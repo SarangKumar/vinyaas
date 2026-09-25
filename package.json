@@ -1,26 +1,27 @@
 {
   "name": "shilp",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
+  "license": "MIT",
+  "type": "module",
+  "author": {
+    "name": "Sarang Kumar",
+    "url": "https://github.com/SarangKumar"
+  },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "pnpm --filter docs dev",
+    "build": "pnpm --filter docs build",
+    "lint": "pnpm --filter docs lint",
+    "typecheck": "pnpm --filter docs typecheck",
+    "format:write": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
-  "dependencies": {
-    "next": "16.3.6",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
-  },
+  "packageManager": "pnpm@10.33.4",
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.6",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
+    "prettier": "^3.9.9",
+    "prettier-plugin-tailwindcss": "^0.8.1"
   }
 }
