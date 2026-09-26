@@ -6,11 +6,15 @@ import { describe, expect, it } from "vitest";
 
 import componentsSchema from "../public/schema/components.json";
 import {
+  componentBaseColors,
   componentStyles,
   componentsAliasFields,
+  componentsAliasRequiredFields,
   componentsConfigFields,
+  componentsConfigRequiredFields,
   componentsSchemaUrl,
   componentsTailwindFields,
+  componentsTailwindRequiredFields,
   parseComponentsConfig,
   ComponentsConfigError,
   type ComponentsConfig,
@@ -79,22 +83,64 @@ describe("components.json", () => {
     ).toBe(false);
   });
 
-  it("builds the schema url from the registry base url", () => {
+  it("builds the schema url from the registry base url", async () => {
+    const testDirectory = path.dirname(fileURLToPath(import.meta.url));
+    const example = await fs.readFile(
+      path.resolve(testDirectory, "../../../.env.example"),
+      "utf8",
+    );
+    const button = JSON.parse(
+      await fs.readFile(
+        path.resolve(testDirectory, "../public/r/new-york/button.json"),
+        "utf8",
+      ),
+    ) as { $schema: string };
+
     expect(componentsSchemaUrl("https://registry.example/")).toBe(
       "https://registry.example/schema/components.json",
     );
+    expect(() => componentsSchemaUrl("  ")).toThrow(ComponentsConfigError);
     expect(validComponentsConfig().$schema).toBe(
       "https://registry.example/schema/components.json",
     );
+    expect(example.trim()).toBe("REGISTRY_BASE_URL=https://vinyas.vercel.app");
+    expect(componentsSchemaUrl("https://vinyas.vercel.app")).toBe(
+      "https://vinyas.vercel.app/schema/components.json",
+    );
+    expect(button.$schema).toBe(
+      "https://vinyas.vercel.app/schema/registry-item.json",
+    );
   });
 
-  it("rejects missing or invalid configuration", () => {
+  it("rejects an unsupported style and non-boolean flags", () => {
+    const config = validComponentsConfig();
+
+    expect(() =>
+      parseComponentsConfig({ ...config, style: "some-random-style" }),
+    ).toThrow(/style/);
+    expect(() => parseComponentsConfig({ ...config, tsx: "true" })).toThrow(
+      /tsx/,
+    );
+    expect(() =>
+      parseComponentsConfig({
+        ...config,
+        tailwind: { ...config.tailwind, cssVariables: "true" },
+      }),
+    ).toThrow(/cssVariables/);
+    expect(() =>
+      parseComponentsConfig({
+        ...config,
+        tailwind: { ...config.tailwind, baseColor: "blue" },
+      }),
+    ).toThrow(/baseColor/);
+  });
+
+  it("rejects missing install locations and absolute css paths", () => {
     const config = validComponentsConfig();
 
     expect(() => parseComponentsConfig(null)).toThrow(ComponentsConfigError);
     expect(() =>
       parseComponentsConfig({
-        $schema: config.$schema,
         tsx: config.tsx,
         tailwind: config.tailwind,
         aliases: config.aliases,
@@ -121,28 +167,75 @@ describe("components.json", () => {
       }),
     ).toThrow(/missing css/);
     expect(() =>
-      parseComponentsConfig({ ...config, style: "default" }),
-    ).toThrow(/style/);
-    expect(() => parseComponentsConfig({ ...config, tsx: "true" })).toThrow(
-      /tsx/,
-    );
+      parseComponentsConfig({
+        ...config,
+        tailwind: { ...config.tailwind, css: "/app/globals.css" },
+      }),
+    ).toThrow(/project-relative path/);
     expect(() => parseComponentsConfig({ ...config, rsc: true })).toThrow(
       /unknown fields/,
     );
-    expect(() => componentsSchemaUrl("  ")).toThrow(ComponentsConfigError);
+  });
+
+  it("applies defaults when optional fields are omitted", () => {
+    expect(
+      parseComponentsConfig({
+        style: "new-york",
+        tailwind: { css: "app/globals.css" },
+        aliases: {
+          components: "@/components",
+          ui: "@/components/ui",
+          utils: "@/lib/utils",
+        },
+      }),
+    ).toEqual({
+      style: "new-york",
+      tsx: true,
+      tailwind: {
+        css: "app/globals.css",
+        baseColor: "neutral",
+        cssVariables: true,
+      },
+      aliases: {
+        components: "@/components",
+        ui: "@/components/ui",
+        utils: "@/lib/utils",
+      },
+    });
   });
 
   it("matches the published json schema", () => {
-    expect(componentsSchema.required).toEqual([...componentsConfigFields]);
+    expect(componentsSchema.required).toEqual([
+      ...componentsConfigRequiredFields,
+    ]);
+    expect(Object.keys(componentsSchema.properties)).toEqual([
+      ...componentsConfigFields,
+    ]);
     expect(componentsSchema.properties.style.enum).toEqual([
       ...componentStyles,
     ]);
+    expect(componentsSchema.properties.tsx.default).toBe(true);
     expect(componentsSchema.properties.tailwind.required).toEqual([
-      ...componentsTailwindFields,
+      ...componentsTailwindRequiredFields,
     ]);
+    expect(
+      Object.keys(componentsSchema.properties.tailwind.properties),
+    ).toEqual([...componentsTailwindFields]);
+    expect(
+      componentsSchema.properties.tailwind.properties.baseColor.enum,
+    ).toEqual([...componentBaseColors]);
+    expect(
+      componentsSchema.properties.tailwind.properties.baseColor.default,
+    ).toBe("neutral");
+    expect(
+      componentsSchema.properties.tailwind.properties.cssVariables.default,
+    ).toBe(true);
     expect(componentsSchema.properties.aliases.required).toEqual([
-      ...componentsAliasFields,
+      ...componentsAliasRequiredFields,
     ]);
+    expect(Object.keys(componentsSchema.properties.aliases.properties)).toEqual(
+      [...componentsAliasFields],
+    );
     expect(componentsSchema.additionalProperties).toBe(false);
     expect(componentsSchema.properties.tailwind.additionalProperties).toBe(
       false,
