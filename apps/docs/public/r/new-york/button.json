@@ -1,5 +1,5 @@
 {
-  "$schema": "http://localhost:3000/schema/registry-item.json",
+  "$schema": "https://vinyas.vercel.app/schema/registry-item.json",
   "name": "button",
   "type": "registry:ui",
   "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
