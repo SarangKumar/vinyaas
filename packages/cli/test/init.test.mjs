@@ -324,4 +324,73 @@ describe("vinyas init", () => {
       "http://localhost:3000/schema/components.json",
     );
   });
+
+  it("creates components.json in the directory given by --cwd", async () => {
+    const parent = await mkdtemp(join(tmpdir(), "vinyas-init-cwd-"));
+    const project = join(parent, "my-app");
+
+    await Promise.all(
+      Object.entries(nextProject()).map(async ([relativePath, contents]) => {
+        const filePath = join(project, relativePath);
+        await mkdir(dirname(filePath), { recursive: true });
+        await writeFile(filePath, contents);
+      }),
+    );
+
+    const result = await execFileAsync(
+      process.execPath,
+      [entrypoint, "init", "--cwd", "./my-app"],
+      {
+        cwd: parent,
+        env: {
+          ...process.env,
+          REGISTRY_BASE_URL: "https://vinyas.vercel.app",
+        },
+      },
+    );
+
+    assert.match(result.stdout, /Created components\.json/);
+    const config = JSON.parse(
+      await readFile(join(project, "components.json"), "utf8"),
+    );
+
+    assert.equal(config.tailwind.css, "app/globals.css");
+    await assert.rejects(readFile(join(parent, "components.json"), "utf8"));
+  });
+
+  it("does not overwrite components.json in the directory given by --cwd", async () => {
+    const parent = await mkdtemp(join(tmpdir(), "vinyas-init-cwd-"));
+    const project = join(parent, "project-a");
+
+    await Promise.all(
+      Object.entries({
+        ...nextProject(),
+        "components.json": '{"keep":true}\n',
+      }).map(async ([relativePath, contents]) => {
+        const filePath = join(project, relativePath);
+        await mkdir(dirname(filePath), { recursive: true });
+        await writeFile(filePath, contents);
+      }),
+    );
+
+    const result = await execFileAsync(
+      process.execPath,
+      [entrypoint, "init", "--cwd", "project-a"],
+      { cwd: parent, env: process.env },
+    ).then(
+      (output) => ({ exitCode: 0, stderr: output.stderr }),
+      (error) => ({
+        exitCode: typeof error.code === "number" ? error.code : 1,
+        stderr: typeof error.stderr === "string" ? error.stderr : "",
+      }),
+    );
+
+    assert.notEqual(result.exitCode, 0);
+    assert.match(result.stderr, /components\.json already exists/);
+    assert.match(result.stderr, /will not overwrite it/);
+    assert.equal(
+      await readFile(join(project, "components.json"), "utf8"),
+      '{"keep":true}\n',
+    );
+  });
 });

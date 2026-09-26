@@ -13,6 +13,7 @@ import {
 
 import { CliError } from "../lib/cli-error.js";
 import { detectProject } from "../lib/detect-project.js";
+import { resolveProjectRoot } from "../lib/project/cwd.js";
 
 const alreadyExistsMessage = [
   "components.json already exists.",
@@ -23,9 +24,10 @@ export function registerInitCommand(program: Command): void {
   program
     .command("init")
     .description("Create components.json for the current project.")
-    .action(async () => {
+    .option("--cwd <path>", "Consumer project directory.")
+    .action(async (options: { cwd?: string }) => {
       try {
-        await runInit({ cwd: process.cwd(), env: process.env });
+        await executeInit({ cwd: options.cwd, env: process.env });
       } catch (error) {
         if (error instanceof CliError) {
           console.error(error.message);
@@ -35,6 +37,21 @@ export function registerInitCommand(program: Command): void {
         throw error;
       }
     });
+}
+
+export async function executeInit({
+  cwd,
+  from = process.cwd(),
+  env,
+}: {
+  cwd?: string;
+  from?: string;
+  env: Record<string, string | undefined>;
+}): Promise<void> {
+  await runInit({
+    cwd: await resolveProjectRoot(cwd, from),
+    env,
+  });
 }
 
 export async function runInit({

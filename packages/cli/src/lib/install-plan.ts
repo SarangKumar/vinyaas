@@ -21,62 +21,139 @@ export interface InstallPlanEntry {
 export interface InstallPlan {
   name: string;
   entries: InstallPlanEntry[];
-  /** npm packages declared by the registry item. Not installed. */
+  /** Runtime npm packages from every resolved item, each listed once. */
   dependencies: string[];
-  /** Other registry items declared by this item. Not installed. */
-  registryDependencies: string[];
+  /** Development npm packages from every resolved item, each listed once. */
+  devDependencies: string[];
+  /** Registry item names in dependency-first order, including the requested item. */
+  items: string[];
+}
+
+export interface PackageDependencyPlan {
+  dependencies: string[];
+  devDependencies: string[];
 }
 
 /**
- * Turns a validated registry item into destination paths.
+ * Turns resolved registry items into destination paths.
  * Does not read or write the consumer project except to resolve aliases.
+ * Items must already be in dependency-first order.
  */
 export async function createInstallPlan({
   cwd,
   config,
-  item,
+  name,
+  items,
 }: {
   cwd: string;
   config: ComponentsConfig;
-  item: RegistryItem;
+  name: string;
+  items: readonly RegistryItem[];
 }): Promise<InstallPlan> {
   const entries: InstallPlanEntry[] = [];
-
-  for (const file of item.files) {
-    const destinationPath = await resolveRegistryFilePath(
-      cwd,
-      config,
-      file.path,
-    );
-
-    entries.push({
-      registryPath: file.path,
-      destinationPath,
-      content: file.content,
-    });
-  }
-
   const destinations = new Set<string>();
 
-  for (const entry of entries) {
-    if (destinations.has(entry.destinationPath)) {
-      throw new CliError(
-        [
-          "Multiple registry files resolve to the same destination:",
-          entry.destinationPath,
-        ].join("\n"),
+  for (const item of items) {
+    for (const file of item.files) {
+      const destinationPath = await resolveRegistryFilePath(
+        cwd,
+        config,
+        file.path,
+      );
+
+      if (destinations.has(destinationPath)) {
+        throw new CliError(
+          [
+            "Multiple registry files resolve to the same destination:",
+            destinationPath,
+          ].join("\n"),
+        );
+      }
+
+      destinations.add(destinationPath);
+      entries.push({
+        registryPath: file.path,
+        destinationPath,
+        content: file.content,
+      });
+    }
+  }
+
+  const packages = planPackageDependencies(items);
+
+  return {
+    name,
+    entries,
+    dependencies: packages.dependencies,
+    devDependencies: packages.devDependencies,
+    items: items.map((item) => item.name),
+  };
+}
+
+/**
+ * Merges npm package names from a dependency-first registry graph.
+ * The first declaration of a name wins. A name cannot be both a runtime
+ * dependency and a development dependency.
+ */
+export function planPackageDependencies(
+  items: readonly RegistryItem[],
+): PackageDependencyPlan {
+  const dependencies: string[] = [];
+  const devDependencies: string[] = [];
+  const runtime = new Set<string>();
+  const development = new Set<string>();
+
+  for (const item of items) {
+    for (const dependency of item.dependencies) {
+      recordPackage(
+        dependency,
+        "dependency",
+        runtime,
+        development,
+        dependencies,
       );
     }
 
-    destinations.add(entry.destinationPath);
+    for (const dependency of item.devDependencies ?? []) {
+      recordPackage(
+        dependency,
+        "devDependency",
+        runtime,
+        development,
+        devDependencies,
+      );
+    }
   }
 
-  return {
-    name: item.name,
-    entries,
-    dependencies: [...item.dependencies],
-    registryDependencies: [...(item.registryDependencies ?? [])],
-  };
+  return { dependencies, devDependencies };
+}
+
+function recordPackage(
+  dependency: string,
+  kind: "dependency" | "devDependency",
+  runtime: Set<string>,
+  development: Set<string>,
+  destination: string[],
+): void {
+  const other = kind === "dependency" ? development : runtime;
+
+  if (other.has(dependency)) {
+    throw new CliError(
+      [
+        "Dependency type conflict:",
+        `${dependency} is declared as both a dependency and a devDependency.`,
+      ].join("\n"),
+    );
+  }
+
+  const seen = kind === "dependency" ? runtime : development;
+
+  if (seen.has(dependency)) {
+    return;
+  }
+
+  seen.add(dependency);
+  destination.push(dependency);
 }
 
 async function resolveRegistryFilePath(

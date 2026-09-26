@@ -57,6 +57,16 @@ describe("vinyas", () => {
     assert.match(result.stdout, /\badd\b/);
   });
 
+  it("shows --cwd on init and add", async () => {
+    const init = await run(["init", "--help"]);
+    const add = await run(["add", "--help"]);
+
+    assert.equal(init.exitCode, 0);
+    assert.match(init.stdout, /--cwd <path>/);
+    assert.equal(add.exitCode, 0);
+    assert.match(add.stdout, /--cwd <path>/);
+  });
+
   it("fails for an unknown command", async () => {
     const result = await run(["nope"]);
 

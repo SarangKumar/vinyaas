@@ -124,6 +124,75 @@ describe("dependency installation", () => {
     });
   }
 
+  it("installs development dependencies with a separate dev flag", async () => {
+    const calls = [];
+
+    await installDependencies({
+      cwd: "/tmp/consumer",
+      manager: "pnpm",
+      dependencies: ["clsx"],
+      devDependencies: ["prettier", "vitest"],
+      run: async (invocation) => {
+        calls.push(invocation);
+      },
+    });
+
+    assert.deepEqual(
+      calls.map((call) => call.args),
+      [
+        ["add", "clsx"],
+        ["add", "-D", "prettier", "vitest"],
+      ],
+    );
+    assert.equal(calls[1].args.includes("prettier vitest"), false);
+  });
+
+  for (const [manager, flag] of [
+    ["pnpm", "-D"],
+    ["npm", "-D"],
+    ["yarn", "-D"],
+    ["bun", "-d"],
+  ]) {
+    it(`passes ${manager} development dependencies as separate arguments`, async () => {
+      const calls = [];
+
+      await installDependencies({
+        cwd: "/tmp/consumer",
+        manager,
+        dependencies: [],
+        devDependencies: ["prettier"],
+        run: async (invocation) => {
+          calls.push(invocation);
+        },
+      });
+
+      assert.equal(calls.length, 1);
+      assert.deepEqual(calls[0].args.slice(1), [flag, "prettier"]);
+      assert.equal(typeof calls[0].command, "string");
+      assert.equal(calls[0].command.includes(" "), false);
+    });
+  }
+
+  it("does not install development dependencies after a runtime install fails", async () => {
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        installDependencies({
+          cwd: "/tmp/consumer",
+          manager: "pnpm",
+          dependencies: ["clsx"],
+          devDependencies: ["prettier"],
+          run: async (invocation) => {
+            calls.push(invocation.args);
+            throw new CliError("Dependency installation failed.");
+          },
+        }),
+      /Dependency installation failed/,
+    );
+    assert.deepEqual(calls, [["add", "clsx"]]);
+  });
+
   it("does not run a package manager for an empty dependency list", async () => {
     const calls = [];
 

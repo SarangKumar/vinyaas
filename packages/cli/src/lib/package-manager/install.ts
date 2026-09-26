@@ -14,6 +14,14 @@ const installArgs: Record<PackageManager, [string, string]> = {
   bun: ["bun", "add"],
 };
 
+/** bun uses `-d`. npm, pnpm, and yarn use `-D`. */
+const devFlags: Record<PackageManager, string> = {
+  pnpm: "-D",
+  npm: "-D",
+  yarn: "-D",
+  bun: "-d",
+};
+
 /**
  * Installs npm dependencies with the consumer's package manager.
  * Does not inspect package.json and does not skip packages that are already present.
@@ -22,27 +30,40 @@ export async function installDependencies({
   cwd,
   manager,
   dependencies,
+  devDependencies = [],
   env = process.env,
   run = runPackageManager,
 }: {
   cwd: string;
   manager: PackageManager;
   dependencies: readonly string[];
+  devDependencies?: readonly string[];
   env?: NodeJS.ProcessEnv;
   run?: RunPackageManager;
 }): Promise<void> {
-  if (dependencies.length === 0) {
+  if (dependencies.length === 0 && devDependencies.length === 0) {
     return;
   }
 
   const [command, subcommand] = installArgs[manager];
 
-  await run({
-    command,
-    args: [subcommand, ...dependencies],
-    cwd,
-    env,
-  });
+  if (dependencies.length > 0) {
+    await run({
+      command,
+      args: [subcommand, ...dependencies],
+      cwd,
+      env,
+    });
+  }
+
+  if (devDependencies.length > 0) {
+    await run({
+      command,
+      args: [subcommand, devFlags[manager], ...devDependencies],
+      cwd,
+      env,
+    });
+  }
 }
 
 export function runPackageManager(

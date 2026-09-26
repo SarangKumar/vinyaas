@@ -9,11 +9,17 @@ import {
 } from "../../../../config/components.ts";
 
 import { CliError } from "../lib/cli-error.ts";
+import { createCssUpdate } from "../lib/css/plan.ts";
+import type { CssUpdate } from "../lib/css/types.ts";
+import { createDocsPlan, formatDocsPlan } from "../lib/docs/plan.ts";
+import { createEnvPlan, formatEnvPlan } from "../lib/env/plan.ts";
 import { createInstallPlan, type InstallPlan } from "../lib/install-plan.ts";
 import { detectPackageManager } from "../lib/package-manager/detect.ts";
 import { installDependencies } from "../lib/package-manager/install.ts";
 import type { RunPackageManager } from "../lib/package-manager/types.ts";
-import { RegistryError, fetchRegistryItem } from "../lib/registry/client.ts";
+import { resolveProjectRoot } from "../lib/project/cwd.ts";
+import { RegistryError } from "../lib/registry/client.ts";
+import { resolveRegistryItems } from "../lib/registry/resolve.ts";
 
 const missingConfigMessage = [
   "components.json was not found.",
@@ -25,9 +31,10 @@ export function registerAddCommand(program: Command): void {
     .command("add")
     .description("Add a component from the Vinyas registry.")
     .argument("<name>", "Registry item name")
-    .action(async (name: string) => {
+    .option("--cwd <path>", "Consumer project directory.")
+    .action(async (name: string, options: { cwd?: string }) => {
       try {
-        await runAdd({ cwd: process.cwd(), name, env: process.env });
+        await executeAdd({ name, cwd: options.cwd, env: process.env });
       } catch (error) {
         if (
           error instanceof CliError ||
@@ -41,6 +48,30 @@ export function registerAddCommand(program: Command): void {
         throw error;
       }
     });
+}
+
+export async function executeAdd({
+  name,
+  cwd,
+  from = process.cwd(),
+  env = process.env,
+  fetch: fetchImpl,
+  runPackageManager,
+}: {
+  name: string;
+  cwd?: string;
+  from?: string;
+  env?: Record<string, string | undefined>;
+  fetch?: typeof fetch;
+  runPackageManager?: RunPackageManager;
+}): Promise<InstallPlan> {
+  return runAdd({
+    cwd: await resolveProjectRoot(cwd, from),
+    name,
+    env,
+    ...(fetchImpl ? { fetch: fetchImpl } : {}),
+    ...(runPackageManager ? { runPackageManager } : {}),
+  });
 }
 
 export async function runAdd({
@@ -57,30 +88,53 @@ export async function runAdd({
   runPackageManager?: RunPackageManager;
 }): Promise<InstallPlan> {
   const config = await readComponentsConfig(cwd);
-  const item = await fetchRegistryItem({
+  const items = await resolveRegistryItems({
     style: config.style,
     name,
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
   });
-  const plan = await createInstallPlan({ cwd, config, item });
+  const plan = await createInstallPlan({ cwd, config, name, items });
 
   await assertDestinationsAvailable(cwd, plan);
+  const cssUpdate = await createCssUpdate({
+    cwd,
+    cssPath: config.tailwind.css,
+    items,
+  });
+  const envPlan = await createEnvPlan({ cwd, items });
+  const docsPlan = createDocsPlan(items);
 
-  if (plan.dependencies.length > 0) {
+  if (plan.dependencies.length > 0 || plan.devDependencies.length > 0) {
     const manager = await detectPackageManager(cwd);
 
     await installDependencies({
       cwd,
       manager,
       dependencies: plan.dependencies,
+      devDependencies: plan.devDependencies,
       env,
       ...(runPackageManager ? { run: runPackageManager } : {}),
     });
   }
 
   await writePlan(cwd, plan);
+  await writeCssUpdate(cwd, cssUpdate);
   console.log(formatAdded(plan));
+
+  const envReport = formatEnvPlan(envPlan);
+
+  if (envReport) {
+    console.log("");
+    console.log(envReport);
+  }
+
+  const docsReport = formatDocsPlan(docsPlan);
+
+  if (docsReport) {
+    console.log("");
+    console.log(docsReport);
+  }
 
   return plan;
 }
@@ -127,6 +181,14 @@ async function assertDestinationsAvailable(
   }
 }
 
+async function writeCssUpdate(cwd: string, update: CssUpdate): Promise<void> {
+  if (!update.changed) {
+    return;
+  }
+
+  await writeFile(path.resolve(cwd, update.relativePath), update.next, "utf8");
+}
+
 async function writePlan(cwd: string, plan: InstallPlan): Promise<void> {
   for (const entry of plan.entries) {
     const destination = path.resolve(cwd, entry.destinationPath);
@@ -155,11 +217,11 @@ function formatAdded(plan: InstallPlan): string {
     );
   }
 
-  if (plan.registryDependencies.length > 0) {
+  if (plan.devDependencies.length > 0) {
     lines.push(
       "",
-      "Registry dependencies were not installed:",
-      ...plan.registryDependencies.map((dependency) => `  ${dependency}`),
+      "Installed devDependencies:",
+      ...plan.devDependencies.map((dependency) => `  ${dependency}`),
     );
   }
 

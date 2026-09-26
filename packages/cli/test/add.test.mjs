@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
 import { ComponentsConfigError } from "../../../config/components.ts";
-import { runAdd } from "../src/commands/add.ts";
+import { executeAdd, runAdd } from "../src/commands/add.ts";
 import { CliError } from "../src/lib/cli-error.ts";
 
 const execFileAsync = promisify(execFile);
@@ -70,16 +70,20 @@ function fetchItem(item) {
   });
 }
 
-async function writeProject(files) {
-  const cwd = await mkdtemp(join(tmpdir(), "vinyas-add-"));
-
+async function writeFiles(root, files) {
   await Promise.all(
     Object.entries(files).map(async ([relativePath, contents]) => {
-      const filePath = join(cwd, relativePath);
+      const filePath = join(root, relativePath);
       await mkdir(dirname(filePath), { recursive: true });
       await writeFile(filePath, contents);
     }),
   );
+}
+
+async function writeProject(files) {
+  const cwd = await mkdtemp(join(tmpdir(), "vinyas-add-"));
+
+  await writeFiles(cwd, files);
 
   return cwd;
 }
@@ -115,7 +119,41 @@ function runCli(cwd, args, env) {
   );
 }
 
-async function add(cwd, item, name = "button", runPackageManager) {
+function fetchCatalog(catalog) {
+  const counts = {};
+  const fetchImpl = async (url) => {
+    const itemName = decodeURIComponent(
+      String(url)
+        .split("/")
+        .pop()
+        .replace(/\.json$/, ""),
+    );
+    counts[itemName] = (counts[itemName] ?? 0) + 1;
+    const item = catalog[itemName];
+
+    if (!item) {
+      return {
+        ok: false,
+        status: 404,
+        async json() {
+          return {};
+        },
+      };
+    }
+
+    return {
+      ok: true,
+      status: 200,
+      async json() {
+        return item;
+      },
+    };
+  };
+
+  return { fetch: fetchImpl, counts };
+}
+
+async function add(cwd, item, name = "button", runPackageManager, fetchImpl) {
   const logs = [];
   const original = console.log;
   packageManagerCalls = [];
@@ -128,7 +166,7 @@ async function add(cwd, item, name = "button", runPackageManager) {
       cwd,
       name,
       env: { REGISTRY_BASE_URL: "http://localhost:3000" },
-      fetch: fetchItem(item),
+      fetch: fetchImpl ?? fetchItem(item),
       runPackageManager:
         runPackageManager ??
         (async (command) => {
@@ -376,44 +414,742 @@ describe("vinyas add", { concurrency: false }, () => {
     );
   });
 
-  it("leaves css unchanged when the registry item includes css metadata", async () => {
+  it("adds css variables and rules to the configured stylesheet", async () => {
     const cwd = await writeProject(consumerProject());
 
     await add(
       cwd,
       buttonItem([{ path: "ui/button/button.tsx", content: buttonContent }], {
-        cssVars: { light: { background: "0 0% 100%" } },
+        cssVars: {
+          light: { "--primary": "222.2 47.4% 11.2%" },
+          dark: { "--primary": "210 40% 98%" },
+        },
+        css: { ".button": "color: red;" },
+      }),
+    );
+
+    const css = await readFile(join(cwd, "app/globals.css"), "utf8");
+
+    assert.match(css, /:root\s*\{[^}]*--primary:\s*222\.2 47\.4% 11\.2%;/);
+    assert.match(css, /prefers-color-scheme:\s*dark/);
+    assert.match(css, /--primary:\s*210 40% 98%;/);
+    assert.match(css, /\.button\s*\{[^}]*color:\s*red;/);
+    assert.equal(
+      (css.match(/--primary:\s*222\.2 47\.4% 11\.2%;/g) ?? []).length,
+      1,
+    );
+
+    await assert.rejects(
+      () =>
+        add(
+          cwd,
+          buttonItem(
+            [{ path: "ui/button/button.tsx", content: buttonContent }],
+            {
+              cssVars: {
+                light: { "--primary": "222.2 47.4% 11.2%" },
+                dark: { "--primary": "210 40% 98%" },
+              },
+              css: { ".button": "color: red;" },
+            },
+          ),
+        ),
+      /File already exists/,
+    );
+    assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
+  });
+
+  it("does not duplicate identical css when the declarations already exist", async () => {
+    const existing = `${cssContent}\n:root {\n  --primary: 222.2 47.4% 11.2%;\n}\n\n.button {\n  color: red;\n}\n`;
+    const cwd = await writeProject(
+      consumerProject({
+        "app/globals.css": existing,
+      }),
+    );
+
+    await add(
+      cwd,
+      buttonItem([{ path: "ui/button/button.tsx", content: buttonContent }], {
+        cssVars: { light: { "--primary": "222.2 47.4% 11.2%" } },
         css: { ".button": "color: red;" },
       }),
     );
 
     assert.equal(
       await readFile(join(cwd, "app/globals.css"), "utf8"),
-      cssContent,
+      existing,
     );
   });
 
-  it("reports registry dependencies without installing them", async () => {
-    const cwd = await writeProject(consumerProject());
-    const { stdout, plan } = await add(
+  it("does not install files or dependencies when css variables conflict", async () => {
+    const existing = `${cssContent}\n:root {\n  --primary: existing-value;\n}\n`;
+    const cwd = await writeProject(
+      consumerProject({
+        "app/globals.css": existing,
+      }),
+    );
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        add(
+          cwd,
+          buttonItem(
+            [{ path: "ui/button/button.tsx", content: buttonContent }],
+            {
+              cssVars: { light: { "--primary": "registry-value" } },
+            },
+          ),
+          "button",
+          async (command) => {
+            calls.push(command);
+          },
+        ),
+      /CSS variable conflict:\n--primary already exists with a different value/,
+    );
+    assert.equal(calls.length, 0);
+    assert.equal(
+      await readFile(join(cwd, "app/globals.css"), "utf8"),
+      existing,
+    );
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("does not install files or dependencies when the css file is missing", async () => {
+    const files = consumerProject();
+    delete files["app/globals.css"];
+    const cwd = await writeProject(files);
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        add(cwd, buttonItem(), "button", async (command) => {
+          calls.push(command);
+        }),
+      /Configured CSS file does not exist:\napp\/globals\.css/,
+    );
+    assert.equal(calls.length, 0);
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("reports a missing environment variable without changing .env", async () => {
+    const envFile = "NEXT_PUBLIC_SITE_URL=https://example.com\n";
+    const cwd = await writeProject(
+      consumerProject({
+        ".env": envFile,
+      }),
+    );
+    const { stdout, calls } = await add(
       cwd,
       buttonItem([{ path: "ui/button/button.tsx", content: buttonContent }], {
-        registryDependencies: ["dialog"],
+        envVars: { OPENAI_API_KEY: "OpenAI API key" },
       }),
     );
 
-    assert.deepEqual(plan.registryDependencies, ["dialog"]);
-    assert.match(
-      stdout,
-      /Registry dependencies were not installed:\n {2}dialog/,
-    );
+    assert.match(stdout, /Environment variables required:/);
+    assert.match(stdout, /OPENAI_API_KEY — OpenAI API key/);
+    assert.match(stdout, /No environment files were modified/);
+    assert.equal(await readFile(join(cwd, ".env"), "utf8"), envFile);
     assert.equal(
-      await readFile(join(cwd, "package.json"), "utf8"),
-      packageJson,
+      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      buttonContent,
+    );
+    assert.equal(calls.length, 1);
+  });
+
+  it("reports a configured environment variable without its value", async () => {
+    const envFile = "OPENAI_API_KEY=super-secret-value\n";
+    const cwd = await writeProject(
+      consumerProject({
+        ".env": envFile,
+      }),
+    );
+    const { stdout } = await add(
+      cwd,
+      buttonItem([{ path: "ui/button/button.tsx", content: buttonContent }], {
+        dependencies: [],
+        envVars: { OPENAI_API_KEY: "OpenAI API key" },
+      }),
+    );
+
+    assert.match(stdout, /OPENAI_API_KEY already configured/);
+    assert.match(stdout, /All required variables are already configured/);
+    assert.doesNotMatch(stdout, /super-secret-value/);
+    assert.doesNotMatch(stdout, /OPENAI_API_KEY=/);
+    assert.equal(await readFile(join(cwd, ".env"), "utf8"), envFile);
+  });
+
+  it("does not install files or dependencies when environment variables conflict", async () => {
+    const envFile = "UNRELATED=1\n";
+    const cwd = await writeProject(consumerProject({ ".env": envFile }));
+    const calls = [];
+    const catalog = fetchCatalog({
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: ["clsx"],
+        files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
+        envVars: { API_URL: "Public API origin" },
+      },
+      button: buttonItem(
+        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        {
+          registryDependencies: ["utils"],
+          envVars: { API_URL: "Private API origin" },
+        },
+      ),
+    });
+
+    await assert.rejects(
+      () =>
+        add(
+          cwd,
+          undefined,
+          "button",
+          async (command) => {
+            calls.push(command);
+          },
+          catalog.fetch,
+        ),
+      /Environment variable conflict:\nAPI_URL is declared differently by registry items "utils" and "button"/,
+    );
+    assert.equal(calls.length, 0);
+    assert.equal(await readFile(join(cwd, ".env"), "utf8"), envFile);
+    await assert.rejects(readFile(join(cwd, "components/ui/utils.ts"), "utf8"));
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("reports documentation urls from the registry graph", async () => {
+    const cwd = await writeProject(consumerProject());
+    const catalog = fetchCatalog({
+      shared: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "shared",
+        type: "registry:ui",
+        dependencies: [],
+        files: [
+          { path: "ui/shared.ts", content: "export const shared = true;\n" },
+        ],
+        docs: "https://vinyas.vercel.app/docs/components/shared",
+      },
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: [],
+        registryDependencies: ["shared"],
+        files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
+        docs: "https://vinyas.vercel.app/docs/components/utils",
+      },
+      icon: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "icon",
+        type: "registry:ui",
+        dependencies: [],
+        registryDependencies: ["shared"],
+        files: [
+          { path: "ui/icon.tsx", content: "export function Icon() {}\n" },
+        ],
+      },
+      button: buttonItem(
+        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        {
+          dependencies: [],
+          registryDependencies: ["utils", "icon"],
+          docs: "https://vinyas.vercel.app/docs/components/button",
+        },
+      ),
+    });
+    const { stdout } = await add(cwd, null, "button", undefined, catalog.fetch);
+    const documentation = stdout.split("Documentation:")[1] ?? "";
+
+    assert.equal(catalog.counts.shared, 1);
+    assert.match(stdout, /Documentation:/);
+    assert.deepEqual(
+      documentation
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line.includes("—")),
+      [
+        "shared — https://vinyas.vercel.app/docs/components/shared",
+        "utils — https://vinyas.vercel.app/docs/components/utils",
+        "button — https://vinyas.vercel.app/docs/components/button",
+      ],
+    );
+    assert.equal((documentation.match(/shared —/g) ?? []).length, 1);
+    assert.doesNotMatch(documentation, /icon —/);
+  });
+
+  it("does not install when a documentation url is invalid", async () => {
+    const css = `${cssContent}`;
+    const cwd = await writeProject(consumerProject({ "app/globals.css": css }));
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        add(
+          cwd,
+          buttonItem(undefined, {
+            dependencies: ["clsx"],
+            cssVars: { light: { "--primary": "0 0% 0%" } },
+            docs: "javascript:alert(1)",
+          }),
+          "button",
+          async (command) => {
+            calls.push(command);
+          },
+        ),
+      /Invalid documentation URL:\nbutton — javascript:alert\(1\)/,
+    );
+    assert.equal(calls.length, 0);
+    assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("does not report documentation when installation fails", async () => {
+    const cwd = await writeProject(
+      consumerProject({
+        "components/ui/button/button.tsx": buttonContent,
+      }),
+    );
+    const logs = [];
+    const original = console.log;
+    console.log = (...args) => {
+      logs.push(args.join(" "));
+    };
+
+    try {
+      await assert.rejects(
+        () =>
+          runAdd({
+            cwd,
+            name: "button",
+            env: { REGISTRY_BASE_URL: "http://localhost:3000" },
+            fetch: fetchItem(
+              buttonItem(undefined, {
+                docs: "https://vinyas.vercel.app/docs/components/button",
+              }),
+            ),
+            runPackageManager: async () => {
+              throw new Error("package manager should not run");
+            },
+          }),
+        /File already exists/,
+      );
+    } finally {
+      console.log = original;
+    }
+
+    assert.equal(logs.join("\n").includes("Documentation:"), false);
+  });
+
+  it("installs a registry dependency before the requested item", async () => {
+    const cwd = await writeProject(consumerProject());
+    const catalog = fetchCatalog({
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: ["clsx"],
+        files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
+      },
+      button: buttonItem(
+        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        {
+          dependencies: ["clsx", "tailwind-merge"],
+          registryDependencies: ["utils"],
+        },
+      ),
+    });
+    const { plan, calls } = await add(
+      cwd,
+      null,
+      "button",
+      undefined,
+      catalog.fetch,
+    );
+
+    assert.deepEqual(plan.items, ["utils", "button"]);
+    assert.deepEqual(plan.dependencies, ["clsx", "tailwind-merge"]);
+    assert.deepEqual(calls[0].args, ["add", "clsx", "tailwind-merge"]);
+    assert.equal(catalog.counts.utils, 1);
+    assert.equal(
+      await readFile(join(cwd, "components/ui/utils.ts"), "utf8"),
+      "export const cn = true;\n",
     );
     assert.equal(
       await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
       buttonContent,
+    );
+  });
+
+  it("fetches a shared registry dependency once and does not write partial files", async () => {
+    const cwd = await writeProject(consumerProject());
+    const catalog = fetchCatalog({
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: ["clsx"],
+        files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
+      },
+      input: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "input",
+        type: "registry:ui",
+        dependencies: ["zod"],
+        registryDependencies: ["utils"],
+        files: [
+          { path: "ui/input.tsx", content: "export function Input() {}\n" },
+        ],
+      },
+      button: buttonItem(
+        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        { registryDependencies: ["utils", "input"] },
+      ),
+    });
+    const { plan } = await add(cwd, null, "button", undefined, catalog.fetch);
+
+    assert.deepEqual(plan.items, ["utils", "input", "button"]);
+    assert.equal(catalog.counts.utils, 1);
+    assert.equal(catalog.counts.input, 1);
+    assert.equal(catalog.counts.button, 1);
+    assert.deepEqual(plan.dependencies, [
+      "clsx",
+      "zod",
+      "class-variance-authority",
+      "tailwind-merge",
+    ]);
+  });
+
+  it("fails a registry cycle before installing dependencies or files", async () => {
+    const cwd = await writeProject(consumerProject());
+    const catalog = fetchCatalog({
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: ["clsx"],
+        registryDependencies: ["button"],
+        files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
+      },
+      button: buttonItem(
+        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        { registryDependencies: ["utils"] },
+      ),
+    });
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        add(
+          cwd,
+          null,
+          "button",
+          async (command) => {
+            calls.push(command);
+          },
+          catalog.fetch,
+        ),
+      (error) => {
+        assert.match(
+          error.message,
+          /Registry dependency cycle detected:\nbutton -> utils -> button/,
+        );
+        return true;
+      },
+    );
+    assert.equal(calls.length, 0);
+    await assert.rejects(readFile(join(cwd, "components/ui/utils.ts"), "utf8"));
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("does not install files when a nested registry item is missing", async () => {
+    const cwd = await writeProject(consumerProject());
+    const catalog = fetchCatalog({
+      button: buttonItem(
+        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        { registryDependencies: ["does-not-exist"] },
+      ),
+    });
+
+    await assert.rejects(
+      () => add(cwd, null, "button", undefined, catalog.fetch),
+      /Registry item not found/,
+    );
+    assert.equal(packageManagerCalls.length, 0);
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("does not install a component when a dependency file already exists", async () => {
+    const cwd = await writeProject(
+      consumerProject({
+        "components/ui/utils.ts": "export const existing = true;\n",
+      }),
+    );
+    const catalog = fetchCatalog({
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: ["clsx"],
+        files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
+      },
+      button: buttonItem(
+        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        { registryDependencies: ["utils"] },
+      ),
+    });
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        add(
+          cwd,
+          null,
+          "button",
+          async (command) => {
+            calls.push(command);
+          },
+          catalog.fetch,
+        ),
+      /File already exists:\ncomponents\/ui\/utils\.ts/,
+    );
+    assert.equal(calls.length, 0);
+    assert.equal(
+      await readFile(join(cwd, "components/ui/utils.ts"), "utf8"),
+      "export const existing = true;\n",
+    );
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("fails when two registry items resolve to the same file", async () => {
+    const cwd = await writeProject(consumerProject());
+    const catalog = fetchCatalog({
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: [],
+        files: [{ path: "ui/shared.tsx", content: "export const a = 1;\n" }],
+      },
+      button: buttonItem(
+        [{ path: "ui/shared.tsx", content: "export const b = 2;\n" }],
+        {
+          dependencies: [],
+          registryDependencies: ["utils"],
+        },
+      ),
+    });
+
+    await assert.rejects(
+      () => add(cwd, null, "button", undefined, catalog.fetch),
+      /Multiple registry files resolve to the same destination:\ncomponents\/ui\/shared\.tsx/,
+    );
+    assert.equal(packageManagerCalls.length, 0);
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/shared.tsx"), "utf8"),
+    );
+  });
+
+  it("installs development dependencies from the registry graph once", async () => {
+    const cwd = await writeProject(consumerProject());
+    const catalog = fetchCatalog({
+      testing: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "testing",
+        type: "registry:ui",
+        dependencies: [],
+        devDependencies: ["vitest", "prettier"],
+        files: [
+          { path: "ui/testing.ts", content: "export const test = true;\n" },
+        ],
+      },
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: [],
+        devDependencies: ["prettier"],
+        registryDependencies: ["testing"],
+        files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
+      },
+      icon: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "icon",
+        type: "registry:ui",
+        dependencies: [],
+        registryDependencies: ["testing"],
+        files: [
+          { path: "ui/icon.tsx", content: "export function Icon() {}\n" },
+        ],
+      },
+      button: buttonItem(
+        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        {
+          dependencies: ["clsx"],
+          registryDependencies: ["utils", "icon"],
+          envVars: { OPENAI_API_KEY: "OpenAI API key" },
+        },
+      ),
+    });
+    const { plan, stdout, calls } = await add(
+      cwd,
+      null,
+      "button",
+      undefined,
+      catalog.fetch,
+    );
+
+    assert.deepEqual(plan.items, ["testing", "utils", "icon", "button"]);
+    assert.deepEqual(plan.dependencies, ["clsx"]);
+    assert.deepEqual(plan.devDependencies, ["vitest", "prettier"]);
+    assert.equal(catalog.counts.testing, 1);
+    assert.deepEqual(
+      calls.map((call) => call.args),
+      [
+        ["add", "clsx"],
+        ["add", "-D", "vitest", "prettier"],
+      ],
+    );
+    assert.match(
+      stdout,
+      /Installed devDependencies:\n {2}vitest\n {2}prettier/,
+    );
+    assert.match(stdout, /OPENAI_API_KEY — OpenAI API key/);
+    assert.equal(
+      await readFile(join(cwd, "components/ui/testing.ts"), "utf8"),
+      "export const test = true;\n",
+    );
+  });
+
+  it("fails before installing when a package is both a dependency and a devDependency", async () => {
+    const css = `${cssContent}\n`;
+    const cwd = await writeProject(
+      consumerProject({
+        "app/globals.css": css,
+        ".env": "UNRELATED=1\n",
+      }),
+    );
+    const calls = [];
+    const catalog = fetchCatalog({
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: [],
+        devDependencies: ["foo"],
+        files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
+        cssVars: { light: { "--primary": "0 0% 0%" } },
+      },
+      button: buttonItem(
+        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        {
+          dependencies: ["foo"],
+          registryDependencies: ["utils"],
+        },
+      ),
+    });
+
+    await assert.rejects(
+      () =>
+        add(
+          cwd,
+          null,
+          "button",
+          async (command) => {
+            calls.push(command);
+          },
+          catalog.fetch,
+        ),
+      /Dependency type conflict:\nfoo is declared as both a dependency and a devDependency/,
+    );
+    assert.equal(calls.length, 0);
+    assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
+    assert.equal(await readFile(join(cwd, ".env"), "utf8"), "UNRELATED=1\n");
+    await assert.rejects(readFile(join(cwd, "components/ui/utils.ts"), "utf8"));
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("does not install development dependencies when runtime installation fails", async () => {
+    const cwd = await writeProject(consumerProject());
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        add(
+          cwd,
+          buttonItem(undefined, {
+            dependencies: ["clsx"],
+            devDependencies: ["prettier"],
+          }),
+          "button",
+          async (command) => {
+            calls.push(command.args);
+            throw new CliError("Dependency installation failed.");
+          },
+        ),
+      /Dependency installation failed/,
+    );
+    assert.deepEqual(calls, [["add", "clsx"]]);
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("does not write files when development dependency installation fails", async () => {
+    const css = '@import "tailwindcss";\n';
+    const cwd = await writeProject(consumerProject({ "app/globals.css": css }));
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        add(
+          cwd,
+          buttonItem(
+            [{ path: "ui/button/button.tsx", content: buttonContent }],
+            {
+              dependencies: ["clsx"],
+              devDependencies: ["prettier"],
+              cssVars: { light: { "--primary": "0 0% 0%" } },
+            },
+          ),
+          "button",
+          async (command) => {
+            calls.push(command.args);
+            if (command.args.includes("-D")) {
+              throw new CliError(
+                "Dependency installation failed.\npnpm add -D prettier exited with status 1.",
+              );
+            }
+          },
+        ),
+      /Dependency installation failed/,
+    );
+    assert.deepEqual(calls, [
+      ["add", "clsx"],
+      ["add", "-D", "prettier"],
+    ]);
+    assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
     );
   });
 
@@ -535,6 +1271,175 @@ describe("vinyas add", { concurrency: false }, () => {
     await assert.rejects(
       readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
     );
+  });
+
+  it("runs the package manager in the directory given by --cwd", async () => {
+    const parent = await mkdtemp(join(tmpdir(), "vinyas-cwd-"));
+    const projectA = join(parent, "project-a");
+    const calls = [];
+
+    await writeFiles(projectA, consumerProject());
+    const original = console.log;
+    console.log = () => {};
+
+    try {
+      await executeAdd({
+        name: "button",
+        cwd: "project-a",
+        from: parent,
+        env: { REGISTRY_BASE_URL: "http://localhost:3000" },
+        fetch: fetchItem(buttonItem()),
+        runPackageManager: async (command) => {
+          calls.push(command);
+        },
+      });
+    } finally {
+      console.log = original;
+    }
+
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].cwd, projectA);
+    assert.equal(calls[0].command, "pnpm");
+    assert.equal(
+      await readFile(join(projectA, "components/ui/button/button.tsx"), "utf8"),
+      buttonContent,
+    );
+    await assert.rejects(
+      readFile(join(parent, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("installs into the project selected by --cwd and leaves the other project unchanged", async () => {
+    const item = buttonItem(undefined, {
+      dependencies: [],
+      cssVars: { light: { "--primary": "1 2% 3%" } },
+      envVars: { OPENAI_API_KEY: "OpenAI API key" },
+      docs: "https://vinyas.vercel.app/docs/components/button",
+    });
+    const requests = [];
+    const server = createServer((request, response) => {
+      requests.push(request.url);
+      if (request.url === "/r/new-york/button.json") {
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(JSON.stringify(item));
+        return;
+      }
+
+      response.writeHead(404);
+      response.end();
+    });
+
+    await new Promise((resolve) => {
+      server.listen(0, "127.0.0.1", resolve);
+    });
+
+    const address = server.address();
+    const parent = await mkdtemp(join(tmpdir(), "vinyas-cwd-"));
+    const projectA = join(parent, "project-a");
+    const projectB = join(parent, "project-b");
+    const envA = "OPENAI_API_KEY=secret-a\n";
+    const envB = "OPENAI_API_KEY=secret-b\n";
+
+    await writeFiles(projectA, consumerProject({ ".env": envA }));
+    await writeFiles(projectB, consumerProject({ ".env": envB }));
+    await writeFile(join(parent, "not-a-directory"), "file\n");
+
+    try {
+      const missing = await runCli(
+        parent,
+        ["add", "button", "--cwd", "missing"],
+        {
+          REGISTRY_BASE_URL: `http://127.0.0.1:${address.port}`,
+        },
+      );
+
+      assert.notEqual(missing.exitCode, 0);
+      assert.match(
+        missing.stderr,
+        /Project directory does not exist:\nmissing/,
+      );
+      assert.deepEqual(requests, []);
+
+      const fileCwd = await runCli(
+        parent,
+        ["add", "button", "--cwd", "not-a-directory"],
+        { REGISTRY_BASE_URL: `http://127.0.0.1:${address.port}` },
+      );
+
+      assert.notEqual(fileCwd.exitCode, 0);
+      assert.match(
+        fileCwd.stderr,
+        /Project path is not a directory:\nnot-a-directory/,
+      );
+      assert.deepEqual(requests, []);
+
+      const first = await runCli(
+        parent,
+        ["add", "button", "--cwd", "project-a"],
+        { REGISTRY_BASE_URL: `http://127.0.0.1:${address.port}` },
+      );
+
+      assert.equal(first.exitCode, 0);
+      assert.match(first.stdout, /Added button\./);
+      assert.match(first.stdout, /OPENAI_API_KEY already configured/);
+      assert.doesNotMatch(first.stdout, /secret-a/);
+      assert.doesNotMatch(first.stdout, /secret-b/);
+      assert.match(
+        first.stdout,
+        /button — https:\/\/vinyas\.vercel\.app\/docs\/components\/button/,
+      );
+      assert.match(
+        await readFile(join(projectA, "app/globals.css"), "utf8"),
+        /--primary:\s*1 2% 3%/,
+      );
+      assert.equal(
+        await readFile(
+          join(projectA, "components/ui/button/button.tsx"),
+          "utf8",
+        ),
+        buttonContent,
+      );
+      assert.equal(await readFile(join(projectA, ".env"), "utf8"), envA);
+      assert.equal(
+        await readFile(join(projectB, "app/globals.css"), "utf8"),
+        cssContent,
+      );
+      assert.equal(await readFile(join(projectB, ".env"), "utf8"), envB);
+      await assert.rejects(
+        readFile(join(projectB, "components/ui/button/button.tsx"), "utf8"),
+      );
+
+      const second = await runCli(
+        parent,
+        ["add", "--cwd", "./project-b", "button"],
+        { REGISTRY_BASE_URL: `http://127.0.0.1:${address.port}` },
+      );
+
+      assert.equal(second.exitCode, 0);
+      assert.doesNotMatch(second.stdout, /secret-b/);
+      assert.equal(
+        await readFile(
+          join(projectB, "components/ui/button/button.tsx"),
+          "utf8",
+        ),
+        buttonContent,
+      );
+      assert.equal(
+        await readFile(
+          join(projectA, "components/ui/button/button.tsx"),
+          "utf8",
+        ),
+        buttonContent,
+      );
+      assert.deepEqual(requests, [
+        "/r/new-york/button.json",
+        "/r/new-york/button.json",
+      ]);
+    } finally {
+      await new Promise((resolve, reject) => {
+        server.close((error) => (error ? reject(error) : resolve()));
+      });
+    }
   });
 
   it("installs button through the built CLI", async () => {
