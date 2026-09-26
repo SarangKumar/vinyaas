@@ -54,6 +54,7 @@ describe("vinyas", () => {
     assert.match(result.stdout, /--version/);
     assert.match(result.stdout, /--help/);
     assert.match(result.stdout, /\binit\b/);
+    assert.match(result.stdout, /\badd\b/);
   });
 
   it("fails for an unknown command", async () => {

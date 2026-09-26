@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { Command } from "commander";
 
+import { registerAddCommand } from "./commands/add.js";
 import { registerInitCommand } from "./commands/init.js";
 
 export function readPackageVersion(moduleUrl = import.meta.url): string {
@@ -30,6 +31,7 @@ export function createProgram(): Command {
     .version(readPackageVersion());
 
   registerInitCommand(program);
+  registerAddCommand(program);
 
   return program;
 }

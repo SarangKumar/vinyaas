@@ -179,6 +179,97 @@ describe("vinyas init", () => {
     await assert.rejects(readFile(join(cwd, "components.json"), "utf8"));
   });
 
+  it("accepts Next.js, React, and Tailwind declared as peer dependencies", async () => {
+    const cwd = await writeProject(
+      nextProject({
+        "package.json": `${JSON.stringify(
+          {
+            peerDependencies: {
+              next: "16.0.0",
+              react: "19.0.0",
+              "react-dom": "19.0.0",
+              "@tailwindcss/postcss": "4.0.0",
+            },
+          },
+          null,
+          2,
+        )}\n`,
+      }),
+    );
+    const result = await run(cwd, {
+      REGISTRY_BASE_URL: "https://vinyas.vercel.app",
+    });
+    const config = JSON.parse(
+      await readFile(join(cwd, "components.json"), "utf8"),
+    );
+
+    assert.equal(result.exitCode, 0);
+    assert.equal(config.tailwind.css, "app/globals.css");
+    assert.deepEqual(config.aliases, {
+      components: "@/components",
+      ui: "@/components/ui",
+      utils: "@/lib/utils",
+    });
+  });
+
+  it("prefers app/globals.css when both stylesheets exist", async () => {
+    const cwd = await writeProject(
+      nextProject({
+        "src/app/globals.css": '@import "tailwindcss";\n',
+      }),
+    );
+    const result = await run(cwd, {
+      REGISTRY_BASE_URL: "https://vinyas.vercel.app",
+    });
+    const config = JSON.parse(
+      await readFile(join(cwd, "components.json"), "utf8"),
+    );
+
+    assert.equal(result.exitCode, 0);
+    assert.equal(config.tailwind.css, "app/globals.css");
+  });
+
+  it("fails when package.json is missing", async () => {
+    const cwd = await writeProject({
+      "tsconfig.json": aliasConfig,
+      "app/globals.css": '@import "tailwindcss";\n',
+    });
+    const result = await run(cwd);
+
+    assert.notEqual(result.exitCode, 0);
+    assert.match(result.stderr, /No package\.json was found/);
+    assert.doesNotMatch(result.stderr, /at /);
+    await assert.rejects(readFile(join(cwd, "components.json"), "utf8"));
+  });
+
+  it("fails when package.json is invalid", async () => {
+    const cwd = await writeProject(
+      nextProject({
+        "package.json": "{ not json\n",
+      }),
+    );
+    const result = await run(cwd);
+
+    assert.notEqual(result.exitCode, 0);
+    assert.match(result.stderr, /Could not read package\.json/);
+    assert.doesNotMatch(result.stderr, /SyntaxError/);
+    await assert.rejects(readFile(join(cwd, "components.json"), "utf8"));
+  });
+
+  it("fails when the project has no supported import alias", async () => {
+    const cwd = await writeProject(
+      nextProject({
+        "tsconfig.json": `${JSON.stringify({ compilerOptions: { paths: {} } })}\n`,
+      }),
+    );
+    const result = await run(cwd);
+
+    assert.notEqual(result.exitCode, 0);
+    assert.match(result.stderr, /Could not find a supported import alias/);
+    assert.doesNotMatch(result.stderr, /at /);
+    await assert.rejects(readFile(join(cwd, "components.json"), "utf8"));
+  });
+
   it("fails when the project is not Next.js", async () => {
     const cwd = await writeProject({
       "package.json": `${JSON.stringify({ dependencies: { react: "19.0.0" } })}\n`,

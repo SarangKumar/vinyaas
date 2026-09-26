@@ -138,6 +138,7 @@ function aliasError(): CliError {
 interface PackageManifest {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
 }
 
 async function readPackageJson(cwd: string): Promise<PackageManifest> {
@@ -169,7 +170,9 @@ async function readPackageJson(cwd: string): Promise<PackageManifest> {
 
 function hasDependency(manifest: PackageManifest, name: string): boolean {
   return Boolean(
-    manifest.dependencies?.[name] || manifest.devDependencies?.[name],
+    manifest.dependencies?.[name] ||
+    manifest.devDependencies?.[name] ||
+    manifest.peerDependencies?.[name],
   );
 }
 
