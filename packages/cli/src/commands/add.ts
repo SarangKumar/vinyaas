@@ -10,6 +10,9 @@ import {
 
 import { CliError } from "../lib/cli-error.ts";
 import { createInstallPlan, type InstallPlan } from "../lib/install-plan.ts";
+import { detectPackageManager } from "../lib/package-manager/detect.ts";
+import { installDependencies } from "../lib/package-manager/install.ts";
+import type { RunPackageManager } from "../lib/package-manager/types.ts";
 import { RegistryError, fetchRegistryItem } from "../lib/registry/client.ts";
 
 const missingConfigMessage = [
@@ -45,11 +48,13 @@ export async function runAdd({
   name,
   env = process.env,
   fetch: fetchImpl,
+  runPackageManager,
 }: {
   cwd: string;
   name: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
+  runPackageManager?: RunPackageManager;
 }): Promise<InstallPlan> {
   const config = await readComponentsConfig(cwd);
   const item = await fetchRegistryItem({
@@ -61,6 +66,19 @@ export async function runAdd({
   const plan = await createInstallPlan({ cwd, config, item });
 
   await assertDestinationsAvailable(cwd, plan);
+
+  if (plan.dependencies.length > 0) {
+    const manager = await detectPackageManager(cwd);
+
+    await installDependencies({
+      cwd,
+      manager,
+      dependencies: plan.dependencies,
+      env,
+      ...(runPackageManager ? { run: runPackageManager } : {}),
+    });
+  }
+
   await writePlan(cwd, plan);
   console.log(formatAdded(plan));
 
@@ -132,7 +150,7 @@ function formatAdded(plan: InstallPlan): string {
   if (plan.dependencies.length > 0) {
     lines.push(
       "",
-      "Dependencies required:",
+      "Installed dependencies:",
       ...plan.dependencies.map((dependency) => `  ${dependency}`),
     );
   }

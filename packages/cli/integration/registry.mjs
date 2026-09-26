@@ -130,6 +130,11 @@ try {
   );
   await mkdir(join(fixture, "app"));
   await writeFile(join(fixture, "app/globals.css"), css);
+  await writeFile(
+    join(fixture, "package.json"),
+    `${JSON.stringify({ name: "vinyas-add-fixture", private: true }, null, 2)}\n`,
+  );
+  await writeFile(join(fixture, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
 
   await runAdd({
     cwd: fixture,

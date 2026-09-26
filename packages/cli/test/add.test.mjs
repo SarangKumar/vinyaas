@@ -89,10 +89,13 @@ function consumerProject(extra = {}) {
     "components.json": `${JSON.stringify(componentsConfig, null, 2)}\n`,
     "tsconfig.json": aliasConfig,
     "package.json": packageJson,
+    "pnpm-lock.yaml": "lockfileVersion: '9.0'\n",
     "app/globals.css": cssContent,
     ...extra,
   };
 }
+
+let packageManagerCalls = [];
 
 function runCli(cwd, args, env) {
   return execFileAsync(process.execPath, [entrypoint, ...args], {
@@ -112,9 +115,10 @@ function runCli(cwd, args, env) {
   );
 }
 
-async function add(cwd, item, name = "button") {
+async function add(cwd, item, name = "button", runPackageManager) {
   const logs = [];
   const original = console.log;
+  packageManagerCalls = [];
   console.log = (...args) => {
     logs.push(args.join(" "));
   };
@@ -125,9 +129,14 @@ async function add(cwd, item, name = "button") {
       name,
       env: { REGISTRY_BASE_URL: "http://localhost:3000" },
       fetch: fetchItem(item),
+      runPackageManager:
+        runPackageManager ??
+        (async (command) => {
+          packageManagerCalls.push(command);
+        }),
     });
 
-    return { plan, stdout: logs.join("\n") };
+    return { plan, stdout: logs.join("\n"), calls: packageManagerCalls };
   } finally {
     console.log = original;
   }
@@ -214,6 +223,7 @@ describe("vinyas add", { concurrency: false }, () => {
     await assert.rejects(
       readFile(join(cwd, "components/ui/card/card.tsx"), "utf8"),
     );
+    assert.equal(packageManagerCalls.length, 0);
   });
 
   it("resolves every file before writing", async () => {
@@ -227,6 +237,7 @@ describe("vinyas add", { concurrency: false }, () => {
     await assert.rejects(
       readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
     );
+    assert.equal(packageManagerCalls.length, 0);
   });
 
   it("installs every file in a registry item", async () => {
@@ -406,8 +417,128 @@ describe("vinyas add", { concurrency: false }, () => {
     );
   });
 
+  it("installs button dependencies with pnpm in the consumer project", async () => {
+    const cwd = await writeProject(consumerProject());
+    const { calls } = await add(cwd, buttonItem());
+
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].command, "pnpm");
+    assert.deepEqual(calls[0].args, [
+      "add",
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge",
+    ]);
+    assert.equal(calls[0].cwd, cwd);
+    assert.equal(
+      calls[0].args.join(" ").includes("class-variance-authority clsx"),
+      true,
+    );
+    assert.notEqual(calls[0].args.length, 1);
+  });
+
+  it("does not install dependencies when the registry list is empty", async () => {
+    const cwd = await writeProject(consumerProject());
+    const calls = [];
+
+    await add(
+      cwd,
+      buttonItem(undefined, { dependencies: [] }),
+      "button",
+      async (command) => {
+        calls.push(command);
+      },
+    );
+
+    assert.equal(calls.length, 0);
+    assert.equal(
+      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      buttonContent,
+    );
+  });
+
+  it("fails before installing dependencies when a file already exists", async () => {
+    const cwd = await writeProject(
+      consumerProject({
+        "components/ui/button/button.tsx": buttonContent,
+      }),
+    );
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        add(cwd, buttonItem(), "button", async (command) => {
+          calls.push(command);
+        }),
+      /File already exists:/,
+    );
+    assert.equal(calls.length, 0);
+  });
+
+  it("fails when the consumer project has no lockfile", async () => {
+    const files = consumerProject();
+    delete files["pnpm-lock.yaml"];
+    const cwd = await writeProject(files);
+
+    await assert.rejects(
+      () => add(cwd, buttonItem()),
+      /No package manager lockfile was found/,
+    );
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+    assert.equal(packageManagerCalls.length, 0);
+  });
+
+  it("fails when the consumer project has multiple lockfiles", async () => {
+    const cwd = await writeProject(
+      consumerProject({
+        "package-lock.json": "{}\n",
+      }),
+    );
+
+    await assert.rejects(
+      () => add(cwd, buttonItem()),
+      (error) => {
+        assert.ok(error instanceof CliError);
+        assert.match(
+          error.message,
+          /Multiple package manager lockfiles were found/,
+        );
+        assert.match(error.message, /pnpm-lock\.yaml/);
+        assert.match(error.message, /package-lock\.json/);
+        return true;
+      },
+    );
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("does not install files when dependency installation fails", async () => {
+    const cwd = await writeProject(consumerProject());
+
+    await assert.rejects(
+      () =>
+        add(cwd, buttonItem(), "button", async () => {
+          throw new CliError(
+            "Dependency installation failed.\npnpm add class-variance-authority clsx tailwind-merge exited with status 1.",
+          );
+        }),
+      (error) => {
+        assert.ok(error instanceof CliError);
+        assert.match(error.message, /Dependency installation failed/);
+        assert.match(error.message, /exited with status 1/);
+        return true;
+      },
+    );
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
   it("installs button through the built CLI", async () => {
-    const item = buttonItem();
+    const item = buttonItem(undefined, { dependencies: [] });
     const server = createServer((request, response) => {
       if (request.url === "/r/new-york/button.json") {
         response.writeHead(200, { "content-type": "application/json" });
