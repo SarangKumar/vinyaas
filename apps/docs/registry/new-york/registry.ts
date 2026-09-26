@@ -1,8 +1,15 @@
-export const registry = [
+import type { RegistryItem } from "../types";
+
+export const registry: readonly RegistryItem[] = [
   {
     name: "button",
     type: "registry:ui",
     dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
-    files: ["ui/button/button.tsx"],
+    files: [
+      {
+        path: "ui/button/button.tsx",
+        type: "registry:ui",
+      },
+    ],
   },
-] as const;
+];

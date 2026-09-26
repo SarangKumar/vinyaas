@@ -2,22 +2,99 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Shilp Registry Item",
   "type": "object",
-  "required": ["name", "type", "files"],
+  "required": ["$schema", "name", "type", "files"],
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
     "name": {
       "type": "string"
     },
     "type": {
-      "type": "string"
+      "description": "Registry item kind.",
+      "type": "string",
+      "enum": ["registry:ui"]
     },
     "dependencies": {
+      "description": "npm packages required by this item.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "devDependencies": {
+      "description": "npm packages required only for development.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "registryDependencies": {
+      "description": "Names of other Shilp registry items this item depends on.",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "files": {
-      "type": "array"
+      "description": "Files delivered to the consumer project.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "content"],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["registry:ui"]
+          },
+          "target": {
+            "description": "Optional destination path in the consumer project.",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "cssVars": {
+      "description": "CSS variables to merge into the consumer stylesheet.",
+      "type": "object",
+      "properties": {
+        "light": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "dark": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "css": {
+      "description": "Additional CSS associated with this item.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "envVars": {
+      "description": "Environment variables required by this item.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "docs": {
+      "description": "Optional documentation for this item.",
+      "type": "string"
     }
   }
 }
