@@ -1,8 +1,5 @@
-export const registry = [
-  {
-    name: "button",
-    type: "registry:ui",
-    dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
-    files: ["registry/ui/button.tsx"],
-  },
-] as const;
+import { registry as newYork } from "./new-york/registry";
+
+export const themes = {
+  "new-york": newYork,
+} as const;

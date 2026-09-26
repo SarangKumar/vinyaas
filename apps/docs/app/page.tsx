@@ -1,4 +1,4 @@
-import { Button } from "@/registry/ui/button";
+import { Button } from "@/registry/new-york/ui/button/button";
 
 export default function Home() {
   return (
