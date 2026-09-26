@@ -11,6 +11,12 @@ import {
 import { CliError } from "../lib/cli-error.ts";
 import { createCssUpdate } from "../lib/css/plan.ts";
 import type { CssUpdate } from "../lib/css/types.ts";
+import {
+  classifyDependencies,
+  formatDeclaredDependencies,
+  readDeclaredDependencies,
+  type DependencyInstallPlan,
+} from "../lib/dependencies/classify.ts";
 import { createDocsPlan, formatDocsPlan } from "../lib/docs/plan.ts";
 import { createEnvPlan, formatEnvPlan } from "../lib/env/plan.ts";
 import {
@@ -19,10 +25,16 @@ import {
   writeInstallPlan,
   type InstallPlan,
 } from "../lib/install-plan.ts";
-import { detectPackageManager } from "../lib/package-manager/detect.ts";
+import { findPackageManager } from "../lib/package-manager/detect.ts";
 import { installDependencies } from "../lib/package-manager/install.ts";
 import type { RunPackageManager } from "../lib/package-manager/types.ts";
 import { resolveProjectRoot } from "../lib/project/cwd.ts";
+import {
+  formatRollbackError,
+  restoreFiles,
+  snapshotFiles,
+  type FileSnapshot,
+} from "../lib/transaction/files.ts";
 import { RegistryError } from "../lib/registry/client.ts";
 import { resolveRegistryItems } from "../lib/registry/resolve.ts";
 
@@ -63,6 +75,13 @@ export function registerAddCommand(program: Command): void {
     );
 }
 
+interface AddMutations {
+  snapshotFiles?: typeof snapshotFiles;
+  restoreFiles?: typeof restoreFiles;
+  writeComponents?: (cwd: string, plan: InstallPlan) => Promise<void>;
+  writeCss?: (cwd: string, update: CssUpdate) => Promise<void>;
+}
+
 export async function executeAdd({
   name,
   cwd,
@@ -71,6 +90,7 @@ export async function executeAdd({
   env = process.env,
   fetch: fetchImpl,
   runPackageManager,
+  mutations,
 }: {
   name: string;
   cwd?: string;
@@ -79,6 +99,7 @@ export async function executeAdd({
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
   runPackageManager?: RunPackageManager;
+  mutations?: AddMutations;
 }): Promise<InstallPlan> {
   return runAdd({
     cwd: await resolveProjectRoot(cwd, from),
@@ -87,6 +108,7 @@ export async function executeAdd({
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
     ...(runPackageManager ? { runPackageManager } : {}),
+    ...(mutations ? { mutations } : {}),
   });
 }
 
@@ -97,6 +119,7 @@ export async function runAdd({
   env = process.env,
   fetch: fetchImpl,
   runPackageManager,
+  mutations,
 }: {
   cwd: string;
   name: string;
@@ -104,6 +127,7 @@ export async function runAdd({
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
   runPackageManager?: RunPackageManager;
+  mutations?: AddMutations;
 }): Promise<InstallPlan> {
   const config = await readComponentsConfig(cwd);
   const items = await resolveRegistryItems({
@@ -122,23 +146,40 @@ export async function runAdd({
   });
   const envPlan = await createEnvPlan({ cwd, items });
   const docsPlan = createDocsPlan(items);
+  const dependencyInstall = classifyDependencies(
+    plan,
+    await readDeclaredDependencies(cwd),
+  );
 
-  if (plan.dependencies.length > 0 || plan.devDependencies.length > 0) {
-    const manager = await detectPackageManager(cwd);
+  const needsInstall =
+    dependencyInstall.installDependencies.length > 0 ||
+    dependencyInstall.installDevDependencies.length > 0;
+  const detected = needsInstall ? await findPackageManager(cwd) : undefined;
+  const snapshot = await (mutations?.snapshotFiles ?? snapshotFiles)(cwd, [
+    ...(detected ? ["package.json", detected.lockfile] : []),
+    ...plan.entries.map((entry) => entry.destinationPath),
+    ...(cssUpdate.changed ? [cssUpdate.relativePath] : []),
+  ]);
 
-    await installDependencies({
-      cwd,
-      manager,
-      dependencies: plan.dependencies,
-      devDependencies: plan.devDependencies,
-      env,
-      ...(runPackageManager ? { run: runPackageManager } : {}),
-    });
+  try {
+    if (detected) {
+      await installDependencies({
+        cwd,
+        manager: detected.manager,
+        dependencies: dependencyInstall.installDependencies,
+        devDependencies: dependencyInstall.installDevDependencies,
+        env,
+        ...(runPackageManager ? { run: runPackageManager } : {}),
+      });
+    }
+
+    await (mutations?.writeComponents ?? writeInstallPlan)(cwd, plan);
+    await (mutations?.writeCss ?? writeCssUpdate)(cwd, cssUpdate);
+  } catch (error) {
+    await rollbackMutation(cwd, snapshot, error, mutations?.restoreFiles);
   }
 
-  await writeInstallPlan(cwd, plan);
-  await writeCssUpdate(cwd, cssUpdate);
-  console.log(formatAdded(plan));
+  console.log(formatAdded(plan, dependencyInstall));
 
   const envReport = formatEnvPlan(envPlan);
 
@@ -155,6 +196,21 @@ export async function runAdd({
   }
 
   return plan;
+}
+
+async function rollbackMutation(
+  cwd: string,
+  snapshot: readonly FileSnapshot[],
+  error: unknown,
+  restore: typeof restoreFiles = restoreFiles,
+): Promise<never> {
+  try {
+    await restore(cwd, snapshot);
+  } catch (rollbackError) {
+    throw formatRollbackError(error, rollbackError);
+  }
+
+  throw formatRollbackError(error);
 }
 
 async function readComponentsConfig(cwd: string): Promise<ComponentsConfig> {
@@ -190,7 +246,10 @@ async function writeCssUpdate(cwd: string, update: CssUpdate): Promise<void> {
   await writeFile(path.resolve(cwd, update.relativePath), update.next, "utf8");
 }
 
-function formatAdded(plan: InstallPlan): string {
+function formatAdded(
+  plan: InstallPlan,
+  dependencyInstall: DependencyInstallPlan,
+): string {
   const lines = [
     `Added ${plan.name}.`,
     "",
@@ -198,20 +257,30 @@ function formatAdded(plan: InstallPlan): string {
     ...plan.entries.map((entry) => `  ${entry.destinationPath}`),
   ];
 
-  if (plan.dependencies.length > 0) {
+  if (dependencyInstall.installDependencies.length > 0) {
     lines.push(
       "",
       "Installed dependencies:",
-      ...plan.dependencies.map((dependency) => `  ${dependency}`),
+      ...dependencyInstall.installDependencies.map(
+        (dependency) => `  ${dependency}`,
+      ),
     );
   }
 
-  if (plan.devDependencies.length > 0) {
+  if (dependencyInstall.installDevDependencies.length > 0) {
     lines.push(
       "",
       "Installed devDependencies:",
-      ...plan.devDependencies.map((dependency) => `  ${dependency}`),
+      ...dependencyInstall.installDevDependencies.map(
+        (dependency) => `  ${dependency}`,
+      ),
     );
+  }
+
+  const declared = formatDeclaredDependencies(dependencyInstall.present);
+
+  if (declared) {
+    lines.push("", declared);
   }
 
   return lines.join("\n");

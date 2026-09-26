@@ -375,6 +375,49 @@ describe("vinyas add", { concurrency: false }, () => {
     );
   });
 
+  it("installs lib/utils.ts where the utils alias resolves", async () => {
+    const cwd = await writeProject(consumerProject());
+    const utilsSource = "export function cn(...inputs) { return inputs; }\n";
+    const catalog = fetchCatalog({
+      utils: {
+        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        name: "utils",
+        type: "registry:ui",
+        dependencies: ["clsx", "tailwind-merge"],
+        files: [{ path: "lib/utils.ts", content: utilsSource }],
+      },
+      button: buttonItem(undefined, { registryDependencies: ["utils"] }),
+    });
+    const { plan, calls } = await add(
+      cwd,
+      undefined,
+      "button",
+      undefined,
+      catalog.fetch,
+    );
+
+    assert.deepEqual(
+      plan.entries.map((entry) => entry.destinationPath),
+      ["lib/utils.ts", "components/ui/button/button.tsx"],
+    );
+    assert.deepEqual(plan.dependencies, [
+      "clsx",
+      "tailwind-merge",
+      "class-variance-authority",
+    ]);
+    assert.equal(
+      await readFile(join(cwd, "lib/utils.ts"), "utf8"),
+      utilsSource,
+    );
+    assert.equal(
+      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      buttonContent,
+    );
+    const installed = calls.flatMap((call) => call.args);
+    assert.equal(installed.filter((arg) => arg === "clsx").length, 1);
+    assert.equal(installed.filter((arg) => arg === "tailwind-merge").length, 1);
+  });
+
   it("rejects registry paths that escape the project", async () => {
     const cwd = await writeProject(consumerProject());
 
@@ -1159,6 +1202,184 @@ describe("vinyas add", { concurrency: false }, () => {
     await assert.rejects(
       readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
     );
+  });
+
+  it("installs only dependencies that package.json does not already declare", async () => {
+    const manifest = `${JSON.stringify(
+      {
+        name: "consumer",
+        dependencies: { clsx: "^2.1.0" },
+        devDependencies: { prettier: "^3.0.0" },
+      },
+      null,
+      2,
+    )}\n`;
+    const cwd = await writeProject(
+      consumerProject({
+        "package.json": manifest,
+      }),
+    );
+    const { stdout, calls } = await add(
+      cwd,
+      buttonItem(undefined, {
+        dependencies: ["clsx", "tailwind-merge", "class-variance-authority"],
+        devDependencies: ["prettier"],
+        cssVars: { light: { "--primary": "1 2% 3%" } },
+      }),
+    );
+
+    assert.deepEqual(
+      calls.map((call) => call.args),
+      [["add", "tailwind-merge", "class-variance-authority"]],
+    );
+    assert.match(stdout, /clsx already configured/);
+    assert.match(stdout, /prettier already configured as a devDependency/);
+    assert.doesNotMatch(stdout, /\^2\.1\.0/);
+    assert.doesNotMatch(stdout, /\^3\.0\.0/);
+    assert.equal(await readFile(join(cwd, "package.json"), "utf8"), manifest);
+    assert.match(
+      await readFile(join(cwd, "app/globals.css"), "utf8"),
+      /--primary:\s*1 2% 3%/,
+    );
+    assert.equal(
+      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      buttonContent,
+    );
+  });
+
+  it("does not run the package manager when every dependency is declared", async () => {
+    const files = consumerProject();
+    delete files["pnpm-lock.yaml"];
+    const manifest = `${JSON.stringify(
+      {
+        name: "consumer",
+        dependencies: {
+          "class-variance-authority": "^0.7.0",
+          clsx: "^2.1.0",
+          "tailwind-merge": "^2.0.0",
+        },
+      },
+      null,
+      2,
+    )}\n`;
+    const cwd = await writeProject({
+      ...files,
+      "package.json": manifest,
+    });
+    const calls = [];
+
+    await add(cwd, buttonItem(), "button", async (command) => {
+      calls.push(command);
+    });
+
+    assert.equal(calls.length, 0);
+    assert.equal(await readFile(join(cwd, "package.json"), "utf8"), manifest);
+    assert.equal(
+      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      buttonContent,
+    );
+  });
+
+  it("does not install files when package.json is invalid", async () => {
+    const cwd = await writeProject(
+      consumerProject({
+        "package.json": "{\n",
+      }),
+    );
+    const calls = [];
+
+    await assert.rejects(
+      () =>
+        add(cwd, buttonItem(), "button", async (command) => {
+          calls.push(command);
+        }),
+      /Could not read package\.json/,
+    );
+    assert.equal(calls.length, 0);
+    assert.equal(await readFile(join(cwd, "package.json"), "utf8"), "{\n");
+    await assert.rejects(
+      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    );
+  });
+
+  it("reads package.json from the project selected by --cwd", async () => {
+    const parent = await mkdtemp(join(tmpdir(), "vinyas-declared-"));
+    const projectA = join(parent, "project-a");
+    const projectB = join(parent, "project-b");
+    const manifestA = `${JSON.stringify(
+      { name: "project-a", dependencies: { clsx: "^2.1.0" } },
+      null,
+      2,
+    )}\n`;
+
+    await writeFiles(
+      projectA,
+      consumerProject({
+        "package.json": manifestA,
+      }),
+    );
+    await writeFiles(projectB, consumerProject());
+
+    const calls = [];
+    const original = console.log;
+    console.log = () => {};
+
+    try {
+      await executeAdd({
+        name: "button",
+        cwd: "project-a",
+        from: parent,
+        env: { REGISTRY_BASE_URL: "http://localhost:3000" },
+        fetch: fetchItem(
+          buttonItem(undefined, {
+            dependencies: ["clsx", "tailwind-merge"],
+          }),
+        ),
+        runPackageManager: async (command) => {
+          calls.push(command);
+        },
+      });
+    } finally {
+      console.log = original;
+    }
+
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].cwd, projectA);
+    assert.deepEqual(calls[0].args, ["add", "tailwind-merge"]);
+    assert.equal(calls[0].args.includes("--force"), false);
+    assert.equal(
+      await readFile(join(projectA, "package.json"), "utf8"),
+      manifestA,
+    );
+  });
+
+  it("does not change dependency skipping when --force replaces a file", async () => {
+    const manifest = `${JSON.stringify(
+      { name: "consumer", dependencies: { clsx: "^2.1.0" } },
+      null,
+      2,
+    )}\n`;
+    const cwd = await writeProject(
+      consumerProject({
+        "package.json": manifest,
+        "components/ui/button/button.tsx": "// local modification\n",
+      }),
+    );
+    const { calls } = await add(
+      cwd,
+      buttonItem(undefined, { dependencies: ["clsx"] }),
+      "button",
+      undefined,
+      undefined,
+      true,
+    );
+
+    assert.equal(calls.length, 0);
+    assert.equal(
+      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      buttonContent,
+    );
+    assert.equal(await readFile(join(cwd, "package.json"), "utf8"), manifest);
   });
 
   it("installs button dependencies with pnpm in the consumer project", async () => {

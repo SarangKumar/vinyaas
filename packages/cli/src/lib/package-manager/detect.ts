@@ -17,9 +17,10 @@ const lockfiles = [
  * A missing lockfile or more than one lockfile is an error. Installed
  * executables are not consulted.
  */
-export async function detectPackageManager(
-  cwd: string,
-): Promise<PackageManager> {
+export async function findPackageManager(cwd: string): Promise<{
+  manager: PackageManager;
+  lockfile: string;
+}> {
   const found: string[] = [];
   let manager: PackageManager | undefined;
 
@@ -51,7 +52,13 @@ export async function detectPackageManager(
     );
   }
 
-  return manager;
+  return { manager, lockfile: found[0] };
+}
+
+export async function detectPackageManager(
+  cwd: string,
+): Promise<PackageManager> {
+  return (await findPackageManager(cwd)).manager;
 }
 
 async function fileExists(filePath: string): Promise<boolean> {

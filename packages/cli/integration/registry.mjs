@@ -75,7 +75,19 @@ assert.ok(
       file.content.includes("export function Button"),
   ),
 );
+assert.deepEqual(item.registryDependencies, ["utils"]);
 assert.deepEqual(item, generated);
+
+const utilsPath = join(repoRoot, "apps/docs/public/r/new-york/utils.json");
+const generatedUtils = JSON.parse(await readFile(utilsPath, "utf8"));
+const utils = await fetchRegistryItem({
+  baseUrl,
+  style: "new-york",
+  name: "utils",
+});
+
+assert.equal(utils.name, "utils");
+assert.deepEqual(utils, generatedUtils);
 
 await assert.rejects(
   () =>
@@ -151,6 +163,11 @@ try {
   );
 
   assert.equal(installed, buttonFile.content);
+  assert.match(installed, /from "@\/lib\/utils"/);
+  assert.match(
+    await readFile(join(fixture, "lib/utils.ts"), "utf8"),
+    /export function cn/,
+  );
   assert.equal(await readFile(join(fixture, "app/globals.css"), "utf8"), css);
 } finally {
   await rm(fixture, { recursive: true, force: true });

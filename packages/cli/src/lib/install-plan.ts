@@ -7,7 +7,7 @@ import { CliError } from "./cli-error.ts";
 import { isInsideProject, resolveAliasDirectory } from "./resolve-alias.ts";
 import type { RegistryItem } from "./registry/types.ts";
 
-const supportedNamespaces = ["ui", "components"] as const;
+const supportedNamespaces = ["ui", "components", "lib"] as const;
 
 type RegistryNamespace = (typeof supportedNamespaces)[number];
 
@@ -255,7 +255,7 @@ async function resolveRegistryFilePath(
     );
   }
 
-  const directory = await resolveAliasDirectory(cwd, config.aliases[namespace]);
+  const directory = await resolveNamespaceDirectory(cwd, config, namespace);
   const destination = path.resolve(directory, ...segments.slice(1));
 
   if (!isInsideProject(cwd, destination)) {
@@ -267,6 +267,40 @@ async function resolveRegistryFilePath(
   }
 
   return path.relative(cwd, destination).split(path.sep).join("/");
+}
+
+/**
+ * `lib` files install under `aliases.lib` when the consumer sets it.
+ * Otherwise the directory is the parent of `aliases.utils`, so `@/lib/utils`
+ * resolves to `lib/utils.ts` with the configuration written by `vinyas init`.
+ */
+async function resolveNamespaceDirectory(
+  cwd: string,
+  config: ComponentsConfig,
+  namespace: RegistryNamespace,
+): Promise<string> {
+  const specifier =
+    namespace === "lib"
+      ? (config.aliases.lib ?? libDirectorySpecifier(config.aliases.utils))
+      : config.aliases[namespace];
+
+  return resolveAliasDirectory(cwd, specifier);
+}
+
+function libDirectorySpecifier(utilsSpecifier: string): string {
+  const normalized = utilsSpecifier.replaceAll("\\", "/");
+  const slash = normalized.lastIndexOf("/");
+
+  if (slash <= 0) {
+    throw new CliError(
+      [
+        "Could not determine where lib files are installed.",
+        "Set aliases.lib, or use a utils alias with a directory, such as @/lib/utils.",
+      ].join("\n"),
+    );
+  }
+
+  return normalized.slice(0, slash);
 }
 
 function registrySegments(registryPath: string): string[] {

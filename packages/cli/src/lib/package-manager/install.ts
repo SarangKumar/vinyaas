@@ -23,8 +23,8 @@ const devFlags: Record<PackageManager, string> = {
 };
 
 /**
- * Installs npm dependencies with the consumer's package manager.
- * Does not inspect package.json and does not skip packages that are already present.
+ * Installs the package lists it is given.
+ * The caller decides which packages are already declared.
  */
 export async function installDependencies({
   cwd,
