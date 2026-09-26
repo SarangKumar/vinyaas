@@ -8,6 +8,8 @@ import componentsSchema from "../public/schema/components.json";
 import {
   componentBaseColors,
   componentStyles,
+  defaultRegistryBaseUrl,
+  registryBaseUrlFromEnv,
   componentsAliasFields,
   componentsAliasRequiredFields,
   componentsConfigFields,
@@ -103,7 +105,11 @@ describe("components.json", () => {
     expect(validComponentsConfig().$schema).toBe(
       "https://registry.example/schema/components.json",
     );
-    expect(example.trim()).toBe("REGISTRY_BASE_URL=https://vinyas.vercel.app");
+    expect(example.trim()).toBe(`REGISTRY_BASE_URL=${defaultRegistryBaseUrl}`);
+    expect(registryBaseUrlFromEnv({})).toBe(defaultRegistryBaseUrl);
+    expect(
+      registryBaseUrlFromEnv({ REGISTRY_BASE_URL: "http://localhost:3000" }),
+    ).toBe("http://localhost:3000");
     expect(componentsSchemaUrl("https://vinyas.vercel.app")).toBe(
       "https://vinyas.vercel.app/schema/components.json",
     );

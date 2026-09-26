@@ -63,6 +63,21 @@ export const componentsAliasRequiredFields = [
 
 export const componentsSchemaPath = "/schema/components.json";
 
+/** Used when REGISTRY_BASE_URL is not set. */
+export const defaultRegistryBaseUrl = "https://vinyas.vercel.app";
+
+export function registryBaseUrlFromEnv(
+  env: Record<string, string | undefined>,
+): string {
+  const configured = env.REGISTRY_BASE_URL?.trim();
+
+  if (configured) {
+    return configured;
+  }
+
+  return defaultRegistryBaseUrl;
+}
+
 export interface ComponentsAliases {
   /** Import specifier for installed components, such as `@/components`. */
   components: string;
