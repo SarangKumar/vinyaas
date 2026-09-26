@@ -1,3 +1,4 @@
+import { mkdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import type { ComponentsConfig } from "../../../../config/components.ts";
@@ -16,6 +17,8 @@ export interface InstallPlanEntry {
   /** Project-relative path using `/` separators. */
   destinationPath: string;
   content: string;
+  /** True when `--force` is replacing an existing component file. */
+  overwrite: boolean;
 }
 
 export interface InstallPlan {
@@ -75,6 +78,7 @@ export async function createInstallPlan({
         registryPath: file.path,
         destinationPath,
         content: file.content,
+        overwrite: false,
       });
     }
   }
@@ -126,6 +130,77 @@ export function planPackageDependencies(
   }
 
   return { dependencies, devDependencies };
+}
+
+/**
+ * Refuses to replace an existing component file unless `force` is set.
+ * `force` does not allow a destination outside the project. Those paths
+ * are rejected while the plan is built.
+ */
+export async function assertDestinationsAvailable(
+  cwd: string,
+  plan: InstallPlan,
+  force = false,
+): Promise<void> {
+  const existing: string[] = [];
+
+  for (const entry of plan.entries) {
+    const destination = path.resolve(cwd, entry.destinationPath);
+
+    if (!(await isFile(destination))) {
+      entry.overwrite = false;
+      continue;
+    }
+
+    if (!force) {
+      existing.push(entry.destinationPath);
+      continue;
+    }
+
+    entry.overwrite = true;
+  }
+
+  if (existing.length > 0) {
+    throw new CliError(["File already exists:", ...existing].join("\n"));
+  }
+}
+
+/** Writes planned component files. Overwrite is allowed only for entries marked by `force`. */
+export async function writeInstallPlan(
+  cwd: string,
+  plan: InstallPlan,
+): Promise<void> {
+  for (const entry of plan.entries) {
+    const destination = path.resolve(cwd, entry.destinationPath);
+
+    await mkdir(path.dirname(destination), { recursive: true });
+    await writeFile(destination, entry.content, {
+      encoding: "utf8",
+      flag: entry.overwrite ? "w" : "wx",
+    });
+  }
+}
+
+async function isFile(filePath: string): Promise<boolean> {
+  try {
+    const file = await stat(filePath);
+    return file.isFile();
+  } catch (error) {
+    if (isNotFound(error)) {
+      return false;
+    }
+
+    throw error;
+  }
+}
+
+function isNotFound(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    error.code === "ENOENT"
+  );
 }
 
 function recordPackage(

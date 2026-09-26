@@ -65,6 +65,16 @@ describe("vinyas", () => {
     assert.match(init.stdout, /--cwd <path>/);
     assert.equal(add.exitCode, 0);
     assert.match(add.stdout, /--cwd <path>/);
+    assert.match(add.stdout, /--force/);
+    assert.match(add.stdout, /overwrite existing component files/i);
+  });
+
+  it("rejects --force on init", async () => {
+    const result = await run(["init", "--force"]);
+
+    assert.notEqual(result.exitCode, 0);
+    assert.match(result.stderr, /unknown option/i);
+    assert.match(result.stderr, /--force/);
   });
 
   it("fails for an unknown command", async () => {

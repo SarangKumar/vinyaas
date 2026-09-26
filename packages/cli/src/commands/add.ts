@@ -1,4 +1,4 @@
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { Command } from "commander";
@@ -13,7 +13,12 @@ import { createCssUpdate } from "../lib/css/plan.ts";
 import type { CssUpdate } from "../lib/css/types.ts";
 import { createDocsPlan, formatDocsPlan } from "../lib/docs/plan.ts";
 import { createEnvPlan, formatEnvPlan } from "../lib/env/plan.ts";
-import { createInstallPlan, type InstallPlan } from "../lib/install-plan.ts";
+import {
+  assertDestinationsAvailable,
+  createInstallPlan,
+  writeInstallPlan,
+  type InstallPlan,
+} from "../lib/install-plan.ts";
 import { detectPackageManager } from "../lib/package-manager/detect.ts";
 import { installDependencies } from "../lib/package-manager/install.ts";
 import type { RunPackageManager } from "../lib/package-manager/types.ts";
@@ -32,27 +37,36 @@ export function registerAddCommand(program: Command): void {
     .description("Add a component from the Vinyas registry.")
     .argument("<name>", "Registry item name")
     .option("--cwd <path>", "Consumer project directory.")
-    .action(async (name: string, options: { cwd?: string }) => {
-      try {
-        await executeAdd({ name, cwd: options.cwd, env: process.env });
-      } catch (error) {
-        if (
-          error instanceof CliError ||
-          error instanceof RegistryError ||
-          error instanceof ComponentsConfigError
-        ) {
-          console.error(error.message);
-          process.exit(1);
-        }
+    .option("--force", "Overwrite existing component files.")
+    .action(
+      async (name: string, options: { cwd?: string; force?: boolean }) => {
+        try {
+          await executeAdd({
+            name,
+            cwd: options.cwd,
+            force: options.force === true,
+            env: process.env,
+          });
+        } catch (error) {
+          if (
+            error instanceof CliError ||
+            error instanceof RegistryError ||
+            error instanceof ComponentsConfigError
+          ) {
+            console.error(error.message);
+            process.exit(1);
+          }
 
-        throw error;
-      }
-    });
+          throw error;
+        }
+      },
+    );
 }
 
 export async function executeAdd({
   name,
   cwd,
+  force = false,
   from = process.cwd(),
   env = process.env,
   fetch: fetchImpl,
@@ -60,6 +74,7 @@ export async function executeAdd({
 }: {
   name: string;
   cwd?: string;
+  force?: boolean;
   from?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
@@ -68,6 +83,7 @@ export async function executeAdd({
   return runAdd({
     cwd: await resolveProjectRoot(cwd, from),
     name,
+    force,
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
     ...(runPackageManager ? { runPackageManager } : {}),
@@ -77,12 +93,14 @@ export async function executeAdd({
 export async function runAdd({
   cwd,
   name,
+  force = false,
   env = process.env,
   fetch: fetchImpl,
   runPackageManager,
 }: {
   cwd: string;
   name: string;
+  force?: boolean;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
   runPackageManager?: RunPackageManager;
@@ -96,7 +114,7 @@ export async function runAdd({
   });
   const plan = await createInstallPlan({ cwd, config, name, items });
 
-  await assertDestinationsAvailable(cwd, plan);
+  await assertDestinationsAvailable(cwd, plan, force);
   const cssUpdate = await createCssUpdate({
     cwd,
     cssPath: config.tailwind.css,
@@ -118,7 +136,7 @@ export async function runAdd({
     });
   }
 
-  await writePlan(cwd, plan);
+  await writeInstallPlan(cwd, plan);
   await writeCssUpdate(cwd, cssUpdate);
   console.log(formatAdded(plan));
 
@@ -164,41 +182,12 @@ async function readComponentsConfig(cwd: string): Promise<ComponentsConfig> {
   return parseComponentsConfig(parsed);
 }
 
-async function assertDestinationsAvailable(
-  cwd: string,
-  plan: InstallPlan,
-): Promise<void> {
-  const existing: string[] = [];
-
-  for (const entry of plan.entries) {
-    if (await pathExists(path.resolve(cwd, entry.destinationPath))) {
-      existing.push(entry.destinationPath);
-    }
-  }
-
-  if (existing.length > 0) {
-    throw new CliError(["File already exists:", ...existing].join("\n"));
-  }
-}
-
 async function writeCssUpdate(cwd: string, update: CssUpdate): Promise<void> {
   if (!update.changed) {
     return;
   }
 
   await writeFile(path.resolve(cwd, update.relativePath), update.next, "utf8");
-}
-
-async function writePlan(cwd: string, plan: InstallPlan): Promise<void> {
-  for (const entry of plan.entries) {
-    const destination = path.resolve(cwd, entry.destinationPath);
-
-    await mkdir(path.dirname(destination), { recursive: true });
-    await writeFile(destination, entry.content, {
-      encoding: "utf8",
-      flag: "wx",
-    });
-  }
 }
 
 function formatAdded(plan: InstallPlan): string {
@@ -226,19 +215,6 @@ function formatAdded(plan: InstallPlan): string {
   }
 
   return lines.join("\n");
-}
-
-async function pathExists(filePath: string): Promise<boolean> {
-  try {
-    const file = await stat(filePath);
-    return file.isFile();
-  } catch (error) {
-    if (isNotFound(error)) {
-      return false;
-    }
-
-    throw error;
-  }
 }
 
 function isNotFound(error: unknown): boolean {

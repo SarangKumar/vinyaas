@@ -153,7 +153,14 @@ function fetchCatalog(catalog) {
   return { fetch: fetchImpl, counts };
 }
 
-async function add(cwd, item, name = "button", runPackageManager, fetchImpl) {
+async function add(
+  cwd,
+  item,
+  name = "button",
+  runPackageManager,
+  fetchImpl,
+  force = false,
+) {
   const logs = [];
   const original = console.log;
   packageManagerCalls = [];
@@ -165,6 +172,7 @@ async function add(cwd, item, name = "button", runPackageManager, fetchImpl) {
     const plan = await runAdd({
       cwd,
       name,
+      force,
       env: { REGISTRY_BASE_URL: "http://localhost:3000" },
       fetch: fetchImpl ?? fetchItem(item),
       runPackageManager:
@@ -1435,6 +1443,96 @@ describe("vinyas add", { concurrency: false }, () => {
         "/r/new-york/button.json",
         "/r/new-york/button.json",
       ]);
+    } finally {
+      await new Promise((resolve, reject) => {
+        server.close((error) => (error ? reject(error) : resolve()));
+      });
+    }
+  });
+
+  it("does not pass --force to the package manager", async () => {
+    const cwd = await writeProject(
+      consumerProject({
+        "components/ui/button/button.tsx": "// local modification\n",
+      }),
+    );
+    const { calls } = await add(
+      cwd,
+      buttonItem(),
+      "button",
+      undefined,
+      undefined,
+      true,
+    );
+
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].args.includes("--force"), false);
+    assert.deepEqual(calls[0].args, [
+      "add",
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge",
+    ]);
+    assert.equal(
+      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      buttonContent,
+    );
+  });
+
+  it("replaces a local modification only when --force is set", async () => {
+    const item = buttonItem(undefined, { dependencies: [] });
+    const server = createServer((request, response) => {
+      if (request.url === "/r/new-york/button.json") {
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(JSON.stringify(item));
+        return;
+      }
+
+      response.writeHead(404);
+      response.end();
+    });
+
+    await new Promise((resolve) => {
+      server.listen(0, "127.0.0.1", resolve);
+    });
+
+    const address = server.address();
+    const cwd = await writeProject(consumerProject());
+    const env = { REGISTRY_BASE_URL: `http://127.0.0.1:${address.port}` };
+
+    try {
+      const installed = await runCli(cwd, ["add", "button"], env);
+
+      assert.equal(installed.exitCode, 0);
+      await writeFile(
+        join(cwd, "components/ui/button/button.tsx"),
+        "// local modification\n",
+      );
+
+      const blocked = await runCli(cwd, ["add", "button"], env);
+
+      assert.notEqual(blocked.exitCode, 0);
+      assert.match(blocked.stderr, /File already exists:/);
+      assert.equal(
+        await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+        "// local modification\n",
+      );
+
+      const replaced = await runCli(cwd, ["add", "--force", "button"], env);
+
+      assert.equal(replaced.exitCode, 0);
+      assert.equal(
+        await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+        buttonContent,
+      );
+
+      const again = await runCli(cwd, ["add", "button", "--force"], env);
+
+      assert.equal(again.exitCode, 0);
+      assert.equal(
+        await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+        buttonContent,
+      );
     } finally {
       await new Promise((resolve, reject) => {
         server.close((error) => (error ? reject(error) : resolve()));
