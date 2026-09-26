@@ -40,13 +40,13 @@ import { resolveRegistryItems } from "../lib/registry/resolve.ts";
 
 const missingConfigMessage = [
   "components.json was not found.",
-  "Run `vinyas init` first.",
+  "Run `vinyaas init` first.",
 ].join("\n");
 
 export function registerAddCommand(program: Command): void {
   program
     .command("add")
-    .description("Add a component from the Vinyas registry.")
+    .description("Add a component from the Vinyaas registry.")
     .argument("<name>", "Registry item name")
     .option("--cwd <path>", "Consumer project directory.")
     .option("--force", "Overwrite existing component files.")

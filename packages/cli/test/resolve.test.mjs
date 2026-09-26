@@ -6,7 +6,7 @@ import { resolveRegistryItems } from "../src/lib/registry/resolve.ts";
 
 function item(name, extra = {}) {
   return {
-    $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+    $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
     name,
     type: "registry:ui",
     dependencies: [],

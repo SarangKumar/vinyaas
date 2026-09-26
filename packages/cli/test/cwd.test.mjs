@@ -13,13 +13,13 @@ describe("project root", () => {
   });
 
   it("resolves --cwd . to the process directory", async () => {
-    const cwd = await mkdtemp(path.join(tmpdir(), "vinyas-cwd-"));
+    const cwd = await mkdtemp(path.join(tmpdir(), "vinyaas-cwd-"));
 
     assert.equal(await resolveProjectRoot(".", cwd), cwd);
   });
 
   it("resolves a relative directory from the process directory", async () => {
-    const cwd = await mkdtemp(path.join(tmpdir(), "vinyas-cwd-"));
+    const cwd = await mkdtemp(path.join(tmpdir(), "vinyaas-cwd-"));
     const project = path.join(cwd, "my-app");
 
     await mkdir(project);
@@ -29,14 +29,14 @@ describe("project root", () => {
   });
 
   it("keeps an absolute directory absolute", async () => {
-    const cwd = await mkdtemp(path.join(tmpdir(), "vinyas-cwd-"));
-    const project = await mkdtemp(path.join(tmpdir(), "vinyas-cwd-abs-"));
+    const cwd = await mkdtemp(path.join(tmpdir(), "vinyaas-cwd-"));
+    const project = await mkdtemp(path.join(tmpdir(), "vinyaas-cwd-abs-"));
 
     assert.equal(await resolveProjectRoot(project, cwd), project);
   });
 
   it("fails when the directory does not exist", async () => {
-    const cwd = await mkdtemp(path.join(tmpdir(), "vinyas-cwd-"));
+    const cwd = await mkdtemp(path.join(tmpdir(), "vinyaas-cwd-"));
 
     await assert.rejects(
       () => resolveProjectRoot("./does-not-exist", cwd),
@@ -52,7 +52,7 @@ describe("project root", () => {
   });
 
   it("fails when the path is a file", async () => {
-    const cwd = await mkdtemp(path.join(tmpdir(), "vinyas-cwd-"));
+    const cwd = await mkdtemp(path.join(tmpdir(), "vinyaas-cwd-"));
 
     await writeFile(path.join(cwd, "package.json"), "{}\n");
 

@@ -29,7 +29,7 @@ export interface RegistryItem {
   dependencies?: readonly string[];
   /** npm packages required only for development. */
   devDependencies?: readonly string[];
-  /** Other Vinyas registry items this item depends on. */
+  /** Other Vinyaas registry items this item depends on. */
   registryDependencies?: readonly string[];
   files: readonly RegistryFile[];
   cssVars?: RegistryCssVars;

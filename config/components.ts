@@ -1,7 +1,7 @@
 /**
  * Consumer `components.json` contract.
  *
- * Registry items describe what Vinyas can install. This file describes how a
+ * Registry items describe what Vinyaas can install. This file describes how a
  * consumer project wants those items installed. The JSON schema is served at
  * `/schema/components.json`; build its URL from the same base as registry
  * item schemas.
@@ -64,7 +64,7 @@ export const componentsAliasRequiredFields = [
 export const componentsSchemaPath = "/schema/components.json";
 
 /** Used when REGISTRY_BASE_URL is not set. */
-export const defaultRegistryBaseUrl = "https://vinyas.vercel.app";
+export const defaultRegistryBaseUrl = "https://vinyaas.vercel.app";
 
 export function registryBaseUrlFromEnv(
   env: Record<string, string | undefined>,

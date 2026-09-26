@@ -17,7 +17,7 @@ import { resolveProjectRoot } from "../lib/project/cwd.js";
 
 const alreadyExistsMessage = [
   "components.json already exists.",
-  "Vinyas will not overwrite it.",
+  "Vinyaas will not overwrite it.",
 ].join("\n");
 
 export function registerInitCommand(program: Command): void {

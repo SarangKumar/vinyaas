@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Vinyas components.json",
-  "description": "Consumer project configuration for installing Vinyas components. The canonical document is served at /schema/components.json on the registry base URL.",
+  "title": "Vinyaas components.json",
+  "description": "Consumer project configuration for installing Vinyaas components. The canonical document is served at /schema/components.json on the registry base URL.",
   "type": "object",
   "additionalProperties": false,
   "required": ["style", "tailwind", "aliases"],
@@ -12,7 +12,7 @@
       "minLength": 1
     },
     "style": {
-      "description": "Vinyas style to install. Required.",
+      "description": "Vinyaas style to install. Required.",
       "type": "string",
       "enum": ["new-york"]
     },

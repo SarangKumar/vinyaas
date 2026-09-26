@@ -110,11 +110,11 @@ describe("components.json", () => {
     expect(
       registryBaseUrlFromEnv({ REGISTRY_BASE_URL: "http://localhost:3000" }),
     ).toBe("http://localhost:3000");
-    expect(componentsSchemaUrl("https://vinyas.vercel.app")).toBe(
-      "https://vinyas.vercel.app/schema/components.json",
+    expect(componentsSchemaUrl("https://vinyaas.vercel.app")).toBe(
+      "https://vinyaas.vercel.app/schema/components.json",
     );
     expect(button.$schema).toBe(
-      "https://vinyas.vercel.app/schema/registry-item.json",
+      "https://vinyaas.vercel.app/schema/registry-item.json",
     );
   });
 

@@ -23,11 +23,11 @@ export function readPackageVersion(moduleUrl = import.meta.url): string {
   return packageJson.version;
 }
 
-/** Builds the Vinyas CLI. Subcommands register on the returned program. */
+/** Builds the Vinyaas CLI. Subcommands register on the returned program. */
 export function createProgram(): Command {
   const program = new Command()
-    .name("vinyas")
-    .description("Install Vinyas components into a project.")
+    .name("vinyaas")
+    .description("Install Vinyaas components into a project.")
     .version(readPackageVersion());
 
   registerInitCommand(program);

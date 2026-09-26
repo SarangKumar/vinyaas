@@ -56,7 +56,7 @@ async function writeFiles(root, files) {
 }
 
 async function project(extra = {}) {
-  const cwd = await mkdtemp(join(tmpdir(), "vinyas-tx-"));
+  const cwd = await mkdtemp(join(tmpdir(), "vinyaas-tx-"));
 
   await writeFiles(cwd, {
     "components.json": `${JSON.stringify(config, null, 2)}\n`,

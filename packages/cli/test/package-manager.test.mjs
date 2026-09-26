@@ -12,7 +12,7 @@ import {
 } from "../src/lib/package-manager/install.ts";
 
 async function project(files) {
-  const cwd = await mkdtemp(join(tmpdir(), "vinyas-pm-"));
+  const cwd = await mkdtemp(join(tmpdir(), "vinyaas-pm-"));
 
   await Promise.all(
     Object.entries(files).map(([name, contents]) =>

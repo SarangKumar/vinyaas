@@ -170,7 +170,7 @@ describe("declared dependency classification", () => {
 
 describe("package.json dependency declarations", () => {
   it("fails before use when package.json is invalid", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "vinyas-declared-"));
+    const cwd = await mkdtemp(join(tmpdir(), "vinyaas-declared-"));
 
     await writeFile(join(cwd, "package.json"), "{");
 
@@ -185,7 +185,7 @@ describe("package.json dependency declarations", () => {
   });
 
   it("treats a missing package.json as having no declarations", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "vinyas-declared-"));
+    const cwd = await mkdtemp(join(tmpdir(), "vinyaas-declared-"));
     const manifest = await readDeclaredDependencies(cwd);
 
     assert.equal(manifest.dependencies.size, 0);

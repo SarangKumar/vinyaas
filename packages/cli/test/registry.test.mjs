@@ -8,7 +8,7 @@ import {
 } from "../src/lib/registry/client.ts";
 
 const buttonItem = {
-  $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+  $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
   name: "button",
   type: "registry:ui",
   dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
@@ -58,22 +58,22 @@ describe("registry item url", () => {
   it("builds a registry item url without a trailing slash on the base", () => {
     assert.equal(
       buildRegistryItemUrl({
-        baseUrl: "https://vinyas.vercel.app",
+        baseUrl: "https://vinyaas.vercel.app",
         style: "new-york",
         name: "button",
       }),
-      "https://vinyas.vercel.app/r/new-york/button.json",
+      "https://vinyaas.vercel.app/r/new-york/button.json",
     );
   });
 
   it("builds the same url when the base has a trailing slash", () => {
     assert.equal(
       buildRegistryItemUrl({
-        baseUrl: "https://vinyas.vercel.app/",
+        baseUrl: "https://vinyaas.vercel.app/",
         style: "new-york",
         name: "button",
       }),
-      "https://vinyas.vercel.app/r/new-york/button.json",
+      "https://vinyaas.vercel.app/r/new-york/button.json",
     );
   });
 
@@ -94,11 +94,11 @@ describe("registry item url", () => {
   it("encodes dynamic path segments", () => {
     assert.equal(
       buildRegistryItemUrl({
-        baseUrl: "https://vinyas.vercel.app",
+        baseUrl: "https://vinyaas.vercel.app",
         style: "new york",
         name: "my button",
       }),
-      "https://vinyas.vercel.app/r/new%20york/my%20button.json",
+      "https://vinyaas.vercel.app/r/new%20york/my%20button.json",
     );
   });
 
@@ -106,7 +106,7 @@ describe("registry item url", () => {
     assert.throws(
       () =>
         buildRegistryItemUrl({
-          baseUrl: "https://vinyas.vercel.app",
+          baseUrl: "https://vinyaas.vercel.app",
           style: "new-york",
           name: "https://evil.example/button",
         }),
@@ -119,7 +119,7 @@ describe("fetchRegistryItem", () => {
   it("returns a validated button registry item", async () => {
     const { fetch, calls } = mockFetch(jsonResponse(200, buttonItem));
     const item = await fetchRegistryItem({
-      baseUrl: "https://vinyas.vercel.app",
+      baseUrl: "https://vinyaas.vercel.app",
       style: "new-york",
       name: "button",
       fetch,
@@ -127,7 +127,7 @@ describe("fetchRegistryItem", () => {
 
     assert.equal(
       calls[0].url,
-      "https://vinyas.vercel.app/r/new-york/button.json",
+      "https://vinyaas.vercel.app/r/new-york/button.json",
     );
     assert.deepEqual(item, buttonItem);
   });
@@ -147,7 +147,7 @@ describe("fetchRegistryItem", () => {
     };
     const { fetch } = mockFetch(jsonResponse(200, item));
     const parsed = await fetchRegistryItem({
-      baseUrl: "https://vinyas.vercel.app",
+      baseUrl: "https://vinyaas.vercel.app",
       style: "new-york",
       name: "button",
       fetch,
@@ -162,7 +162,7 @@ describe("fetchRegistryItem", () => {
     await assert.rejects(
       () =>
         fetchRegistryItem({
-          baseUrl: "https://vinyas.vercel.app",
+          baseUrl: "https://vinyaas.vercel.app",
           style: "new-york",
           name: "button",
           fetch,
@@ -171,7 +171,7 @@ describe("fetchRegistryItem", () => {
         assert.ok(error instanceof RegistryError);
         assert.equal(
           error.message,
-          "Registry item not found:\nhttps://vinyas.vercel.app/r/new-york/button.json",
+          "Registry item not found:\nhttps://vinyaas.vercel.app/r/new-york/button.json",
         );
         return true;
       },
@@ -184,7 +184,7 @@ describe("fetchRegistryItem", () => {
     await assert.rejects(
       () =>
         fetchRegistryItem({
-          baseUrl: "https://vinyas.vercel.app",
+          baseUrl: "https://vinyaas.vercel.app",
           style: "new-york",
           name: "button",
           fetch,
@@ -206,7 +206,7 @@ describe("fetchRegistryItem", () => {
     await assert.rejects(
       () =>
         fetchRegistryItem({
-          baseUrl: "https://vinyas.vercel.app",
+          baseUrl: "https://vinyaas.vercel.app",
           style: "new-york",
           name: "button",
           fetch,
@@ -226,7 +226,7 @@ describe("fetchRegistryItem", () => {
     await assert.rejects(
       () =>
         fetchRegistryItem({
-          baseUrl: "https://vinyas.vercel.app",
+          baseUrl: "https://vinyaas.vercel.app",
           style: "new-york",
           name: "button",
           fetch,
@@ -246,7 +246,7 @@ describe("fetchRegistryItem", () => {
     await assert.rejects(
       () =>
         fetchRegistryItem({
-          baseUrl: "https://vinyas.vercel.app",
+          baseUrl: "https://vinyaas.vercel.app",
           style: "new-york",
           name: "button",
           fetch,
@@ -268,7 +268,7 @@ describe("fetchRegistryItem", () => {
     await assert.rejects(
       () =>
         fetchRegistryItem({
-          baseUrl: "https://vinyas.vercel.app",
+          baseUrl: "https://vinyaas.vercel.app",
           style: "new-york",
           name: "button",
           fetch,
@@ -292,7 +292,7 @@ describe("fetchRegistryItem", () => {
     await assert.rejects(
       () =>
         fetchRegistryItem({
-          baseUrl: "https://vinyas.vercel.app",
+          baseUrl: "https://vinyaas.vercel.app",
           style: "new-york",
           name: "button",
           fetch,

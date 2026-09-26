@@ -272,7 +272,7 @@ async function resolveRegistryFilePath(
 /**
  * `lib` files install under `aliases.lib` when the consumer sets it.
  * Otherwise the directory is the parent of `aliases.utils`, so `@/lib/utils`
- * resolves to `lib/utils.ts` with the configuration written by `vinyas init`.
+ * resolves to `lib/utils.ts` with the configuration written by `vinyaas init`.
  */
 async function resolveNamespaceDirectory(
   cwd: string,

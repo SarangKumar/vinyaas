@@ -24,7 +24,7 @@ export async function detectProject(cwd: string): Promise<DetectedProject> {
   if (!hasDependency(packageJson, "next")) {
     throw new CliError(
       [
-        "Vinyas currently supports Next.js projects.",
+        "Vinyaas currently supports Next.js projects.",
         "No Next.js dependency was found in this project.",
       ].join("\n"),
     );
@@ -36,7 +36,7 @@ export async function detectProject(cwd: string): Promise<DetectedProject> {
   ) {
     throw new CliError(
       [
-        "Vinyas currently supports Next.js projects.",
+        "Vinyaas currently supports Next.js projects.",
         "react and react-dom dependencies were not found in this project.",
       ].join("\n"),
     );
@@ -45,7 +45,7 @@ export async function detectProject(cwd: string): Promise<DetectedProject> {
   if (!tailwindPackages.some((name) => hasDependency(packageJson, name))) {
     throw new CliError(
       [
-        "Vinyas requires Tailwind CSS.",
+        "Vinyaas requires Tailwind CSS.",
         "No Tailwind dependency was found in this project.",
       ].join("\n"),
     );
@@ -147,7 +147,7 @@ async function readPackageJson(cwd: string): Promise<PackageManifest> {
   if (!(await fileExists(packageJsonPath))) {
     throw new CliError(
       [
-        "Vinyas currently supports Next.js projects.",
+        "Vinyaas currently supports Next.js projects.",
         "No package.json was found in this project.",
       ].join("\n"),
     );

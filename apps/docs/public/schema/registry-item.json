@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Vinyas Registry Item",
+  "title": "Vinyaas Registry Item",
   "type": "object",
   "required": ["$schema", "name", "type", "files"],
   "properties": {
@@ -30,7 +30,7 @@
       }
     },
     "registryDependencies": {
-      "description": "Names of other Vinyas registry items this item depends on.",
+      "description": "Names of other Vinyaas registry items this item depends on.",
       "type": "array",
       "items": {
         "type": "string"

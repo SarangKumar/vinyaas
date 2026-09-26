@@ -127,7 +127,7 @@ describe("environment variable planning", () => {
   });
 
   it("reports a missing variable", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "vinyas-env-"));
+    const cwd = await mkdtemp(join(tmpdir(), "vinyaas-env-"));
     const plan = await createEnvPlan({
       cwd,
       items: [
@@ -147,7 +147,7 @@ describe("environment variable planning", () => {
   });
 
   it("treats a name in any inspected env file as configured", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "vinyas-env-"));
+    const cwd = await mkdtemp(join(tmpdir(), "vinyaas-env-"));
     await writeFile(
       join(cwd, ".env.production"),
       "API_URL=https://example.com\n",
@@ -180,7 +180,7 @@ describe("environment variable planning", () => {
   });
 
   it("does not modify environment files", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "vinyas-env-"));
+    const cwd = await mkdtemp(join(tmpdir(), "vinyaas-env-"));
     const source = "OPENAI_API_KEY=super-secret-value\n";
     await writeFile(join(cwd, ".env"), source);
 

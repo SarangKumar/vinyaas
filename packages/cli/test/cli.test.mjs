@@ -30,12 +30,12 @@ function run(args) {
   );
 }
 
-describe("vinyas", () => {
-  it("points the vinyas binary at the built entrypoint", () => {
+describe("vinyaas", () => {
+  it("points the vinyaas binary at the built entrypoint", () => {
     const source = readFileSync(entrypoint, "utf8");
 
-    assert.equal(packageJson.name, "@vinyas/cli");
-    assert.equal(packageJson.bin.vinyas, "./dist/index.js");
+    assert.equal(packageJson.name, "@vinyaas/cli");
+    assert.equal(packageJson.bin.vinyaas, "./dist/index.js");
     assert.match(source, /^#!\/usr\/bin\/env node\n/);
   });
 
@@ -50,7 +50,7 @@ describe("vinyas", () => {
     const result = await run(["--help"]);
 
     assert.equal(result.exitCode, 0);
-    assert.match(result.stdout, /Usage: vinyas/);
+    assert.match(result.stdout, /Usage: vinyaas/);
     assert.match(result.stdout, /--version/);
     assert.match(result.stdout, /--help/);
     assert.match(result.stdout, /\binit\b/);

@@ -51,7 +51,7 @@ function buttonItem(
   extra = {},
 ) {
   return {
-    $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+    $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
     name: "button",
     type: "registry:ui",
     dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
@@ -81,7 +81,7 @@ async function writeFiles(root, files) {
 }
 
 async function writeProject(files) {
-  const cwd = await mkdtemp(join(tmpdir(), "vinyas-add-"));
+  const cwd = await mkdtemp(join(tmpdir(), "vinyaas-add-"));
 
   await writeFiles(cwd, files);
 
@@ -188,7 +188,7 @@ async function add(
   }
 }
 
-describe("vinyas add", { concurrency: false }, () => {
+describe("vinyaas add", { concurrency: false }, () => {
   it("installs button at the path mapped from the ui alias", async () => {
     const cwd = await writeProject(consumerProject());
     const { stdout } = await add(cwd, buttonItem());
@@ -313,7 +313,7 @@ describe("vinyas add", { concurrency: false }, () => {
         assert.ok(error instanceof CliError);
         assert.equal(
           error.message,
-          "components.json was not found.\nRun `vinyas init` first.",
+          "components.json was not found.\nRun `vinyaas init` first.",
         );
         return true;
       },
@@ -380,7 +380,7 @@ describe("vinyas add", { concurrency: false }, () => {
     const utilsSource = "export function cn(...inputs) { return inputs; }\n";
     const catalog = fetchCatalog({
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: ["clsx", "tailwind-merge"],
@@ -640,7 +640,7 @@ describe("vinyas add", { concurrency: false }, () => {
     const calls = [];
     const catalog = fetchCatalog({
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: ["clsx"],
@@ -681,26 +681,26 @@ describe("vinyas add", { concurrency: false }, () => {
     const cwd = await writeProject(consumerProject());
     const catalog = fetchCatalog({
       shared: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "shared",
         type: "registry:ui",
         dependencies: [],
         files: [
           { path: "ui/shared.ts", content: "export const shared = true;\n" },
         ],
-        docs: "https://vinyas.vercel.app/docs/components/shared",
+        docs: "https://vinyaas.vercel.app/docs/components/shared",
       },
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: [],
         registryDependencies: ["shared"],
         files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
-        docs: "https://vinyas.vercel.app/docs/components/utils",
+        docs: "https://vinyaas.vercel.app/docs/components/utils",
       },
       icon: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "icon",
         type: "registry:ui",
         dependencies: [],
@@ -714,7 +714,7 @@ describe("vinyas add", { concurrency: false }, () => {
         {
           dependencies: [],
           registryDependencies: ["utils", "icon"],
-          docs: "https://vinyas.vercel.app/docs/components/button",
+          docs: "https://vinyaas.vercel.app/docs/components/button",
         },
       ),
     });
@@ -729,9 +729,9 @@ describe("vinyas add", { concurrency: false }, () => {
         .map((line) => line.trim())
         .filter((line) => line.includes("—")),
       [
-        "shared — https://vinyas.vercel.app/docs/components/shared",
-        "utils — https://vinyas.vercel.app/docs/components/utils",
-        "button — https://vinyas.vercel.app/docs/components/button",
+        "shared — https://vinyaas.vercel.app/docs/components/shared",
+        "utils — https://vinyaas.vercel.app/docs/components/utils",
+        "button — https://vinyaas.vercel.app/docs/components/button",
       ],
     );
     assert.equal((documentation.match(/shared —/g) ?? []).length, 1);
@@ -787,7 +787,7 @@ describe("vinyas add", { concurrency: false }, () => {
             env: { REGISTRY_BASE_URL: "http://localhost:3000" },
             fetch: fetchItem(
               buttonItem(undefined, {
-                docs: "https://vinyas.vercel.app/docs/components/button",
+                docs: "https://vinyaas.vercel.app/docs/components/button",
               }),
             ),
             runPackageManager: async () => {
@@ -807,7 +807,7 @@ describe("vinyas add", { concurrency: false }, () => {
     const cwd = await writeProject(consumerProject());
     const catalog = fetchCatalog({
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: ["clsx"],
@@ -847,14 +847,14 @@ describe("vinyas add", { concurrency: false }, () => {
     const cwd = await writeProject(consumerProject());
     const catalog = fetchCatalog({
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: ["clsx"],
         files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
       },
       input: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "input",
         type: "registry:ui",
         dependencies: ["zod"],
@@ -886,7 +886,7 @@ describe("vinyas add", { concurrency: false }, () => {
     const cwd = await writeProject(consumerProject());
     const catalog = fetchCatalog({
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: ["clsx"],
@@ -953,7 +953,7 @@ describe("vinyas add", { concurrency: false }, () => {
     );
     const catalog = fetchCatalog({
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: ["clsx"],
@@ -993,7 +993,7 @@ describe("vinyas add", { concurrency: false }, () => {
     const cwd = await writeProject(consumerProject());
     const catalog = fetchCatalog({
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: [],
@@ -1022,7 +1022,7 @@ describe("vinyas add", { concurrency: false }, () => {
     const cwd = await writeProject(consumerProject());
     const catalog = fetchCatalog({
       testing: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "testing",
         type: "registry:ui",
         dependencies: [],
@@ -1032,7 +1032,7 @@ describe("vinyas add", { concurrency: false }, () => {
         ],
       },
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: [],
@@ -1041,7 +1041,7 @@ describe("vinyas add", { concurrency: false }, () => {
         files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
       },
       icon: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "icon",
         type: "registry:ui",
         dependencies: [],
@@ -1100,7 +1100,7 @@ describe("vinyas add", { concurrency: false }, () => {
     const calls = [];
     const catalog = fetchCatalog({
       utils: {
-        $schema: "https://vinyas.vercel.app/schema/registry-item.json",
+        $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
         name: "utils",
         type: "registry:ui",
         dependencies: [],
@@ -1303,7 +1303,7 @@ describe("vinyas add", { concurrency: false }, () => {
   });
 
   it("reads package.json from the project selected by --cwd", async () => {
-    const parent = await mkdtemp(join(tmpdir(), "vinyas-declared-"));
+    const parent = await mkdtemp(join(tmpdir(), "vinyaas-declared-"));
     const projectA = join(parent, "project-a");
     const projectB = join(parent, "project-b");
     const manifestA = `${JSON.stringify(
@@ -1503,7 +1503,7 @@ describe("vinyas add", { concurrency: false }, () => {
   });
 
   it("runs the package manager in the directory given by --cwd", async () => {
-    const parent = await mkdtemp(join(tmpdir(), "vinyas-cwd-"));
+    const parent = await mkdtemp(join(tmpdir(), "vinyaas-cwd-"));
     const projectA = join(parent, "project-a");
     const calls = [];
 
@@ -1543,7 +1543,7 @@ describe("vinyas add", { concurrency: false }, () => {
       dependencies: [],
       cssVars: { light: { "--primary": "1 2% 3%" } },
       envVars: { OPENAI_API_KEY: "OpenAI API key" },
-      docs: "https://vinyas.vercel.app/docs/components/button",
+      docs: "https://vinyaas.vercel.app/docs/components/button",
     });
     const requests = [];
     const server = createServer((request, response) => {
@@ -1563,7 +1563,7 @@ describe("vinyas add", { concurrency: false }, () => {
     });
 
     const address = server.address();
-    const parent = await mkdtemp(join(tmpdir(), "vinyas-cwd-"));
+    const parent = await mkdtemp(join(tmpdir(), "vinyaas-cwd-"));
     const projectA = join(parent, "project-a");
     const projectB = join(parent, "project-b");
     const envA = "OPENAI_API_KEY=secret-a\n";
@@ -1615,7 +1615,7 @@ describe("vinyas add", { concurrency: false }, () => {
       assert.doesNotMatch(first.stdout, /secret-b/);
       assert.match(
         first.stdout,
-        /button — https:\/\/vinyas\.vercel\.app\/docs\/components\/button/,
+        /button — https:\/\/vinyaas\.vercel\.app\/docs\/components\/button/,
       );
       assert.match(
         await readFile(join(projectA, "app/globals.css"), "utf8"),
@@ -1827,7 +1827,7 @@ describe("vinyas add", { concurrency: false }, () => {
 
     assert.notEqual(result.exitCode, 0);
     assert.match(result.stderr, /components\.json was not found/);
-    assert.match(result.stderr, /vinyas init/);
+    assert.match(result.stderr, /vinyaas init/);
     assert.doesNotMatch(result.stderr, /at /);
   });
 });

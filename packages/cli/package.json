@@ -1,11 +1,11 @@
 {
-  "name": "@vinyas/cli",
+  "name": "@vinyaas/cli",
   "version": "0.0.1",
-  "description": "Command-line interface for installing Vinyas components.",
+  "description": "Command-line interface for installing Vinyaas components.",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "vinyas": "./dist/index.js"
+    "vinyaas": "./dist/index.js"
   },
   "files": [
     "dist/index.js",

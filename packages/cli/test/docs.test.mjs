@@ -26,14 +26,14 @@ describe("documentation planning", () => {
   it("reports one documentation url", () => {
     const plan = createDocsPlan([
       registryItem("button", {
-        docs: "https://vinyas.vercel.app/docs/components/button",
+        docs: "https://vinyaas.vercel.app/docs/components/button",
       }),
     ]);
 
     assert.deepEqual(plan.entries, [
       {
         name: "button",
-        url: "https://vinyas.vercel.app/docs/components/button",
+        url: "https://vinyaas.vercel.app/docs/components/button",
       },
     ]);
     assert.equal(
@@ -41,7 +41,7 @@ describe("documentation planning", () => {
       [
         "Documentation:",
         "",
-        "  button — https://vinyas.vercel.app/docs/components/button",
+        "  button — https://vinyaas.vercel.app/docs/components/button",
       ].join("\n"),
     );
   });
@@ -95,7 +95,7 @@ describe("documentation planning", () => {
   it("accepts https and http urls", () => {
     const plan = createDocsPlan([
       registryItem("button", {
-        docs: "https://vinyas.vercel.app/docs/button",
+        docs: "https://vinyaas.vercel.app/docs/button",
       }),
       registryItem("card", {
         docs: "http://localhost:3000/docs/button",
@@ -105,7 +105,7 @@ describe("documentation planning", () => {
     assert.deepEqual(
       plan.entries.map((entry) => entry.url),
       [
-        "https://vinyas.vercel.app/docs/button",
+        "https://vinyaas.vercel.app/docs/button",
         "http://localhost:3000/docs/button",
       ],
     );

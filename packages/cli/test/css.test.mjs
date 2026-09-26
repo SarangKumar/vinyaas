@@ -27,7 +27,7 @@ function registryItem(name, extra = {}) {
 
 describe("css target", () => {
   it("resolves a project-relative stylesheet", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "vinyas-css-"));
+    const cwd = await mkdtemp(join(tmpdir(), "vinyaas-css-"));
 
     assert.equal(
       resolveCssPath(cwd, "app/globals.css"),
@@ -54,7 +54,7 @@ describe("css target", () => {
   });
 
   it("fails when the configured css file does not exist", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "vinyas-css-"));
+    const cwd = await mkdtemp(join(tmpdir(), "vinyaas-css-"));
 
     await assert.rejects(
       () =>
@@ -211,7 +211,7 @@ describe("css rules", () => {
 
 describe("css update", () => {
   it("keeps an identical stylesheet unchanged", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "vinyas-css-"));
+    const cwd = await mkdtemp(join(tmpdir(), "vinyaas-css-"));
     await mkdir(dirname(join(cwd, "app/globals.css")), { recursive: true });
     await writeFile(
       join(cwd, "app/globals.css"),

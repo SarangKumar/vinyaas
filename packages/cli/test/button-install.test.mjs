@@ -69,7 +69,7 @@ describe("installable button registry", () => {
     { timeout: 120_000 },
     async () => {
       const { server, baseUrl } = await serveRegistry();
-      const cwd = await mkdtemp(join(tmpdir(), "vinyas-button-install-"));
+      const cwd = await mkdtemp(join(tmpdir(), "vinyaas-button-install-"));
       const css = '@import "tailwindcss";\n';
       const logs = [];
       const originalLog = console.log;
@@ -99,7 +99,7 @@ describe("installable button registry", () => {
           join(cwd, "package.json"),
           `${JSON.stringify(
             {
-              name: "vinyas-button-consumer",
+              name: "vinyaas-button-consumer",
               private: true,
               dependencies: {
                 react: "19.2.8",
