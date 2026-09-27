@@ -388,6 +388,98 @@ describe("registry build output", () => {
     expect(generated).not.toHaveProperty("registryDependencies");
   });
 
+  it("keeps the new-york checkbox artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/checkbox.json");
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/checkbox/checkbox.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
+    ]);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      files: { path: string; content: string }[];
+    };
+    const checkbox = newYork.find((item) => item.name === "checkbox");
+
+    if (!checkbox) {
+      throw new Error("Expected a checkbox registry item");
+    }
+
+    const files = await readRegistryItemFiles(
+      checkbox,
+      async (relativePath) => {
+        expect(relativePath).toBe("ui/checkbox/checkbox.tsx");
+        return source;
+      },
+    );
+    const payload = serializeRegistryItem(checkbox, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.$schema).toBe(
+      "https://vinyaas.vercel.app/schema/registry-item.json",
+    );
+    expect(generated.name).toBe("checkbox");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(checkbox.registryDependencies).toBeUndefined();
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated).not.toHaveProperty("registryDependencies");
+  });
+
+  it("keeps the new-york radio-group artifact aligned with the source item", async () => {
+    const outputPath = path.join(
+      docsRoot,
+      "public/r/new-york/radio-group.json",
+    );
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/radio-group/radio-group.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
+    ]);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      files: { path: string; content: string }[];
+    };
+    const radioGroup = newYork.find((item) => item.name === "radio-group");
+
+    if (!radioGroup) {
+      throw new Error("Expected a radio-group registry item");
+    }
+
+    const files = await readRegistryItemFiles(
+      radioGroup,
+      async (relativePath) => {
+        expect(relativePath).toBe("ui/radio-group/radio-group.tsx");
+        return source;
+      },
+    );
+    const payload = serializeRegistryItem(radioGroup, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.$schema).toBe(
+      "https://vinyaas.vercel.app/schema/registry-item.json",
+    );
+    expect(generated.name).toBe("radio-group");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(radioGroup.registryDependencies).toBeUndefined();
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain('"use client"');
+    expect(generated).not.toHaveProperty("registryDependencies");
+  });
+
   it("does not publish utils as a registry item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/utils.json");
 

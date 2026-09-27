@@ -3,8 +3,13 @@ import Link from "next/link";
 import { CodeBlock } from "@/components/code-block";
 import { focusRing } from "@/components/focus-ring";
 import { Button } from "@/registry/new-york/ui/button/button";
+import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
 import { Input } from "@/registry/new-york/ui/input/input";
 import { Label } from "@/registry/new-york/ui/label/label";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/registry/new-york/ui/radio-group/radio-group";
 import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
 
 const actionLink = `inline-flex h-8 cursor-pointer items-center rounded-md px-3 text-sm font-medium ${focusRing}`;
@@ -107,9 +112,9 @@ export default function Home() {
           Components
         </h2>
         <p className="text-body max-w-2xl text-base leading-7">
-          Button, Input, Textarea, and Label are the current components. Each
-          page includes a live preview, an install command, and the source that
-          gets copied into your project.
+          Button, Checkbox, Input, Label, Radio Group, and Textarea are the
+          current components. Each page includes a live preview, an install
+          command, and the source that gets copied into your project.
         </p>
         <div className="border-border flex flex-col gap-4 rounded-md border px-6 py-10">
           <div className="flex flex-wrap items-center gap-3">
@@ -128,6 +133,24 @@ export default function Home() {
             rows={3}
             className="max-w-sm"
           />
+          <div className="flex items-center gap-2">
+            <Checkbox id="home-terms" />
+            <Label htmlFor="home-terms">Accept terms</Label>
+          </div>
+          <RadioGroup
+            defaultValue="comfortable"
+            aria-label="Spacing"
+            className="max-w-sm"
+          >
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="comfortable" id="home-comfortable" />
+              <Label htmlFor="home-comfortable">Comfortable</Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="compact" id="home-compact" />
+              <Label htmlFor="home-compact">Compact</Label>
+            </div>
+          </RadioGroup>
         </div>
         <p className="text-muted-foreground text-sm leading-6">
           <Link
@@ -138,6 +161,13 @@ export default function Home() {
           </Link>
           {" · "}
           <Link
+            href="/components/checkbox"
+            className={`text-foreground cursor-pointer rounded-sm underline ${focusRing}`}
+          >
+            Checkbox
+          </Link>
+          {" · "}
+          <Link
             href="/components/input"
             className={`text-foreground cursor-pointer rounded-sm underline ${focusRing}`}
           >
@@ -145,17 +175,24 @@ export default function Home() {
           </Link>
           {" · "}
           <Link
-            href="/components/textarea"
-            className={`text-foreground cursor-pointer rounded-sm underline ${focusRing}`}
-          >
-            Textarea
-          </Link>
-          {" · "}
-          <Link
             href="/components/label"
             className={`text-foreground cursor-pointer rounded-sm underline ${focusRing}`}
           >
             Label
+          </Link>
+          {" · "}
+          <Link
+            href="/components/radio-group"
+            className={`text-foreground cursor-pointer rounded-sm underline ${focusRing}`}
+          >
+            Radio Group
+          </Link>
+          {" · "}
+          <Link
+            href="/components/textarea"
+            className={`text-foreground cursor-pointer rounded-sm underline ${focusRing}`}
+          >
+            Textarea
           </Link>
           {" · "}
           <Link

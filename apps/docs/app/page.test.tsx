@@ -40,18 +40,30 @@ describe("homepage", () => {
       "href",
       "/components/button",
     );
+    expect(screen.getByRole("link", { name: "Checkbox" })).toHaveAttribute(
+      "href",
+      "/components/checkbox",
+    );
     expect(screen.getByRole("link", { name: "Input" })).toHaveAttribute(
       "href",
       "/components/input",
-    );
-    expect(screen.getByRole("link", { name: "Textarea" })).toHaveAttribute(
-      "href",
-      "/components/textarea",
     );
     expect(screen.getByRole("link", { name: "Label" })).toHaveAttribute(
       "href",
       "/components/label",
     );
+    expect(screen.getByRole("link", { name: "Radio Group" })).toHaveAttribute(
+      "href",
+      "/components/radio-group",
+    );
+    expect(screen.getByRole("link", { name: "Textarea" })).toHaveAttribute(
+      "href",
+      "/components/textarea",
+    );
+    expect(
+      screen.getByRole("checkbox", { name: "Accept terms" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "Comfortable" })).toBeChecked();
     expect(
       screen.getByRole("textbox", { name: "Message" }),
     ).toBeInTheDocument();

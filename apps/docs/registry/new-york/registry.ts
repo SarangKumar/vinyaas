@@ -45,4 +45,26 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "checkbox",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/checkbox/checkbox.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "radio-group",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/radio-group/radio-group.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
