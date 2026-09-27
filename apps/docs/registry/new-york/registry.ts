@@ -67,4 +67,59 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "avatar",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/avatar/avatar.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "progress",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/progress/progress.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "skeleton",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/skeleton/skeleton.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "separator",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/separator/separator.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "kbd",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/kbd/kbd.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

@@ -10,11 +10,16 @@ describe("component metadata", () => {
     expect(new Set(slugs).size).toBe(slugs.length);
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
     expect(names).toEqual([
+      "Avatar",
       "Button",
       "Checkbox",
       "Input",
+      "Kbd",
       "Label",
+      "Progress",
       "Radio Group",
+      "Separator",
+      "Skeleton",
       "Textarea",
     ]);
   });
@@ -28,8 +33,13 @@ describe("component metadata", () => {
     }
 
     expect(newComponents().map((component) => component.slug)).toEqual([
+      "avatar",
       "checkbox",
+      "kbd",
+      "progress",
       "radio-group",
+      "separator",
+      "skeleton",
     ]);
   });
 });

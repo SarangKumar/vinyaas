@@ -164,7 +164,7 @@ v0.2 components follow the existing Button.
 - Registry name, folder, and file use the same lowercase name: `button` → `ui/button/button.tsx`.
 - `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/button.tsx`.
 - The file exports a PascalCase component, `Button`, and a props type, `ButtonProps`.
-- Variants use `class-variance-authority` when a component has more than one visual style. Input, Textarea, Label, Checkbox, and Radio Group do not use it.
+- Variants use `class-variance-authority` when a component has more than one visual style. Input, Textarea, Label, Checkbox, Radio Group, Avatar, Progress, Skeleton, Separator, and Kbd do not use it.
 - Class names are merged with `cn` from `@/lib/utils`.
 - Components render the native element and pass through its attributes, including `disabled` and `aria-*`.
 - Colors use semantic utilities such as `bg-primary`, `text-foreground`, and `border-border`. The docs site defines those tokens in `apps/docs/app/globals.css`. Installed projects do not receive that theme file yet.
@@ -180,6 +180,11 @@ Components use the native element and the browser’s keyboard behavior.
 - Label is a `<label>`. `htmlFor` matches the control `id`. It does not validate, store form state, or mark a field required.
 - Checkbox is a native checkbox. Space toggles it. `name` and `value` submit with the form. `indeterminate` is the native mixed state.
 - Radio Group is a set of native radios that share a name. Arrow keys move the selection. One option is submitted.
+- Avatar is an image plus a fallback. The image uses `alt`. The fallback is not announced together with a loaded image.
+- Progress is a native `<progress>` element. Omit `value` for the indeterminate state.
+- Skeleton is a decorative placeholder with `aria-hidden`. The pulse stops under `prefers-reduced-motion`.
+- Separator is an `<hr>` when horizontal. A vertical separator sets `aria-orientation="vertical"`.
+- Kbd is a native `<kbd>`. It displays a key and does not handle keyboard events.
 - Interactive elements use a visible `focus-visible` ring. Disabled controls use `cursor-not-allowed`.
 - Future components should keep native semantics before adding custom keyboard behavior.
 - Registry JSON embeds that source. It lists npm dependencies. It does not list `lib/utils.ts`.

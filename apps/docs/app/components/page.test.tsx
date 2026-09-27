@@ -38,6 +38,17 @@ describe("components catalog", () => {
         "A versatile button primitive for actions and commands.",
       ).length,
     ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("An image with a fallback for a person or entity.")
+        .length,
+    ).toBeGreaterThan(0);
+
+    const avatarLinks = document.querySelectorAll(
+      'a[href="/components/avatar"]',
+    );
+
+    expect(avatarLinks).toHaveLength(2);
+    expect(avatarLinks[0]?.textContent).toContain(", new");
 
     const radioLinks = document.querySelectorAll(
       'a[href="/components/radio-group"]',

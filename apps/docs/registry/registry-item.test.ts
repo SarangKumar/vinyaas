@@ -480,6 +480,57 @@ describe("registry build output", () => {
     expect(generated).not.toHaveProperty("registryDependencies");
   });
 
+  it.each([
+    ["avatar", "ui/avatar/avatar.tsx", '"use client"'],
+    ["progress", "ui/progress/progress.tsx", "<progress"],
+    ["skeleton", "ui/skeleton/skeleton.tsx", "aria-hidden"],
+    ["separator", "ui/separator/separator.tsx", "<hr"],
+    ["kbd", "ui/kbd/kbd.tsx", "<kbd"],
+  ])(
+    "keeps the new-york %s artifact aligned with the source item",
+    async (name, filePath, sourceMarker) => {
+      const outputPath = path.join(docsRoot, `public/r/new-york/${name}.json`);
+      const sourcePath = path.join(docsRoot, `registry/new-york/${filePath}`);
+      const [rawOutput, source] = await Promise.all([
+        fs.readFile(outputPath, "utf8"),
+        fs.readFile(sourcePath, "utf8"),
+      ]);
+      const generated = JSON.parse(rawOutput) as {
+        $schema: string;
+        name: string;
+        type: string;
+        dependencies: string[];
+        files: { path: string; content: string }[];
+      };
+      const item = newYork.find((entry) => entry.name === name);
+
+      if (!item) {
+        throw new Error(`Expected a ${name} registry item`);
+      }
+
+      const files = await readRegistryItemFiles(item, async (relativePath) => {
+        expect(relativePath).toBe(filePath);
+        return source;
+      });
+      const payload = serializeRegistryItem(item, files, generated.$schema);
+
+      expect(generated).toEqual(payload);
+      expect(generated.$schema).toBe(
+        "https://vinyaas.vercel.app/schema/registry-item.json",
+      );
+      expect(generated.name).toBe(name);
+      expect(generated.type).toBe("registry:ui");
+      expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+      expect(item.registryDependencies).toBeUndefined();
+      expect(generated.files.map((file) => file.path)).toEqual([filePath]);
+      expect(generated.files[0]?.content).toBe(source);
+      expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
+      expect(generated.files[0]?.content).toContain(sourceMarker);
+      expect(generated).not.toHaveProperty("registryDependencies");
+      expect(JSON.stringify(generated)).not.toContain("utils.json");
+    },
+  );
+
   it("does not publish utils as a registry item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/utils.json");
 

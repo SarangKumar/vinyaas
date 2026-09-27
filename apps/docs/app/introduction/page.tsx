@@ -113,9 +113,9 @@ export default function IntroductionPage() {
           Components
         </h2>
         <p className="text-body max-w-2xl text-base leading-7">
-          Button, Checkbox, Input, Label, Radio Group, and Textarea are the
-          current components. Each page includes a live preview, an install
-          command, and the source that gets copied into your project.
+          The catalog lists the current components. Each page includes a live
+          preview, an install command, and the source that gets copied into your
+          project. The examples below are a few of the form controls.
         </p>
         <div className="border-border flex flex-col gap-4 rounded-md border px-6 py-10">
           <div className="flex flex-wrap items-center gap-3">

@@ -15,6 +15,13 @@ export type ComponentMeta = {
  */
 export const components: readonly ComponentMeta[] = [
   {
+    name: "Avatar",
+    slug: "avatar",
+    description: "An image with a fallback for a person or entity.",
+    category: "display",
+    isNew: true,
+  },
+  {
     name: "Button",
     slug: "button",
     description: "A versatile button primitive for actions and commands.",
@@ -34,16 +41,44 @@ export const components: readonly ComponentMeta[] = [
     category: "form",
   },
   {
+    name: "Kbd",
+    slug: "kbd",
+    description: "A compact label for a keyboard key.",
+    category: "display",
+    isNew: true,
+  },
+  {
     name: "Label",
     slug: "label",
     description: "An accessible label for form controls.",
     category: "form",
   },
   {
+    name: "Progress",
+    slug: "progress",
+    description: "A native progress indicator for a known amount of work.",
+    category: "feedback",
+    isNew: true,
+  },
+  {
     name: "Radio Group",
     slug: "radio-group",
     description: "A group of mutually exclusive selectable options.",
     category: "form",
+    isNew: true,
+  },
+  {
+    name: "Separator",
+    slug: "separator",
+    description: "A horizontal or vertical divider between content.",
+    category: "layout",
+    isNew: true,
+  },
+  {
+    name: "Skeleton",
+    slug: "skeleton",
+    description: "A placeholder shown while content is loading.",
+    category: "display",
     isNew: true,
   },
   {
