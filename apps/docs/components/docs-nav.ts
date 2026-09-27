@@ -1,5 +1,6 @@
 import {
   componentHref,
+  componentIsNew,
   components,
   type ComponentMeta,
 } from "@/components/component-meta";
@@ -24,7 +25,7 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
     title: component.name,
     href: componentHref(component.slug),
     description: component.description,
-    isNew: component.isNew,
+    isNew: componentIsNew(component),
   };
 }
 

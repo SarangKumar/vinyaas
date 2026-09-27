@@ -1,5 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DocsShell } from "./docs-shell";
 
@@ -8,6 +8,10 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("DocsShell", () => {
+  beforeEach(() => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
+  });
+
   it("keeps the current page marked and lists article headings", async () => {
     render(
       <DocsShell>
@@ -70,6 +74,13 @@ describe("DocsShell", () => {
     );
     expect(github).toHaveAttribute("title", "GitHub");
     expect(github).not.toHaveTextContent("GitHub");
+    expect(github.querySelector("svg")).toBeInTheDocument();
+    expect(end.className).toContain("sm:gap-4");
+    expect(
+      within(end).queryByRole("combobox", {
+        name: "Component example language",
+      }),
+    ).toBeNull();
     expect(within(end).getByRole("button")).toBeInTheDocument();
   });
 
@@ -94,6 +105,47 @@ describe("DocsShell", () => {
     expect(
       document.querySelector("[data-header-section='end']"),
     ).toContainElement(portfolio);
+  });
+
+  it("shows the GitHub star count when the public API responds", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ stargazers_count: 12 }),
+      }),
+    );
+
+    render(
+      <DocsShell>
+        <article>
+          <h2 id="preview">Preview</h2>
+        </article>
+      </DocsShell>,
+    );
+
+    const github = await screen.findByRole("link", { name: "GitHub" });
+
+    expect(await screen.findByText("12")).toBeInTheDocument();
+    expect(github).toHaveAccessibleName("GitHub");
+    expect(github.querySelector("svg")).toBeInTheDocument();
+  });
+
+  it("hides the star count when GitHub is unavailable", async () => {
+    render(
+      <DocsShell>
+        <article>
+          <h2 id="preview">Preview</h2>
+        </article>
+      </DocsShell>,
+    );
+
+    const github = screen.getByRole("link", { name: "GitHub" });
+
+    await vi.waitFor(() => {
+      expect(fetch).toHaveBeenCalled();
+    });
+    expect(github.querySelector("span")).toBeNull();
   });
 });
 

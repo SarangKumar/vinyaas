@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import AvatarPage from "./avatar/page";
 import BadgePage from "./badge/page";
+import CardPage from "./card/page";
 import SpinnerPage from "./spinner/page";
 import KbdPage from "./kbd/page";
 import ProgressPage from "./progress/page";
@@ -90,6 +91,12 @@ const pages = [
     api: "variant",
   },
   {
+    load: CardPage,
+    title: "Card",
+    command: "npx @vinyaas/cli add card",
+    api: "className",
+  },
+  {
     load: SpinnerPage,
     title: "Spinner",
     command: "npx @vinyaas/cli add spinner",
@@ -102,6 +109,27 @@ const pages = [
     api: "onOpenChange",
   },
 ] as const;
+
+describe("composed examples", () => {
+  it("renders badge and card examples", async () => {
+    render(await BadgePage());
+    expect(
+      screen.getAllByRole("link", { name: "Documentation" }).length,
+    ).toBeGreaterThan(0);
+    expect(screen.getAllByText("Processing").length).toBeGreaterThan(0);
+    expect(screen.getByText("Claim offer")).toBeInTheDocument();
+    expect(screen.getByText("Bookmark")).toBeInTheDocument();
+    expect(screen.getByText("Beta")).toBeInTheDocument();
+    expect(screen.getByText("Ghost")).toBeInTheDocument();
+
+    render(await CardPage());
+    expect(screen.getAllByText("Sarah Johnson").length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("button", { name: "Save preferences" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Archive" })).toBeInTheDocument();
+  });
+});
 
 describe("new component pages", () => {
   it.each(pages)(

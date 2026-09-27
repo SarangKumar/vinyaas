@@ -52,6 +52,10 @@ describe("Tooltip", () => {
     const tooltip = screen.getByRole("tooltip");
 
     expect(tooltip).toHaveAttribute("data-side", "right");
+    expect(tooltip.querySelector("[data-tooltip-arrow]")).toHaveClass(
+      "border-r-foreground",
+      "pointer-events-none",
+    );
 
     fireEvent.keyDown(trigger, { key: "Escape" });
 

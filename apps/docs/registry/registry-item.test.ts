@@ -495,6 +495,7 @@ describe("registry build output", () => {
     ["popover", "ui/popover/popover.tsx", "PopoverContent"],
     ["badge", "ui/badge/badge.tsx", "<span"],
     ["spinner", "ui/spinner/spinner.tsx", "aria-hidden"],
+    ["card", "ui/card/card.tsx", "CardHeader"],
   ])(
     "keeps the new-york %s artifact aligned with the source item",
     async (name, filePath, sourceMarker) => {

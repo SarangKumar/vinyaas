@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { components } from "./component-meta";
+import { componentIsNew, components } from "./component-meta";
 import { docsNav, githubUrl, homePath, introductionPath } from "./docs-nav";
 
 describe("documentation navigation", () => {
@@ -30,7 +30,7 @@ describe("documentation navigation", () => {
         title: component.name,
         href: `/components/${component.slug}`,
         description: component.description,
-        isNew: component.isNew,
+        isNew: componentIsNew(component),
       })),
     );
   });

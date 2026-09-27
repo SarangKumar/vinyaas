@@ -70,9 +70,10 @@ export default function ChangelogPage() {
             and the complete source together.
           </li>
           <li>
-            A session code-language preference covers tsx, jsx, typescript,
-            javascript, and bash. Package-manager choice stays separate. Syntax
-            highlighting is not included yet.
+            A component example that has both sources can switch between TSX and
+            JSX in that snippet. Terminal commands stay bash, and the
+            package-manager choice stays separate. Syntax highlighting is not
+            included yet.
           </li>
           <li>
             Button matches Input at the default height and adds ghost,

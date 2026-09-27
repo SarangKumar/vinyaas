@@ -11,7 +11,7 @@ export function DocsMobileNav() {
   return (
     <details
       ref={detailsRef}
-      className="border-border bg-background shrink-0 border-b lg:hidden"
+      className="border-border bg-background shrink-0 border-b md:hidden"
       onKeyDown={(event) => {
         if (event.key === "Escape" && detailsRef.current?.open) {
           detailsRef.current.open = false;

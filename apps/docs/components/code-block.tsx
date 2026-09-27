@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import { CopyButton } from "@/components/copy-button";
 import { focusRing } from "@/components/focus-ring";
@@ -16,11 +16,14 @@ export function CodeBlock({
   code,
   language,
   attached = false,
+  leading,
 }: {
   code: string;
   language?: string;
   /** Drops the outer frame so a parent demo can share one border. */
   attached?: boolean;
+  /** Replaces the language label. `language` still sets data-language. */
+  leading?: ReactNode;
 }) {
   const collapsible = code.split("\n").length > collapseAfterLines;
   const [expanded, setExpanded] = useState(false);
@@ -35,7 +38,9 @@ export function CodeBlock({
       }
     >
       <div className="border-border flex items-center justify-between gap-3 border-b px-3 py-1.5">
-        {language ? (
+        {leading ? (
+          leading
+        ) : language ? (
           <span className="text-subtle-foreground font-mono text-xs">
             {language}
           </span>

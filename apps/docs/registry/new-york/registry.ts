@@ -221,4 +221,15 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "card",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/card/card.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

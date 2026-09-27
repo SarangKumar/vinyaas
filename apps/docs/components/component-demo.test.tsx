@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import { CodeLanguageSelect, rememberCodeLanguage } from "./code-language";
+import { CodeBlock } from "./code-block";
 import { ComponentDemo } from "./component-demo";
 
 const longSource = Array.from(
@@ -19,13 +19,10 @@ export function SaveButton() {
 `;
 
     render(
-      <>
-        <CodeLanguageSelect />
-        <ComponentDemo
-          preview={<button type="button">Save</button>}
-          code={source}
-        />
-      </>,
+      <ComponentDemo
+        preview={<button type="button">Save</button>}
+        code={source}
+      />,
     );
 
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
@@ -34,6 +31,9 @@ export function SaveButton() {
       "data-language",
       "tsx",
     );
+    expect(
+      screen.queryByRole("group", { name: "Component example language" }),
+    ).toBeNull();
     expect(
       screen.getByRole("button", { name: "Copy code" }),
     ).toBeInTheDocument();
@@ -55,10 +55,12 @@ export function SaveButton() {
     );
   });
 
-  it("follows the session language when that source exists", () => {
+  it("switches TSX and JSX inside the demo and copies the visible source", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", { clipboard: { writeText } });
+
     render(
       <>
-        <CodeLanguageSelect />
         <ComponentDemo
           preview={<span>Preview</span>}
           code={{
@@ -66,28 +68,45 @@ export function SaveButton() {
             jsx: "export function SaveJsx() { return null }",
           }}
         />
+        <ComponentDemo
+          preview={<span>Other</span>}
+          code={{
+            tsx: "export function Other() { return null }",
+            jsx: "export function OtherJsx() { return null }",
+          }}
+        />
+        <CodeBlock language="bash" code="npx @vinyaas/cli add button" />
       </>,
     );
 
-    expect(document.querySelector("code")).toHaveTextContent(
-      "export function Save()",
-    );
-    fireEvent.change(screen.getByRole("combobox", { name: "Code language" }), {
-      target: { value: "jsx" },
-    });
-    expect(document.querySelector("code")).toHaveAttribute(
-      "data-language",
-      "jsx",
-    );
-    expect(document.querySelector("code")).toHaveTextContent("SaveJsx");
+    const codes = () => [...document.querySelectorAll("code")];
 
-    fireEvent.change(screen.getByRole("combobox", { name: "Code language" }), {
-      target: { value: "bash" },
+    expect(codes()[0]).toHaveAttribute("data-language", "tsx");
+    expect(codes()[0]).toHaveTextContent("export function Save()");
+    expect(codes()[2]).toHaveAttribute("data-language", "bash");
+    expect(codes()[2]).toHaveTextContent("npx @vinyaas/cli add button");
+
+    const groups = screen.getAllByRole("group", {
+      name: "Component example language",
     });
-    expect(document.querySelector("code")).toHaveAttribute(
-      "data-language",
-      "tsx",
+
+    fireEvent.click(screen.getAllByRole("button", { name: "JSX" })[0]!);
+    expect(groups[0]?.querySelector("[aria-pressed='true']")).toHaveTextContent(
+      "JSX",
     );
-    rememberCodeLanguage("tsx");
+    expect(codes()[0]).toHaveAttribute("data-language", "jsx");
+    expect(codes()[0]).toHaveTextContent("SaveJsx");
+    expect(codes()[1]).toHaveTextContent("export function Other()");
+    expect(codes()[2]).toHaveAttribute("data-language", "bash");
+    expect(codes()[2]).toHaveTextContent("npx @vinyaas/cli add button");
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Copy code" })[0]!);
+    expect(writeText).toHaveBeenCalledWith(
+      "export function SaveJsx() { return null }",
+    );
+
+    fireEvent.click(screen.getAllByRole("button", { name: "TSX" })[0]!);
+    expect(codes()[0]).toHaveAttribute("data-language", "tsx");
+    expect(codes()[2]).toHaveTextContent("npx @vinyaas/cli add button");
   });
 });

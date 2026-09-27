@@ -77,17 +77,54 @@ const examples: ComponentExample[] = [
   {
     id: "position",
     title: "Position",
-    description: "side chooses the preferred placement.",
+    description:
+      "side places the tooltip and its pointer above, below, or beside the trigger.",
     preview: (
-      <Tooltip content="Saved locally" side="right">
-        <Button type="button" variant="outline">
-          Right
-        </Button>
-      </Tooltip>
+      <>
+        <Tooltip content="Above the trigger" side="top">
+          <Button type="button" variant="outline">
+            Top
+          </Button>
+        </Tooltip>
+        <Tooltip content="Below the trigger" side="bottom">
+          <Button type="button" variant="outline">
+            Bottom
+          </Button>
+        </Tooltip>
+        <Tooltip content="Left of the trigger" side="left">
+          <Button type="button" variant="outline">
+            Left
+          </Button>
+        </Tooltip>
+        <Tooltip content="Right of the trigger" side="right">
+          <Button type="button" variant="outline">
+            Right
+          </Button>
+        </Tooltip>
+      </>
     ),
-    code: `<Tooltip content="Saved locally" side="right">
-  <Button type="button">Right</Button>
-</Tooltip>`,
+    code: `import { Button } from "@/components/ui/button/button";
+import { Tooltip } from "@/components/ui/tooltip/tooltip";
+
+export function Placements() {
+  return (
+    <>
+      <Tooltip content="Above the trigger" side="top">
+        <Button type="button" variant="outline">Top</Button>
+      </Tooltip>
+      <Tooltip content="Below the trigger" side="bottom">
+        <Button type="button" variant="outline">Bottom</Button>
+      </Tooltip>
+      <Tooltip content="Left of the trigger" side="left">
+        <Button type="button" variant="outline">Left</Button>
+      </Tooltip>
+      <Tooltip content="Right of the trigger" side="right">
+        <Button type="button" variant="outline">Right</Button>
+      </Tooltip>
+    </>
+  );
+}
+`,
   },
 ];
 
@@ -104,8 +141,9 @@ export default async function TooltipPage() {
       overview={
         <>
           <p>
-            Tooltip shows concise text on hover and on keyboard focus. It is
-            portaled to the document body so the article does not clip it.
+            Tooltip shows concise text on hover and on keyboard focus. A pointer
+            connects the panel to its trigger. It is portaled to the document
+            body so the article does not clip it.
           </p>
           <p>
             The content is not interactive. Do not put buttons, links, or inputs

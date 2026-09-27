@@ -2,7 +2,9 @@ import Link from "next/link";
 
 import {
   componentHref,
+  componentIsNew,
   components,
+  currentVersion,
   newComponents,
   type ComponentMeta,
 } from "@/components/component-meta";
@@ -46,7 +48,7 @@ export default function ComponentsPage() {
             New Components
           </h2>
           <p className="text-body text-base leading-7">
-            Components added in the current docs pass.
+            Components introduced in v{currentVersion}.
           </p>
           <ComponentGrid items={recent} />
         </section>
@@ -77,9 +79,8 @@ export default function ComponentsPage() {
           What&apos;s Next
         </h2>
         <p className="text-body text-base leading-7">
-          The introduction lives at <code>/introduction</code>. The homepage is
-          reserved for a later showcase of components, combinations, and
-          reusable blocks. That showcase is not part of this page.
+          The introduction lives at <code>/introduction</code>. The homepage
+          showcases the components that are already in the catalog.
         </p>
       </section>
     </DocsArticle>
@@ -97,7 +98,7 @@ function ComponentGrid({ items }: { items: readonly ComponentMeta[] }) {
           >
             <span className="text-foreground flex items-center text-sm font-medium">
               {item.name}
-              {item.isNew ? <NewIndicator /> : null}
+              {componentIsNew(item) ? <NewIndicator /> : null}
             </span>
             <span className="text-muted-foreground text-sm leading-6">
               {item.description}

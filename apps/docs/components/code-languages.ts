@@ -1,22 +1,21 @@
-export const codeLanguages = [
-  "tsx",
-  "jsx",
-  "typescript",
-  "javascript",
-  "bash",
-] as const;
+export const codeLanguages = ["tsx", "jsx"] as const;
 
 export type CodeLanguage = (typeof codeLanguages)[number];
 
 export type DemoCode = string | Partial<Record<CodeLanguage, string>>;
 
-export function isCodeLanguage(value: string | null): value is CodeLanguage {
-  return codeLanguages.some((language) => language === value);
+const labels: Record<CodeLanguage, string> = {
+  tsx: "TSX",
+  jsx: "JSX",
+};
+
+export function codeLanguageLabel(language: CodeLanguage) {
+  return labels[language];
 }
 
 /**
- * A string is source for one language and is never relabeled.
- * A record follows the session preference only when that language has source.
+ * A string stays in its declared language.
+ * A TSX/JSX record follows the language selected in that demo when that source exists.
  */
 export function resolveDemoCode(
   code: DemoCode,

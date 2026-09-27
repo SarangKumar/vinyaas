@@ -1,0 +1,13 @@
+{
+  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "name": "card",
+  "type": "registry:ui",
+  "dependencies": ["clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "ui/card/card.tsx",
+      "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport function Card({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div\n      className={cn(\n        \"border-border bg-card text-card-foreground flex flex-col gap-4 rounded-md border p-4\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function CardHeader({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLElement>) {\n  return <header className={cn(\"flex flex-col gap-1\", className)} {...props} />;\n}\n\nexport function CardTitle({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div\n      className={cn(\"text-sm leading-none font-semibold\", className)}\n      {...props}\n    />\n  );\n}\n\nexport function CardDescription({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLParagraphElement>) {\n  return (\n    <p\n      className={cn(\"text-muted-foreground text-sm leading-5\", className)}\n      {...props}\n    />\n  );\n}\n\nexport function CardContent({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLDivElement>) {\n  return <div className={cn(\"flex flex-col gap-3\", className)} {...props} />;\n}\n\nexport function CardFooter({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLElement>) {\n  return (\n    <footer className={cn(\"flex items-center gap-2\", className)} {...props} />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

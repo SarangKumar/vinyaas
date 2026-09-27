@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { components, newComponents } from "./component-meta";
+import {
+  componentIsNew,
+  components,
+  currentVersion,
+  newComponents,
+} from "./component-meta";
 
 describe("component metadata", () => {
   it("lists each component once, in alphabetical order", () => {
@@ -13,6 +18,7 @@ describe("component metadata", () => {
       "Avatar",
       "Badge",
       "Button",
+      "Card",
       "Checkbox",
       "Input",
       "Kbd",
@@ -33,17 +39,21 @@ describe("component metadata", () => {
     ]);
   });
 
-  it("keeps new components as a subset of the catalog", () => {
+  it("treats v0.2 introductions as new and keeps earlier components out", () => {
+    expect(currentVersion).toBe("0.2");
+
     const slugs = new Set(components.map((component) => component.slug));
 
     for (const component of newComponents()) {
       expect(slugs.has(component.slug)).toBe(true);
-      expect(component.isNew).toBe(true);
+      expect(component.introducedIn).toBe(currentVersion);
+      expect(componentIsNew(component)).toBe(true);
     }
 
     expect(newComponents().map((component) => component.slug)).toEqual([
       "avatar",
       "badge",
+      "card",
       "checkbox",
       "kbd",
       "native-select",
@@ -59,5 +69,13 @@ describe("component metadata", () => {
       "toast",
       "tooltip",
     ]);
+    expect(newComponents().map((component) => component.slug)).not.toContain(
+      "button",
+    );
+    expect(
+      components
+        .filter((component) => component.introducedIn === "0.1")
+        .map((component) => component.slug),
+    ).toEqual(["button", "input", "label", "textarea"]);
   });
 });

@@ -43,6 +43,25 @@ describe("components catalog", () => {
         .length,
     ).toBeGreaterThan(0);
 
+    const newList = lists[0];
+    const allList = lists[1];
+
+    expect(newList?.querySelector('a[href="/components/button"]')).toBeNull();
+    expect(
+      newList?.querySelector('a[href="/components/card"]')?.textContent,
+    ).toContain(", new");
+    expect(
+      allList?.querySelector('a[href="/components/button"]'),
+    ).not.toBeNull();
+
+    const allNames = [...(allList?.querySelectorAll("a") ?? [])].map((link) =>
+      link.querySelector("span")?.childNodes[0]?.textContent?.trim(),
+    );
+
+    expect(allNames).toEqual(
+      [...allNames].sort((a, b) => (a ?? "").localeCompare(b ?? "")),
+    );
+
     const avatarLinks = document.querySelectorAll(
       'a[href="/components/avatar"]',
     );
@@ -53,14 +72,17 @@ describe("components catalog", () => {
     const radioLinks = document.querySelectorAll(
       'a[href="/components/radio-group"]',
     );
-    const buttonLink = document.querySelector('a[href="/components/button"]');
+    const buttonLinks = document.querySelectorAll(
+      'a[href="/components/button"]',
+    );
 
+    expect(buttonLinks).toHaveLength(1);
     expect(radioLinks).toHaveLength(2);
     expect(radioLinks[0]).toHaveClass("no-underline");
     expect(radioLinks[0]).not.toHaveClass("underline");
     expect(radioLinks[0]?.textContent).toContain(", new");
-    expect(buttonLink).toHaveClass("no-underline");
-    expect(buttonLink).not.toHaveClass("underline");
-    expect(buttonLink?.textContent).not.toContain(", new");
+    expect(buttonLinks[0]).toHaveClass("no-underline");
+    expect(buttonLinks[0]).not.toHaveClass("underline");
+    expect(buttonLinks[0]?.textContent).not.toContain(", new");
   });
 });
