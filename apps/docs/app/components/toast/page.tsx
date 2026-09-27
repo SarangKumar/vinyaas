@@ -80,9 +80,29 @@ const examples: ComponentExample[] = [
   {
     id: "success",
     title: "Success",
-    description: "type sets the status treatment.",
+    description:
+      "A successful save uses the success status, an icon, and a description.",
     preview: <SuccessToastDemo />,
-    code: `toast.add({ title: "Event created", type: "success" })`,
+    code: `import { Button } from "@/components/ui/button/button";
+import { toast } from "@/components/ui/toast/toast";
+
+export function SaveProfile() {
+  return (
+    <Button
+      type="button"
+      onClick={() =>
+        toast.add({
+          title: "Changes saved",
+          description: "The profile is up to date.",
+          type: "success",
+        })
+      }
+    >
+      Save profile
+    </Button>
+  );
+}
+`,
   },
   {
     id: "info",
@@ -101,9 +121,29 @@ const examples: ComponentExample[] = [
   {
     id: "error",
     title: "Error",
-    description: "An error toast is an alert.",
+    description: "An error toast is an alert with a destructive treatment.",
     preview: <ErrorToastDemo />,
-    code: `toast.add({ title: "Could not save", type: "error" })`,
+    code: `import { Button } from "@/components/ui/button/button";
+import { toast } from "@/components/ui/toast/toast";
+
+export function SaveAndFail() {
+  return (
+    <Button
+      type="button"
+      variant="destructive"
+      onClick={() =>
+        toast.add({
+          title: "Could not save",
+          description: "Check the connection and try again.",
+          type: "error",
+        })
+      }
+    >
+      Save and fail
+    </Button>
+  );
+}
+`,
   },
   {
     id: "loading",
@@ -116,12 +156,31 @@ const examples: ComponentExample[] = [
   {
     id: "action",
     title: "Action",
-    description: "actionProps renders a button inside the toast.",
+    description: "An action button stays in the toast so the user can undo.",
     preview: <ActionToastDemo />,
-    code: `toast.add({
-  title: "File deleted",
-  actionProps: { children: "Undo", onClick() {} },
-})`,
+    code: `import { Button } from "@/components/ui/button/button";
+import { toast } from "@/components/ui/toast/toast";
+
+export function DeleteFile() {
+  return (
+    <Button
+      type="button"
+      onClick={() =>
+        toast.add({
+          title: "File deleted",
+          description: "notes.md was removed.",
+          actionProps: {
+            children: "Undo",
+            onClick() {},
+          },
+        })
+      }
+    >
+      Delete file
+    </Button>
+  );
+}
+`,
   },
   {
     id: "promise",
@@ -160,7 +219,8 @@ export default async function ToastPage() {
           <p>
             Render <code>Toaster</code> once, near the root of the page. Call{" "}
             <code>toast.add</code> from an event. Toasts stack in the chosen
-            corner and dismiss themselves after a duration.
+            corner, fade in, and dismiss themselves after a duration. Each toast
+            shows a status icon, a title, and an optional description.
           </p>
           <p>
             Swipe dismissal is not implemented. Hover pauses the timer. Escape

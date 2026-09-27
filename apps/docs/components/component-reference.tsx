@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 
 import { ApiTable, type ApiRow } from "@/components/api-table";
 import { CodeBlock } from "@/components/code-block";
+import { ComponentDemo } from "@/components/component-demo";
+import type { CodeLanguage, DemoCode } from "@/components/code-languages";
 import { ComponentPreview } from "@/components/component-preview";
 import { DocsArticle } from "@/components/docs-article";
 import { InstallCommand } from "@/components/install-command";
@@ -17,7 +19,8 @@ export type ComponentExample = {
   title: string;
   description: string;
   preview: ReactNode;
-  code: string;
+  code: DemoCode;
+  language?: CodeLanguage;
 };
 
 /**
@@ -107,8 +110,11 @@ export function ComponentReference({
               <p className="text-body text-sm leading-6">
                 {example.description}
               </p>
-              <ComponentPreview>{example.preview}</ComponentPreview>
-              <CodeBlock code={example.code} language="tsx" />
+              <ComponentDemo
+                preview={example.preview}
+                code={example.code}
+                language={example.language}
+              />
             </div>
           ))}
         </section>

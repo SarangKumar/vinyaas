@@ -15,9 +15,15 @@ export function SuccessToastDemo() {
   return (
     <Button
       type="button"
-      onClick={() => toast.add({ title: "Event created", type: "success" })}
+      onClick={() =>
+        toast.add({
+          title: "Changes saved",
+          description: "The profile is up to date.",
+          type: "success",
+        })
+      }
     >
-      Show success
+      Save profile
     </Button>
   );
 }
@@ -48,9 +54,16 @@ export function ErrorToastDemo() {
   return (
     <Button
       type="button"
-      onClick={() => toast.add({ title: "Could not save", type: "error" })}
+      variant="destructive"
+      onClick={() =>
+        toast.add({
+          title: "Could not save",
+          description: "Check the connection and try again.",
+          type: "error",
+        })
+      }
     >
-      Show error
+      Save and fail
     </Button>
   );
 }
@@ -73,6 +86,7 @@ export function ActionToastDemo() {
       onClick={() =>
         toast.add({
           title: "File deleted",
+          description: "notes.md was removed.",
           actionProps: {
             children: "Undo",
             onClick() {},
@@ -80,7 +94,7 @@ export function ActionToastDemo() {
         })
       }
     >
-      Show action
+      Delete file
     </Button>
   );
 }

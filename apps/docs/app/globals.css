@@ -27,7 +27,7 @@
   --palette-mist: #d8d8f2;
   --palette-iris: #7272a5;
   --palette-lilac: #b2b2d8;
-  --palette-danger: #b4234a;
+  --palette-danger: #b42318;
 }
 
 /*
@@ -51,8 +51,10 @@
   --subtle-foreground: var(--palette-neutral-600);
   --accent: var(--palette-neutral-100);
   --accent-foreground: var(--palette-neutral-950);
+  --secondary: var(--palette-neutral-100);
+  --secondary-foreground: var(--palette-neutral-950);
   --destructive: var(--palette-danger);
-  --destructive-foreground: var(--palette-white);
+  --destructive-foreground: #fff5f5;
   --border: var(--palette-neutral-200);
   --input: var(--palette-neutral-200);
   --ring: var(--palette-neutral-950);
@@ -87,8 +89,10 @@
   --subtle-foreground: var(--palette-neutral-500);
   --accent: var(--palette-neutral-900);
   --accent-foreground: var(--palette-white);
+  --secondary: var(--palette-neutral-800);
+  --secondary-foreground: var(--palette-white);
   --destructive: var(--palette-danger);
-  --destructive-foreground: var(--palette-white);
+  --destructive-foreground: #fff5f5;
   --border: var(--palette-neutral-800);
   --input: var(--palette-neutral-800);
   --ring: var(--palette-white);
@@ -116,6 +120,8 @@
   --color-subtle-foreground: var(--subtle-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);

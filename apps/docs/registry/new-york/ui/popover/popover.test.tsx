@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
@@ -90,5 +90,40 @@ describe("Popover", () => {
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.queryByText("Second")).not.toBeInTheDocument();
+  });
+
+  it("follows the trigger when a scrolling ancestor moves", () => {
+    render(<Example />);
+    fireEvent.click(screen.getByRole("button", { name: "Details" }));
+
+    const trigger = screen.getByRole("button", { name: "Details" });
+    const dialog = screen.getByRole("dialog");
+    const box = (top: number) => ({
+      top,
+      bottom: top + 36,
+      left: 20,
+      right: 100,
+      width: 80,
+      height: 36,
+      x: 20,
+      y: top,
+      toJSON() {
+        return {};
+      },
+    });
+
+    vi.spyOn(trigger, "getBoundingClientRect").mockImplementation(() =>
+      box(40),
+    );
+    vi.spyOn(dialog, "getBoundingClientRect").mockImplementation(() => box(0));
+    fireEvent.scroll(window);
+
+    expect(dialog).toHaveClass("overflow-y-auto");
+    expect(dialog.style.top).toBe("84px");
+
+    vi.mocked(trigger.getBoundingClientRect).mockImplementation(() => box(140));
+    fireEvent.scroll(window);
+
+    expect(dialog.style.top).toBe("184px");
   });
 });

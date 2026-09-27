@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { CodeLanguageSelect } from "@/components/code-language";
 import { DocsMobileNav } from "@/components/docs-mobile-nav";
 import { githubUrl, homePath, introductionPath } from "@/components/docs-nav";
 import { portfolioUrl } from "@/lib/public-env";
@@ -41,9 +42,13 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
               <Link href="/components" className={headerLink}>
                 Components
               </Link>
+              <Link href="/changelog" className={headerLink}>
+                Changelog
+              </Link>
             </nav>
           </div>
           <div data-header-section="end" className="flex items-center gap-1">
+            <CodeLanguageSelect />
             <ThemeToggle />
             <a
               href={githubUrl}

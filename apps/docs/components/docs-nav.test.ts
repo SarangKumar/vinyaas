@@ -16,6 +16,10 @@ describe("documentation navigation", () => {
       title: "Installation",
       href: "/installation",
     });
+    expect(docsNav[0]?.items[2]).toEqual({
+      title: "Changelog",
+      href: "/changelog",
+    });
   });
 
   it("builds the component sidebar from the shared catalog", () => {

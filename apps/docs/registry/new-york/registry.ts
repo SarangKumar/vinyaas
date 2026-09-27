@@ -189,6 +189,28 @@ export const registry: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "badge",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/badge/badge.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "spinner",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/spinner/spinner.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "popover",
     type: "registry:ui",
     dependencies: ["clsx", "tailwind-merge"],

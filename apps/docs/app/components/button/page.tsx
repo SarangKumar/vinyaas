@@ -5,6 +5,8 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Button } from "@/registry/new-york/ui/button/button";
+import { Input } from "@/registry/new-york/ui/input/input";
+import { Label } from "@/registry/new-york/ui/label/label";
 
 const usage = `import { Button } from "@/components/ui/button/button";
 
@@ -13,19 +15,54 @@ export function SaveButton() {
 }
 `;
 
+const saveSource = {
+  tsx: `import { Button } from "@/components/ui/button/button";
+import { Input } from "@/components/ui/input/input";
+import { Label } from "@/components/ui/label/label";
+
+export function SaveName() {
+  return (
+    <form className="flex items-end gap-3">
+      <div className="grid gap-2">
+        <Label htmlFor="name">Name</Label>
+        <Input id="name" defaultValue="Ada Lovelace" />
+      </div>
+      <Button type="submit">Save</Button>
+    </form>
+  );
+}
+`,
+  jsx: `import { Button } from "@/components/ui/button/button";
+import { Input } from "@/components/ui/input/input";
+import { Label } from "@/components/ui/label/label";
+
+export function SaveName() {
+  return (
+    <form className="flex items-end gap-3">
+      <div className="grid gap-2">
+        <Label htmlFor="name">Name</Label>
+        <Input id="name" defaultValue="Ada Lovelace" />
+      </div>
+      <Button type="submit">Save</Button>
+    </form>
+  );
+}
+`,
+};
+
 const api: ApiRow[] = [
   {
     prop: "variant",
-    type: '"default" | "outline" | "destructive"',
+    type: '"default" | "outline" | "ghost" | "destructive" | "secondary" | "link"',
     defaultValue: '"default"',
     description: "Visual style.",
   },
   {
     prop: "size",
-    type: '"sm" | "md" | "lg"',
-    defaultValue: '"md"',
+    type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
+    defaultValue: '"default"',
     description:
-      "sm is h-8, md is h-9, and lg is h-10. md matches Input. Text stays text-sm.",
+      "default is h-9 and matches Input. xs is h-7, sm is h-8, and lg is h-10. Icon sizes are square.",
   },
   {
     prop: "className",
@@ -54,49 +91,84 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
-    id: "default",
-    title: "Default",
-    description: "The default variant is a solid button at the md size.",
-    preview: <Button>Save</Button>,
-    code: `<Button>Save</Button>`,
-  },
-  {
-    id: "outline",
-    title: "Outline",
+    id: "with-a-field",
+    title: "With a field",
     description:
-      "Outline keeps the button border and uses the page background.",
-    preview: <Button variant="outline">Cancel</Button>,
-    code: `<Button variant="outline">Cancel</Button>`,
+      "The default button is the same height as Input, so a label, a field, and Save sit on one line.",
+    preview: (
+      <form className="flex items-end gap-3">
+        <div className="grid gap-2">
+          <Label htmlFor="button-name">Name</Label>
+          <Input id="button-name" defaultValue="Ada Lovelace" />
+        </div>
+        <Button type="submit">Save</Button>
+      </form>
+    ),
+    code: saveSource,
   },
   {
-    id: "destructive",
-    title: "Destructive",
-    description: "Destructive is for an irreversible action such as delete.",
-    preview: <Button variant="destructive">Delete</Button>,
-    code: `<Button variant="destructive">Delete</Button>`,
-  },
-  {
-    id: "disabled",
-    title: "Disabled",
-    description: "Disabled blocks activation and shows the not-allowed cursor.",
-    preview: <Button disabled>Save</Button>,
-    code: `<Button disabled>Save</Button>`,
+    id: "variants",
+    title: "Variants",
+    description:
+      "Outline, ghost, and secondary are quiet actions. Destructive is for delete. Link is inline.",
+    preview: (
+      <>
+        <Button>Save</Button>
+        <Button variant="outline">Cancel</Button>
+        <Button variant="ghost">Skip</Button>
+        <Button variant="secondary">Draft</Button>
+        <Button variant="destructive">Delete</Button>
+        <Button variant="link">Learn more</Button>
+      </>
+    ),
+    code: `import { Button } from "@/components/ui/button/button";
+
+export function Actions() {
+  return (
+    <>
+      <Button>Save</Button>
+      <Button variant="outline">Cancel</Button>
+      <Button variant="ghost">Skip</Button>
+      <Button variant="secondary">Draft</Button>
+      <Button variant="destructive">Delete</Button>
+      <Button variant="link">Learn more</Button>
+    </>
+  );
+}
+`,
   },
   {
     id: "sizes",
     title: "Sizes",
     description:
-      "sm is the compact height, md is the default and matches Input, and lg is taller.",
+      "default matches Input. xs, sm, and lg change the text button. Icon sizes are square.",
     preview: (
       <>
+        <Button size="xs">Extra small</Button>
         <Button size="sm">Small</Button>
-        <Button size="md">Medium</Button>
+        <Button>Default</Button>
         <Button size="lg">Large</Button>
+        <Button size="icon" aria-label="Add">
+          +
+        </Button>
       </>
     ),
-    code: `<Button size="sm">Small</Button>
-<Button size="md">Medium</Button>
-<Button size="lg">Large</Button>`,
+    code: `import { Button } from "@/components/ui/button/button";
+
+export function Sizes() {
+  return (
+    <>
+      <Button size="xs">Extra small</Button>
+      <Button size="sm">Small</Button>
+      <Button>Default</Button>
+      <Button size="lg">Large</Button>
+      <Button size="icon" aria-label="Add">
+        +
+      </Button>
+    </>
+  );
+}
+`,
   },
 ];
 
@@ -154,6 +226,7 @@ export default async function ButtonPage() {
     >
       <Button>Save</Button>
       <Button variant="outline">Cancel</Button>
+      <Button variant="secondary">Draft</Button>
       <Button variant="destructive">Delete</Button>
     </ComponentReference>
   );

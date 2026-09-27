@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import AvatarPage from "./avatar/page";
+import BadgePage from "./badge/page";
+import SpinnerPage from "./spinner/page";
 import KbdPage from "./kbd/page";
 import ProgressPage from "./progress/page";
 import NativeSelectPage from "./native-select/page";
@@ -80,6 +82,18 @@ const pages = [
     title: "Toast",
     command: "npx @vinyaas/cli add toast",
     api: "actionProps",
+  },
+  {
+    load: BadgePage,
+    title: "Badge",
+    command: "npx @vinyaas/cli add badge",
+    api: "variant",
+  },
+  {
+    load: SpinnerPage,
+    title: "Spinner",
+    command: "npx @vinyaas/cli add spinner",
+    api: "label",
   },
   {
     load: PopoverPage,

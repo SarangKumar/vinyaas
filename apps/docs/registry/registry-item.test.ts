@@ -493,6 +493,8 @@ describe("registry build output", () => {
     ["native-select", "ui/native-select/native-select.tsx", "<select"],
     ["toast", "ui/toast/toast.tsx", "toast.add"],
     ["popover", "ui/popover/popover.tsx", "PopoverContent"],
+    ["badge", "ui/badge/badge.tsx", "<span"],
+    ["spinner", "ui/spinner/spinner.tsx", "aria-hidden"],
   ])(
     "keeps the new-york %s artifact aligned with the source item",
     async (name, filePath, sourceMarker) => {

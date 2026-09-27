@@ -11,6 +11,7 @@ describe("component metadata", () => {
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
     expect(names).toEqual([
       "Avatar",
+      "Badge",
       "Button",
       "Checkbox",
       "Input",
@@ -23,6 +24,7 @@ describe("component metadata", () => {
       "Select",
       "Separator",
       "Skeleton",
+      "Spinner",
       "Switch",
       "Table",
       "Textarea",
@@ -41,6 +43,7 @@ describe("component metadata", () => {
 
     expect(newComponents().map((component) => component.slug)).toEqual([
       "avatar",
+      "badge",
       "checkbox",
       "kbd",
       "native-select",
@@ -50,6 +53,7 @@ describe("component metadata", () => {
       "select",
       "separator",
       "skeleton",
+      "spinner",
       "switch",
       "table",
       "toast",

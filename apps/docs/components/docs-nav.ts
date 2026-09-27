@@ -34,6 +34,7 @@ export const docsNav: { title: string; items: DocsNavItem[] }[] = [
     items: [
       { title: "Introduction", href: introductionPath },
       { title: "Installation", href: "/installation" },
+      { title: "Changelog", href: "/changelog" },
     ],
   },
   {

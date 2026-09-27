@@ -192,7 +192,9 @@ Components use the native element and the browser’s keyboard behavior.
 - Tooltip shows short, non-interactive text on hover and keyboard focus. Escape hides it. It does not take focus.
 - Native Select is a composed native `<select>`, `<option>`, and `<optgroup>`. It is separate from Select. A custom popup Select is not implemented.
 - Toast renders through an explicit `<Toaster />`. Error toasts use `role="alert"`. Other toasts use `role="status"`. A toast does not take focus when it appears.
-- Popover opens a non-modal dialog. Escape and an outside click close it and return focus to the trigger. The panel may contain controls.
+- Popover opens a non-modal dialog. Escape and an outside click close it and return focus to the trigger. The panel may contain controls. It follows its trigger while the page scrolls, and long content scrolls inside the panel.
+- Spinner hides its graphic from assistive technology and exposes a text label. The animation stops under `prefers-reduced-motion`.
+- Badge is an inline label. It is not a button.
 - Interactive elements use a visible `focus-visible` ring. Disabled controls use `cursor-not-allowed`.
 - Future components should keep native semantics before adding custom keyboard behavior.
 - Registry JSON embeds that source. It lists npm dependencies. It does not list `lib/utils.ts`.

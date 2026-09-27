@@ -24,11 +24,26 @@ describe("Button", () => {
   });
 
   it("supports variants", () => {
-    render(<Button variant="outline">Cancel</Button>);
+    const { rerender } = render(<Button variant="outline">Save</Button>);
+    const button = () => screen.getByRole("button", { name: "Save" });
 
-    expect(screen.getByRole("button", { name: "Cancel" })).toHaveClass(
-      "border",
+    expect(button()).toHaveClass("border", "bg-background");
+
+    rerender(<Button variant="ghost">Save</Button>);
+    expect(button()).toHaveClass("hover:bg-accent");
+
+    rerender(<Button variant="secondary">Save</Button>);
+    expect(button()).toHaveClass("bg-secondary", "text-secondary-foreground");
+
+    rerender(<Button variant="link">Save</Button>);
+    expect(button()).toHaveClass("underline-offset-4");
+
+    rerender(<Button variant="destructive">Save</Button>);
+    expect(button()).toHaveClass(
+      "bg-destructive",
+      "text-destructive-foreground",
     );
+    expect(button()).toHaveClass("disabled:opacity-50");
   });
 
   it("uses the default control height and keeps the size scale", () => {
@@ -38,6 +53,13 @@ describe("Button", () => {
     expect(button).toHaveClass("h-9", "text-sm", "px-4");
     expect(button).not.toHaveClass("h-8");
     expect(button).not.toHaveClass("h-10");
+    expect(button).not.toHaveClass("h-7");
+
+    rerender(<Button size="xs">Save</Button>);
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass(
+      "h-7",
+      "text-xs",
+    );
 
     rerender(<Button size="sm">Save</Button>);
     expect(screen.getByRole("button", { name: "Save" })).toHaveClass("h-8");
@@ -47,6 +69,34 @@ describe("Button", () => {
       "h-10",
       "px-6",
     );
+
+    rerender(
+      <Button size="icon" aria-label="Save">
+        +
+      </Button>,
+    );
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass("size-9");
+
+    rerender(
+      <Button size="icon-xs" aria-label="Save">
+        +
+      </Button>,
+    );
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass("size-7");
+
+    rerender(
+      <Button size="icon-sm" aria-label="Save">
+        +
+      </Button>,
+    );
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass("size-8");
+
+    rerender(
+      <Button size="icon-lg" aria-label="Save">
+        +
+      </Button>,
+    );
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass("size-10");
   });
 
   it("is keyboard focusable and activates from a click", () => {

@@ -1,4 +1,10 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { toast, Toaster } from "./toast";
@@ -26,13 +32,17 @@ describe("Toast", () => {
       });
     });
 
-    expect(screen.getByRole("status")).toHaveTextContent("Saved");
+    const status = screen.getByRole("status");
+
+    expect(status).toHaveTextContent("Saved");
     expect(screen.getByText("The note was saved.")).toBeInTheDocument();
-    expect(screen.getByRole("status")).toHaveAttribute("data-type", "success");
+    expect(status).toHaveAttribute("data-type", "success");
+    expect(status.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    expect(status.style.animation).toContain("vinyaas-toast-in");
     expect(screen.getByRole("button", { name: "Page" })).toHaveFocus();
   });
 
-  it("stacks toasts, runs an action, and dismisses one", () => {
+  it("stacks toasts, runs an action, and dismisses one", async () => {
     const onUndo = vi.fn();
 
     render(<Toaster position="top-right" />);
@@ -57,7 +67,9 @@ describe("Toast", () => {
 
     fireEvent.click(screen.getAllByRole("button", { name: "Dismiss" })[0]!);
 
-    expect(screen.getAllByRole("status")).toHaveLength(1);
+    await waitFor(() => {
+      expect(screen.getAllByRole("status")).toHaveLength(1);
+    });
   });
 
   it("dismisses automatically and pauses while hovered", () => {
@@ -84,6 +96,10 @@ describe("Toast", () => {
     fireEvent.mouseLeave(status);
     act(() => {
       vi.advanceTimersByTime(1000);
+    });
+    expect(screen.getByText("Saved")).toBeInTheDocument();
+    act(() => {
+      vi.advanceTimersByTime(160);
     });
 
     expect(screen.queryByText("Saved")).not.toBeInTheDocument();

@@ -145,69 +145,109 @@ export function PopoverContent({
   );
 
   useLayoutEffect(() => {
-    if (!open || !triggerRef.current || !contentRef.current) {
+    if (!open) {
       return;
     }
 
-    const trigger = triggerRef.current.getBoundingClientRect();
-    const content = contentRef.current.getBoundingClientRect();
-    const gap = 8;
-    let top = trigger.bottom + gap;
-    let left = trigger.left;
+    function place() {
+      const triggerNode = triggerRef.current;
+      const contentNode = contentRef.current;
 
-    if (side === "top") {
-      top = trigger.top - content.height - gap;
-    }
-
-    if (side === "left") {
-      left = trigger.left - content.width - gap;
-      top = trigger.top;
-    }
-
-    if (side === "right") {
-      left = trigger.right + gap;
-      top = trigger.top;
-    }
-
-    if (side === "top" || side === "bottom") {
-      if (align === "center") {
-        left = trigger.left + trigger.width / 2 - content.width / 2;
+      if (!triggerNode || !contentNode) {
+        return;
       }
 
-      if (align === "end") {
-        left = trigger.right - content.width;
-      }
-    } else {
-      if (align === "center") {
-        top = trigger.top + trigger.height / 2 - content.height / 2;
+      const trigger = triggerNode.getBoundingClientRect();
+      const content = contentNode.getBoundingClientRect();
+      const gap = 8;
+      let top = trigger.bottom + gap;
+      let left = trigger.left;
+
+      if (side === "top") {
+        top = trigger.top - content.height - gap;
       }
 
-      if (align === "end") {
-        top = trigger.bottom - content.height;
+      if (side === "left") {
+        left = trigger.left - content.width - gap;
+        top = trigger.top;
       }
+
+      if (side === "right") {
+        left = trigger.right + gap;
+        top = trigger.top;
+      }
+
+      if (side === "top" || side === "bottom") {
+        if (align === "center") {
+          left = trigger.left + trigger.width / 2 - content.width / 2;
+        }
+
+        if (align === "end") {
+          left = trigger.right - content.width;
+        }
+      } else {
+        if (align === "center") {
+          top = trigger.top + trigger.height / 2 - content.height / 2;
+        }
+
+        if (align === "end") {
+          top = trigger.bottom - content.height;
+        }
+      }
+
+      const fitsBelow =
+        trigger.bottom + content.height + gap < window.innerHeight;
+      const fitsAbove = trigger.top - content.height - gap > 0;
+
+      if (side === "bottom" && !fitsBelow && fitsAbove) {
+        top = trigger.top - content.height - gap;
+      }
+
+      if (side === "top" && !fitsAbove && fitsBelow) {
+        top = trigger.bottom + gap;
+      }
+
+      left = Math.min(
+        Math.max(8, left),
+        Math.max(8, window.innerWidth - content.width - 8),
+      );
+      top = Math.min(
+        Math.max(8, top),
+        Math.max(8, window.innerHeight - content.height - 8),
+      );
+      setPoint({ top, left });
     }
 
-    const fitsBelow =
-      trigger.bottom + content.height + gap < window.innerHeight;
-    const fitsAbove = trigger.top - content.height - gap > 0;
+    place();
+    // position:fixed does not follow a scrolling ancestor. Scroll events do
+    // not bubble, so listen on each scrollable parent of the trigger.
+    const scrollers: EventTarget[] = [window];
+    let parent = triggerRef.current?.parentElement ?? null;
 
-    if (side === "bottom" && !fitsBelow && fitsAbove) {
-      top = trigger.top - content.height - gap;
+    while (parent) {
+      const style = getComputedStyle(parent);
+      const overflow = `${style.overflow}${style.overflowX}${style.overflowY}`;
+
+      if (/(auto|scroll)/.test(overflow)) {
+        scrollers.push(parent);
+      }
+
+      parent = parent.parentElement;
     }
 
-    if (side === "top" && !fitsAbove && fitsBelow) {
-      top = trigger.bottom + gap;
+    for (const scroller of scrollers) {
+      scroller.addEventListener("scroll", place);
     }
 
-    left = Math.min(
-      Math.max(8, left),
-      Math.max(8, window.innerWidth - content.width - 8),
-    );
-    top = Math.min(
-      Math.max(8, top),
-      Math.max(8, window.innerHeight - content.height - 8),
-    );
-    setPoint({ top, left });
+    window.addEventListener("resize", place);
+
+    return () => {
+      for (const scroller of scrollers) {
+        scroller.removeEventListener("scroll", place);
+      }
+
+      window.removeEventListener("resize", place);
+    };
   }, [open, side, align, children, triggerRef]);
 
   useEffect(() => {
@@ -270,7 +310,7 @@ export function PopoverContent({
         left: point?.left ?? -9999,
       }}
       className={cn(
-        "border-border bg-background text-foreground z-50 w-72 max-w-[calc(100vw-1rem)] rounded-md border p-4 text-sm focus-visible:outline-none",
+        "border-border bg-background text-foreground z-50 max-h-[min(24rem,calc(100dvh-2rem))] w-72 max-w-[calc(100vw-1rem)] overflow-x-hidden overflow-y-auto rounded-md border p-4 text-sm focus-visible:outline-none",
         className,
       )}
     >

@@ -15,16 +15,25 @@ const collapseAfterLines = 16;
 export function CodeBlock({
   code,
   language,
+  attached = false,
 }: {
   code: string;
   language?: string;
+  /** Drops the outer frame so a parent demo can share one border. */
+  attached?: boolean;
 }) {
   const collapsible = code.split("\n").length > collapseAfterLines;
   const [expanded, setExpanded] = useState(false);
   const collapsed = collapsible && !expanded;
 
   return (
-    <div className="border-border bg-card text-card-foreground overflow-hidden rounded-md border">
+    <div
+      className={
+        attached
+          ? "border-border bg-card text-card-foreground overflow-hidden border-t"
+          : "border-border bg-card text-card-foreground overflow-hidden rounded-md border"
+      }
+    >
       <div className="border-border flex items-center justify-between gap-3 border-b px-3 py-1.5">
         {language ? (
           <span className="text-subtle-foreground font-mono text-xs">

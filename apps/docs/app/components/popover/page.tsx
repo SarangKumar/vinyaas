@@ -5,13 +5,13 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Button } from "@/registry/new-york/ui/button/button";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/registry/new-york/ui/popover/popover";
+
+import { ProfileSettings } from "./profile-settings";
 
 const usage = `import { Button } from "@/components/ui/button/button";
 import {
@@ -65,11 +65,61 @@ const api: ApiRow[] = [
   },
 ];
 
+const profileSource = `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import { Input } from "@/components/ui/input/input";
+import { Label } from "@/components/ui/label/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover/popover";
+import { Separator } from "@/components/ui/separator/separator";
+import { Switch } from "@/components/ui/switch/switch";
+
+export function ProfileSettings() {
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <Button type="button" variant="outline">
+          Profile
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="grid gap-4">
+        <div className="flex items-center justify-between gap-3">
+          <p className="font-medium">Account</p>
+          <Badge>Pro</Badge>
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="profile-name">Name</Label>
+          <Input id="profile-name" defaultValue="Ada Lovelace" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="profile-email">Email</Label>
+          <Input id="profile-email" type="email" defaultValue="ada@example.com" />
+        </div>
+        <Separator />
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="profile-notifications">Notifications</Label>
+          <Switch id="profile-notifications" defaultChecked />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="profile-privacy">Privacy</Label>
+          <Switch id="profile-privacy" />
+        </div>
+        <Button type="button">Save account</Button>
+      </PopoverContent>
+    </Popover>
+  );
+}
+`;
+
 const examples: ComponentExample[] = [
   {
     id: "basic",
     title: "Basic",
-    description: "Click the trigger. Escape or an outside click closes it.",
+    description:
+      "Click the trigger. Escape or an outside click closes it and returns focus.",
     preview: (
       <Popover>
         <PopoverTrigger>
@@ -80,19 +130,40 @@ const examples: ComponentExample[] = [
         </PopoverContent>
       </Popover>
     ),
-    code: `<Popover>
-  <PopoverTrigger>
-    <Button type="button">Details</Button>
-  </PopoverTrigger>
-  <PopoverContent>
-    <p>Installed as source.</p>
-  </PopoverContent>
-</Popover>`,
+    code: `import { Button } from "@/components/ui/button/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover/popover";
+
+export function Details() {
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <Button type="button">Details</Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <p>Installed as source.</p>
+      </PopoverContent>
+    </Popover>
+  );
+}
+`,
+  },
+  {
+    id: "profile-settings",
+    title: "Profile settings",
+    description:
+      "A settings panel combines a badge, fields, switches, and a save button. Long content scrolls inside the panel.",
+    preview: <ProfileSettings />,
+    code: profileSource,
   },
   {
     id: "alignment",
     title: "Alignment",
-    description: "side and align place the panel. It shifts to stay in view.",
+    description:
+      "side and align place the panel around the trigger. The panel follows the trigger when the page scrolls.",
     preview: (
       <Popover>
         <PopoverTrigger>
@@ -101,76 +172,32 @@ const examples: ComponentExample[] = [
           </Button>
         </PopoverTrigger>
         <PopoverContent side="bottom" align="start">
-          <p>Aligned to the start.</p>
+          <p>Aligned to the start of the trigger.</p>
         </PopoverContent>
       </Popover>
     ),
-    code: `<PopoverContent side="bottom" align="start">
-  <p>Aligned to the start.</p>
-</PopoverContent>`,
-  },
-  {
-    id: "interactive",
-    title: "Interactive",
-    description: "Content can contain buttons and other controls.",
-    preview: (
-      <Popover>
-        <PopoverTrigger>
-          <Button type="button">Actions</Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <Button type="button">Save note</Button>
-        </PopoverContent>
-      </Popover>
-    ),
-    code: `<PopoverContent>
-  <Button type="button">Save note</Button>
-</PopoverContent>`,
-  },
-  {
-    id: "form",
-    title: "Form",
-    description: "A field inside the popover is a normal control.",
-    preview: (
-      <Popover>
-        <PopoverTrigger>
-          <Button type="button">Rename</Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <div className="grid gap-2">
-            <Label htmlFor="popover-name">Name</Label>
-            <Input id="popover-name" defaultValue="Ada" />
-          </div>
-        </PopoverContent>
-      </Popover>
-    ),
-    code: `<PopoverContent>
-  <Label htmlFor="name">Name</Label>
-  <Input id="name" defaultValue="Ada" />
-</PopoverContent>`,
-  },
-  {
-    id: "close",
-    title: "Close",
-    description: "Escape closes the popover and returns focus to the trigger.",
-    preview: (
-      <Popover>
-        <PopoverTrigger>
-          <Button type="button">Close me</Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <p>Press Escape.</p>
-        </PopoverContent>
-      </Popover>
-    ),
-    code: `<Popover>
-  <PopoverTrigger>
-    <Button type="button">Close me</Button>
-  </PopoverTrigger>
-  <PopoverContent>
-    <p>Press Escape.</p>
-  </PopoverContent>
-</Popover>`,
+    code: `import { Button } from "@/components/ui/button/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover/popover";
+
+export function AlignedDetails() {
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <Button type="button" variant="outline">
+          Align
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent side="bottom" align="start">
+        <p>Aligned to the start of the trigger.</p>
+      </PopoverContent>
+    </Popover>
+  );
+}
+`,
   },
 ];
 
@@ -193,7 +220,9 @@ export default async function PopoverPage() {
           </p>
           <p>
             Unlike Tooltip, the panel can contain buttons, fields, and links.
-            Focus is not trapped: tabbing can leave the panel.
+            Focus is not trapped: tabbing can leave the panel. The panel is
+            positioned against the trigger and moves when the page scrolls.
+            Content taller than the viewport scrolls inside the panel.
           </p>
         </>
       }

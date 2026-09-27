@@ -22,6 +22,13 @@ export const components: readonly ComponentMeta[] = [
     isNew: true,
   },
   {
+    name: "Badge",
+    slug: "badge",
+    description: "A compact label for status or category.",
+    category: "display",
+    isNew: true,
+  },
+  {
     name: "Button",
     slug: "button",
     description: "A versatile button primitive for actions and commands.",
@@ -100,6 +107,13 @@ export const components: readonly ComponentMeta[] = [
     slug: "skeleton",
     description: "A placeholder shown while content is loading.",
     category: "display",
+    isNew: true,
+  },
+  {
+    name: "Spinner",
+    slug: "spinner",
+    description: "A small loading indicator.",
+    category: "feedback",
     isNew: true,
   },
   {
