@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
 import { Button } from "./button";
 
@@ -35,6 +35,36 @@ describe("Button", () => {
     render(<Button size="lg">Save</Button>);
 
     expect(screen.getByRole("button", { name: "Save" })).toHaveClass("h-11");
+  });
+
+  it("is keyboard focusable and activates from a click", () => {
+    const onClick = vi.fn();
+
+    render(<Button onClick={onClick}>Save</Button>);
+    const button = screen.getByRole("button", { name: "Save" });
+
+    button.focus();
+    fireEvent.click(button);
+
+    expect(button.tagName).toBe("BUTTON");
+    expect(button).toHaveFocus();
+    expect(onClick).toHaveBeenCalledOnce();
+  });
+
+  it("does not activate when disabled", () => {
+    const onClick = vi.fn();
+
+    render(
+      <Button disabled onClick={onClick}>
+        Save
+      </Button>,
+    );
+    const button = screen.getByRole("button", { name: "Save" });
+
+    fireEvent.click(button);
+
+    expect(button).toBeDisabled();
+    expect(onClick).not.toHaveBeenCalled();
   });
 
   it("allows custom classes", () => {

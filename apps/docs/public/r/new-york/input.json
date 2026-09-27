@@ -6,7 +6,7 @@
   "files": [
     {
       "path": "ui/input/input.tsx",
-      "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type InputProps = React.ComponentProps<\"input\">;\n\nexport function Input({ className, type = \"text\", ref, ...props }: InputProps) {\n  return (\n    <input\n      type={type}\n      ref={ref}\n      className={cn(\n        \"flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-black placeholder:text-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 disabled:pointer-events-none disabled:opacity-50\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
+      "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type InputProps = React.ComponentProps<\"input\">;\n\nexport function Input({ className, type = \"text\", ref, ...props }: InputProps) {\n  return (\n    <input\n      type={type}\n      ref={ref}\n      className={cn(\n        \"border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-ring focus-visible:ring-offset-background flex h-10 w-full rounded-md border px-3 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }
   ]

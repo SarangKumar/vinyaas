@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { docsNav } from "@/components/docs-nav";
+import { focusRing } from "@/components/focus-ring";
 
 export function DocsNavLinks({ className }: { className?: string }) {
   const pathname = usePathname();
@@ -12,10 +13,10 @@ export function DocsNavLinks({ className }: { className?: string }) {
     <nav className={className} aria-label="Documentation">
       {docsNav.map((group) => (
         <div key={group.title} className="flex flex-col gap-2">
-          <p className="px-2 text-xs font-medium tracking-wide text-gray-500 uppercase">
+          <p className="text-muted-foreground px-2 text-[11px] font-medium tracking-wide uppercase">
             {group.title}
           </p>
-          <ul className="flex flex-col gap-1">
+          <ul className="flex flex-col">
             {group.items.map((item) => {
               const current = pathname === item.href;
 
@@ -26,8 +27,8 @@ export function DocsNavLinks({ className }: { className?: string }) {
                     aria-current={current ? "page" : undefined}
                     className={
                       current
-                        ? "block rounded-md bg-gray-100 px-2 py-1.5 text-sm font-medium text-black"
-                        : "block rounded-md px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-black"
+                        ? `bg-muted text-foreground block cursor-pointer rounded-md px-2 py-1 text-[13px] font-medium ${focusRing}`
+                        : `text-muted-foreground hover:bg-muted hover:text-foreground block cursor-pointer rounded-md px-2 py-1 text-[13px] ${focusRing}`
                     }
                   >
                     {item.title}

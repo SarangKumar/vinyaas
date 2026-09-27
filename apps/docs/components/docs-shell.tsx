@@ -1,42 +1,62 @@
+import Image from "next/image";
 import Link from "next/link";
 
+import { DocsMobileNav } from "@/components/docs-mobile-nav";
 import { githubUrl } from "@/components/docs-nav";
 import { DocsNavLinks } from "@/components/docs-nav-links";
+import { focusRing } from "@/components/focus-ring";
+import logo from "@/components/logo.png";
+import { TableOfContents } from "@/components/table-of-contents";
+
+const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground ${focusRing}`;
 
 export function DocsShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-full flex-col bg-white text-gray-950">
-      <header className="sticky top-0 z-10 border-b border-gray-200 bg-white">
-        <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4">
-          <Link href="/" className="text-sm font-medium">
-            Vinyaas
+    <div className="bg-background text-foreground flex h-full min-h-0 flex-col">
+      <header className="border-border bg-background z-20 h-12 shrink-0 border-b">
+        <div className="flex h-full items-center justify-between gap-4 px-4">
+          <Link
+            href="/"
+            className={`text-foreground inline-flex items-center gap-2 rounded-md text-sm font-medium ${focusRing}`}
+          >
+            <Image
+              src={logo}
+              alt=""
+              width={20}
+              height={20}
+              className="h-5 w-5"
+            />
+            <span>Vinyaas</span>
           </Link>
-          <nav aria-label="Site" className="flex items-center gap-5 text-sm">
-            <Link href="/" className="text-gray-600 hover:text-black">
+          <nav aria-label="Site" className="flex items-center gap-1">
+            <Link href="/" className={headerLink}>
               Docs
             </Link>
-            <Link href="/components" className="text-gray-600 hover:text-black">
+            <Link href="/components" className={headerLink}>
               Components
             </Link>
-            <a href={githubUrl} className="text-gray-600 hover:text-black">
+            <a href={githubUrl} className={headerLink}>
               GitHub
             </a>
           </nav>
         </div>
       </header>
-      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col md:flex-row">
-        <aside className="hidden w-56 shrink-0 border-r border-gray-200 px-4 py-6 md:block">
-          <DocsNavLinks className="flex flex-col gap-6" />
+      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[14rem_minmax(0,1fr)] xl:grid-cols-[14rem_minmax(0,1fr)_12rem]">
+        <aside className="border-border hidden min-h-0 overflow-y-auto overscroll-y-contain border-r lg:block">
+          <DocsNavLinks className="flex flex-col gap-5 px-3 py-4" />
         </aside>
-        <div className="min-w-0 flex-1">
-          <details className="border-b border-gray-200 md:hidden">
-            <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
-              Menu
-            </summary>
-            <DocsNavLinks className="flex flex-col gap-6 px-4 pb-4" />
-          </details>
-          {children}
+        <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
+          <DocsMobileNav />
+          <main
+            id="docs-content"
+            className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain"
+          >
+            {children}
+          </main>
         </div>
+        <aside className="hidden min-h-0 overflow-y-auto overscroll-y-contain xl:block">
+          <TableOfContents />
+        </aside>
       </div>
     </div>
   );

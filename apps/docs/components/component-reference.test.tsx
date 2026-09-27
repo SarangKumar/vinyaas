@@ -30,5 +30,20 @@ describe("ComponentReference", () => {
     expect(screen.getByRole("heading", { name: "Usage" })).toBeInTheDocument();
     expect(screen.getByText("<Input />")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Source" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Preview" })).toHaveAttribute(
+      "id",
+      "preview",
+    );
+    expect(
+      screen.getByRole("heading", { name: "Installation" }),
+    ).toHaveAttribute("id", "installation");
+    expect(screen.getByRole("heading", { name: "Usage" })).toHaveAttribute(
+      "id",
+      "usage",
+    );
+    expect(screen.getByRole("heading", { name: "Source" })).toHaveAttribute(
+      "id",
+      "source",
+    );
   });
 });

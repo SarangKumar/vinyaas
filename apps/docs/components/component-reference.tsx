@@ -27,19 +27,39 @@ export function ComponentReference({
   return (
     <DocsArticle title={title} description={description}>
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-medium">Preview</h2>
+        <h2
+          id="preview"
+          className="scroll-mt-8 text-lg font-semibold tracking-tight"
+        >
+          Preview
+        </h2>
         <ComponentPreview>{children}</ComponentPreview>
       </section>
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-medium">Installation</h2>
+        <h2
+          id="installation"
+          className="scroll-mt-8 text-lg font-semibold tracking-tight"
+        >
+          Installation
+        </h2>
         <InstallCommand command={install} />
       </section>
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-medium">Usage</h2>
+        <h2
+          id="usage"
+          className="scroll-mt-8 text-lg font-semibold tracking-tight"
+        >
+          Usage
+        </h2>
         <CodeBlock code={usage} language="tsx" />
       </section>
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-medium">Source</h2>
+        <h2
+          id="source"
+          className="scroll-mt-8 text-lg font-semibold tracking-tight"
+        >
+          Source
+        </h2>
         <CodeBlock code={source} language="tsx" />
       </section>
     </DocsArticle>

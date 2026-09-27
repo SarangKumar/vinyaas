@@ -1,4 +1,4 @@
-export const githubUrl = "https://github.com/SarangKumar/shilp";
+export const githubUrl = "https://github.com/SarangKumar/vinyaas";
 
 export const docsNav = [
   {

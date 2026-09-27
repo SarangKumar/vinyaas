@@ -5,6 +5,26 @@ import { describe, expect, it } from "vitest";
 import { Input } from "./input";
 
 describe("Input", () => {
+  it("associates with a label through id", () => {
+    render(
+      <>
+        <label htmlFor="email">Email</label>
+        <Input id="email" />
+      </>,
+    );
+
+    expect(screen.getByLabelText("Email")).toBeInstanceOf(HTMLInputElement);
+  });
+
+  it("can be focused", () => {
+    render(<Input aria-label="Email" />);
+    const input = screen.getByRole("textbox", { name: "Email" });
+
+    input.focus();
+
+    expect(input).toHaveFocus();
+  });
+
   it("renders a text field", () => {
     render(<Input aria-label="Email" placeholder="name@example.com" />);
 

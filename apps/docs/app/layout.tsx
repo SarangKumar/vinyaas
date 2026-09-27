@@ -26,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans">
+      <body className="bg-background text-foreground h-full overflow-hidden font-sans">
         <DocsShell>{children}</DocsShell>
       </body>
     </html>

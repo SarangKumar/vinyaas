@@ -153,7 +153,17 @@ v0.2 components follow the existing Button.
 - Variants use `class-variance-authority` when a component has more than one visual style. Input is a single field and does not use it.
 - Class names are merged with `cn` from `@/lib/utils`.
 - Components render the native element and pass through its attributes, including `disabled` and `aria-*`.
+- Colors use semantic utilities such as `bg-primary`, `text-foreground`, and `border-border`. The docs site defines those tokens in `apps/docs/app/globals.css`. Installed projects do not receive that theme file yet.
 - Documentation pages live at `/components/<name>`. Each page shows a live example, the install command, a usage snippet, and the registry source.
+
+## Accessibility
+
+Components use the native element and the browser’s keyboard behavior.
+
+- Button is a `<button>`. Enter and Space activate it. `disabled` blocks activation. Visible text is the accessible name. It is not a clickable `<div>`.
+- Input is an `<input>`. A label associates with `htmlFor` and `id`. `disabled`, `aria-invalid`, and other ARIA attributes pass through. It does not wrap the control in an extra element.
+- Interactive elements use a visible `focus-visible` ring. Disabled controls use `cursor-not-allowed`.
+- Future components should keep native semantics before adding custom keyboard behavior.
 - Registry JSON embeds that source. It lists npm dependencies. It does not list `lib/utils.ts`.
 
 ## Development

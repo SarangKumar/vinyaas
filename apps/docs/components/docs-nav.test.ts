@@ -4,7 +4,7 @@ import { docsNav, githubUrl } from "./docs-nav";
 
 describe("documentation navigation", () => {
   it("lists the getting started pages and the current components", () => {
-    expect(githubUrl).toBe("https://github.com/SarangKumar/shilp");
+    expect(githubUrl).toBe("https://github.com/SarangKumar/vinyaas");
     expect(docsNav).toEqual([
       {
         title: "Getting Started",

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { docsNav } from "@/components/docs-nav";
 import { DocsArticle } from "@/components/docs-article";
+import { focusRing } from "@/components/focus-ring";
 
 export default function ComponentsPage() {
   const components = docsNav.find((group) => group.title === "Components");
@@ -14,7 +15,10 @@ export default function ComponentsPage() {
       <ul className="flex flex-col gap-2 text-sm">
         {components?.items.map((item) => (
           <li key={item.href}>
-            <Link href={item.href} className="underline">
+            <Link
+              href={item.href}
+              className={`text-foreground cursor-pointer rounded-sm underline ${focusRing}`}
+            >
               {item.title}
             </Link>
           </li>
