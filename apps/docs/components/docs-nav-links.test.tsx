@@ -14,7 +14,7 @@ describe("DocsNavLinks", () => {
     expect(
       screen.getByRole("navigation", { name: "Documentation" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Input" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Input, new" })).toHaveAttribute(
       "aria-current",
       "page",
     );

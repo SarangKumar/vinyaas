@@ -1,0 +1,13 @@
+{
+  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "name": "alert",
+  "type": "registry:ui",
+  "dependencies": ["clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "ui/alert/alert.tsx",
+      "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst alertVariants = {\n  default: \"border-border bg-background text-foreground\",\n  destructive:\n    \"border-destructive bg-destructive text-destructive-foreground border-2\",\n} as const;\n\nexport type AlertVariant = keyof typeof alertVariants;\n\nexport function Alert({\n  className,\n  variant = \"default\",\n  ...props\n}: React.HTMLAttributes<HTMLDivElement> & {\n  variant?: AlertVariant;\n}) {\n  return (\n    <div\n      role=\"alert\"\n      data-variant={variant}\n      className={cn(\n        \"relative flex w-full flex-col gap-1 rounded-md border px-4 py-3 text-sm\",\n        alertVariants[variant],\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function AlertTitle({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLParagraphElement>) {\n  return (\n    <p\n      className={cn(\"text-sm leading-none font-medium\", className)}\n      {...props}\n    />\n  );\n}\n\nexport function AlertDescription({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLParagraphElement>) {\n  return (\n    <p className={cn(\"text-sm leading-6 opacity-90\", className)} {...props} />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

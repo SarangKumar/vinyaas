@@ -221,4 +221,59 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "alert",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/alert/alert.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "dialog",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/dialog/dialog.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "accordion",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/accordion/accordion.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "breadcrumb",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/breadcrumb/breadcrumb.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "scroll-area",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/scroll-area/scroll-area.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

@@ -16,9 +16,23 @@ export type ComponentMeta = {
 
 /**
  * Alphabetical catalog. Sidebar, New Components, and All Components read this list.
- * New means introducedIn matches currentVersion. v0.1 is Button, Input, Textarea, and Label.
+ * New means introducedIn matches currentVersion. Button is the only v0.1 component.
  */
 export const components: readonly ComponentMeta[] = [
+  {
+    name: "Accordion",
+    slug: "accordion",
+    description: "A stack of sections that expand and collapse.",
+    category: "layout",
+    introducedIn: "0.2",
+  },
+  {
+    name: "Alert",
+    slug: "alert",
+    description: "A notice for a status that should be announced.",
+    category: "feedback",
+    introducedIn: "0.2",
+  },
   {
     name: "Avatar",
     slug: "avatar",
@@ -31,6 +45,13 @@ export const components: readonly ComponentMeta[] = [
     slug: "badge",
     description: "A compact label for status or category.",
     category: "display",
+    introducedIn: "0.2",
+  },
+  {
+    name: "Breadcrumb",
+    slug: "breadcrumb",
+    description: "A trail of links for the current page.",
+    category: "navigation",
     introducedIn: "0.2",
   },
   {
@@ -55,11 +76,18 @@ export const components: readonly ComponentMeta[] = [
     introducedIn: "0.2",
   },
   {
+    name: "Dialog",
+    slug: "dialog",
+    description: "A modal panel for a focused task.",
+    category: "overlay",
+    introducedIn: "0.2",
+  },
+  {
     name: "Input",
     slug: "input",
     description: "A styled native input for single-line user input.",
     category: "form",
-    introducedIn: "0.1",
+    introducedIn: "0.2",
   },
   {
     name: "Kbd",
@@ -73,7 +101,7 @@ export const components: readonly ComponentMeta[] = [
     slug: "label",
     description: "An accessible label for form controls.",
     category: "form",
-    introducedIn: "0.1",
+    introducedIn: "0.2",
   },
   {
     name: "Native Select",
@@ -101,6 +129,13 @@ export const components: readonly ComponentMeta[] = [
     slug: "radio-group",
     description: "A group of mutually exclusive selectable options.",
     category: "form",
+    introducedIn: "0.2",
+  },
+  {
+    name: "Scroll Area",
+    slug: "scroll-area",
+    description: "A native scroll container with a thin scrollbar.",
+    category: "layout",
     introducedIn: "0.2",
   },
   {
@@ -143,7 +178,7 @@ export const components: readonly ComponentMeta[] = [
     slug: "textarea",
     description: "A styled multiline text input.",
     category: "form",
-    introducedIn: "0.1",
+    introducedIn: "0.2",
   },
   {
     name: "Toast",

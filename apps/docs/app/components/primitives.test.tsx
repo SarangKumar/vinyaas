@@ -15,6 +15,11 @@ import SwitchPage from "./switch/page";
 import TablePage from "./table/page";
 import ToastPage from "./toast/page";
 import TooltipPage from "./tooltip/page";
+import AlertPage from "./alert/page";
+import DialogPage from "./dialog/page";
+import AccordionPage from "./accordion/page";
+import BreadcrumbDocsPage from "./breadcrumb/page";
+import ScrollAreaPage from "./scroll-area/page";
 
 const pages = [
   {
@@ -100,6 +105,36 @@ const pages = [
     title: "Popover",
     command: "npx @vinyaas/cli add popover",
     api: "onOpenChange",
+  },
+  {
+    load: AlertPage,
+    title: "Alert",
+    command: "npx @vinyaas/cli add alert",
+    api: "variant",
+  },
+  {
+    load: DialogPage,
+    title: "Dialog",
+    command: "npx @vinyaas/cli add dialog",
+    api: "open",
+  },
+  {
+    load: AccordionPage,
+    title: "Accordion",
+    command: "npx @vinyaas/cli add accordion",
+    api: "type",
+  },
+  {
+    load: BreadcrumbDocsPage,
+    title: "Breadcrumb",
+    command: "npx @vinyaas/cli add breadcrumb",
+    api: "href",
+  },
+  {
+    load: ScrollAreaPage,
+    title: "Scroll Area",
+    command: "npx @vinyaas/cli add scroll-area",
+    api: "orientation",
   },
 ] as const;
 

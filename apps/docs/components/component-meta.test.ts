@@ -15,11 +15,15 @@ describe("component metadata", () => {
     expect(new Set(slugs).size).toBe(slugs.length);
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
     expect(names).toEqual([
+      "Accordion",
+      "Alert",
       "Avatar",
       "Badge",
+      "Breadcrumb",
       "Button",
       "Card",
       "Checkbox",
+      "Dialog",
       "Input",
       "Kbd",
       "Label",
@@ -27,6 +31,7 @@ describe("component metadata", () => {
       "Popover",
       "Progress",
       "Radio Group",
+      "Scroll Area",
       "Separator",
       "Skeleton",
       "Spinner",
@@ -50,20 +55,28 @@ describe("component metadata", () => {
     }
 
     expect(newComponents().map((component) => component.slug)).toEqual([
+      "accordion",
+      "alert",
       "avatar",
       "badge",
+      "breadcrumb",
       "card",
       "checkbox",
+      "dialog",
+      "input",
       "kbd",
+      "label",
       "native-select",
       "popover",
       "progress",
       "radio-group",
+      "scroll-area",
       "separator",
       "skeleton",
       "spinner",
       "switch",
       "table",
+      "textarea",
       "toast",
       "tooltip",
     ]);
@@ -74,6 +87,6 @@ describe("component metadata", () => {
       components
         .filter((component) => component.introducedIn === "0.1")
         .map((component) => component.slug),
-    ).toEqual(["button", "input", "label", "textarea"]);
+    ).toEqual(["button"]);
   });
 });

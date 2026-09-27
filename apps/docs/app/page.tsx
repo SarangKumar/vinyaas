@@ -41,6 +41,36 @@ import {
 } from "@/registry/new-york/ui/table/table";
 import { Switch } from "@/registry/new-york/ui/switch/switch";
 import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/registry/new-york/ui/accordion/accordion";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/registry/new-york/ui/alert/alert";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/registry/new-york/ui/breadcrumb/breadcrumb";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/registry/new-york/ui/dialog/dialog";
+import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
@@ -80,8 +110,7 @@ export default function Home() {
         </h2>
         <p className="max-w-2xl text-base leading-7">
           Each component installs on its own. The catalog has{" "}
-          {components.length} components and is growing to{" "}
-          {targetComponentCount} for v0.2.
+          {components.length} components.
         </p>
         <div className="border-border flex flex-col gap-6 rounded-md border px-6 py-8">
           <div className="flex flex-wrap items-center gap-3">
@@ -194,6 +223,70 @@ export default function Home() {
             </Button>
           </div>
         </form>
+      </section>
+
+      <section className="flex flex-col gap-6">
+        <h2 id="library" className={sectionHeading}>
+          Library
+        </h2>
+        <div className="grid gap-4">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/introduction">Docs</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Card</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <Alert>
+            <AlertTitle>Deployment complete</AlertTitle>
+            <AlertDescription>
+              Production is now running the latest build.
+            </AlertDescription>
+          </Alert>
+          <div className="flex flex-wrap items-start gap-4">
+            <Accordion type="single" collapsible className="min-w-0 flex-1">
+              <AccordionItem value="what">
+                <AccordionTrigger>What is Vinyaas?</AccordionTrigger>
+                <AccordionContent>
+                  Components you install as source.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant="outline">Edit profile</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Edit profile</DialogTitle>
+                  <DialogDescription>
+                    Update your public profile.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose>Close</DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <ScrollArea className="h-24" aria-label="Component names">
+            <ul className="grid gap-1">
+              {components.map((component) => (
+                <li key={component.slug} className="text-sm">
+                  {component.name}
+                </li>
+              ))}
+            </ul>
+          </ScrollArea>
+        </div>
       </section>
 
       <section className="flex flex-col gap-4">

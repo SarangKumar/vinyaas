@@ -13,7 +13,7 @@ describe("Changelog", () => {
     expect(screen.getByRole("heading", { name: "v0.1" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "v0.2" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Implemented" }),
+      screen.getByRole("heading", { name: "Released" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Planned" }),

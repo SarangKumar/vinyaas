@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { components, targetComponentCount } from "@/components/component-meta";
+import { components } from "@/components/component-meta";
 
 import Home from "./page";
 
@@ -35,9 +35,7 @@ describe("homepage", () => {
 
     expect(
       screen.getByText(
-        new RegExp(
-          `catalog has ${components.length} components and is growing to ${targetComponentCount}`,
-        ),
+        new RegExp(`catalog has ${components.length} components`),
       ),
     ).toBeInTheDocument();
     expect(screen.getByText("npx @vinyaas/cli add button")).toBeInTheDocument();
