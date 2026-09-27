@@ -18,8 +18,10 @@ describe("component metadata", () => {
       "Label",
       "Progress",
       "Radio Group",
+      "Select",
       "Separator",
       "Skeleton",
+      "Switch",
       "Textarea",
     ]);
   });
@@ -38,8 +40,10 @@ describe("component metadata", () => {
       "kbd",
       "progress",
       "radio-group",
+      "select",
       "separator",
       "skeleton",
+      "switch",
     ]);
   });
 });

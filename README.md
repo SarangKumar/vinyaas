@@ -2,7 +2,7 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
-v0.2 aims to provide approximately 20 independently installable components. The set should cover useful primitives for form controls, feedback, layout, navigation, display, and overlays. Quality and a coherent API matter more than hitting an exact count.
+v0.2 will contain exactly 25 independently installable components, with a strong focus on forms. The set should also cover useful primitives for feedback, layout, navigation, display, and overlays. The homepage at `/` is the component showcase. `/introduction` stays the documentation introduction.
 
 ## Prerequisites
 
@@ -166,6 +166,7 @@ v0.2 components follow the existing Button.
 - The file exports a PascalCase component, `Button`, and a props type, `ButtonProps`.
 - Variants use `class-variance-authority` when a component has more than one visual style. Input, Textarea, Label, Checkbox, Radio Group, Avatar, Progress, Skeleton, Separator, and Kbd do not use it.
 - Class names are merged with `cn` from `@/lib/utils`.
+- Form controls share one height scale: `sm` is `h-8`, the default is `h-9`, and `lg` is `h-10`. Button `md` and Input are both `h-9` and `text-sm`. Textarea uses the same border, type, padding, focus, and disabled treatment, with a content height.
 - Components render the native element and pass through its attributes, including `disabled` and `aria-*`.
 - Colors use semantic utilities such as `bg-primary`, `text-foreground`, and `border-border`. The docs site defines those tokens in `apps/docs/app/globals.css`. Installed projects do not receive that theme file yet.
 - Documentation pages live at `/components/<name>`. Each page shows a live example, the install command, a usage snippet, and the registry source.
@@ -185,6 +186,8 @@ Components use the native element and the browser’s keyboard behavior.
 - Skeleton is a decorative placeholder with `aria-hidden`. The pulse stops under `prefers-reduced-motion`.
 - Separator is an `<hr>` when horizontal. A vertical separator sets `aria-orientation="vertical"`.
 - Kbd is a native `<kbd>`. It displays a key and does not handle keyboard events.
+- Switch is a button with `role="switch"`. Click, Space, and Enter toggle it. It is not submitted with a form.
+- Select is a native `<select>`. The browser handles the menu, the keyboard, and the submitted value.
 - Interactive elements use a visible `focus-visible` ring. Disabled controls use `cursor-not-allowed`.
 - Future components should keep native semantics before adding custom keyboard behavior.
 - Registry JSON embeds that source. It lists npm dependencies. It does not list `lib/utils.ts`.

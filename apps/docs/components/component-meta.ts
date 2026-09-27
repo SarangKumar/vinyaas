@@ -68,6 +68,13 @@ export const components: readonly ComponentMeta[] = [
     isNew: true,
   },
   {
+    name: "Select",
+    slug: "select",
+    description: "A native select for choosing an option.",
+    category: "form",
+    isNew: true,
+  },
+  {
     name: "Separator",
     slug: "separator",
     description: "A horizontal or vertical divider between content.",
@@ -82,12 +89,22 @@ export const components: readonly ComponentMeta[] = [
     isNew: true,
   },
   {
+    name: "Switch",
+    slug: "switch",
+    description: "A switch for a binary setting.",
+    category: "form",
+    isNew: true,
+  },
+  {
     name: "Textarea",
     slug: "textarea",
     description: "A styled multiline text input.",
     category: "form",
   },
 ];
+
+/** v0.2 ships this many components, with forms as the main focus. */
+export const targetComponentCount = 25;
 
 export function componentHref(slug: string) {
   return `/components/${slug}`;

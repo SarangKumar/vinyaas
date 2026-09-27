@@ -1,0 +1,13 @@
+{
+  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "name": "select",
+  "type": "registry:ui",
+  "dependencies": ["clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "ui/select/select.tsx",
+      "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type SelectProps = React.ComponentProps<\"select\">;\n\nexport function Select({\n  className,\n  ref,\n  multiple,\n  size,\n  ...props\n}: SelectProps) {\n  const listed = Boolean(multiple) || (size !== undefined && Number(size) > 1);\n\n  return (\n    <select\n      ref={ref}\n      multiple={multiple}\n      size={size}\n      className={cn(\n        \"border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background w-full rounded-md border px-3 pr-8 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50\",\n        listed ? \"h-auto py-1\" : \"h-9\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

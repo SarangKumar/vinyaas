@@ -122,4 +122,26 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "switch",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/switch/switch.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "select",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/select/select.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

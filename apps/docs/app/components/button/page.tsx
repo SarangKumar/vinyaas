@@ -24,7 +24,8 @@ const api: ApiRow[] = [
     prop: "size",
     type: '"sm" | "md" | "lg"',
     defaultValue: '"md"',
-    description: "Height, padding, and text size.",
+    description:
+      "sm is h-8, md is h-9, and lg is h-10. md matches Input. Text stays text-sm.",
   },
   {
     prop: "className",
@@ -84,7 +85,8 @@ const examples: ComponentExample[] = [
   {
     id: "sizes",
     title: "Sizes",
-    description: "sm, md, and lg change height and padding. md is the default.",
+    description:
+      "sm is the compact height, md is the default and matches Input, and lg is taller.",
     preview: (
       <>
         <Button size="sm">Small</Button>

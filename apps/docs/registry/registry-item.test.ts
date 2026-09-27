@@ -486,6 +486,8 @@ describe("registry build output", () => {
     ["skeleton", "ui/skeleton/skeleton.tsx", "aria-hidden"],
     ["separator", "ui/separator/separator.tsx", "<hr"],
     ["kbd", "ui/kbd/kbd.tsx", "<kbd"],
+    ["switch", "ui/switch/switch.tsx", 'role="switch"'],
+    ["select", "ui/select/select.tsx", "<select"],
   ])(
     "keeps the new-york %s artifact aligned with the source item",
     async (name, filePath, sourceMarker) => {

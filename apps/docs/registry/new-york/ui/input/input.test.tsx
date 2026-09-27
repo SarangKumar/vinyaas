@@ -58,7 +58,7 @@ describe("Input", () => {
     expect(input).toBeDisabled();
     expect(input).toHaveValue("a@b.co");
     expect(input).toHaveAttribute("aria-invalid", "true");
-    expect(input).toHaveClass("max-w-sm");
+    expect(input).toHaveClass("max-w-sm", "h-9", "text-sm", "px-3");
   });
 
   it("updates a controlled value", () => {

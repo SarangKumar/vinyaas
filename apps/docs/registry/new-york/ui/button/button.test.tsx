@@ -31,10 +31,22 @@ describe("Button", () => {
     );
   });
 
-  it("supports sizes", () => {
-    render(<Button size="lg">Save</Button>);
+  it("uses the default control height and keeps the size scale", () => {
+    const { rerender } = render(<Button>Save</Button>);
+    const button = screen.getByRole("button", { name: "Save" });
 
-    expect(screen.getByRole("button", { name: "Save" })).toHaveClass("h-11");
+    expect(button).toHaveClass("h-9", "text-sm", "px-4");
+    expect(button).not.toHaveClass("h-8");
+    expect(button).not.toHaveClass("h-10");
+
+    rerender(<Button size="sm">Save</Button>);
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass("h-8");
+
+    rerender(<Button size="lg">Save</Button>);
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass(
+      "h-10",
+      "px-6",
+    );
   });
 
   it("is keyboard focusable and activates from a click", () => {
