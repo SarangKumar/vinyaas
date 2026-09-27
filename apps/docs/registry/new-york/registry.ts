@@ -12,4 +12,15 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "input",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/input/input.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

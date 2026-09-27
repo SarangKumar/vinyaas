@@ -1,23 +1,36 @@
 import Link from "next/link";
 
-import { Button } from "@/registry/new-york/ui/button/button";
+import { DocsArticle } from "@/components/docs-article";
 
 export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
-      <h1 className="text-2xl font-medium">Vinyaas</h1>
-      <p>UI components installed into your project as source.</p>
-      <p>
-        <Link href="/components/button">Button</Link>
-      </p>
-      <div className="flex flex-wrap items-center gap-3">
-        <Button>Save</Button>
-        <Button variant="destructive">Delete</Button>
-        <Button variant="outline" disabled>
-          Cancel
-        </Button>
-        <Button size="lg">Save</Button>
+    <DocsArticle
+      title="Introduction"
+      description="Vinyaas installs UI components into your project as source."
+    >
+      <div className="flex flex-col gap-4 text-sm leading-6 text-gray-700">
+        <p>
+          <code className="font-mono">vinyaas init</code> creates{" "}
+          <code className="font-mono">components.json</code> and{" "}
+          <code className="font-mono">lib/utils.ts</code>. Components are then
+          added from the registry with{" "}
+          <code className="font-mono">vinyaas add</code>.
+        </p>
+        <p>
+          <Link href="/installation" className="underline">
+            Installation
+          </Link>{" "}
+          covers the project requirements. The current components are{" "}
+          <Link href="/components/button" className="underline">
+            Button
+          </Link>{" "}
+          and{" "}
+          <Link href="/components/input" className="underline">
+            Input
+          </Link>
+          .
+        </p>
       </div>
-    </main>
+    </DocsArticle>
   );
 }

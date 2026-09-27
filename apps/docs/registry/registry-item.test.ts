@@ -199,6 +199,22 @@ describe("serializeRegistryItem", () => {
   });
 });
 
+describe("input registry item", () => {
+  it("declares the class-name dependencies and no registry dependency", () => {
+    const input = newYork.find((item) => item.name === "input");
+
+    expect(input?.type).toBe("registry:ui");
+    expect(input?.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(input?.registryDependencies).toBeUndefined();
+    expect(input?.files).toEqual([
+      {
+        path: "ui/input/input.tsx",
+        type: "registry:ui",
+      },
+    ]);
+  });
+});
+
 describe("registry build output", () => {
   it("keeps the new-york button artifact aligned with the source item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/button.json");
@@ -242,6 +258,47 @@ describe("registry build output", () => {
     expect(generated).not.toHaveProperty("css");
     expect(generated).not.toHaveProperty("envVars");
     expect(generated).not.toHaveProperty("docs");
+  });
+
+  it("keeps the new-york input artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/input.json");
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/input/input.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
+    ]);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      files: { path: string; content: string }[];
+    };
+    const input = newYork.find((item) => item.name === "input");
+
+    if (!input) {
+      throw new Error("Expected an input registry item");
+    }
+
+    const files = await readRegistryItemFiles(input, async (relativePath) => {
+      expect(relativePath).toBe("ui/input/input.tsx");
+      return source;
+    });
+    const payload = serializeRegistryItem(input, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.$schema).toBe(
+      "https://vinyaas.vercel.app/schema/registry-item.json",
+    );
+    expect(generated.name).toBe("input");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
+    expect(generated).not.toHaveProperty("registryDependencies");
   });
 
   it("does not publish utils as a registry item", async () => {

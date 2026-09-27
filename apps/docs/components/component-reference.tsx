@@ -1,5 +1,10 @@
 import type { ReactNode } from "react";
 
+import { CodeBlock } from "@/components/code-block";
+import { ComponentPreview } from "@/components/component-preview";
+import { DocsArticle } from "@/components/docs-article";
+import { InstallCommand } from "@/components/install-command";
+
 /**
  * Shared layout for a component documentation page.
  * Live examples are children. Installation, usage, and source are text.
@@ -20,33 +25,23 @@ export function ComponentReference({
   children: ReactNode;
 }) {
   return (
-    <article className="mx-auto flex w-full max-w-3xl flex-col gap-8 p-8">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-medium">{title}</h1>
-        <p>{description}</p>
-      </header>
+    <DocsArticle title={title} description={description}>
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-medium">Example</h2>
-        <div className="flex flex-wrap items-center gap-3">{children}</div>
+        <h2 className="text-base font-medium">Preview</h2>
+        <ComponentPreview>{children}</ComponentPreview>
       </section>
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-medium">Installation</h2>
-        <pre className="overflow-x-auto rounded-md bg-gray-100 p-4 text-sm">
-          <code>{install}</code>
-        </pre>
+        <h2 className="text-base font-medium">Installation</h2>
+        <InstallCommand command={install} />
       </section>
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-medium">Usage</h2>
-        <pre className="overflow-x-auto rounded-md bg-gray-100 p-4 text-sm">
-          <code>{usage}</code>
-        </pre>
+        <h2 className="text-base font-medium">Usage</h2>
+        <CodeBlock code={usage} language="tsx" />
       </section>
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-medium">Source</h2>
-        <pre className="overflow-x-auto rounded-md bg-gray-100 p-4 text-sm">
-          <code>{source}</code>
-        </pre>
+        <h2 className="text-base font-medium">Source</h2>
+        <CodeBlock code={source} language="tsx" />
       </section>
-    </article>
+    </DocsArticle>
   );
 }

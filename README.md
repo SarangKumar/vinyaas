@@ -150,7 +150,8 @@ v0.2 components follow the existing Button.
 - Registry name, folder, and file use the same lowercase name: `button` → `ui/button/button.tsx`.
 - `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/button.tsx`.
 - The file exports a PascalCase component, `Button`, and a props type, `ButtonProps`.
-- Variants use `class-variance-authority`. Class names are merged with `cn` from `@/lib/utils`.
+- Variants use `class-variance-authority` when a component has more than one visual style. Input is a single field and does not use it.
+- Class names are merged with `cn` from `@/lib/utils`.
 - Components render the native element and pass through its attributes, including `disabled` and `aria-*`.
 - Documentation pages live at `/components/<name>`. Each page shows a live example, the install command, a usage snippet, and the registry source.
 - Registry JSON embeds that source. It lists npm dependencies. It does not list `lib/utils.ts`.

@@ -20,7 +20,7 @@ export default async function ButtonPage() {
   return (
     <ComponentReference
       title="Button"
-      description="A button with variant and size styles. It uses the cn helper from lib/utils.ts, which vinyaas init creates."
+      description="A button with variant and size styles."
       install="vinyaas add button"
       usage={usage}
       source={source}
