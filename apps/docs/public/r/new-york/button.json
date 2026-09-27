@@ -3,7 +3,6 @@
   "name": "button",
   "type": "registry:ui",
   "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
-  "registryDependencies": ["utils"],
   "files": [
     {
       "path": "ui/button/button.tsx",

@@ -65,7 +65,7 @@ function run(command, args, cwd) {
 
 describe("installable button registry", () => {
   it(
-    "installs utils before button and the result typechecks",
+    "installs button without a utils registry item and the result typechecks",
     { timeout: 120_000 },
     async () => {
       const { server, baseUrl } = await serveRegistry();
@@ -83,17 +83,13 @@ describe("installable button registry", () => {
 
         assert.deepEqual(
           items.map((item) => item.name),
-          ["utils", "button"],
+          ["button"],
         );
-        assert.deepEqual(items[1].registryDependencies, ["utils"]);
-        assert.equal(items[0].files[0]?.path, "lib/utils.ts");
-        assert.match(items[0].files[0]?.content ?? "", /export function cn/);
+        assert.equal(items[0].registryDependencies, undefined);
         assert.equal(items[0].docs, undefined);
         assert.equal(items[0].envVars, undefined);
-        assert.equal(items[1].docs, undefined);
-        assert.equal(items[1].envVars, undefined);
-        assert.equal(items[1].css, undefined);
-        assert.equal(items[1].cssVars, undefined);
+        assert.equal(items[0].css, undefined);
+        assert.equal(items[0].cssVars, undefined);
 
         await writeFile(
           join(cwd, "package.json"),
@@ -157,7 +153,12 @@ describe("installable button registry", () => {
           )}\n`,
         );
         await mkdir(join(cwd, "app"));
+        await mkdir(join(cwd, "lib"));
         await writeFile(join(cwd, "app/globals.css"), css);
+        await writeFile(
+          join(cwd, "lib/utils.ts"),
+          'import { clsx, type ClassValue } from "clsx";\nimport { twMerge } from "tailwind-merge";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n',
+        );
         await run("pnpm", ["install"], cwd);
 
         console.log = (...args) => {

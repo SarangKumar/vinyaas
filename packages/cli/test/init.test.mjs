@@ -103,6 +103,11 @@ describe("vinyaas init", () => {
       )}\n`,
     );
     assert.equal(raw.endsWith("\n"), true);
+    assert.match(result.stdout, /Created lib\/utils\.ts\./);
+    assert.match(
+      await readFile(join(cwd, "lib/utils.ts"), "utf8"),
+      /export function cn/,
+    );
   });
 
   it("uses src/app/globals.css when that is the global stylesheet", async () => {
@@ -287,6 +292,7 @@ describe("vinyaas init", () => {
     const cwd = await writeProject({
       ...nextProject(),
       "components.json": '{"keep":true}\n',
+      "lib/utils.ts": "export const kept = true;\n",
     });
     const result = await run(cwd);
 
@@ -296,6 +302,29 @@ describe("vinyaas init", () => {
     assert.equal(
       await readFile(join(cwd, "components.json"), "utf8"),
       '{"keep":true}\n',
+    );
+    assert.equal(
+      await readFile(join(cwd, "lib/utils.ts"), "utf8"),
+      "export const kept = true;\n",
+    );
+  });
+
+  it("does not overwrite an existing lib/utils.ts", async () => {
+    const cwd = await writeProject({
+      ...nextProject(),
+      "lib/utils.ts": "export const kept = true;\n",
+    });
+    const result = await run(cwd, {
+      REGISTRY_BASE_URL: "https://vinyaas.vercel.app",
+    });
+
+    assert.equal(result.exitCode, 0);
+    assert.match(result.stdout, /Created components\.json\./);
+    assert.match(result.stdout, /lib\/utils\.ts already exists/);
+    assert.match(result.stdout, /will not overwrite it/);
+    assert.equal(
+      await readFile(join(cwd, "lib/utils.ts"), "utf8"),
+      "export const kept = true;\n",
     );
   });
 

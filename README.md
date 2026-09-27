@@ -12,7 +12,7 @@ Vinyaas detects the package manager from the project lockfile: `pnpm-lock.yaml`,
 
 ## Installation
 
-`@vinyaas/cli` is the package prepared for release. After it is published, install it with:
+Install the published package:
 
 ```bash
 npm install -g @vinyaas/cli
@@ -31,7 +31,7 @@ From the project root:
 vinyaas init
 ```
 
-`init` detects the project and creates `components.json`. It does not overwrite an existing `components.json`.
+`init` detects the project and creates `components.json` and `lib/utils.ts`. It does not overwrite an existing `components.json`. If `lib/utils.ts` already exists, that file is left unchanged. `lib/utils.ts` is project infrastructure, not a registry component. It exports `cn` for class names.
 
 A TypeScript Next.js app with `app/globals.css` gets:
 
@@ -57,7 +57,7 @@ A TypeScript Next.js app with `app/globals.css` gets:
 - `tailwind.css` is the stylesheet Vinyaas updates. It is `app/globals.css` or `src/app/globals.css`, whichever exists.
 - `tailwind.baseColor` is `neutral`. `tailwind.cssVariables` is `true`.
 - `tsx` is `true` when `tsconfig.json` exists, and `false` otherwise.
-- `aliases` map registry files onto import paths. `ui` is where UI components are installed. `utils` is the `cn` helper.
+- `aliases` map registry files onto import paths. `ui` is where UI components are installed. `utils` is the import path for the `cn` helper at `lib/utils.ts`.
 
 ## Add a component
 
@@ -68,7 +68,7 @@ vinyaas add button
 For each component, Vinyaas:
 
 1. Fetches the registry item.
-2. Resolves registry dependencies, such as `utils` for Button.
+2. Resolves registry dependencies when the item declares them. Button does not declare any.
 3. Collects the npm dependencies declared by those items.
 4. Installs dependencies that the project does not already declare.
 5. Writes the component source files.
@@ -82,7 +82,7 @@ Not every component includes CSS, environment variables, or documentation.
 
 The `ui` alias controls UI component paths. The default `@/components/ui` installs files under `components/ui/`.
 
-Other registry files follow the configured aliases. The default `utils` alias is `@/lib/utils`, so the `utils` item is installed as `lib/utils.ts`.
+`lib/utils.ts` is created by `vinyaas init`. Registry items do not install it.
 
 ## `--cwd`
 
@@ -133,7 +133,7 @@ vinyaas init
 vinyaas add button
 ```
 
-Button depends on the `utils` registry item. The install adds `class-variance-authority`, `clsx`, and `tailwind-merge` when they are not already declared, and writes:
+`vinyaas init` writes `components.json` and `lib/utils.ts`. `vinyaas add button` adds `class-variance-authority`, `clsx`, and `tailwind-merge` when they are not already declared, and writes the button source:
 
 ```text
 components.json
@@ -142,6 +142,18 @@ components/ui/button/button.tsx
 ```
 
 The current Button item does not declare CSS, environment variables, or a documentation URL, so those steps do not change `app/globals.css` and do not print an environment or documentation section.
+
+## Component conventions
+
+v0.2 components follow the existing Button.
+
+- Registry name, folder, and file use the same lowercase name: `button` → `ui/button/button.tsx`.
+- `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/button.tsx`.
+- The file exports a PascalCase component, `Button`, and a props type, `ButtonProps`.
+- Variants use `class-variance-authority`. Class names are merged with `cn` from `@/lib/utils`.
+- Components render the native element and pass through its attributes, including `disabled` and `aria-*`.
+- Documentation pages live at `/components/<name>`. Each page shows a live example, the install command, a usage snippet, and the registry source.
+- Registry JSON embeds that source. It lists npm dependencies. It does not list `lib/utils.ts`.
 
 ## Development
 

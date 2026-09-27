@@ -26,19 +26,10 @@ function buttonItem() {
 }
 
 describe("button registry item", () => {
-  it("declares its npm dependencies and an explicit utils dependency", () => {
+  it("declares its npm dependencies and no registry dependency", () => {
     const button = buttonItem();
-    const utils = newYork.find((item) => item.name === "utils");
 
-    expect(utils?.type).toBe("registry:ui");
-    expect(utils?.dependencies).toEqual(["clsx", "tailwind-merge"]);
-    expect(utils?.registryDependencies).toBeUndefined();
-    expect(utils?.files).toEqual([
-      {
-        path: "lib/utils.ts",
-        type: "registry:ui",
-      },
-    ]);
+    expect(newYork.some((item) => item.name === "utils")).toBe(false);
     expect(button.type).toBe("registry:ui");
     expect(button.dependencies).toEqual([
       "class-variance-authority",
@@ -48,7 +39,7 @@ describe("button registry item", () => {
     expect(
       button.dependencies?.some((dependency) => dependency.startsWith("@/")),
     ).toBe(false);
-    expect(button.registryDependencies).toEqual(["utils"]);
+    expect(button.registryDependencies).toBeUndefined();
     expect(button.files).toEqual([
       {
         path: "ui/button/button.tsx",
@@ -245,7 +236,7 @@ describe("registry build output", () => {
     ]);
     expect(generated.files[0]?.content).toBe(source);
     expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
-    expect(generated.registryDependencies).toEqual(["utils"]);
+    expect(generated).not.toHaveProperty("registryDependencies");
     expect(generated).not.toHaveProperty("devDependencies");
     expect(generated).not.toHaveProperty("cssVars");
     expect(generated).not.toHaveProperty("css");
@@ -253,44 +244,11 @@ describe("registry build output", () => {
     expect(generated).not.toHaveProperty("docs");
   });
 
-  it("embeds the utils source and does not scan its imports", async () => {
+  it("does not publish utils as a registry item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/utils.json");
-    const sourcePath = path.join(docsRoot, "registry/new-york/lib/utils.ts");
-    const docsUtilsPath = path.join(docsRoot, "lib/utils.ts");
-    const [rawOutput, source, docsUtils] = await Promise.all([
-      fs.readFile(outputPath, "utf8"),
-      fs.readFile(sourcePath, "utf8"),
-      fs.readFile(docsUtilsPath, "utf8"),
-    ]);
-    const generated = JSON.parse(rawOutput) as {
-      name: string;
-      dependencies: string[];
-      files: { path: string; content: string }[];
-    };
-    const utils = newYork.find((item) => item.name === "utils");
 
-    if (!utils) {
-      throw new Error("Expected a utils registry item");
-    }
-
-    const files = await readRegistryItemFiles(utils, async (relativePath) => {
-      expect(relativePath).toBe("lib/utils.ts");
-      return source;
-    });
-
-    expect(source).toBe(docsUtils);
-    expect(generated.name).toBe("utils");
-    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
-    expect(generated).not.toHaveProperty("registryDependencies");
-    expect(generated.files).toEqual([
-      {
-        path: "lib/utils.ts",
-        content: source,
-        type: "registry:ui",
-      },
-    ]);
-    expect(generated.files[0]?.content).toContain("export function cn");
-    expect(files).toHaveLength(1);
+    await expect(fs.access(outputPath)).rejects.toThrow();
+    expect(newYork.some((item) => item.name === "utils")).toBe(false);
   });
 
   it("matches the json schema item types", () => {
