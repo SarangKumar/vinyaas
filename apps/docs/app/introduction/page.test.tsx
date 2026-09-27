@@ -1,0 +1,69 @@
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+
+import IntroductionPage from "./page";
+
+describe("introduction", () => {
+  it("introduces Vinyaas and links into the docs", () => {
+    render(<IntroductionPage />);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Accessible React components you can own.",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Get Started" })).toHaveAttribute(
+      "href",
+      "/installation",
+    );
+    expect(screen.getByRole("link", { name: "Get Started" })).toHaveClass(
+      "h-8",
+    );
+    expect(
+      screen.getByRole("link", { name: "Browse Components" }),
+    ).toHaveAttribute("href", "/components");
+    expect(screen.getByText("npx @vinyaas/cli init")).toBeInTheDocument();
+    expect(screen.getByText("npx @vinyaas/cli add button")).toBeInTheDocument();
+    expect(screen.getAllByText("bash").length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("heading", { name: "Philosophy" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Own your components" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Email" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Button" })).toHaveAttribute(
+      "href",
+      "/components/button",
+    );
+    expect(screen.getByRole("link", { name: "Checkbox" })).toHaveAttribute(
+      "href",
+      "/components/checkbox",
+    );
+    expect(screen.getByRole("link", { name: "Input" })).toHaveAttribute(
+      "href",
+      "/components/input",
+    );
+    expect(screen.getByRole("link", { name: "Label" })).toHaveAttribute(
+      "href",
+      "/components/label",
+    );
+    expect(screen.getByRole("link", { name: "Radio Group" })).toHaveAttribute(
+      "href",
+      "/components/radio-group",
+    );
+    expect(screen.getByRole("link", { name: "Textarea" })).toHaveAttribute(
+      "href",
+      "/components/textarea",
+    );
+    expect(
+      screen.getByRole("checkbox", { name: "Accept terms" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "Comfortable" })).toBeChecked();
+    expect(
+      screen.getByRole("textbox", { name: "Message" }),
+    ).toBeInTheDocument();
+  });
+});

@@ -1,6 +1,11 @@
 import Link from "next/link";
 
-import { docsNav } from "@/components/docs-nav";
+import {
+  componentHref,
+  components,
+  newComponents,
+  type ComponentMeta,
+} from "@/components/component-meta";
 import { DocsArticle } from "@/components/docs-article";
 import { focusRing } from "@/components/focus-ring";
 import { NewIndicator } from "@/components/new-indicator";
@@ -8,9 +13,10 @@ import { NewIndicator } from "@/components/new-indicator";
 const heading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 
+const gridClass = "grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3";
+
 export default function ComponentsPage() {
-  const components =
-    docsNav.find((group) => group.title === "Components")?.items ?? [];
+  const recent = newComponents();
 
   return (
     <DocsArticle
@@ -34,83 +40,71 @@ export default function ComponentsPage() {
           </p>
         </div>
       </section>
-      <section className="flex flex-col gap-8">
-        <div className="flex flex-col gap-4">
-          <h2 id="available-components" className={heading}>
-            Available Components
+      {recent.length > 0 ? (
+        <section className="flex flex-col gap-4">
+          <h2 id="new-components" className={heading}>
+            New Components
           </h2>
           <p className="text-body text-base leading-7">
-            These are the primitives you can install today. Each name links to
-            its documentation.
+            Components added in the current docs pass.
           </p>
-        </div>
-        <div className="flex flex-col gap-4">
-          <h3
-            id="forms"
-            className="text-foreground scroll-mt-8 text-base font-medium tracking-tight"
-          >
-            Forms
-          </h3>
-          <p className="text-body text-base leading-7">
-            Buttons and form controls. Install one at a time with{" "}
-            <code>vinyaas add</code>.
-          </p>
-          <ul className="flex flex-col">
-            {components.map((item) => {
-              const id = item.href.split("/").pop() ?? item.title;
-
-              return (
-                <li key={item.href} className="border-border border-b">
-                  <Link
-                    href={item.href}
-                    aria-label={item.isNew ? `${item.title}, new` : undefined}
-                    className={`hover:bg-muted flex cursor-pointer flex-col gap-1 rounded-md px-2 py-4 no-underline ${focusRing}`}
-                  >
-                    <span className="flex items-center">
-                      <h3
-                        id={id}
-                        className="text-foreground scroll-mt-8 text-sm font-medium"
-                      >
-                        {item.title}
-                      </h3>
-                      {item.isNew ? <NewIndicator /> : null}
-                    </span>
-                    {item.description ? (
-                      <p className="text-muted-foreground text-sm leading-6">
-                        {item.description}
-                      </p>
-                    ) : null}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+          <ComponentGrid items={recent} />
+        </section>
+      ) : null}
+      <section className="flex flex-col gap-4">
+        <h2 id="all-components" className={heading}>
+          All Components
+        </h2>
+        <p className="text-body text-base leading-7">
+          The full catalog, in alphabetical order. Install one at a time with{" "}
+          <code>vinyaas add</code>.
+        </p>
+        <ComponentGrid items={components} />
       </section>
       <section className="flex flex-col gap-4">
         <h2 id="using-components" className={heading}>
           Using Components
         </h2>
-        <div className="text-body flex flex-col gap-3 text-base leading-7">
-          <p>
-            Run <code>vinyaas init</code>, then add the component you need. The
-            files land in your project. Edit them there. Semantic color
-            utilities such as <code>bg-background</code> and{" "}
-            <code>text-foreground</code> follow the theme variables in your
-            stylesheet.
-          </p>
-        </div>
+        <p className="text-body text-base leading-7">
+          Run <code>vinyaas init</code>, then add the component you need. The
+          files land in your project. Edit them there. Semantic color utilities
+          such as <code>bg-background</code> and <code>text-foreground</code>{" "}
+          follow the theme variables in your stylesheet.
+        </p>
       </section>
       <section className="flex flex-col gap-4">
         <h2 id="whats-next" className={heading}>
           What&apos;s Next
         </h2>
         <p className="text-body text-base leading-7">
-          The introduction at the site root stays a short start page. A later
-          homepage can showcase these components, combinations of them, and
-          reusable blocks. That catalog is not part of this page.
+          The introduction lives at <code>/introduction</code>. The homepage is
+          reserved for a later showcase of components, combinations, and
+          reusable blocks. That showcase is not part of this page.
         </p>
       </section>
     </DocsArticle>
+  );
+}
+
+function ComponentGrid({ items }: { items: readonly ComponentMeta[] }) {
+  return (
+    <ul className={gridClass}>
+      {items.map((item) => (
+        <li key={item.slug}>
+          <Link
+            href={componentHref(item.slug)}
+            className={`border-border hover:bg-muted flex h-full cursor-pointer flex-col gap-1 rounded-md border px-3 py-3 no-underline ${focusRing}`}
+          >
+            <span className="text-foreground flex items-center text-sm font-medium">
+              {item.name}
+              {item.isNew ? <NewIndicator /> : null}
+            </span>
+            <span className="text-muted-foreground text-sm leading-6">
+              {item.description}
+            </span>
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }

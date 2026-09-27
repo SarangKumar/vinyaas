@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { DocsMobileNav } from "@/components/docs-mobile-nav";
-import { githubUrl, introductionPath } from "@/components/docs-nav";
+import { githubUrl, homePath, introductionPath } from "@/components/docs-nav";
 import { portfolioUrl } from "@/lib/public-env";
 import { DocsNavLinks } from "@/components/docs-nav-links";
 import { focusRing } from "@/components/focus-ring";
@@ -21,7 +21,7 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
         <div className="flex h-full items-center justify-between gap-3 px-4">
           <div data-header-section="start" className="flex items-center gap-3">
             <Link
-              href={introductionPath}
+              href={homePath}
               className={`text-foreground inline-flex items-center gap-2 rounded-md text-sm font-medium ${focusRing}`}
             >
               <Image

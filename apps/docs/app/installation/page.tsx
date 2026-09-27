@@ -1,5 +1,9 @@
-import { CodeBlock } from "@/components/code-block";
 import { DocsArticle } from "@/components/docs-article";
+import { InstallCommand } from "@/components/install-command";
+import {
+  cliCommands,
+  packageInstallCommands,
+} from "@/components/package-managers";
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
@@ -14,7 +18,11 @@ export default function InstallationPage() {
         <h2 id="cli" className={sectionHeading}>
           CLI
         </h2>
-        <CodeBlock code="npm install -g @vinyaas/cli" language="bash" />
+        <p className="text-body text-base leading-7">
+          Add the CLI to a project, or run it without a global install.
+        </p>
+        <InstallCommand commands={packageInstallCommands("@vinyaas/cli")} />
+        <InstallCommand commands={cliCommands("init")} />
       </section>
       <section className="flex flex-col gap-6">
         <h2 id="project" className={sectionHeading}>
@@ -28,7 +36,7 @@ export default function InstallationPage() {
           <code className="font-mono">@/*</code> path alias, and one package
           manager lockfile.
         </p>
-        <CodeBlock code={"vinyaas init\nvinyaas add button"} language="bash" />
+        <InstallCommand commands={cliCommands("add button")} />
       </section>
     </DocsArticle>
   );

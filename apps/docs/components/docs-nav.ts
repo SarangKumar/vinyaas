@@ -1,10 +1,16 @@
+import {
+  componentHref,
+  components,
+  type ComponentMeta,
+} from "@/components/component-meta";
+
 export const githubUrl = "https://github.com/SarangKumar/vinyaas";
 
-/**
- * `/` is the introduction. A future showcase can take this path, and the
- * introduction can move, without changing header call sites.
- */
-export const introductionPath = "/";
+/** Future component and block showcase. Intentionally empty for now. */
+export const homePath = "/";
+
+/** Canonical introduction. It is not an alias of the homepage. */
+export const introductionPath = "/introduction";
 
 export type DocsNavItem = {
   title: string;
@@ -12,6 +18,15 @@ export type DocsNavItem = {
   description?: string;
   isNew?: boolean;
 };
+
+function componentNavItem(component: ComponentMeta): DocsNavItem {
+  return {
+    title: component.name,
+    href: componentHref(component.slug),
+    description: component.description,
+    isNew: component.isNew,
+  };
+}
 
 export const docsNav: { title: string; items: DocsNavItem[] }[] = [
   {
@@ -23,44 +38,6 @@ export const docsNav: { title: string; items: DocsNavItem[] }[] = [
   },
   {
     title: "Components",
-    items: [
-      {
-        title: "Button",
-        href: "/components/button",
-        description: "A versatile button primitive for actions and commands.",
-        isNew: true,
-      },
-      {
-        title: "Checkbox",
-        href: "/components/checkbox",
-        description:
-          "A native checkbox control for selecting one or more options.",
-        isNew: true,
-      },
-      {
-        title: "Input",
-        href: "/components/input",
-        description: "A styled native input for single-line user input.",
-        isNew: true,
-      },
-      {
-        title: "Label",
-        href: "/components/label",
-        description: "An accessible label for form controls.",
-        isNew: true,
-      },
-      {
-        title: "Radio Group",
-        href: "/components/radio-group",
-        description: "A group of mutually exclusive selectable options.",
-        isNew: true,
-      },
-      {
-        title: "Textarea",
-        href: "/components/textarea",
-        description: "A styled multiline text input.",
-        isNew: true,
-      },
-    ],
+    items: components.map(componentNavItem),
   },
 ];

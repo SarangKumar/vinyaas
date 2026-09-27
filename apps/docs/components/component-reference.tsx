@@ -5,6 +5,7 @@ import { CodeBlock } from "@/components/code-block";
 import { ComponentPreview } from "@/components/component-preview";
 import { DocsArticle } from "@/components/docs-article";
 import { InstallCommand } from "@/components/install-command";
+import { cliCommands } from "@/components/package-managers";
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
@@ -74,7 +75,9 @@ export function ComponentReference({
           <h3 id="cli" className={subsectionHeading}>
             CLI
           </h3>
-          <InstallCommand command={install} />
+          <InstallCommand
+            commands={cliCommands(install.replace(/^vinyaas\s+/, ""))}
+          />
         </div>
         {manual ? (
           <div className="text-body flex flex-col gap-3 text-base leading-7">

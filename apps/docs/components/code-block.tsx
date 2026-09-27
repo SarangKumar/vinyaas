@@ -7,6 +7,11 @@ import { focusRing } from "@/components/focus-ring";
 
 const collapseAfterLines = 16;
 
+/**
+ * Renders plain text. `language` is part of the API so a highlighter can be
+ * added later without changing call sites.
+ */
+
 export function CodeBlock({
   code,
   language,
@@ -37,7 +42,7 @@ export function CodeBlock({
             : "overflow-x-auto px-4 py-3 text-[13px] leading-6"
         }
       >
-        <code>{code}</code>
+        <code data-language={language}>{code}</code>
       </pre>
       {collapsible ? (
         <div className="border-border relative border-t">

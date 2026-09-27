@@ -2,6 +2,8 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
+v0.2 aims to provide approximately 20 independently installable components. The set should cover useful primitives for form controls, feedback, layout, navigation, display, and overlays. Quality and a coherent API matter more than hitting an exact count.
+
 ## Prerequisites
 
 - Node.js 20 or newer
@@ -12,15 +14,27 @@ Vinyaas detects the package manager from the project lockfile: `pnpm-lock.yaml`,
 
 ## Installation
 
-Install the published package:
+Install the published package with the project's package manager:
 
 ```bash
-npm install -g @vinyaas/cli
+npm install @vinyaas/cli
+pnpm add @vinyaas/cli
+yarn add @vinyaas/cli
+bun add @vinyaas/cli
+```
+
+Run it without a global install:
+
+```bash
+npx @vinyaas/cli init
+pnpm dlx @vinyaas/cli init
+yarn dlx @vinyaas/cli init
+bunx @vinyaas/cli init
 ```
 
 ```bash
-vinyaas --version
-vinyaas --help
+npx @vinyaas/cli --version
+npx @vinyaas/cli --help
 ```
 
 ## Initialize a project

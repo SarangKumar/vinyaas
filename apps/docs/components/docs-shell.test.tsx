@@ -19,7 +19,7 @@ describe("DocsShell", () => {
       </DocsShell>,
     );
 
-    const current = screen.getAllByRole("link", { name: "Button, new" });
+    const current = screen.getAllByRole("link", { name: "Button" });
 
     expect(current.length).toBeGreaterThan(0);
     for (const link of current) {
@@ -49,9 +49,12 @@ describe("DocsShell", () => {
       throw new Error("Expected header sections");
     }
 
+    expect(
+      within(start).getByRole("link", { name: "Vinyaas" }),
+    ).toHaveAttribute("href", "/");
     expect(within(start).getByRole("link", { name: "Docs" })).toHaveAttribute(
       "href",
-      "/",
+      "/introduction",
     );
     expect(
       within(start).getByRole("link", { name: "Components" }),

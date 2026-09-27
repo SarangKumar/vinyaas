@@ -15,6 +15,11 @@ describe("CodeBlock", () => {
 
     expect(screen.getByText(shortCode)).toBeInTheDocument();
     expect(screen.getByText("bash")).toBeInTheDocument();
+    expect(document.querySelector("pre")).toHaveClass("overflow-x-auto");
+    expect(document.querySelector("code")).toHaveAttribute(
+      "data-language",
+      "bash",
+    );
     expect(screen.queryByRole("button", { name: "View code" })).toBeNull();
     expect(
       screen.getByRole("button", { name: "Copy code" }),
@@ -25,6 +30,10 @@ describe("CodeBlock", () => {
     render(<CodeBlock code={longCode} language="tsx" />);
 
     expect(screen.getByText("tsx")).toBeInTheDocument();
+    expect(document.querySelector("code")).toHaveAttribute(
+      "data-language",
+      "tsx",
+    );
     expect(screen.getByText(/line 20/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "View code" }));
     expect(screen.getByRole("button", { name: "Hide code" })).toHaveAttribute(
