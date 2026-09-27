@@ -80,9 +80,9 @@ export default function ChangelogPage() {
             secondary, and link variants, plus icon sizes.
           </li>
           <li>
-            Spinner, Badge, Table, Tooltip, Native Select, Toast, and Popover
-            are source-installed components. The existing Select stays a native
-            select. A custom popup Select is not implemented.
+            Spinner, Badge, Card, Table, Tooltip, Native Select, Toast, and
+            Popover are source-installed components. A plain HTML select is used
+            where a menu is enough. A custom popup Select is not implemented.
           </li>
         </ul>
         <h3

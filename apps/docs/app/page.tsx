@@ -29,7 +29,6 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/registry/new-york/ui/radio-group/radio-group";
-import { Select } from "@/registry/new-york/ui/select/select";
 import { Separator } from "@/registry/new-york/ui/separator/separator";
 import { Skeleton } from "@/registry/new-york/ui/skeleton/skeleton";
 import {
@@ -175,10 +174,10 @@ export default function Home() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="home-plan">Plan</Label>
-            <Select id="home-plan" defaultValue="pro">
-              <option value="free">Free</option>
-              <option value="pro">Pro</option>
-            </Select>
+            <NativeSelect id="home-plan" defaultValue="pro">
+              <NativeSelectOption value="free">Free</NativeSelectOption>
+              <NativeSelectOption value="pro">Pro</NativeSelectOption>
+            </NativeSelect>
           </div>
           <div className="flex items-center justify-between gap-3">
             <Label htmlFor="home-alerts">Alerts</Label>

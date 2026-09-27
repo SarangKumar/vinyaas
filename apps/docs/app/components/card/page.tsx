@@ -18,13 +18,18 @@ import {
 import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
 import { Input } from "@/registry/new-york/ui/input/input";
 import { Label } from "@/registry/new-york/ui/label/label";
-import { Select } from "@/registry/new-york/ui/select/select";
+import { Progress } from "@/registry/new-york/ui/progress/progress";
+import { Separator } from "@/registry/new-york/ui/separator/separator";
+import { Switch } from "@/registry/new-york/ui/switch/switch";
+import { Tooltip } from "@/registry/new-york/ui/tooltip/tooltip";
+
+const selectClass =
+  "border-input bg-background text-foreground h-9 w-full rounded-md border px-3 text-sm";
 
 const usage = `import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/card";
@@ -37,9 +42,6 @@ export function Note() {
         <CardDescription>Private to this workspace.</CardDescription>
       </CardHeader>
       <CardContent>Drafts stay on this device.</CardContent>
-      <CardFooter>
-        <button type="button">Close</button>
-      </CardFooter>
     </Card>
   );
 }
@@ -59,7 +61,7 @@ const examples: ComponentExample[] = [
     id: "profile",
     title: "Profile",
     description:
-      "A card can group an avatar, a status badge, and the action for that person.",
+      "Avatar, a status badge, and two actions sit in one card. Separator divides the bio from the buttons.",
     preview: <ProfileCard />,
     code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
 import { Badge } from "@/components/ui/badge/badge";
@@ -72,6 +74,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/card";
+import { Separator } from "@/components/ui/separator/separator";
 
 export function ProfileCard() {
   return (
@@ -79,20 +82,27 @@ export function ProfileCard() {
       <CardHeader>
         <div className="flex items-center gap-3">
           <Avatar>
-            <AvatarFallback>SJ</AvatarFallback>
+            <AvatarFallback>SK</AvatarFallback>
           </Avatar>
           <div className="grid gap-1">
-            <CardTitle>Sarah Johnson</CardTitle>
-            <CardDescription>Product Designer</CardDescription>
+            <CardTitle>Sarang Kumar</CardTitle>
+            <CardDescription>@sarang · Developer</CardDescription>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <Badge variant="secondary">Available</Badge>
+      <CardContent className="gap-3">
+        <Badge variant="secondary">Open to work</Badge>
+        <p className="text-sm">
+          Building accessible UI that you install as source.
+        </p>
       </CardContent>
+      <Separator />
       <CardFooter>
-        <Button type="button" variant="outline" className="w-full">
+        <Button type="button" variant="outline">
           View profile
+        </Button>
+        <Button type="button" variant="secondary">
+          Follow
         </Button>
       </CardFooter>
     </Card>
@@ -101,97 +111,118 @@ export function ProfileCard() {
 `,
   },
   {
-    id: "account",
-    title: "Account",
+    id: "pricing",
+    title: "Pricing",
     description:
-      "Pair labels and inputs inside the content area for a short form.",
-    preview: <AccountCard />,
-    code: `import { Button } from "@/components/ui/button/button";
+      "A plan name, a badge, a price, and a feature list. The trial button explains itself with a tooltip.",
+    preview: <PricingCard />,
+    code: `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/card";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+import { Separator } from "@/components/ui/separator/separator";
+import { Tooltip } from "@/components/ui/tooltip/tooltip";
 
-export function AccountCard() {
+export function PricingCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Account</CardTitle>
-        <CardDescription>Update the name on your profile.</CardDescription>
+        <div className="flex items-center justify-between gap-3">
+          <CardTitle>Pro</CardTitle>
+          <Badge>Popular</Badge>
+        </div>
+        <p className="text-foreground text-2xl font-semibold">$24 / month</p>
+        <CardDescription>For developers building faster.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="grid gap-3">
-          <div className="grid gap-2">
-            <Label htmlFor="account-name">Name</Label>
-            <Input id="account-name" defaultValue="Sarah Johnson" />
-          </div>
-          <Button type="submit">Save</Button>
-        </form>
+        <ul className="text-sm leading-6">
+          <li>Unlimited projects</li>
+          <li>Team collaboration</li>
+          <li>Priority support</li>
+        </ul>
       </CardContent>
+      <Separator />
+      <CardFooter>
+        <Tooltip content="14 days, then $24 a month">
+          <Button type="button">Start free trial</Button>
+        </Tooltip>
+      </CardFooter>
     </Card>
   );
 }
 `,
   },
   {
-    id: "billing",
-    title: "Billing",
+    id: "checkout",
+    title: "Checkout",
     description:
-      "A select and a checkbox fit in the same card when they belong to one setting.",
-    preview: <BillingCard />,
+      "Labels, inputs, a native select, and a checkbox make a payment form. The select is a plain HTML element.",
+    preview: <CheckoutCard />,
     code: `import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/card";
 import { Checkbox } from "@/components/ui/checkbox/checkbox";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label/label";
-import { Select } from "@/components/ui/select/select";
+import { Separator } from "@/components/ui/separator/separator";
 
-export function BillingCard() {
+export function CheckoutCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Billing</CardTitle>
-        <CardDescription>Receipts and the default payment method.</CardDescription>
+        <CardTitle>Payment method</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid gap-2">
-          <Label htmlFor="payment-method">Payment method</Label>
-          <Select id="payment-method" defaultValue="card">
-            <option value="card">Card ending 4242</option>
-            <option value="bank">Bank transfer</option>
-          </Select>
+          <Label htmlFor="card-number">Card number</Label>
+          <Input id="card-number" defaultValue="4242 4242 4242 4242" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="card-name">Name</Label>
+          <Input id="card-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="checkout-plan">Plan</Label>
+          <select id="checkout-plan" defaultValue="pro" className="${selectClass}">
+            <option value="free">Free</option>
+            <option value="pro">Pro</option>
+          </select>
         </div>
         <div className="flex items-center gap-2">
-          <Checkbox id="email-receipts" defaultChecked />
-          <Label htmlFor="email-receipts">Email receipts</Label>
+          <Checkbox id="save-payment" defaultChecked />
+          <Label htmlFor="save-payment">Save payment method</Label>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button type="button">Save preferences</Button>
+      <Separator />
+      <CardFooter className="justify-between">
+        <span className="text-sm">Total</span>
+        <span className="text-sm font-medium">$24</span>
       </CardFooter>
+      <Button type="button">Confirm payment</Button>
     </Card>
   );
 }
 `,
   },
   {
-    id: "footer-actions",
-    title: "Footer actions",
+    id: "project",
+    title: "Project",
     description:
-      "CardFooter holds the actions. Outline and secondary stay quieter than the page's primary button.",
-    preview: <ArchiveCard />,
-    code: `import { Button } from "@/components/ui/button/button";
+      "Badges name the project, and Progress shows how much of the catalog is in place.",
+    preview: <ProjectCard />,
+    code: `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
@@ -200,26 +231,143 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/card";
+import { Progress } from "@/components/ui/progress/progress";
+import { Separator } from "@/components/ui/separator/separator";
 
-export function ArchiveCard() {
+export function ProjectCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Archive project</CardTitle>
-        <CardDescription>The project stays recoverable for 7 days.</CardDescription>
+        <CardTitle>Vinyaas</CardTitle>
+        <CardDescription>Accessible component library</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground text-sm">
-          Members lose access until you restore it.
-        </p>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="secondary">Open source</Badge>
+          <Badge variant="outline">v0.2</Badge>
+        </div>
+        <div className="grid gap-2">
+          <div className="flex items-center justify-between text-sm">
+            <span>Components</span>
+            <span>20 / 25</span>
+          </div>
+          <Progress aria-label="Catalog progress" value={20} max={25} />
+        </div>
       </CardContent>
+      <Separator />
+      <CardFooter className="justify-between">
+        <span className="text-muted-foreground text-sm">Updated recently</span>
+        <Button type="button" variant="outline">
+          View project
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+`,
+  },
+  {
+    id: "settings",
+    title: "Settings",
+    description:
+      "A display name, an email, a switch, and a checkbox. Cancel stays outline next to Save.",
+    preview: <SettingsCard />,
+    code: `import { Button } from "@/components/ui/button/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card/card";
+import { Checkbox } from "@/components/ui/checkbox/checkbox";
+import { Input } from "@/components/ui/input/input";
+import { Label } from "@/components/ui/label/label";
+import { Separator } from "@/components/ui/separator/separator";
+import { Switch } from "@/components/ui/switch/switch";
+
+export function SettingsCard() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Account settings</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-2">
+          <Label htmlFor="display-name">Display name</Label>
+          <Input id="display-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="account-email">Email</Label>
+          <Input id="account-email" type="email" defaultValue="sarang@example.com" />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="product-updates">Receive product updates</Label>
+          <Switch id="product-updates" defaultChecked />
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox id="activity-email" defaultChecked />
+          <Label htmlFor="activity-email">Email me about activity</Label>
+        </div>
+      </CardContent>
+      <Separator />
       <CardFooter className="justify-end">
         <Button type="button" variant="outline">
           Cancel
         </Button>
-        <Button type="button" variant="secondary">
-          Archive
-        </Button>
+        <Button type="button">Save changes</Button>
+      </CardFooter>
+    </Card>
+  );
+}
+`,
+  },
+  {
+    id: "activity",
+    title: "Activity",
+    description:
+      "A card can report a status. The badge names the result, and the tooltip names the destination.",
+    preview: <ActivityCard />,
+    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
+import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card/card";
+import { Separator } from "@/components/ui/separator/separator";
+import { Tooltip } from "@/components/ui/tooltip/tooltip";
+
+export function ActivityCard() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <Avatar>
+            <AvatarFallback>VW</AvatarFallback>
+          </Avatar>
+          <div className="grid gap-1">
+            <CardTitle>Deployment completed</CardTitle>
+            <CardDescription>vinyaas-web</CardDescription>
+          </div>
+          <Badge variant="secondary">Succeeded</Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm">Production deployment succeeded.</p>
+        <p className="text-muted-foreground text-sm">2 minutes ago</p>
+      </CardContent>
+      <Separator />
+      <CardFooter>
+        <Tooltip content="Opens the deployment log">
+          <Button type="button" variant="outline">
+            View deployment
+          </Button>
+        </Tooltip>
       </CardFooter>
     </Card>
   );
@@ -260,9 +408,9 @@ export default async function CardPage() {
       api={api}
       accessibility={
         <p>
-          Card does not add a role. Use a heading in the page around the card
-          when the section needs one. Controls inside the card keep their own
-          names through Label, Button, or visible text.
+          Card does not add a role. Controls inside the card keep their own
+          names through Label, Button, or visible text. A native select in a
+          card stays a combobox.
         </p>
       }
       source={source}
@@ -278,96 +426,194 @@ function ProfileCard() {
       <CardHeader>
         <div className="flex items-center gap-3">
           <Avatar>
-            <AvatarFallback>SJ</AvatarFallback>
+            <AvatarFallback>SK</AvatarFallback>
           </Avatar>
           <div className="grid gap-1">
-            <CardTitle>Sarah Johnson</CardTitle>
-            <CardDescription>Product Designer</CardDescription>
+            <CardTitle>Sarang Kumar</CardTitle>
+            <CardDescription>@sarang · Developer</CardDescription>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <Badge variant="secondary">Available</Badge>
+      <CardContent className="gap-3">
+        <Badge variant="secondary">Open to work</Badge>
+        <p className="text-sm">
+          Building accessible UI that you install as source.
+        </p>
       </CardContent>
+      <Separator />
       <CardFooter>
-        <Button type="button" variant="outline" className="w-full">
+        <Button type="button" variant="outline">
           View profile
+        </Button>
+        <Button type="button" variant="secondary">
+          Follow
         </Button>
       </CardFooter>
     </Card>
   );
 }
 
-function AccountCard() {
+function PricingCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Account</CardTitle>
-        <CardDescription>Update the name on your profile.</CardDescription>
+        <div className="flex items-center justify-between gap-3">
+          <CardTitle>Pro</CardTitle>
+          <Badge>Popular</Badge>
+        </div>
+        <p className="text-foreground text-2xl font-semibold">$24 / month</p>
+        <CardDescription>For developers building faster.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="grid gap-3">
-          <div className="grid gap-2">
-            <Label htmlFor="account-name">Name</Label>
-            <Input id="account-name" defaultValue="Sarah Johnson" />
-          </div>
-          <Button type="submit">Save</Button>
-        </form>
+        <ul className="text-sm leading-6">
+          <li>Unlimited projects</li>
+          <li>Team collaboration</li>
+          <li>Priority support</li>
+        </ul>
       </CardContent>
-    </Card>
-  );
-}
-
-function BillingCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Billing</CardTitle>
-        <CardDescription>
-          Receipts and the default payment method.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-2">
-          <Label htmlFor="payment-method">Payment method</Label>
-          <Select id="payment-method" defaultValue="card">
-            <option value="card">Card ending 4242</option>
-            <option value="bank">Bank transfer</option>
-          </Select>
-        </div>
-        <div className="flex items-center gap-2">
-          <Checkbox id="email-receipts" defaultChecked />
-          <Label htmlFor="email-receipts">Email receipts</Label>
-        </div>
-      </CardContent>
+      <Separator />
       <CardFooter>
-        <Button type="button">Save preferences</Button>
+        <Tooltip content="14 days, then $24 a month">
+          <Button type="button">Start free trial</Button>
+        </Tooltip>
       </CardFooter>
     </Card>
   );
 }
 
-function ArchiveCard() {
+function CheckoutCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Archive project</CardTitle>
-        <CardDescription>
-          The project stays recoverable for 7 days.
-        </CardDescription>
+        <CardTitle>Payment method</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground text-sm">
-          Members lose access until you restore it.
-        </p>
+        <div className="grid gap-2">
+          <Label htmlFor="card-number">Card number</Label>
+          <Input id="card-number" defaultValue="4242 4242 4242 4242" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="card-name">Name</Label>
+          <Input id="card-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="checkout-plan">Plan</Label>
+          <select id="checkout-plan" defaultValue="pro" className={selectClass}>
+            <option value="free">Free</option>
+            <option value="pro">Pro</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox id="save-payment" defaultChecked />
+          <Label htmlFor="save-payment">Save payment method</Label>
+        </div>
       </CardContent>
+      <Separator />
+      <CardFooter className="justify-between">
+        <span className="text-sm">Total</span>
+        <span className="text-sm font-medium">$24</span>
+      </CardFooter>
+      <Button type="button">Confirm payment</Button>
+    </Card>
+  );
+}
+
+function ProjectCard() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Vinyaas</CardTitle>
+        <CardDescription>Accessible component library</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="secondary">Open source</Badge>
+          <Badge variant="outline">v0.2</Badge>
+        </div>
+        <div className="grid gap-2">
+          <div className="flex items-center justify-between text-sm">
+            <span>Components</span>
+            <span>20 / 25</span>
+          </div>
+          <Progress aria-label="Catalog progress" value={20} max={25} />
+        </div>
+      </CardContent>
+      <Separator />
+      <CardFooter className="justify-between">
+        <span className="text-muted-foreground text-sm">Updated recently</span>
+        <Button type="button" variant="outline">
+          View project
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+function SettingsCard() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Account settings</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-2">
+          <Label htmlFor="display-name">Display name</Label>
+          <Input id="display-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="account-email">Email</Label>
+          <Input
+            id="account-email"
+            type="email"
+            defaultValue="sarang@example.com"
+          />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="product-updates">Receive product updates</Label>
+          <Switch id="product-updates" defaultChecked />
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox id="activity-email" defaultChecked />
+          <Label htmlFor="activity-email">Email me about activity</Label>
+        </div>
+      </CardContent>
+      <Separator />
       <CardFooter className="justify-end">
         <Button type="button" variant="outline">
           Cancel
         </Button>
-        <Button type="button" variant="secondary">
-          Archive
-        </Button>
+        <Button type="button">Save changes</Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+function ActivityCard() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <Avatar>
+            <AvatarFallback>VW</AvatarFallback>
+          </Avatar>
+          <div className="grid flex-1 gap-1">
+            <CardTitle>Deployment completed</CardTitle>
+            <CardDescription>vinyaas-web</CardDescription>
+          </div>
+          <Badge variant="secondary">Succeeded</Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm">Production deployment succeeded.</p>
+        <p className="text-muted-foreground text-sm">2 minutes ago</p>
+      </CardContent>
+      <Separator />
+      <CardFooter>
+        <Tooltip content="Opens the deployment log">
+          <Button type="button" variant="outline">
+            View deployment
+          </Button>
+        </Tooltip>
       </CardFooter>
     </Card>
   );

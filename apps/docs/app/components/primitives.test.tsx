@@ -9,7 +9,6 @@ import KbdPage from "./kbd/page";
 import ProgressPage from "./progress/page";
 import NativeSelectPage from "./native-select/page";
 import PopoverPage from "./popover/page";
-import SelectPage from "./select/page";
 import SeparatorPage from "./separator/page";
 import SkeletonPage from "./skeleton/page";
 import SwitchPage from "./switch/page";
@@ -53,12 +52,6 @@ const pages = [
     title: "Switch",
     command: "npx @vinyaas/cli add switch",
     api: "onCheckedChange",
-  },
-  {
-    load: SelectPage,
-    title: "Select",
-    command: "npx @vinyaas/cli add select",
-    api: "multiple",
   },
   {
     load: TablePage,
@@ -123,11 +116,24 @@ describe("composed examples", () => {
     expect(screen.getByText("Ghost")).toBeInTheDocument();
 
     render(await CardPage());
-    expect(screen.getAllByText("Sarah Johnson").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Sarang Kumar").length).toBeGreaterThan(0);
     expect(
-      screen.getByRole("button", { name: "Save preferences" }),
+      screen.getAllByRole("button", { name: "Follow" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("button", { name: "Start free trial" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Archive" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Card number")).toBeInTheDocument();
+    expect(screen.getByLabelText("Plan")).toBeInstanceOf(HTMLSelectElement);
+    expect(
+      screen.getByRole("button", { name: "Save changes" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "View deployment" }),
+    ).toBeInTheDocument();
+    expect(document.body.textContent).not.toContain(
+      'from "@/components/ui/select/select"',
+    );
   });
 });
 

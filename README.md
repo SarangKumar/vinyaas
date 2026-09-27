@@ -187,10 +187,9 @@ Components use the native element and the browser’s keyboard behavior.
 - Separator is an `<hr>` when horizontal. A vertical separator sets `aria-orientation="vertical"`.
 - Kbd is a native `<kbd>`. It displays a key and does not handle keyboard events.
 - Switch is a button with `role="switch"`. Click, Space, and Enter toggle it. It is not submitted with a form.
-- Select is a native `<select>`. The browser handles the menu, the keyboard, and the submitted value.
 - Table is a native `<table>` with header, body, footer, and caption elements. It does not sort or paginate. A wide table scrolls inside its wrapper.
 - Tooltip shows short, non-interactive text on hover and keyboard focus. Escape hides it. It does not take focus.
-- Native Select is a composed native `<select>`, `<option>`, and `<optgroup>`. It is separate from Select. A custom popup Select is not implemented.
+- Native Select is a composed native `<select>`, `<option>`, and `<optgroup>`. A plain `<select>` is enough when the composed parts are not needed. A custom popup Select is not implemented.
 - Toast renders through an explicit `<Toaster />`. Error toasts use `role="alert"`. Other toasts use `role="status"`. A toast does not take focus when it appears.
 - Popover opens a non-modal dialog. Escape and an outside click close it and return focus to the trigger. The panel may contain controls. It follows its trigger while the page scrolls, and long content scrolls inside the panel.
 - Spinner hides its graphic from assistive technology and exposes a text label. The animation stops under `prefers-reduced-motion`.

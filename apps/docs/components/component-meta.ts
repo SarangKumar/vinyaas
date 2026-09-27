@@ -104,13 +104,6 @@ export const components: readonly ComponentMeta[] = [
     introducedIn: "0.2",
   },
   {
-    name: "Select",
-    slug: "select",
-    description: "A native select for choosing an option.",
-    category: "form",
-    introducedIn: "0.2",
-  },
-  {
     name: "Separator",
     slug: "separator",
     description: "A horizontal or vertical divider between content.",

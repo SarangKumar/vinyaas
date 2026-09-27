@@ -189,9 +189,9 @@ export default async function NativeSelectPage() {
             and the submitted value.
           </p>
           <p>
-            Select is the current simple native select. NativeSelect is the
-            composed native API. A custom popup Select is not part of this
-            library yet.
+            Use a plain <code>select</code> when the composed parts are not
+            needed. NativeSelect is the installable composed API. A custom popup
+            Select is not part of this library.
           </p>
         </>
       }
