@@ -34,4 +34,15 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "label",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/label/label.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

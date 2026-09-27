@@ -4,6 +4,7 @@ import { CodeBlock } from "@/components/code-block";
 import { focusRing } from "@/components/focus-ring";
 import { Button } from "@/registry/new-york/ui/button/button";
 import { Input } from "@/registry/new-york/ui/input/input";
+import { Label } from "@/registry/new-york/ui/label/label";
 import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
 
 const actionLink = `inline-flex h-8 cursor-pointer items-center rounded-md px-3 text-sm font-medium ${focusRing}`;
@@ -106,9 +107,9 @@ export default function Home() {
           Components
         </h2>
         <p className="text-body max-w-2xl text-base leading-7">
-          Button, Input, and Textarea are the current components. Each page
-          includes a live preview, an install command, and the source that gets
-          copied into your project.
+          Button, Input, Textarea, and Label are the current components. Each
+          page includes a live preview, an install command, and the source that
+          gets copied into your project.
         </p>
         <div className="border-border flex flex-col gap-4 rounded-md border px-6 py-10">
           <div className="flex flex-wrap items-center gap-3">
@@ -117,7 +118,10 @@ export default function Home() {
               Cancel
             </Button>
           </div>
-          <Input aria-label="Email" placeholder="Email" className="max-w-sm" />
+          <div className="grid max-w-sm gap-2">
+            <Label htmlFor="home-email">Email</Label>
+            <Input id="home-email" type="email" placeholder="Email" />
+          </div>
           <Textarea
             aria-label="Message"
             placeholder="Write a message"
@@ -145,6 +149,13 @@ export default function Home() {
             className={`text-foreground cursor-pointer rounded-sm underline ${focusRing}`}
           >
             Textarea
+          </Link>
+          {" · "}
+          <Link
+            href="/components/label"
+            className={`text-foreground cursor-pointer rounded-sm underline ${focusRing}`}
+          >
+            Label
           </Link>
           {" · "}
           <Link

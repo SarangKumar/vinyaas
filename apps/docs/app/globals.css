@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* `dark:` utilities follow the .dark class set by the theme toggle. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
  * Raw palette. Components do not use these names.
  * Documentation surfaces stay black, white, and neutral gray.
@@ -8,9 +11,13 @@
 :root {
   --palette-black: #000000;
   --palette-white: #ffffff;
+  --palette-neutral-50: #fafafa;
+  --palette-neutral-100: #f5f5f5;
   --palette-neutral-950: #0a0a0a;
   --palette-neutral-900: #171717;
   --palette-neutral-800: #262626;
+  --palette-neutral-700: #404040;
+  --palette-neutral-600: #525252;
   --palette-neutral-200: #e5e5e5;
   --palette-neutral-300: #c6c6c6;
   --palette-neutral-400: #a3a3a3;
@@ -21,23 +28,53 @@
   --palette-iris: #7272a5;
   --palette-lilac: #b2b2d8;
   --palette-danger: #b4234a;
-  color-scheme: dark;
 }
 
 /*
- * Dark theme. Declared on :root because the docs site is dark-first.
- * A light theme can move this block to `.dark` and add light values on `:root`
- * without changing component classes.
- *
+ * Light theme. Near-white surfaces, near-black text, neutral borders.
+ * Contrast against white:
+ * foreground #0a0a0a is about 19:1
+ * body and sidebar #262626 is about 13:1
+ * secondary text #525252 is about 7.5:1
+ */
+:root {
+  color-scheme: light;
+  --background: var(--palette-white);
+  --foreground: var(--palette-neutral-950);
+  --body: var(--palette-neutral-800);
+  --card: var(--palette-neutral-50);
+  --card-foreground: var(--palette-neutral-950);
+  --primary: var(--palette-neutral-950);
+  --primary-foreground: var(--palette-white);
+  --muted: var(--palette-neutral-100);
+  --muted-foreground: var(--palette-neutral-600);
+  --subtle-foreground: var(--palette-neutral-600);
+  --accent: var(--palette-neutral-100);
+  --accent-foreground: var(--palette-neutral-950);
+  --destructive: var(--palette-danger);
+  --destructive-foreground: var(--palette-white);
+  --border: var(--palette-neutral-200);
+  --input: var(--palette-neutral-200);
+  --ring: var(--palette-neutral-950);
+  --new: var(--palette-new);
+  --sidebar: var(--palette-white);
+  --sidebar-foreground: var(--palette-neutral-800);
+  --sidebar-accent: var(--palette-neutral-100);
+  --sidebar-accent-foreground: var(--palette-neutral-950);
+  --sidebar-border: var(--palette-neutral-200);
+  --sidebar-ring: var(--palette-neutral-950);
+}
+
+/*
+ * Dark theme. Black surfaces, white text, neutral borders.
  * Contrast against black:
  * foreground #ffffff is about 21:1
- * body #e5e5e5 is about 16:1
  * body and sidebar text #e5e5e5 is about 16:1
  * muted secondary text #c6c6c6 is about 12:1
  * metadata #8f8f8f is about 6.5:1
  */
-:root,
 .dark {
+  color-scheme: dark;
   --background: var(--palette-black);
   --foreground: var(--palette-white);
   --body: var(--palette-neutral-200);

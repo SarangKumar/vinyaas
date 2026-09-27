@@ -17,11 +17,15 @@ describe("docs theme", () => {
     );
 
     expect(css).toContain('@import "tailwindcss"');
+    expect(css).toContain("@custom-variant dark (&:where(.dark, .dark *))");
     expect(css).toContain("@theme inline");
     expect(css).toContain("--color-background: var(--background)");
     expect(css).toContain("--color-foreground: var(--foreground)");
     expect(css).toContain("--color-sidebar: var(--sidebar)");
+    expect(css).toContain("--foreground: var(--palette-neutral-950)");
     expect(css).toContain("--foreground: var(--palette-white)");
+    expect(css).toContain("--background: var(--palette-white)");
+    expect(css).toContain("--body: var(--palette-neutral-800)");
     expect(css).toContain("--body: var(--palette-neutral-200)");
     expect(css).toContain("--muted-foreground: var(--palette-neutral-300)");
     expect(css).toContain("--sidebar-foreground: var(--palette-neutral-200)");
@@ -33,6 +37,8 @@ describe("docs theme", () => {
     expect(css).toContain(
       "--font-mono: var(--font-geist-mono), ui-monospace, monospace",
     );
+    expect(css).toContain("color-scheme: light");
+    expect(css).toContain("color-scheme: dark");
     expect(css).toContain(":root");
     expect(css).toContain(".dark");
     expect(css).not.toMatch(/--foreground:\s*var\(--palette-mist\)/);

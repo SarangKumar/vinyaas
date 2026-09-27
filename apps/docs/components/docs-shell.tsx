@@ -7,6 +7,7 @@ import { DocsNavLinks } from "@/components/docs-nav-links";
 import { focusRing } from "@/components/focus-ring";
 import logo from "@/components/logo.png";
 import { TableOfContents } from "@/components/table-of-contents";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-sidebar-foreground hover:text-foreground ${focusRing}`;
 
@@ -28,17 +29,20 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
             />
             <span>Vinyaas</span>
           </Link>
-          <nav aria-label="Site" className="flex items-center gap-1">
-            <Link href="/" className={headerLink}>
-              Docs
-            </Link>
-            <Link href="/components" className={headerLink}>
-              Components
-            </Link>
-            <a href={githubUrl} className={headerLink}>
-              GitHub
-            </a>
-          </nav>
+          <div className="flex items-center gap-1">
+            <nav aria-label="Site" className="flex items-center gap-1">
+              <Link href="/" className={headerLink}>
+                Docs
+              </Link>
+              <Link href="/components" className={headerLink}>
+                Components
+              </Link>
+              <a href={githubUrl} className={headerLink}>
+                GitHub
+              </a>
+            </nav>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
       <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)_13rem]">

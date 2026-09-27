@@ -1,0 +1,13 @@
+{
+  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "name": "label",
+  "type": "registry:ui",
+  "dependencies": ["clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "ui/label/label.tsx",
+      "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type LabelProps = React.ComponentProps<\"label\">;\n\nexport function Label({ className, ref, ...props }: LabelProps) {\n  return (\n    <label\n      ref={ref}\n      className={cn(\n        \"text-foreground text-sm leading-none font-medium\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

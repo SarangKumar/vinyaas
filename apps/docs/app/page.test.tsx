@@ -48,6 +48,10 @@ describe("homepage", () => {
       "href",
       "/components/textarea",
     );
+    expect(screen.getByRole("link", { name: "Label" })).toHaveAttribute(
+      "href",
+      "/components/label",
+    );
     expect(
       screen.getByRole("textbox", { name: "Message" }),
     ).toBeInTheDocument();

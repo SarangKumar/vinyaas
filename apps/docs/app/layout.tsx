@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { DocsShell } from "@/components/docs-shell";
+import { themeInitScript } from "@/components/theme";
 
 import "./globals.css";
 
@@ -25,7 +26,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Sets the theme class before the body paints. React does not own this class during SSR. */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="bg-background text-foreground h-full overflow-hidden font-sans">
         <DocsShell>{children}</DocsShell>
       </body>
