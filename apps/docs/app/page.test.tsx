@@ -71,6 +71,14 @@ describe("homepage", () => {
       "checkbox",
     );
     expect(screen.getByLabelText("Plan")).toBeInstanceOf(HTMLSelectElement);
+    expect(screen.getByLabelText("Region")).toBeInstanceOf(HTMLSelectElement);
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Hint" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Details" })).toHaveAttribute(
+      "aria-haspopup",
+      "dialog",
+    );
+    expect(screen.getByRole("button", { name: "Notify" })).toBeInTheDocument();
     expect(screen.getByRole("switch", { name: "Alerts" })).toHaveAttribute(
       "aria-checked",
       "false",

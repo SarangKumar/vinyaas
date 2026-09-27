@@ -16,13 +16,18 @@ describe("component metadata", () => {
       "Input",
       "Kbd",
       "Label",
+      "Native Select",
+      "Popover",
       "Progress",
       "Radio Group",
       "Select",
       "Separator",
       "Skeleton",
       "Switch",
+      "Table",
       "Textarea",
+      "Toast",
+      "Tooltip",
     ]);
   });
 
@@ -38,12 +43,17 @@ describe("component metadata", () => {
       "avatar",
       "checkbox",
       "kbd",
+      "native-select",
+      "popover",
       "progress",
       "radio-group",
       "select",
       "separator",
       "skeleton",
       "switch",
+      "table",
+      "toast",
+      "tooltip",
     ]);
   });
 });

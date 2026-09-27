@@ -21,12 +21,14 @@ export function TableOfContents() {
       setItems((current) => (sameHeadings(current, next) ? current : next));
     };
     const frame = window.requestAnimationFrame(update);
+    const timeout = window.setTimeout(update, 0);
     const observer = new MutationObserver(update);
 
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
       observer.disconnect();
     };
   }, [pathname]);

@@ -8,6 +8,7 @@ import {
 import { focusRing } from "@/components/focus-ring";
 import { InstallCommand } from "@/components/install-command";
 import { cliCommands } from "@/components/package-managers";
+import { HomeOverlays } from "@/app/home-overlays";
 import {
   Avatar,
   AvatarFallback,
@@ -18,6 +19,11 @@ import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
 import { Input } from "@/registry/new-york/ui/input/input";
 import { Kbd } from "@/registry/new-york/ui/kbd/kbd";
 import { Label } from "@/registry/new-york/ui/label/label";
+import {
+  NativeSelect,
+  NativeSelectOptGroup,
+  NativeSelectOption,
+} from "@/registry/new-york/ui/native-select/native-select";
 import { Progress } from "@/registry/new-york/ui/progress/progress";
 import {
   RadioGroup,
@@ -26,6 +32,14 @@ import {
 import { Select } from "@/registry/new-york/ui/select/select";
 import { Separator } from "@/registry/new-york/ui/separator/separator";
 import { Skeleton } from "@/registry/new-york/ui/skeleton/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/registry/new-york/ui/table/table";
 import { Switch } from "@/registry/new-york/ui/switch/switch";
 import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
 
@@ -95,6 +109,21 @@ export default function Home() {
             value={components.length}
             max={targetComponentCount}
           />
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Role</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>Ada Lovelace</TableCell>
+                <TableCell>Writer</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <HomeOverlays />
         </div>
       </section>
 
@@ -135,6 +164,15 @@ export default function Home() {
               </div>
             </RadioGroup>
           </fieldset>
+          <div className="grid gap-2">
+            <Label htmlFor="home-region">Region</Label>
+            <NativeSelect id="home-region" defaultValue="in">
+              <NativeSelectOptGroup label="Asia">
+                <NativeSelectOption value="in">India</NativeSelectOption>
+              </NativeSelectOptGroup>
+              <NativeSelectOption value="us">United States</NativeSelectOption>
+            </NativeSelect>
+          </div>
           <div className="grid gap-2">
             <Label htmlFor="home-plan">Plan</Label>
             <Select id="home-plan" defaultValue="pro">

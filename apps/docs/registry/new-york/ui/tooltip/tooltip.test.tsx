@@ -1,0 +1,74 @@
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+import { Tooltip } from "./tooltip";
+
+describe("Tooltip", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("shows on focus, links the tooltip, and does not move focus", () => {
+    render(
+      <Tooltip content="Saved locally">
+        <button type="button">Hint</button>
+      </Tooltip>,
+    );
+
+    const trigger = screen.getByRole("button", { name: "Hint" });
+
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+
+    act(() => {
+      trigger.focus();
+    });
+
+    const tooltip = screen.getByRole("tooltip");
+
+    expect(tooltip).toHaveTextContent("Saved locally");
+    expect(trigger).toHaveAttribute("aria-describedby", tooltip.id);
+    expect(trigger).toHaveFocus();
+    expect(tooltip).not.toHaveAttribute("tabindex");
+  });
+
+  it("waits for the hover delay, then hides on Escape", () => {
+    vi.useFakeTimers();
+
+    render(
+      <Tooltip content="Saved locally" delayDuration={400} side="right">
+        <button type="button">Hint</button>
+      </Tooltip>,
+    );
+
+    const trigger = screen.getByRole("button", { name: "Hint" });
+
+    fireEvent.mouseEnter(trigger.parentElement!);
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(400);
+    });
+
+    const tooltip = screen.getByRole("tooltip");
+
+    expect(tooltip).toHaveAttribute("data-side", "right");
+
+    fireEvent.keyDown(trigger, { key: "Escape" });
+
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+  });
+
+  it("merges a class name onto the tooltip", () => {
+    render(
+      <Tooltip content="Saved locally" className="max-w-sm" delayDuration={0}>
+        <button type="button">Hint</button>
+      </Tooltip>,
+    );
+
+    act(() => {
+      screen.getByRole("button", { name: "Hint" }).focus();
+    });
+
+    expect(screen.getByRole("tooltip")).toHaveClass("text-sm", "max-w-sm");
+  });
+});

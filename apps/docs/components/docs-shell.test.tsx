@@ -32,15 +32,14 @@ describe("DocsShell", () => {
       name: "On this page",
     });
 
-    expect(screen.getByRole("link", { name: "Preview" })).toHaveAttribute(
-      "href",
-      "#preview",
-    );
     expect(
-      within(onThisPage).getByRole("link", { name: "Installation" }),
+      await within(onThisPage).findByRole("link", { name: "Preview" }),
+    ).toHaveAttribute("href", "#preview");
+    expect(
+      await within(onThisPage).findByRole("link", { name: "Installation" }),
     ).toHaveAttribute("href", "#installation");
     expect(
-      within(onThisPage).getByRole("link", { name: "Notes" }),
+      await within(onThisPage).findByRole("link", { name: "Notes" }),
     ).toHaveAttribute("href", "#notes");
     const start = document.querySelector("[data-header-section='start']");
     const end = document.querySelector("[data-header-section='end']");

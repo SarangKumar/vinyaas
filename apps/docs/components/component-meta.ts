@@ -54,6 +54,20 @@ export const components: readonly ComponentMeta[] = [
     category: "form",
   },
   {
+    name: "Native Select",
+    slug: "native-select",
+    description: "A composed native select with options and groups.",
+    category: "form",
+    isNew: true,
+  },
+  {
+    name: "Popover",
+    slug: "popover",
+    description: "A floating panel with interactive content.",
+    category: "overlay",
+    isNew: true,
+  },
+  {
     name: "Progress",
     slug: "progress",
     description: "A native progress indicator for a known amount of work.",
@@ -96,10 +110,31 @@ export const components: readonly ComponentMeta[] = [
     isNew: true,
   },
   {
+    name: "Table",
+    slug: "table",
+    description: "A semantic table for rows and columns.",
+    category: "display",
+    isNew: true,
+  },
+  {
     name: "Textarea",
     slug: "textarea",
     description: "A styled multiline text input.",
     category: "form",
+  },
+  {
+    name: "Toast",
+    slug: "toast",
+    description: "A temporary notice.",
+    category: "feedback",
+    isNew: true,
+  },
+  {
+    name: "Tooltip",
+    slug: "tooltip",
+    description: "A short label for a control.",
+    category: "overlay",
+    isNew: true,
   },
 ];
 

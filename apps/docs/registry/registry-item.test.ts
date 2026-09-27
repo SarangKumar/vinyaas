@@ -488,6 +488,11 @@ describe("registry build output", () => {
     ["kbd", "ui/kbd/kbd.tsx", "<kbd"],
     ["switch", "ui/switch/switch.tsx", 'role="switch"'],
     ["select", "ui/select/select.tsx", "<select"],
+    ["table", "ui/table/table.tsx", "<table"],
+    ["tooltip", "ui/tooltip/tooltip.tsx", 'role="tooltip"'],
+    ["native-select", "ui/native-select/native-select.tsx", "<select"],
+    ["toast", "ui/toast/toast.tsx", "toast.add"],
+    ["popover", "ui/popover/popover.tsx", "PopoverContent"],
   ])(
     "keeps the new-york %s artifact aligned with the source item",
     async (name, filePath, sourceMarker) => {

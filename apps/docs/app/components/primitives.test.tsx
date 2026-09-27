@@ -4,10 +4,15 @@ import { describe, expect, it } from "vitest";
 import AvatarPage from "./avatar/page";
 import KbdPage from "./kbd/page";
 import ProgressPage from "./progress/page";
+import NativeSelectPage from "./native-select/page";
+import PopoverPage from "./popover/page";
 import SelectPage from "./select/page";
 import SeparatorPage from "./separator/page";
 import SkeletonPage from "./skeleton/page";
 import SwitchPage from "./switch/page";
+import TablePage from "./table/page";
+import ToastPage from "./toast/page";
+import TooltipPage from "./tooltip/page";
 
 const pages = [
   {
@@ -52,6 +57,36 @@ const pages = [
     command: "npx @vinyaas/cli add select",
     api: "multiple",
   },
+  {
+    load: TablePage,
+    title: "Table",
+    command: "npx @vinyaas/cli add table",
+    api: "children",
+  },
+  {
+    load: TooltipPage,
+    title: "Tooltip",
+    command: "npx @vinyaas/cli add tooltip",
+    api: "delayDuration",
+  },
+  {
+    load: NativeSelectPage,
+    title: "Native Select",
+    command: "npx @vinyaas/cli add native-select",
+    api: "multiple",
+  },
+  {
+    load: ToastPage,
+    title: "Toast",
+    command: "npx @vinyaas/cli add toast",
+    api: "actionProps",
+  },
+  {
+    load: PopoverPage,
+    title: "Popover",
+    command: "npx @vinyaas/cli add popover",
+    api: "onOpenChange",
+  },
 ] as const;
 
 describe("new component pages", () => {
@@ -74,7 +109,9 @@ describe("new component pages", () => {
         screen.getByRole("heading", { name: "Accessibility" }),
       ).toBeInTheDocument();
       expect(screen.getByText(command)).toBeInTheDocument();
-      expect(document.querySelector("table")).toHaveTextContent(api);
+      const tables = document.querySelectorAll("table");
+
+      expect(tables[tables.length - 1]).toHaveTextContent(api);
     },
   );
 });

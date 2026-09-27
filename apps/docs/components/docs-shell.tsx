@@ -9,6 +9,7 @@ import { focusRing } from "@/components/focus-ring";
 import logo from "@/components/logo.png";
 import { TableOfContents } from "@/components/table-of-contents";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Toaster } from "@/registry/new-york/ui/toast/toast";
 
 const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-sidebar-foreground hover:text-foreground ${focusRing}`;
 
@@ -82,6 +83,7 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
           <TableOfContents />
         </aside>
       </div>
+      <Toaster />
     </div>
   );
 }

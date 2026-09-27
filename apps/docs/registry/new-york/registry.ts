@@ -144,4 +144,59 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "table",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/table/table.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "tooltip",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/tooltip/tooltip.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "native-select",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/native-select/native-select.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "toast",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/toast/toast.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "popover",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/popover/popover.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
