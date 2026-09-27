@@ -45,5 +45,70 @@ describe("ComponentReference", () => {
       "id",
       "source",
     );
+    expect(screen.getByRole("heading", { name: "CLI" })).toHaveAttribute(
+      "id",
+      "cli",
+    );
+  });
+
+  it("renders optional documentation sections with stable ids", () => {
+    render(
+      <ComponentReference
+        title="Button"
+        description="A button."
+        overview={<p>Native button.</p>}
+        install="vinyaas add button"
+        manual={<p>Copy the file.</p>}
+        usage="<Button />"
+        examples={[
+          {
+            id: "destructive",
+            title: "Destructive",
+            description: "For delete.",
+            preview: <button type="button">Delete</button>,
+            code: `<Button variant="destructive">Delete</Button>`,
+          },
+        ]}
+        api={[
+          {
+            prop: "variant",
+            type: '"default" | "outline" | "destructive"',
+            defaultValue: '"default"',
+            description: "Visual style.",
+          },
+        ]}
+        accessibility={<p>Enter and Space activate it.</p>}
+        source="export function Button() {}"
+      >
+        <button type="button">Save</button>
+      </ComponentReference>,
+    );
+
+    expect(screen.getByRole("heading", { name: "Overview" })).toHaveAttribute(
+      "id",
+      "overview",
+    );
+    expect(screen.getByRole("heading", { name: "Manual" })).toHaveAttribute(
+      "id",
+      "manual",
+    );
+    expect(screen.getByRole("heading", { name: "Examples" })).toHaveAttribute(
+      "id",
+      "examples",
+    );
+    expect(
+      screen.getByRole("heading", { name: "Destructive" }),
+    ).toHaveAttribute("id", "destructive");
+    expect(screen.getByRole("heading", { name: "API" })).toHaveAttribute(
+      "id",
+      "api",
+    );
+    expect(
+      screen.getByRole("heading", { name: "Accessibility" }),
+    ).toHaveAttribute("id", "accessibility");
+    expect(
+      screen.getByRole("columnheader", { name: "Prop" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Visual style.")).toBeInTheDocument();
   });
 });

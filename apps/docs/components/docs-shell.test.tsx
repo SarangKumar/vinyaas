@@ -19,7 +19,7 @@ describe("DocsShell", () => {
       </DocsShell>,
     );
 
-    const current = screen.getAllByRole("link", { name: "Button" });
+    const current = screen.getAllByRole("link", { name: "Button, new" });
 
     expect(current.length).toBeGreaterThan(0);
     for (const link of current) {

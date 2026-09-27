@@ -14,6 +14,7 @@ describe("CodeBlock", () => {
     render(<CodeBlock code={shortCode} language="bash" />);
 
     expect(screen.getByText(shortCode)).toBeInTheDocument();
+    expect(screen.getByText("bash")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "View code" })).toBeNull();
     expect(
       screen.getByRole("button", { name: "Copy code" }),
@@ -23,6 +24,7 @@ describe("CodeBlock", () => {
   it("collapses long code and can expand and collapse it again", () => {
     render(<CodeBlock code={longCode} language="tsx" />);
 
+    expect(screen.getByText("tsx")).toBeInTheDocument();
     expect(screen.getByText(/line 20/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "View code" }));
     expect(screen.getByRole("button", { name: "Hide code" })).toHaveAttribute(

@@ -16,8 +16,9 @@ describe("documentation navigation", () => {
       {
         title: "Components",
         items: [
-          { title: "Button", href: "/components/button" },
-          { title: "Input", href: "/components/input" },
+          { title: "Button", href: "/components/button", isNew: true },
+          { title: "Input", href: "/components/input", isNew: true },
+          { title: "Textarea", href: "/components/textarea", isNew: true },
         ],
       },
     ]);

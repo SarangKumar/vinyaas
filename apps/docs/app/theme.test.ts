@@ -22,6 +22,13 @@ describe("docs theme", () => {
     expect(css).toContain("--color-foreground: var(--foreground)");
     expect(css).toContain("--color-sidebar: var(--sidebar)");
     expect(css).toContain("--foreground: var(--palette-white)");
+    expect(css).toContain("--body: var(--palette-neutral-200)");
+    expect(css).toContain("--muted-foreground: var(--palette-neutral-300)");
+    expect(css).toContain("--sidebar-foreground: var(--palette-neutral-200)");
+    expect(css).toContain("--subtle-foreground: var(--palette-neutral-500)");
+    expect(css).toContain("--new: var(--palette-new)");
+    expect(css).toContain("--color-body: var(--body)");
+    expect(css).toContain("--color-new: var(--new)");
     expect(css).toContain("--background: var(--palette-black)");
     expect(css).toContain(
       "--font-mono: var(--font-geist-mono), ui-monospace, monospace",

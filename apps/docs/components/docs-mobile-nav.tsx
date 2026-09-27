@@ -30,11 +30,11 @@ export function DocsMobileNav() {
       }}
     >
       <summary
-        className={`text-muted-foreground cursor-pointer px-4 py-2 text-sm ${focusRing}`}
+        className={`text-muted-foreground cursor-pointer px-4 py-2.5 text-sm ${focusRing}`}
       >
         Menu
       </summary>
-      <DocsNavLinks className="flex flex-col gap-6 px-4 pb-4" />
+      <DocsNavLinks className="flex flex-col gap-8 px-4 pt-2 pb-6" />
     </details>
   );
 }

@@ -301,6 +301,51 @@ describe("registry build output", () => {
     expect(generated).not.toHaveProperty("registryDependencies");
   });
 
+  it("keeps the new-york textarea artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/textarea.json");
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/textarea/textarea.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
+    ]);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      files: { path: string; content: string }[];
+    };
+    const textarea = newYork.find((item) => item.name === "textarea");
+
+    if (!textarea) {
+      throw new Error("Expected a textarea registry item");
+    }
+
+    const files = await readRegistryItemFiles(
+      textarea,
+      async (relativePath) => {
+        expect(relativePath).toBe("ui/textarea/textarea.tsx");
+        return source;
+      },
+    );
+    const payload = serializeRegistryItem(textarea, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.$schema).toBe(
+      "https://vinyaas.vercel.app/schema/registry-item.json",
+    );
+    expect(generated.name).toBe("textarea");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(textarea.registryDependencies).toBeUndefined();
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
+    expect(generated).not.toHaveProperty("registryDependencies");
+  });
+
   it("does not publish utils as a registry item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/utils.json");
 

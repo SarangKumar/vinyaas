@@ -12,12 +12,14 @@ export function DocsArticle({
   return (
     <article
       data-docs-article
-      className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-6 py-10"
+      className="text-body mx-auto flex w-full max-w-3xl flex-col gap-20 px-6 py-14"
     >
-      <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+      <header className="flex flex-col gap-4">
+        <h1 className="text-foreground text-3xl font-semibold tracking-tight">
+          {title}
+        </h1>
         {description ? (
-          <p className="text-muted-foreground text-base">{description}</p>
+          <p className="text-body text-base leading-7">{description}</p>
         ) : null}
       </header>
       {children}

@@ -19,16 +19,22 @@ export function CodeBlock({
   const collapsed = collapsible && !expanded;
 
   return (
-    <div className="border-border bg-card text-card-foreground relative rounded-md border">
-      <div className="absolute top-2 right-2 z-10">
+    <div className="border-border bg-card text-card-foreground overflow-hidden rounded-md border">
+      <div className="border-border flex items-center justify-between gap-3 border-b px-3 py-1.5">
+        {language ? (
+          <span className="text-subtle-foreground font-mono text-xs">
+            {language}
+          </span>
+        ) : (
+          <span />
+        )}
         <CopyButton value={code} />
       </div>
-      {language ? <span className="sr-only">{language}</span> : null}
       <pre
         className={
           collapsed
-            ? "max-h-72 overflow-hidden px-4 py-3 pr-12 text-[13px] leading-6"
-            : "overflow-x-auto px-4 py-3 pr-12 text-[13px] leading-6"
+            ? "max-h-72 overflow-x-auto overflow-y-hidden px-4 py-3 text-[13px] leading-6"
+            : "overflow-x-auto px-4 py-3 text-[13px] leading-6"
         }
       >
         <code>{code}</code>
@@ -41,7 +47,7 @@ export function CodeBlock({
           <button
             type="button"
             aria-expanded={expanded}
-            className={`text-muted-foreground hover:text-foreground w-full cursor-pointer px-4 py-2 text-center text-sm ${focusRing}`}
+            className={`text-subtle-foreground hover:text-foreground w-full cursor-pointer px-4 py-2.5 text-center text-sm ${focusRing}`}
             onClick={() => setExpanded((open) => !open)}
           >
             {expanded ? "Hide code" : "View code"}

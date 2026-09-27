@@ -32,14 +32,14 @@ export function TableOfContents() {
   }, [pathname]);
 
   return (
-    <nav aria-label="On this page" className="px-4 py-6">
+    <nav aria-label="On this page" className="px-5 py-8">
       <p className="text-foreground text-sm font-medium">On this page</p>
-      <ul className="mt-3 flex flex-col gap-1.5">
+      <ul className="mt-5 flex flex-col gap-3">
         {items.map((item) => (
-          <li key={item.id} className={item.level === 3 ? "pl-3" : undefined}>
+          <li key={item.id} className={item.level === 3 ? "pl-5" : undefined}>
             <a
               href={`#${item.id}`}
-              className={`text-muted-foreground hover:text-foreground block rounded-md text-[13px] ${focusRing}`}
+              className={`text-sidebar-foreground hover:text-foreground block rounded-md py-0.5 text-sm leading-6 ${focusRing}`}
               onClick={(event) => {
                 scrollArticleTo(item.id, event);
               }}

@@ -8,7 +8,7 @@ import { focusRing } from "@/components/focus-ring";
 import logo from "@/components/logo.png";
 import { TableOfContents } from "@/components/table-of-contents";
 
-const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground ${focusRing}`;
+const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-sidebar-foreground hover:text-foreground ${focusRing}`;
 
 export function DocsShell({ children }: { children: React.ReactNode }) {
   return (
@@ -41,9 +41,9 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
       </header>
-      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[14rem_minmax(0,1fr)] xl:grid-cols-[14rem_minmax(0,1fr)_12rem]">
+      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)_13rem]">
         <aside className="border-border hidden min-h-0 overflow-y-auto overscroll-y-contain border-r lg:block">
-          <DocsNavLinks className="flex flex-col gap-5 px-3 py-4" />
+          <DocsNavLinks className="flex flex-col gap-10 px-4 py-8" />
         </aside>
         <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
           <DocsMobileNav />

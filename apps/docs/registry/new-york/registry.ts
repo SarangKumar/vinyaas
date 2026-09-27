@@ -23,4 +23,15 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "textarea",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/textarea/textarea.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
