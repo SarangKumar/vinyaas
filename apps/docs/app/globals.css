@@ -255,7 +255,7 @@ code[data-language] .hljs-literal {
   color: var(--muted-foreground);
 }
 
-:not(pre) > code {
+:not(pre) > code:not([data-language]) {
   border-radius: 0.25rem;
   background: var(--muted);
   padding: 0.125rem 0.375rem;

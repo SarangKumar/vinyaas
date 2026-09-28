@@ -31,6 +31,7 @@ import InputGroupPage from "./input-group/page";
 import InputOTPPage from "./input-otp/page";
 import FileUploadPage from "./file-upload/page";
 import CommandPage from "./command/page";
+import TypographyPage from "./typography/page";
 
 function renderDocs(node: ReactNode) {
   return render(<DocsStoreProvider>{node}</DocsStoreProvider>);
@@ -198,6 +199,12 @@ const pages = [
     title: "Command",
     command: "npx @vinyaas/cli add command",
     api: "value",
+  },
+  {
+    load: TypographyPage,
+    title: "Typography",
+    command: "npx @vinyaas/cli add typography",
+    api: "className",
   },
 ] as const;
 

@@ -20,14 +20,19 @@ describe("installation docs", () => {
     expect(
       screen.getByRole("heading", { name: "Install form components" }),
     ).toBeInTheDocument();
-    const command = [...document.querySelectorAll("code")].find(
-      (code) =>
-        code.textContent ===
-        "npx @vinyaas/cli add button checkbox radio-group input textarea",
+    const command = [...document.querySelectorAll("code")].find((code) =>
+      code.textContent?.includes(
+        "add button checkbox radio-group input textarea label input-group native-select slider spinner skeleton",
+      ),
     );
 
     expect(command).toBeDefined();
     expect(command).toHaveAttribute("data-language", "bash");
+    expect(screen.getByRole("heading", { name: "React" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Next.js" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Vite" })).toBeInTheDocument();
     expect(
       command?.parentElement?.parentElement?.querySelector(
         "[data-line-numbers]",

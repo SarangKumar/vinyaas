@@ -4,7 +4,11 @@ import { join } from "node:path";
 import { CliError } from "./cli-error.js";
 import { parseJsonConfig } from "./parse-jsonc.js";
 
-const cssCandidates = ["app/globals.css", "src/app/globals.css"] as const;
+const cssCandidates = [
+  "app/globals.css",
+  "src/app/globals.css",
+  "src/index.css",
+] as const;
 
 const tailwindPackages = ["tailwindcss", "@tailwindcss/postcss"] as const;
 
@@ -21,23 +25,14 @@ export interface DetectedProject {
 export async function detectProject(cwd: string): Promise<DetectedProject> {
   const packageJson = await readPackageJson(cwd);
 
-  if (!hasDependency(packageJson, "next")) {
-    throw new CliError(
-      [
-        "Vinyaas currently supports Next.js projects.",
-        "No Next.js dependency was found in this project.",
-      ].join("\n"),
-    );
-  }
-
   if (
     !hasDependency(packageJson, "react") ||
     !hasDependency(packageJson, "react-dom")
   ) {
     throw new CliError(
       [
-        "Vinyaas currently supports Next.js projects.",
-        "react and react-dom dependencies were not found in this project.",
+        "Vinyaas supports React projects.",
+        "react and react-dom were not found in this project.",
       ].join("\n"),
     );
   }
@@ -146,10 +141,7 @@ async function readPackageJson(cwd: string): Promise<PackageManifest> {
 
   if (!(await fileExists(packageJsonPath))) {
     throw new CliError(
-      [
-        "Vinyaas currently supports Next.js projects.",
-        "No package.json was found in this project.",
-      ].join("\n"),
+      ["No package.json was found in this project."].join("\n"),
     );
   }
 

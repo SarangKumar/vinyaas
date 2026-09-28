@@ -2,12 +2,14 @@ import Link from "next/link";
 
 import {
   componentHref,
+  componentIsNew,
   components,
   newComponents,
   type ComponentMeta,
 } from "@/components/component-meta";
 import { DocsArticle } from "@/components/docs-article";
 import { focusRing } from "@/components/focus-ring";
+import { NewIndicator } from "@/components/new-indicator";
 
 const heading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
@@ -32,7 +34,7 @@ export default function ComponentsPage() {
       </p>
       <section className="flex flex-col gap-4">
         <h2 id="new" className={heading}>
-          New
+          New Components
         </h2>
         <p className="text-body text-base leading-7">
           Components introduced in the current release.
@@ -56,9 +58,10 @@ function NameGrid({ items }: { items: readonly ComponentMeta[] }) {
         <li key={item.slug}>
           <Link
             href={componentHref(item.slug)}
-            className={`text-foreground hover:bg-muted block cursor-pointer rounded-md px-2 py-1.5 text-sm no-underline ${focusRing}`}
+            className={`text-foreground hover:bg-muted flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm no-underline ${focusRing}`}
           >
             {item.name}
+            {componentIsNew(item) ? <NewIndicator /> : null}
           </Link>
         </li>
       ))}

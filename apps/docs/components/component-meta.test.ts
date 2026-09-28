@@ -48,6 +48,7 @@ describe("component metadata", () => {
       "Textarea",
       "Toast",
       "Tooltip",
+      "Typography",
     ]);
   });
 
@@ -95,6 +96,7 @@ describe("component metadata", () => {
       "textarea",
       "toast",
       "tooltip",
+      "typography",
     ]);
     expect(newComponents().map((component) => component.slug)).not.toContain(
       "button",

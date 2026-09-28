@@ -3,14 +3,43 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DocsShell } from "./docs-shell";
 
+const navigation = vi.hoisted(() => ({
+  pathname: "/components/button",
+}));
+
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/components/button",
+  usePathname: () => navigation.pathname,
   useRouter: () => ({ push: vi.fn() }),
 }));
 
 describe("DocsShell", () => {
   beforeEach(() => {
+    navigation.pathname = "/components/button";
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
+  });
+
+  it("hides the docs sidebars on the homepage", () => {
+    navigation.pathname = "/";
+
+    render(
+      <DocsShell>
+        <h1>Build with Vinyaas</h1>
+      </DocsShell>,
+    );
+
+    expect(document.querySelector("[data-docs-frame]")).toHaveAttribute(
+      "data-docs-frame",
+      "home",
+    );
+    expect(
+      screen.queryByRole("navigation", { name: "Documentation" }),
+    ).toBeNull();
+    expect(
+      screen.queryByRole("navigation", { name: "On this page" }),
+    ).toBeNull();
+    expect(
+      screen.getByRole("heading", { name: "Build with Vinyaas" }),
+    ).toBeInTheDocument();
   });
 
   it("keeps the current page marked and lists article headings", async () => {

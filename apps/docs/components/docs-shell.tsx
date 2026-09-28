@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { DocsFrame } from "@/components/docs-frame";
 import { DocsMobileNav } from "@/components/docs-mobile-nav";
 import {
   DocsSearchField,
@@ -13,11 +14,9 @@ import {
   introductionPath,
 } from "@/components/docs-nav";
 import { portfolioUrl } from "@/lib/public-env";
-import { DocsNavLinks } from "@/components/docs-nav-links";
 import { focusRing } from "@/components/focus-ring";
 import { GitHubLink } from "@/components/github-link";
 import logo from "@/components/logo.png";
-import { TableOfContents } from "@/components/table-of-contents";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Toaster } from "@/registry/new-york/ui/toast/toast";
 
@@ -86,22 +85,7 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </header>
-        <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)_13rem]">
-          <aside className="border-border hidden min-h-0 overflow-y-auto overscroll-y-contain border-r lg:block">
-            <DocsNavLinks className="flex flex-col gap-6 px-4 py-6" />
-          </aside>
-          <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
-            <main
-              id="docs-content"
-              className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain"
-            >
-              {children}
-            </main>
-          </div>
-          <aside className="hidden min-h-0 overflow-y-auto overscroll-y-contain xl:block">
-            <TableOfContents />
-          </aside>
-        </div>
+        <DocsFrame>{children}</DocsFrame>
         <Toaster />
       </div>
     </DocsSearchProvider>

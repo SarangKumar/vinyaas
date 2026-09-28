@@ -16,7 +16,7 @@ describe("components catalog", () => {
 
     expect(headings).toEqual([
       { name: "Components", id: "" },
-      { name: "New", id: "new" },
+      { name: "New Components", id: "new" },
       { name: "All Components", id: "all-components" },
     ]);
 
@@ -43,6 +43,11 @@ describe("components catalog", () => {
 
     expect(names(lists[0]!)).toEqual(added);
     expect(names(lists[1]!)).toEqual(all);
+    expect(lists[0]!.querySelectorAll(".bg-new").length).toBe(added.length);
+    expect(lists[1]!.querySelectorAll(".bg-new").length).toBe(added.length);
+    expect(
+      lists[1]!.querySelector('a[href="/components/button"] .bg-new'),
+    ).toBeNull();
     expect(added).not.toContain("Button");
     expect(all).toContain("Button");
     expect(
@@ -56,6 +61,6 @@ describe("components catalog", () => {
 
 function names(list: Element) {
   return [...list.querySelectorAll("a")].map((link) =>
-    link.textContent?.trim(),
+    link.textContent?.replace(", new", "").trim(),
   );
 }

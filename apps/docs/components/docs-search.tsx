@@ -192,12 +192,15 @@ function SearchDialog() {
         }
       }}
     >
-      <DialogContent className="max-w-lg gap-0 overflow-hidden p-0 shadow-sm">
+      <DialogContent className="border-border bg-secondary max-w-lg gap-0 overflow-hidden border p-0 shadow-sm">
         <DialogTitle className="sr-only">Search documentation</DialogTitle>
         <DialogDescription className="sr-only">
           Search pages and components, then press Enter to open a result.
         </DialogDescription>
-        <Command onQueryChange={setQuery} className="rounded-none border-0">
+        <Command
+          onQueryChange={setQuery}
+          className="bg-secondary rounded-none border-0 shadow-none"
+        >
           <CommandInput
             aria-label="Search documentation"
             placeholder="Search documentation..."

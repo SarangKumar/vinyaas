@@ -1,91 +1,58 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-
-import { components } from "@/components/component-meta";
 
 import Home from "./page";
 
 describe("homepage", () => {
-  it("showcases the library and links into the docs", () => {
+  it("shows distinct working compositions", () => {
     render(<Home />);
 
-    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: "Accessible components, installed as source.",
-      }),
+      screen.getByRole("heading", { level: 1, name: "Build with Vinyaas" }),
     ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("article", { name: "Home" }),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText("Quick start")).not.toBeInTheDocument();
-    expect(screen.queryByText("Philosophy")).not.toBeInTheDocument();
-
-    expect(
-      screen.getByRole("link", { name: "Browse components" }),
-    ).toHaveAttribute("href", "/components");
-    expect(screen.getByRole("link", { name: "Installation" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Get Started" })).toHaveAttribute(
       "href",
       "/installation",
     );
     expect(
-      screen.getByRole("link", { name: "Open the component catalog" }),
+      screen.getByRole("link", { name: "View Components" }),
     ).toHaveAttribute("href", "/components");
+    expect(screen.getByText("Made by Sarang Kumar · 2026")).toBeInTheDocument();
+    expect(screen.getByText("Vinyaas v1.0.0")).toBeInTheDocument();
 
     expect(
-      screen.getByText(
-        new RegExp(`catalog has ${components.length} components`),
-      ),
-    ).toBeInTheDocument();
-    expect(screen.getByText("npx @vinyaas/cli add button")).toBeInTheDocument();
-
-    expect(
-      screen.getAllByRole("button", { name: "Save" }).length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByRole("button", { name: "Cancel" }).length,
-    ).toBeGreaterThan(0);
-    expect(screen.getByText("⌘")).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: "Sarang Kumar" }),
+      screen.getByRole("heading", { name: "Sign in" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("progressbar", {
-        name: "Components in the v1.0.0 catalog",
-      }),
+      screen.getByRole("heading", { name: "Notifications" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Payment received" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Directory" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Documents" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Verify email" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Jump to" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Reset password" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "March invoice" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Today" })).toBeInTheDocument();
+    expect(document.querySelector(".xl\\:columns-5")).not.toBeNull();
 
-    expect(screen.getByLabelText("Name")).toBeInstanceOf(HTMLInputElement);
-    expect(screen.getByLabelText("Note")).toBeInstanceOf(HTMLTextAreaElement);
-    expect(screen.getByLabelText("Email")).toBeInstanceOf(HTMLInputElement);
-    expect(screen.getByLabelText("Email")).toBeChecked();
-    expect(screen.getByLabelText("SMS")).toBeInstanceOf(HTMLInputElement);
-    expect(screen.getByLabelText("Send updates")).toBeInstanceOf(
-      HTMLInputElement,
-    );
-    expect(screen.getByLabelText("Send updates")).toHaveAttribute(
-      "type",
-      "checkbox",
-    );
-    expect(screen.getByLabelText("Plan")).toBeInstanceOf(HTMLSelectElement);
-    expect(screen.getByLabelText("Region")).toBeInstanceOf(HTMLSelectElement);
-    expect(screen.getByRole("table")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Hint" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Details" })).toHaveAttribute(
-      "aria-haspopup",
-      "dialog",
-    );
-    expect(screen.getByRole("button", { name: "Notify" })).toBeInTheDocument();
-    expect(screen.getByRole("switch", { name: "Alerts" })).toHaveAttribute(
-      "aria-checked",
-      "false",
-    );
-
-    for (const component of components) {
-      expect(
-        screen.getByRole("link", { name: component.name }),
-      ).toHaveAttribute("href", `/components/${component.slug}`);
-    }
+    fireEvent.change(screen.getByRole("textbox", { name: "Search people" }), {
+      target: { value: "Priya" },
+    });
+    expect(screen.getByText("1 people")).toBeInTheDocument();
   });
 });

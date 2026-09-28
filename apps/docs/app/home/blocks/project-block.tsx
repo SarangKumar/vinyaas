@@ -1,0 +1,54 @@
+"use client";
+
+import { PlayBlock } from "@/app/home/play-block";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
+import { Badge } from "@/registry/new-york/ui/badge/badge";
+import { Button } from "@/registry/new-york/ui/button/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
+import { Progress } from "@/registry/new-york/ui/progress/progress";
+
+export function ProjectBlock() {
+  return (
+    <PlayBlock title="Analytical Engine">
+      <div className="flex items-center justify-between gap-2">
+        <Badge>On track</Badge>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              aria-label="Project actions"
+            >
+              Menu
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>Rename</DropdownMenuItem>
+            <DropdownMenuItem>Archive</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <Progress aria-label="Project progress" value={68} />
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex -space-x-2">
+          {["AL", "GH", "PS"].map((initials) => (
+            <Avatar key={initials} className="size-7 border-2">
+              <AvatarFallback className="text-[10px]">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+          ))}
+        </div>
+        <Button type="button" size="sm">
+          Open project
+        </Button>
+      </div>
+    </PlayBlock>
+  );
+}

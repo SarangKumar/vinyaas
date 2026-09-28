@@ -256,6 +256,13 @@ export const components: readonly ComponentMeta[] = [
     category: "overlay",
     introducedIn: "1.0.0",
   },
+  {
+    name: "Typography",
+    slug: "typography",
+    description: "Semantic text styles for titles, body, and supporting copy.",
+    category: "display",
+    introducedIn: "1.0.0",
+  },
 ];
 
 /** v1.0.0 ships the full catalog. The progress max matches that count. */

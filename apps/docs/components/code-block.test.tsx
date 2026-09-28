@@ -37,6 +37,8 @@ describe("CodeBlock", () => {
     expect(screen.queryByRole("button", { name: "View code" })).toBeNull();
     expect(document.querySelector("[data-code-fade]")).toBeNull();
     expect(document.querySelector("[data-line-numbers]")).toBeNull();
+    expect(document.querySelector("code")).toHaveClass("px-5");
+    expect(document.querySelector("pre")).toHaveClass("py-4");
     expect(
       screen.queryByRole("tablist", { name: "Component example language" }),
     ).toBeNull();
@@ -53,7 +55,13 @@ describe("CodeBlock", () => {
       "data-language",
       "tsx",
     );
-    expect(document.querySelector("[data-line-numbers]")).toBeInTheDocument();
+    expect(document.querySelector("[data-line-numbers]")).toHaveClass(
+      "bg-secondary",
+    );
+    expect(
+      document.querySelector("[data-line-numbers]")?.closest("pre")
+        ?.parentElement?.parentElement,
+    ).toHaveClass("bg-secondary");
     expect(document.querySelector("[data-code-fade]")).toBeInTheDocument();
     expect(document.querySelector("pre")).toHaveClass("max-h-72");
     expect(document.querySelector("code")?.textContent).toContain("line 20");

@@ -28,6 +28,13 @@ describe("documentation search", () => {
     expect(
       await screen.findByText("Search components, docs and pages"),
     ).toBeInTheDocument();
+    expect(document.querySelector("[data-dialog-content]")).toHaveClass(
+      "bg-secondary",
+    );
+    expect(
+      document.querySelector("[role=dialog] [role=combobox]")?.parentElement
+        ?.parentElement,
+    ).toHaveClass("bg-secondary");
     expect(screen.queryByRole("option")).toBeNull();
   });
 

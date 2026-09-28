@@ -280,7 +280,10 @@ export function FileUploadList({
                 <span className="text-muted-foreground text-xs">Uploaded</span>
               ) : null}
               {status === "error" ? (
-                <span className="text-destructive text-xs" role="alert">
+                <span
+                  className="text-destructive min-w-0 text-xs break-words"
+                  role="alert"
+                >
                   {item.error}
                 </span>
               ) : null}

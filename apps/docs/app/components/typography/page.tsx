@@ -1,0 +1,214 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+
+import type { ApiRow } from "@/components/api-table";
+import type { ComponentExample } from "@/components/component-reference";
+import { ComponentReference } from "@/components/component-reference";
+import {
+  Typography,
+  TypographyBlockquote,
+  TypographyH1,
+  TypographyH2,
+  TypographyH3,
+  TypographyH4,
+  TypographyLarge,
+  TypographyLead,
+  TypographyList,
+  TypographyMuted,
+  TypographyP,
+  TypographySmall,
+} from "@/registry/new-york/ui/typography/typography";
+
+const usage = `import {
+  Typography,
+  TypographyH1,
+  TypographyP,
+} from "@/components/ui/typography/typography";
+
+export function Article() {
+  return (
+    <Typography>
+      <TypographyH1>Notes</TypographyH1>
+      <TypographyP>Installed as source.</TypographyP>
+    </Typography>
+  );
+}
+`;
+
+const api: ApiRow[] = [
+  {
+    prop: "className",
+    type: "string",
+    description:
+      "Merged onto the element with cn. Each export renders its own semantic tag.",
+  },
+  {
+    prop: "children",
+    type: "ReactNode",
+    description: "The text or nested content for that element.",
+  },
+];
+
+const examples: ComponentExample[] = [
+  {
+    id: "article",
+    title: "Article",
+    description: "A short article uses a title, a lead, body, and a list.",
+    preview: (
+      <Typography className="max-w-md text-left">
+        <TypographyH3>Notes on the engine</TypographyH3>
+        <TypographyLead>
+          A short account of how the catalog is installed.
+        </TypographyLead>
+        <TypographyP>
+          Each component is a source file in your repository.
+        </TypographyP>
+        <TypographyList>
+          <li>Copy the file</li>
+          <li>Install its packages</li>
+        </TypographyList>
+      </Typography>
+    ),
+    code: `<Typography>
+  <TypographyH3>Notes on the engine</TypographyH3>
+  <TypographyLead>A short account of how the catalog is installed.</TypographyLead>
+  <TypographyP>Each component is a source file in your repository.</TypographyP>
+  <TypographyList>
+    <li>Copy the file</li>
+    <li>Install its packages</li>
+  </TypographyList>
+</Typography>`,
+  },
+  {
+    id: "product",
+    title: "Product description",
+    description: "A product name, price, and muted detail.",
+    preview: (
+      <Typography className="max-w-sm text-left">
+        <TypographyH4>Studio plan</TypographyH4>
+        <TypographyLarge>₹9,600 / month</TypographyLarge>
+        <TypographyMuted>
+          Billed annually. Seats can be added later.
+        </TypographyMuted>
+      </Typography>
+    ),
+    code: `<Typography>
+  <TypographyH4>Studio plan</TypographyH4>
+  <TypographyLarge>₹9,600 / month</TypographyLarge>
+  <TypographyMuted>Billed annually. Seats can be added later.</TypographyMuted>
+</Typography>`,
+  },
+  {
+    id: "release",
+    title: "Release notes",
+    description: "A release heading, a paragraph, and a quote.",
+    preview: (
+      <Typography className="max-w-md text-left">
+        <TypographyH2>v1.0.0</TypographyH2>
+        <TypographyP>The catalog ships as source you can edit.</TypographyP>
+        <TypographyBlockquote>
+          Button remains the v0.1 primitive.
+        </TypographyBlockquote>
+        <TypographySmall>28 September 2026</TypographySmall>
+      </Typography>
+    ),
+    code: `<Typography>
+  <TypographyH2>v1.0.0</TypographyH2>
+  <TypographyP>The catalog ships as source you can edit.</TypographyP>
+  <TypographyBlockquote>Button remains the v0.1 primitive.</TypographyBlockquote>
+  <TypographySmall>28 September 2026</TypographySmall>
+</Typography>`,
+  },
+  {
+    id: "message",
+    title: "Message",
+    description: "A message uses a name, body, and a muted time.",
+    preview: (
+      <Typography className="max-w-sm text-left">
+        <TypographyH4>Priya Shah</TypographyH4>
+        <TypographyP>The compiler patch is ready for review.</TypographyP>
+        <TypographyMuted>9:41</TypographyMuted>
+      </Typography>
+    ),
+    code: `<Typography>
+  <TypographyH4>Priya Shah</TypographyH4>
+  <TypographyP>The compiler patch is ready for review.</TypographyP>
+  <TypographyMuted>9:41</TypographyMuted>
+</Typography>`,
+  },
+  {
+    id: "dashboard",
+    title: "Dashboard",
+    description: "A metric pairs a large value with a muted caption.",
+    preview: (
+      <Typography className="max-w-xs text-left">
+        <TypographyH1>128</TypographyH1>
+        <TypographyMuted>Signups in the last 7 days</TypographyMuted>
+      </Typography>
+    ),
+    code: `<Typography>
+  <TypographyH1>128</TypographyH1>
+  <TypographyMuted>Signups in the last 7 days</TypographyMuted>
+</Typography>`,
+  },
+];
+
+export default async function TypographyPage() {
+  const source = await readFile(
+    path.join(process.cwd(), "registry/new-york/ui/typography/typography.tsx"),
+    "utf8",
+  );
+
+  return (
+    <ComponentReference
+      title="Typography"
+      description="Semantic text styles for titles, body, and supporting copy."
+      overview={
+        <p>
+          Typography is a set of elements. <code>Typography</code> groups them
+          with a consistent gap. Headings, paragraphs, lists, and quotes keep
+          their native tags so the document outline stays intact.
+        </p>
+      }
+      install="vinyaas add typography"
+      manual={
+        <p>
+          After <code>vinyaas init</code>, place the source at{" "}
+          <code>components/ui/typography/typography.tsx</code>. It imports{" "}
+          <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
+          <code>clsx</code> and <code>tailwind-merge</code>.
+        </p>
+      }
+      usage={usage}
+      examples={examples}
+      api={api}
+      accessibility={
+        <>
+          <p>
+            Each export renders the HTML element in its name. A heading stays a
+            heading, a list stays a list, and a quote stays a blockquote.
+          </p>
+          <ul className="list-disc pl-5">
+            <li>
+              Do not use a heading style on a paragraph. Use the matching
+              heading component.
+            </li>
+            <li>
+              <code>TypographyMuted</code> is quieter copy. It is not a
+              replacement for text that must meet a status requirement.
+            </li>
+          </ul>
+        </>
+      }
+      source={source}
+    >
+      <Typography className="max-w-md text-left">
+        <TypographyH1>Notes</TypographyH1>
+        <TypographyLead>Installed into your project as source.</TypographyLead>
+        <TypographyP>
+          Edit the file after the CLI copies it into your repository.
+        </TypographyP>
+      </Typography>
+    </ComponentReference>
+  );
+}

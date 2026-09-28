@@ -354,6 +354,17 @@ export const registry: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "typography",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/typography/typography.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "dropdown-menu",
     type: "registry:ui",
     dependencies: ["clsx", "tailwind-merge"],

@@ -162,8 +162,8 @@ function CodeFrame({
     <div
       className={
         attached
-          ? "border-border bg-card text-card-foreground overflow-hidden border-t"
-          : "border-border bg-card text-card-foreground overflow-hidden rounded-md border"
+          ? "border-border bg-secondary text-secondary-foreground overflow-hidden border-t"
+          : "border-border bg-secondary text-secondary-foreground overflow-hidden rounded-md border"
       }
     >
       <div className="border-border flex items-center justify-between gap-3 border-b px-3 py-1.5">
@@ -182,14 +182,16 @@ function CodeFrame({
         <pre
           className={
             collapsed
-              ? "max-h-72 overflow-hidden py-3 text-[13px] leading-6"
-              : "overflow-x-auto py-3 text-[13px] leading-6"
+              ? "max-h-72 overflow-hidden py-2 text-[13px] leading-6"
+              : numbered
+                ? "overflow-x-auto py-2 text-[13px] leading-6"
+                : "overflow-x-auto py-4 text-[13px] leading-6"
           }
         >
           {numbered ? (
             <NumberedSource code={code} language={language} />
           ) : (
-            <code data-language={language} className="block px-4">
+            <code data-language={language} className="block px-5">
               {highlightCode(code, language) ?? code}
             </code>
           )}
@@ -197,7 +199,7 @@ function CodeFrame({
         {collapsed ? (
           <div
             data-code-fade
-            className="from-card absolute inset-x-0 bottom-0 flex h-24 items-end justify-center bg-gradient-to-t to-transparent pb-3"
+            className="from-secondary absolute inset-x-0 bottom-0 flex h-24 items-end justify-center bg-gradient-to-t to-transparent pb-3"
           >
             <Button
               type="button"
@@ -242,7 +244,7 @@ function NumberedSource({
       <div
         data-line-numbers
         aria-hidden="true"
-        className="text-muted-foreground border-border bg-card sticky left-0 shrink-0 border-r pr-3 pl-4 text-right tabular-nums select-none"
+        className="text-secondary-foreground/60 border-border bg-secondary sticky left-0 shrink-0 border-r pr-2 pl-3 text-right tabular-nums select-none"
       >
         {lines.map((_, index) => (
           <div key={index} className="min-h-6 leading-6">
@@ -252,7 +254,7 @@ function NumberedSource({
       </div>
       <code
         data-language={language}
-        className="block min-w-max flex-1 pr-4 pl-4 whitespace-pre"
+        className="block min-w-max flex-1 pr-3 pl-3 whitespace-pre"
       >
         {highlightCode(code, language) ?? code}
       </code>
