@@ -156,16 +156,14 @@ describe("composed examples", () => {
       screen.getAllByRole("button", { name: "Follow" }).length,
     ).toBeGreaterThan(0);
     expect(
-      screen.getByRole("button", { name: "Start free trial" }),
+      screen.getByRole("button", { name: "Manage subscription" }),
     ).toBeInTheDocument();
-    expect(screen.getByLabelText("Card number")).toBeInTheDocument();
-    expect(screen.getByLabelText("Plan")).toBeInstanceOf(HTMLSelectElement);
+    expect(screen.getByText("Enabled")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Save changes" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "View deployment" }),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Recent activity")).toBeInTheDocument();
+    expect(screen.getAllByText("v0.2").length).toBeGreaterThan(0);
     expect(document.body.textContent).not.toContain(
       'from "@/components/ui/select/select"',
     );

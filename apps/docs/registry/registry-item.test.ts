@@ -494,7 +494,7 @@ describe("registry build output", () => {
     ["popover", "ui/popover/popover.tsx", "PopoverContent"],
     ["badge", "ui/badge/badge.tsx", "<span"],
     ["spinner", "ui/spinner/spinner.tsx", "aria-hidden"],
-    ["card", "ui/card/card.tsx", "CardHeader"],
+    ["card", "ui/card/card.tsx", "CardAction"],
     ["alert", "ui/alert/alert.tsx", 'role="alert"'],
     ["dialog", "ui/dialog/dialog.tsx", 'role="dialog"'],
     ["accordion", "ui/accordion/accordion.tsx", "aria-expanded"],

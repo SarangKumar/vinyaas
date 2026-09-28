@@ -9,6 +9,7 @@ import { Badge } from "@/registry/new-york/ui/badge/badge";
 import { Button } from "@/registry/new-york/ui/button/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -18,21 +19,19 @@ import {
 import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
 import { Input } from "@/registry/new-york/ui/input/input";
 import { Label } from "@/registry/new-york/ui/label/label";
-import { Progress } from "@/registry/new-york/ui/progress/progress";
+import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
 import { Separator } from "@/registry/new-york/ui/separator/separator";
 import { Switch } from "@/registry/new-york/ui/switch/switch";
-import { Tooltip } from "@/registry/new-york/ui/tooltip/tooltip";
-
-const selectClass =
-  "border-input bg-background text-foreground h-9 w-full rounded-md border px-3 text-sm";
 
 const usage = `import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/card";
+import { Badge } from "@/components/ui/badge/badge";
 
 export function Note() {
   return (
@@ -40,6 +39,9 @@ export function Note() {
       <CardHeader>
         <CardTitle>Notes</CardTitle>
         <CardDescription>Private to this workspace.</CardDescription>
+        <CardAction>
+          <Badge variant="secondary">Draft</Badge>
+        </CardAction>
       </CardHeader>
       <CardContent>Drafts stay on this device.</CardContent>
     </Card>
@@ -49,273 +51,325 @@ export function Note() {
 
 const api: ApiRow[] = [
   {
+    prop: "size",
+    type: '"default" | "sm"',
+    defaultValue: '"default"',
+    description: "Card spacing only. sm uses tighter padding and gap.",
+  },
+  {
     prop: "className",
     type: "string",
     description:
-      "Merged with cn on Card, CardHeader, CardTitle, CardDescription, CardContent, and CardFooter.",
+      "Merged with cn on Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, and CardFooter.",
   },
 ];
+
+const profileCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
+import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card/card";
+
+export function ProfileCard() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <div className="flex min-w-0 items-start gap-3">
+          <Avatar>
+            <AvatarFallback>SK</AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <CardTitle>Sarang Kumar</CardTitle>
+            <CardDescription>
+              Developer. Building accessible UI that you install as source.
+            </CardDescription>
+          </div>
+        </div>
+        <CardAction>
+          <Button variant="ghost" size="icon-sm" aria-label="More actions">
+            <svg viewBox="0 0 16 16" className="size-4" fill="currentColor" aria-hidden="true">
+              <circle cx="3" cy="8" r="1.2" />
+              <circle cx="8" cy="8" r="1.2" />
+              <circle cx="13" cy="8" r="1.2" />
+            </svg>
+          </Button>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <Badge variant="secondary">Verified</Badge>
+      </CardContent>
+      <CardFooter>
+        <Button variant="outline">Message</Button>
+        <Button variant="secondary">Follow</Button>
+      </CardFooter>
+    </Card>
+  );
+}
+`;
+
+function MoreIcon() {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      className="size-4"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <circle cx="3" cy="8" r="1.2" />
+      <circle cx="8" cy="8" r="1.2" />
+      <circle cx="13" cy="8" r="1.2" />
+    </svg>
+  );
+}
+
+function ProfileCard() {
+  return (
+    <Card className="w-full max-w-sm text-left">
+      <CardHeader>
+        <div className="flex min-w-0 items-start gap-3">
+          <Avatar>
+            <AvatarFallback>SK</AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <CardTitle>Sarang Kumar</CardTitle>
+            <CardDescription>
+              Developer. Building accessible UI that you install as source.
+            </CardDescription>
+          </div>
+        </div>
+        <CardAction>
+          <Button variant="ghost" size="icon-sm" aria-label="More actions">
+            <MoreIcon />
+          </Button>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <Badge variant="secondary">Verified</Badge>
+      </CardContent>
+      <CardFooter>
+        <Button variant="outline">Message</Button>
+        <Button variant="secondary">Follow</Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+const activity = [
+  ["SK", "Sarang Kumar", "Opened a pull request", "2m"],
+  ["AL", "Ada Lovelace", "Published the notes", "8m"],
+  ["VW", "vinyaas-web", "Deployment succeeded", "14m"],
+  ["AL", "Ada Lovelace", "Left a comment", "1h"],
+  ["SK", "Sarang Kumar", "Updated the catalog", "3h"],
+] as const;
 
 const examples: ComponentExample[] = [
   {
     id: "profile",
     title: "Profile",
     description:
-      "Avatar, a status badge, and two actions sit in one card. Separator divides the bio from the buttons.",
+      "The header keeps the avatar and name beside a CardAction. A long role wraps instead of pushing the icon off the card.",
     preview: <ProfileCard />,
-    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
-import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
-import { Separator } from "@/components/ui/separator/separator";
-
-export function ProfileCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarFallback>SK</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-1">
-            <CardTitle>Sarang Kumar</CardTitle>
-            <CardDescription>@sarang · Developer</CardDescription>
+    code: { tsx: profileCode, jsx: profileCode },
+  },
+  {
+    id: "account",
+    title: "Account settings",
+    description:
+      "Labels name the fields. The footer holds the actions for the form.",
+    preview: (
+      <Card className="w-full max-w-sm text-left">
+        <CardHeader>
+          <CardTitle>Account settings</CardTitle>
+          <CardDescription>
+            Update the name and email on your profile.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-2">
+            <Label htmlFor="card-name">Display name</Label>
+            <Input id="card-name" defaultValue="Sarang Kumar" />
           </div>
-        </div>
-      </CardHeader>
-      <CardContent className="gap-3">
-        <Badge variant="secondary">Open to work</Badge>
-        <p className="text-sm">
-          Building accessible UI that you install as source.
-        </p>
-      </CardContent>
-      <Separator />
-      <CardFooter>
-        <Button type="button" variant="outline">
-          View profile
-        </Button>
-        <Button type="button" variant="secondary">
-          Follow
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
-`,
-  },
-  {
-    id: "pricing",
-    title: "Pricing",
-    description:
-      "A plan name, a badge, a price, and a feature list. The trial button explains itself with a tooltip.",
-    preview: <PricingCard />,
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
-import { Separator } from "@/components/ui/separator/separator";
-import { Tooltip } from "@/components/ui/tooltip/tooltip";
-
-export function PricingCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <div className="flex items-center justify-between gap-3">
-          <CardTitle>Pro</CardTitle>
-          <Badge>Popular</Badge>
-        </div>
-        <p className="text-foreground text-2xl font-semibold">$24 / month</p>
-        <CardDescription>For developers building faster.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ul className="text-sm leading-6">
-          <li>Unlimited projects</li>
-          <li>Team collaboration</li>
-          <li>Priority support</li>
-        </ul>
-      </CardContent>
-      <Separator />
-      <CardFooter>
-        <Tooltip content="14 days, then $24 a month">
-          <Button type="button">Start free trial</Button>
-        </Tooltip>
-      </CardFooter>
-    </Card>
-  );
-}
-`,
-  },
-  {
-    id: "checkout",
-    title: "Checkout",
-    description:
-      "Labels, inputs, a native select, and a checkbox make a payment form. The select is a plain HTML element.",
-    preview: <CheckoutCard />,
+          <div className="grid gap-2">
+            <Label htmlFor="card-email">Email</Label>
+            <Input id="card-email" defaultValue="sarang@example.com" />
+          </div>
+        </CardContent>
+        <CardFooter className="justify-end">
+          <Button variant="outline">Cancel</Button>
+          <Button>Save changes</Button>
+        </CardFooter>
+      </Card>
+    ),
     code: `import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
-import { Checkbox } from "@/components/ui/checkbox/checkbox";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
-import { Separator } from "@/components/ui/separator/separator";
-
-export function CheckoutCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Payment method</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-2">
-          <Label htmlFor="card-number">Card number</Label>
-          <Input id="card-number" defaultValue="4242 4242 4242 4242" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="card-name">Name</Label>
-          <Input id="card-name" defaultValue="Sarang Kumar" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="checkout-plan">Plan</Label>
-          <select id="checkout-plan" defaultValue="pro" className="${selectClass}">
-            <option value="free">Free</option>
-            <option value="pro">Pro</option>
-          </select>
-        </div>
-        <div className="flex items-center gap-2">
-          <Checkbox id="save-payment" defaultChecked />
-          <Label htmlFor="save-payment">Save payment method</Label>
-        </div>
-      </CardContent>
-      <Separator />
-      <CardFooter className="justify-between">
-        <span className="text-sm">Total</span>
-        <span className="text-sm font-medium">$24</span>
-      </CardFooter>
-      <Button type="button">Confirm payment</Button>
-    </Card>
-  );
-}
-`,
-  },
-  {
-    id: "project",
-    title: "Project",
-    description:
-      "Badges name the project, and Progress shows how much of the catalog is in place.",
-    preview: <ProjectCard />,
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import {
-  Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/card";
-import { Progress } from "@/components/ui/progress/progress";
-import { Separator } from "@/components/ui/separator/separator";
-
-export function ProjectCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Vinyaas</CardTitle>
-        <CardDescription>Accessible component library</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary">Open source</Badge>
-          <Badge variant="outline">v0.2</Badge>
-        </div>
-        <div className="grid gap-2">
-          <div className="flex items-center justify-between text-sm">
-            <span>Components</span>
-            <span>20 / 25</span>
-          </div>
-          <Progress aria-label="Catalog progress" value={20} max={25} />
-        </div>
-      </CardContent>
-      <Separator />
-      <CardFooter className="justify-between">
-        <span className="text-muted-foreground text-sm">Updated recently</span>
-        <Button type="button" variant="outline">
-          View project
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
-`,
-  },
-  {
-    id: "settings",
-    title: "Settings",
-    description:
-      "A display name, an email, a switch, and a checkbox. Cancel stays outline next to Save.",
-    preview: <SettingsCard />,
-    code: `import { Button } from "@/components/ui/button/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
-import { Checkbox } from "@/components/ui/checkbox/checkbox";
 import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label/label";
-import { Separator } from "@/components/ui/separator/separator";
-import { Switch } from "@/components/ui/switch/switch";
 
-export function SettingsCard() {
+export function AccountCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Account settings</CardTitle>
+        <CardDescription>Update the name and email on your profile.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-2">
-          <Label htmlFor="display-name">Display name</Label>
-          <Input id="display-name" defaultValue="Sarang Kumar" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="account-email">Email</Label>
-          <Input id="account-email" type="email" defaultValue="sarang@example.com" />
-        </div>
-        <div className="flex items-center justify-between gap-3">
-          <Label htmlFor="product-updates">Receive product updates</Label>
-          <Switch id="product-updates" defaultChecked />
-        </div>
-        <div className="flex items-center gap-2">
-          <Checkbox id="activity-email" defaultChecked />
-          <Label htmlFor="activity-email">Email me about activity</Label>
-        </div>
+        <Label htmlFor="card-name">Display name</Label>
+        <Input id="card-name" defaultValue="Sarang Kumar" />
+        <Label htmlFor="card-email">Email</Label>
+        <Input id="card-email" defaultValue="sarang@example.com" />
       </CardContent>
-      <Separator />
       <CardFooter className="justify-end">
-        <Button type="button" variant="outline">
-          Cancel
-        </Button>
-        <Button type="button">Save changes</Button>
+        <Button variant="outline">Cancel</Button>
+        <Button>Save changes</Button>
+      </CardFooter>
+    </Card>
+  );
+}
+`,
+  },
+  {
+    id: "subscription",
+    title: "Subscription",
+    description:
+      "CardAction holds the status badge so the price can use the rest of the header.",
+    preview: (
+      <Card className="w-full max-w-sm text-left">
+        <CardHeader>
+          <div>
+            <CardTitle>Pro Plan</CardTitle>
+            <CardDescription>
+              $24 / month. Renews on October 12.
+            </CardDescription>
+          </div>
+          <CardAction>
+            <Badge>Active</Badge>
+          </CardAction>
+        </CardHeader>
+        <Separator />
+        <CardFooter>
+          <Button>Manage subscription</Button>
+        </CardFooter>
+      </Card>
+    ),
+    code: `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card/card";
+import { Separator } from "@/components/ui/separator/separator";
+
+export function SubscriptionCard() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <div>
+          <CardTitle>Pro Plan</CardTitle>
+          <CardDescription>$24 / month. Renews on October 12.</CardDescription>
+        </div>
+        <CardAction>
+          <Badge>Active</Badge>
+        </CardAction>
+      </CardHeader>
+      <Separator />
+      <CardFooter>
+        <Button>Manage subscription</Button>
+      </CardFooter>
+    </Card>
+  );
+}
+`,
+  },
+  {
+    id: "security",
+    title: "Security",
+    description:
+      "A switch and a checkbox live in the body. The header action names the current state.",
+    preview: (
+      <Card className="w-full max-w-sm text-left">
+        <CardHeader>
+          <div className="min-w-0">
+            <CardTitle>Security</CardTitle>
+            <CardDescription>
+              Two-factor authentication protects the account with an extra step.
+            </CardDescription>
+          </div>
+          <CardAction>
+            <Badge variant="secondary">Enabled</Badge>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="card-2fa">
+              Require verification for new devices
+            </Label>
+            <Switch id="card-2fa" defaultChecked />
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox id="card-trusted" defaultChecked />
+            <Label htmlFor="card-trusted">Remember trusted devices</Label>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button variant="outline">Review sessions</Button>
+        </CardFooter>
+      </Card>
+    ),
+    code: `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card/card";
+import { Checkbox } from "@/components/ui/checkbox/checkbox";
+import { Label } from "@/components/ui/label/label";
+import { Switch } from "@/components/ui/switch/switch";
+
+export function SecurityCard() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <div>
+          <CardTitle>Security</CardTitle>
+          <CardDescription>
+            Two-factor authentication protects the account with an extra step.
+          </CardDescription>
+        </div>
+        <CardAction>
+          <Badge variant="secondary">Enabled</Badge>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <Label htmlFor="card-2fa">Require verification for new devices</Label>
+        <Switch id="card-2fa" defaultChecked />
+        <Checkbox id="card-trusted" defaultChecked />
+        <Label htmlFor="card-trusted">Remember trusted devices</Label>
+      </CardContent>
+      <CardFooter>
+        <Button variant="outline">Review sessions</Button>
       </CardFooter>
     </Card>
   );
@@ -326,48 +380,126 @@ export function SettingsCard() {
     id: "activity",
     title: "Activity",
     description:
-      "A card can report a status. The badge names the result, and the tooltip names the destination.",
-    preview: <ActivityCard />,
+      "The feed scrolls inside the card. The page around it stays still.",
+    preview: (
+      <Card className="w-full max-w-sm text-left">
+        <CardHeader>
+          <CardTitle>Recent activity</CardTitle>
+          <CardDescription>Updates from the last day.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea
+            className="border-border bg-background h-40 rounded-md border"
+            aria-label="Recent activity"
+          >
+            <ul className="grid">
+              {activity.map(([initials, name, text, time]) => (
+                <li key={text} className="grid gap-3 p-3">
+                  <div className="flex items-start gap-3">
+                    <Avatar>
+                      <AvatarFallback>{initials}</AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium">{name}</p>
+                      <p className="text-muted-foreground text-sm">{text}</p>
+                    </div>
+                    <Badge variant="outline">{time}</Badge>
+                  </div>
+                  <Separator />
+                </li>
+              ))}
+            </ul>
+          </ScrollArea>
+        </CardContent>
+      </Card>
+    ),
     code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
 import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/card";
+import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";
 import { Separator } from "@/components/ui/separator/separator";
-import { Tooltip } from "@/components/ui/tooltip/tooltip";
 
 export function ActivityCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarFallback>VW</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-1">
-            <CardTitle>Deployment completed</CardTitle>
-            <CardDescription>vinyaas-web</CardDescription>
-          </div>
-          <Badge variant="secondary">Succeeded</Badge>
-        </div>
+        <CardTitle>Recent activity</CardTitle>
+        <CardDescription>Updates from the last day.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm">Production deployment succeeded.</p>
-        <p className="text-muted-foreground text-sm">2 minutes ago</p>
+        <ScrollArea className="border-border bg-background h-40 rounded-md border" aria-label="Recent activity">
+          <ul>
+            <li>
+              <Avatar><AvatarFallback>SK</AvatarFallback></Avatar>
+              <span>Sarang Kumar</span>
+              <span>Opened a pull request</span>
+              <Badge variant="outline">2m</Badge>
+              <Separator />
+            </li>
+          </ul>
+        </ScrollArea>
       </CardContent>
-      <Separator />
-      <CardFooter>
-        <Tooltip content="Opens the deployment log">
-          <Button type="button" variant="outline">
-            View deployment
+    </Card>
+  );
+}
+`,
+  },
+  {
+    id: "compact",
+    title: "Compact",
+    description:
+      'size="sm" tightens the card padding and the gap between sections. CardAction still sits at the top right.',
+    preview: (
+      <Card size="sm" className="w-full max-w-sm text-left">
+        <CardHeader>
+          <div className="min-w-0">
+            <CardTitle>Catalog</CardTitle>
+            <CardDescription>
+              25 components are in the v0.2 registry.
+            </CardDescription>
+          </div>
+          <CardAction>
+            <Badge variant="secondary">v0.2</Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter>
+          <Button variant="outline" size="sm">
+            View project
           </Button>
-        </Tooltip>
+        </CardFooter>
+      </Card>
+    ),
+    code: `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card/card";
+
+export function CompactCard() {
+  return (
+    <Card size="sm" className="w-full max-w-sm">
+      <CardHeader>
+        <div>
+          <CardTitle>Catalog</CardTitle>
+          <CardDescription>25 components are in the v0.2 registry.</CardDescription>
+        </div>
+        <CardAction>
+          <Badge variant="secondary">v0.2</Badge>
+        </CardAction>
+      </CardHeader>
+      <CardFooter>
+        <Button variant="outline" size="sm">View project</Button>
       </CardFooter>
     </Card>
   );
@@ -388,10 +520,10 @@ export default async function CardPage() {
       description="A bordered container for related content."
       overview={
         <p>
-          Card, CardHeader, CardTitle, CardDescription, CardContent, and
-          CardFooter are layout wrappers. Compose them with the controls the
-          content needs. Each one forwards its element props and merges{" "}
-          <code>className</code> with <code>cn</code>.
+          Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent,
+          and CardFooter are layout wrappers. <code>size=&quot;sm&quot;</code>{" "}
+          only tightens spacing. CardAction sits at the top right of the header,
+          including when the title is long.
         </p>
       }
       install="vinyaas add card"
@@ -409,212 +541,13 @@ export default async function CardPage() {
       accessibility={
         <p>
           Card does not add a role. Controls inside the card keep their own
-          names through Label, Button, or visible text. A native select in a
-          card stays a combobox.
+          names through Label, Button, or visible text. CardAction is a layout
+          wrapper, so the control inside it supplies the name.
         </p>
       }
       source={source}
     >
       <ProfileCard />
     </ComponentReference>
-  );
-}
-
-function ProfileCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarFallback>SK</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-1">
-            <CardTitle>Sarang Kumar</CardTitle>
-            <CardDescription>@sarang · Developer</CardDescription>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="gap-3">
-        <Badge variant="secondary">Open to work</Badge>
-        <p className="text-sm">
-          Building accessible UI that you install as source.
-        </p>
-      </CardContent>
-      <Separator />
-      <CardFooter>
-        <Button type="button" variant="outline">
-          View profile
-        </Button>
-        <Button type="button" variant="secondary">
-          Follow
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
-
-function PricingCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <div className="flex items-center justify-between gap-3">
-          <CardTitle>Pro</CardTitle>
-          <Badge>Popular</Badge>
-        </div>
-        <p className="text-foreground text-2xl font-semibold">$24 / month</p>
-        <CardDescription>For developers building faster.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ul className="text-sm leading-6">
-          <li>Unlimited projects</li>
-          <li>Team collaboration</li>
-          <li>Priority support</li>
-        </ul>
-      </CardContent>
-      <Separator />
-      <CardFooter>
-        <Tooltip content="14 days, then $24 a month">
-          <Button type="button">Start free trial</Button>
-        </Tooltip>
-      </CardFooter>
-    </Card>
-  );
-}
-
-function CheckoutCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Payment method</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-2">
-          <Label htmlFor="card-number">Card number</Label>
-          <Input id="card-number" defaultValue="4242 4242 4242 4242" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="card-name">Name</Label>
-          <Input id="card-name" defaultValue="Sarang Kumar" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="checkout-plan">Plan</Label>
-          <select id="checkout-plan" defaultValue="pro" className={selectClass}>
-            <option value="free">Free</option>
-            <option value="pro">Pro</option>
-          </select>
-        </div>
-        <div className="flex items-center gap-2">
-          <Checkbox id="save-payment" defaultChecked />
-          <Label htmlFor="save-payment">Save payment method</Label>
-        </div>
-      </CardContent>
-      <Separator />
-      <CardFooter className="justify-between">
-        <span className="text-sm">Total</span>
-        <span className="text-sm font-medium">$24</span>
-      </CardFooter>
-      <Button type="button">Confirm payment</Button>
-    </Card>
-  );
-}
-
-function ProjectCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Vinyaas</CardTitle>
-        <CardDescription>Accessible component library</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary">Open source</Badge>
-          <Badge variant="outline">v0.2</Badge>
-        </div>
-        <div className="grid gap-2">
-          <div className="flex items-center justify-between text-sm">
-            <span>Components</span>
-            <span>20 / 25</span>
-          </div>
-          <Progress aria-label="Catalog progress" value={20} max={25} />
-        </div>
-      </CardContent>
-      <Separator />
-      <CardFooter className="justify-between">
-        <span className="text-muted-foreground text-sm">Updated recently</span>
-        <Button type="button" variant="outline">
-          View project
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
-
-function SettingsCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Account settings</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-2">
-          <Label htmlFor="display-name">Display name</Label>
-          <Input id="display-name" defaultValue="Sarang Kumar" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="account-email">Email</Label>
-          <Input
-            id="account-email"
-            type="email"
-            defaultValue="sarang@example.com"
-          />
-        </div>
-        <div className="flex items-center justify-between gap-3">
-          <Label htmlFor="product-updates">Receive product updates</Label>
-          <Switch id="product-updates" defaultChecked />
-        </div>
-        <div className="flex items-center gap-2">
-          <Checkbox id="activity-email" defaultChecked />
-          <Label htmlFor="activity-email">Email me about activity</Label>
-        </div>
-      </CardContent>
-      <Separator />
-      <CardFooter className="justify-end">
-        <Button type="button" variant="outline">
-          Cancel
-        </Button>
-        <Button type="button">Save changes</Button>
-      </CardFooter>
-    </Card>
-  );
-}
-
-function ActivityCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarFallback>VW</AvatarFallback>
-          </Avatar>
-          <div className="grid flex-1 gap-1">
-            <CardTitle>Deployment completed</CardTitle>
-            <CardDescription>vinyaas-web</CardDescription>
-          </div>
-          <Badge variant="secondary">Succeeded</Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm">Production deployment succeeded.</p>
-        <p className="text-muted-foreground text-sm">2 minutes ago</p>
-      </CardContent>
-      <Separator />
-      <CardFooter>
-        <Tooltip content="Opens the deployment log">
-          <Button type="button" variant="outline">
-            View deployment
-          </Button>
-        </Tooltip>
-      </CardFooter>
-    </Card>
   );
 }
