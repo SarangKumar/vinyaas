@@ -35,6 +35,7 @@ describe("vinyaas", () => {
     const source = readFileSync(entrypoint, "utf8");
 
     assert.equal(packageJson.name, "vinyaas");
+    assert.equal(packageJson.version, "1.0.0");
     assert.equal(packageJson.bin.vinyaas, "./dist/index.js");
     assert.match(source, /^#!\/usr\/bin\/env node\n/);
   });
@@ -43,7 +44,7 @@ describe("vinyaas", () => {
     const result = await run(["--version"]);
 
     assert.equal(result.exitCode, 0);
-    assert.equal(result.stdout, `${packageJson.version}\n`);
+    assert.equal(result.stdout, "1.0.0\n");
   });
 
   it("prints help", async () => {
