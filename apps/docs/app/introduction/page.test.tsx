@@ -29,6 +29,9 @@ describe("introduction", () => {
       screen.getByRole("heading", { name: "What Vinyaas is" }),
     ).toBeInTheDocument();
     expect(
+      screen.getByRole("heading", { name: "Catalog and releases" }),
+    ).toBeInTheDocument();
+    expect(
       screen.getByRole("heading", { name: "Why it exists" }),
     ).toBeInTheDocument();
     expect(

@@ -9,7 +9,7 @@ describe("homepage", () => {
 
     const hero = screen.getByRole("heading", {
       level: 1,
-      name: "Build interfaces with composable components.",
+      name: "Build. Ship. Beautifully.",
     });
 
     expect(hero).toBeInTheDocument();
@@ -52,6 +52,10 @@ describe("homepage", () => {
       "max-w-none",
       "overflow-hidden",
     );
+    expect(shell?.className).toContain("p-(--playground-pad)");
+    expect(shell?.className).toContain("lg:p-(--playground-pad-lg)");
+    expect(shell?.className).toContain("xl:p-(--playground-pad-xl)");
+    expect(shell?.className).toContain("min-[1900px]:p-(--playground-pad-xl)!");
     expect(shell?.className).toContain("[--gap:var(--playground-gap)]");
     expect(shell?.className).toContain("md:[--gap:var(--playground-gap-md)]");
     expect(shell?.className).toContain("xl:[--gap:var(--playground-gap-xl)]");
@@ -78,6 +82,11 @@ describe("homepage", () => {
 
     const rails = document.querySelector("[data-playground-rails]");
     expect(rails).toHaveClass("hidden", "min-[2200px]:block", "absolute");
+    expect(rails?.className).toContain("top-(--playground-pad)");
+    expect(rails?.className).toContain("xl:top-(--playground-pad-xl)");
+    expect(rails?.className).toContain(
+      "min-[1900px]:top-(--playground-pad-xl)",
+    );
 
     const leftRail = document.querySelector('[data-playground-side="left"]');
     const rightRail = document.querySelector('[data-playground-side="right"]');

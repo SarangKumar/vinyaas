@@ -13,7 +13,7 @@ export function PlaygroundSideRails() {
     <div
       aria-hidden="true"
       data-playground-rails
-      className="pointer-events-none absolute inset-x-0 top-[var(--playground-pad)] z-10 hidden min-[1900px]:top-[var(--playground-pad-xl)] min-[2200px]:block xl:top-[var(--playground-pad-xl)]"
+      className="pointer-events-none absolute inset-x-0 top-(--playground-pad) z-10 hidden min-[1900px]:top-(--playground-pad-xl) min-[2200px]:block xl:top-(--playground-pad-xl)"
     >
       <Rail side="left">
         <RailColumn>

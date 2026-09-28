@@ -2,7 +2,7 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
-v0.1 contains Button. v1.0.0 contains every other component: forms, feedback, layout, navigation, data display, overlays, and utilities. The homepage at `/` is the component showcase. `/introduction` stays the documentation introduction.
+v1.0.0 is the major production-focused catalog release. v0.1 contains Button. v1.0.0 contains every other catalog component: forms, feedback, layout, navigation, data display, overlays, and utilities. Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` stays the documentation introduction.
 
 ## Prerequisites
 
@@ -77,6 +77,12 @@ A TypeScript Next.js app with `app/globals.css` gets:
 
 ```bash
 vinyaas add button
+```
+
+Install multiple components in one call. Shared packages install once:
+
+```bash
+npx @vinyaas/cli add button card badge
 ```
 
 For each component, Vinyaas:

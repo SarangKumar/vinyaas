@@ -34,11 +34,14 @@ export default function ComponentsPage() {
   return (
     <DocsArticle
       title="Components"
-      description="Accessible primitives you install into your project as source."
+      description={`${components.length} accessible primitives you install into your project as source.`}
     >
       <p className="text-body text-base leading-7">
-        The CLI copies each component into your repository. Styles use Tailwind
-        utilities and follow your theme tokens.
+        The v1.0.0 catalog has {components.length} independently installable
+        registry items. Button is the v0.1 foundation; the other {added.length}{" "}
+        components were introduced in v1.0.0. The CLI copies each component into
+        your repository. Styles use Tailwind utilities and follow your theme
+        tokens.
       </p>
       <section className="flex flex-col gap-4">
         <h2 id="new" className={heading}>

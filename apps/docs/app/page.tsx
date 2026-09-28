@@ -12,11 +12,24 @@ const creditLink = `text-primary inline underline underline-offset-4 ${focusRing
 export const metadata: Metadata = {
   title: "Vinyaas",
   description:
-    "Composable React components you install as source. Build forms, billing, directories, and product UI.",
+    "Composable React components you install as source. The v1.0.0 catalog covers forms, overlays, feedback, and product UI.",
   openGraph: {
     title: "Vinyaas",
-    description: "Composable React components you install as source.",
+    description:
+      "Composable React components you install as source. v1.0.0 production catalog.",
     type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Vinyaas — composable React components installed as source",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og.png"],
   },
 };
 
@@ -28,11 +41,12 @@ export default function Home() {
           Vinyaas
         </p>
         <h1 className="text-foreground mt-4 max-w-full text-[min(3rem,calc((100vw-3rem)/22))] leading-[1.15] font-semibold tracking-tight whitespace-nowrap">
-          Build interfaces with composable components.
+          Build. Ship. Beautifully.
         </h1>
-        <p className="text-muted-foreground mt-4 max-w-[34rem] text-sm leading-6 sm:text-base sm:leading-7">
-          Accessible React primitives installed as source. Compose the product
-          UI you need without a locked runtime.
+        <p className="text-muted-foreground mt-4 max-w-136 text-sm leading-6 sm:text-base sm:leading-7">
+          Vinyaas is a production-focused component library and CLI for building
+          polished, accessible interfaces faster—with composable components,
+          thoughtful defaults, and a workflow designed for real products.
         </p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
           <Link href="/installation" className={primaryLink}>
@@ -51,7 +65,7 @@ export default function Home() {
         */}
         <div
           data-playground-shell
-          className="bg-muted dark:bg-background relative flex w-full max-w-none flex-col overflow-hidden p-[var(--playground-pad)] pb-0! [--gap:var(--playground-gap)] min-[1900px]:p-[var(--playground-pad-xl)]! min-[1900px]:[--gap:var(--playground-gap-2xl)]! md:[--gap:var(--playground-gap-md)] lg:p-[var(--playground-pad-lg)] xl:p-[var(--playground-pad-xl)] xl:[--gap:var(--playground-gap-xl)]"
+          className="bg-muted dark:bg-background relative flex w-full max-w-none flex-col overflow-hidden p-(--playground-pad) pb-0! [--gap:var(--playground-gap)] min-[1900px]:p-(--playground-pad-xl)! min-[1900px]:[--gap:var(--playground-gap-2xl)]! md:[--gap:var(--playground-gap-md)] lg:p-(--playground-pad-lg) xl:p-(--playground-pad-xl) xl:[--gap:var(--playground-gap-xl)]"
         >
           <PlaygroundSideRails />
           <Playground />

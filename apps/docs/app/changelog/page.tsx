@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { components, targetComponentCount } from "@/components/component-meta";
+import { components, currentVersion } from "@/components/component-meta";
 import { DocsArticle } from "@/components/docs-article";
 import { pageMetadata } from "@/lib/page-metadata";
 
@@ -28,7 +28,8 @@ export default function ChangelogPage() {
           v0.1
         </h2>
         <p className="text-body text-base leading-7">
-          v0.1 is the foundation. It ships {v01.length} component.
+          v0.1 is the foundation. It ships {v01.length} component:{" "}
+          {v01.map((component) => component.name).join(", ")}.
         </p>
         <ul className="text-body list-disc pl-5 text-base leading-7">
           <li>
@@ -40,9 +41,6 @@ export default function ChangelogPage() {
             <code> vinyaas init</code> writes <code>components.json</code> and{" "}
             <code>lib/utils.ts</code>. <code>vinyaas add</code> copies that
             component&apos;s source.
-          </li>
-          <li>
-            Released: {v01.map((component) => component.name).join(", ")}.
           </li>
           <li>Light and dark themes, stored in the browser.</li>
           <li>
@@ -56,12 +54,71 @@ export default function ChangelogPage() {
           v1.0.0
         </h2>
         <p className="text-body text-base leading-7">
-          v1.0.0 is the production release. It adds {v10.length} components.
-          Together with v0.1, the catalog has {components.length} of{" "}
-          {targetComponentCount}. It includes the form, overlay, and display
-          system, documentation search, command navigation, syntax highlighting,
-          and production-oriented examples.
+          v1.0.0 is the major production-focused catalog release. It adds{" "}
+          {v10.length} components. Together with v0.1, the catalog has{" "}
+          {components.length} independently installable registry items. It
+          expands forms, overlays, feedback, layout, navigation, data display,
+          and utilities, with documentation, CLI, and production-oriented
+          examples built around the full set.
         </p>
+        <h3
+          id="catalog"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Component catalog
+        </h3>
+        <ul className="text-body list-disc pl-5 text-base leading-7">
+          <li>
+            {components.length} components in total. Button remains the v0.1
+            foundation; the other {v10.length} are introduced in{" "}
+            {currentVersion}.
+          </li>
+          <li>
+            Each catalog entry is an independently installable registry item.
+          </li>
+          <li>
+            Components are composable primitives with production-oriented
+            examples, light and dark theme support, and responsive behavior.
+          </li>
+        </ul>
+        <h3
+          id="documentation"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Documentation
+        </h3>
+        <ul className="text-body list-disc pl-5 text-base leading-7">
+          <li>
+            Component pages cover API reference, installation, usage examples,
+            composition, accessibility notes, and registry source.
+          </li>
+          <li>
+            Examples can switch between TSX and JSX. Source blocks are
+            syntax-highlighted, line-numbered when shown as registry source, and
+            long snippets collapse behind an expand control.
+          </li>
+          <li>
+            Installation snippets stay bash. Documentation search opens with
+            Cmd/Ctrl+K. The shell is responsive for desktop and mobile.
+          </li>
+          <li>
+            Site and per-component Open Graph images, plus the homepage
+            playground showcase.
+          </li>
+        </ul>
+        <h3
+          id="cli"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          CLI
+        </h3>
+        <p className="text-body text-base leading-7">
+          The CLI installs one or many components in a single call. Shared
+          packages install once:
+        </p>
+        <pre className="border-border bg-card text-card-foreground overflow-x-auto rounded-md border p-4 font-mono text-[13px] leading-6">
+          <code>npx @vinyaas/cli add button card badge</code>
+        </pre>
         <h3
           id="implemented"
           className="text-foreground scroll-mt-8 text-base font-medium"
@@ -74,10 +131,8 @@ export default function ChangelogPage() {
           ))}
         </ul>
         <p className="text-body text-base leading-7">
-          Component pages share one reference layout. An example with both
-          sources can switch between TSX and JSX. Terminal commands stay bash. A
-          plain HTML select is used where a menu is enough. A custom popup
-          Select is not implemented.
+          A plain HTML select is used where a menu is enough. A custom popup
+          Select is not part of the catalog. Native Select remains a component.
         </p>
         <h3
           id="planned"

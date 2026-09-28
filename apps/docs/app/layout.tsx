@@ -20,12 +20,34 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://vinyaas.vercel.app"),
   title: {
     default: "Vinyaas",
     template: "%s · Vinyaas",
   },
   description:
     "Composable React UI components installed into your project as source.",
+  openGraph: {
+    title: "Vinyaas",
+    description:
+      "Composable React UI components installed into your project as source.",
+    type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Vinyaas — composable React components installed as source",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vinyaas",
+    description:
+      "Composable React UI components installed into your project as source.",
+    images: ["/og.png"],
+  },
 };
 
 /**

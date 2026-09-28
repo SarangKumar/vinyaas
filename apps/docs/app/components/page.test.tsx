@@ -50,6 +50,10 @@ describe("components catalog", () => {
     ).toBeNull();
     expect(added).not.toContain("Button");
     expect(all).toContain("Button");
+    expect(all).toHaveLength(components.length);
+    expect(document.body.textContent).toContain(
+      `The v1.0.0 catalog has ${components.length} independently installable`,
+    );
     expect(
       screen.queryByText(
         "A versatile button primitive for actions and commands.",

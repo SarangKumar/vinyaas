@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CodeBlock } from "@/components/code-block";
+import { components, currentVersion } from "@/components/component-meta";
 import { focusRing } from "@/components/focus-ring";
 import { InstallCommand } from "@/components/install-command";
 import { cliCommands } from "@/components/package-managers";
@@ -57,6 +58,13 @@ export function SaveName() {
 };
 
 export default function IntroductionPage() {
+  const v01Count = components.filter(
+    (component) => component.introducedIn === "0.1",
+  ).length;
+  const v10Count = components.filter(
+    (component) => component.introducedIn === currentVersion,
+  ).length;
+
   return (
     <article
       data-docs-article
@@ -105,6 +113,26 @@ export default function IntroductionPage() {
           It is not a hosted design system you import from{" "}
           <code>node_modules</code> forever. After install, the components are
           yours.
+        </p>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="catalog" className={sectionHeading}>
+          Catalog and releases
+        </h2>
+        <p className={body}>
+          The current catalog has {components.length} components. v0.1 ships{" "}
+          {v01Count} component (Button). v{currentVersion} is the major
+          production-focused release and adds the other {v10Count}. Components
+          are composable, theme-aware in light and dark, and documented with
+          production-oriented examples.
+        </p>
+        <p className={body}>
+          Docs pages include API reference, installation, usage and composition
+          examples, accessibility notes, and syntax-highlighted source with
+          TSX/JSX switching, line numbers on registry source, and expandable
+          long snippets. Installation commands stay bash. Search opens with
+          Cmd/Ctrl+K.
         </p>
       </section>
 
