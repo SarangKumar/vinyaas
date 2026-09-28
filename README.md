@@ -2,7 +2,7 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
-v0.2 will contain exactly 25 independently installable components, with a strong focus on forms. The set should also cover useful primitives for feedback, layout, navigation, display, and overlays. The homepage at `/` is the component showcase. `/introduction` stays the documentation introduction.
+v0.1 contains Button. v1.0.0 contains every other component: forms, feedback, layout, navigation, data display, overlays, and utilities. The homepage at `/` is the component showcase. `/introduction` stays the documentation introduction.
 
 ## Prerequisites
 
@@ -159,7 +159,7 @@ The current Button item does not declare CSS, environment variables, or a docume
 
 ## Component conventions
 
-v0.2 components follow the existing Button.
+v1.0.0 components follow the existing Button.
 
 - Registry name, folder, and file use the same lowercase name: `button` → `ui/button/button.tsx`.
 - `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/button.tsx`.

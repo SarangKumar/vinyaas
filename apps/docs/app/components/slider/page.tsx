@@ -5,7 +5,7 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Label } from "@/registry/new-york/ui/label/label";
-import { Slider } from "@/registry/new-york/ui/slider/slider";
+import { RangeSlider, Slider } from "@/registry/new-york/ui/slider/slider";
 
 const usage = `import { Slider } from "@/components/ui/slider/slider";
 
@@ -98,6 +98,30 @@ export function Zoom() {
     <div className="grid gap-2">
       <Label htmlFor="zoom">Zoom</Label>
       <Slider id="zoom" min={1} max={4} step={1} defaultValue={2} />
+    </div>
+  );
+}
+`,
+  },
+  {
+    id: "range",
+    title: "Range",
+    description:
+      "Two native range inputs share one track. The selected interval uses the foreground token. The rest of the track stays muted.",
+    preview: (
+      <div className="grid w-full max-w-sm gap-2 text-left">
+        <Label id="price-label">Price</Label>
+        <RangeSlider aria-labelledby="price-label" defaultValue={[20, 80]} />
+      </div>
+    ),
+    code: `import { Label } from "@/components/ui/label/label";
+import { RangeSlider } from "@/components/ui/slider/slider";
+
+export function PriceRange() {
+  return (
+    <div className="grid gap-2">
+      <Label id="price-label">Price</Label>
+      <RangeSlider aria-labelledby="price-label" defaultValue={[20, 80]} />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { DocsShell } from "./docs-shell";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/components/button",
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 describe("DocsShell", () => {

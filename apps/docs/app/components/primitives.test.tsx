@@ -24,6 +24,10 @@ import SliderPage from "./slider/page";
 import HoverCardPage from "./hover-card/page";
 import MarkerPage from "./marker/page";
 import DropdownMenuPage from "./dropdown-menu/page";
+import InputGroupPage from "./input-group/page";
+import InputOTPPage from "./input-otp/page";
+import FileUploadPage from "./file-upload/page";
+import CommandPage from "./command/page";
 
 const pages = [
   {
@@ -164,6 +168,30 @@ const pages = [
     command: "npx @vinyaas/cli add dropdown-menu",
     api: "align",
   },
+  {
+    load: InputGroupPage,
+    title: "Input Group",
+    command: "npx @vinyaas/cli add input-group",
+    api: "className",
+  },
+  {
+    load: InputOTPPage,
+    title: "Input OTP",
+    command: "npx @vinyaas/cli add input-otp",
+    api: "length",
+  },
+  {
+    load: FileUploadPage,
+    title: "File Upload",
+    command: "npx @vinyaas/cli add file-upload",
+    api: "accept",
+  },
+  {
+    load: CommandPage,
+    title: "Command",
+    command: "npx @vinyaas/cli add command",
+    api: "value",
+  },
 ] as const;
 
 describe("composed examples", () => {
@@ -191,7 +219,7 @@ describe("composed examples", () => {
       screen.getByRole("button", { name: "Save changes" }),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Recent activity")).toBeInTheDocument();
-    expect(screen.getAllByText("v0.2").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("v1.0.0").length).toBeGreaterThan(0);
     expect(document.body.textContent).not.toContain(
       'from "@/components/ui/select/select"',
     );
@@ -217,7 +245,11 @@ describe("new component pages", () => {
       expect(
         screen.getByRole("heading", { name: "Accessibility" }),
       ).toBeInTheDocument();
-      expect(screen.getByText(command)).toBeInTheDocument();
+      expect(
+        [...document.querySelectorAll("code")].some(
+          (node) => node.textContent === command,
+        ),
+      ).toBe(true);
       const tables = document.querySelectorAll("table");
 
       expect(tables[tables.length - 1]).toHaveTextContent(api);

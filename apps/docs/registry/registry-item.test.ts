@@ -503,6 +503,10 @@ describe("registry build output", () => {
     ["slider", "ui/slider/slider.tsx", 'type="range"'],
     ["hover-card", "ui/hover-card/hover-card.tsx", "HoverCardContent"],
     ["marker", "ui/marker/marker.tsx", "MarkerContent"],
+    ["input-group", "ui/input-group/input-group.tsx", "InputGroupInput"],
+    ["input-otp", "ui/input-otp/input-otp.tsx", "InputOTPSlot"],
+    ["file-upload", "ui/file-upload/file-upload.tsx", "FileUploadDropzone"],
+    ["command", "ui/command/command.tsx", "CommandInput"],
     [
       "dropdown-menu",
       "ui/dropdown-menu/dropdown-menu.tsx",
@@ -565,7 +569,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).rejects.toThrow();
     expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(29);
+    expect(newYork).toHaveLength(33);
   });
 
   it("matches the json schema item types", () => {

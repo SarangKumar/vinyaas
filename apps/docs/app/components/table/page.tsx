@@ -161,8 +161,8 @@ const examples: ComponentExample[] = [
 </Table>`,
   },
   {
-    id: "customers",
-    title: "Customers",
+    id: "users",
+    title: "Users",
     description:
       "Search filters the rows in the page. Status uses a badge. The row menu is a dropdown. The table component itself stays a set of table elements.",
     preview: <CustomerTable />,

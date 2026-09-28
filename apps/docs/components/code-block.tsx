@@ -1,11 +1,32 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import hljs from "highlight.js/lib/core";
+import bash from "highlight.js/lib/languages/bash";
+import javascript from "highlight.js/lib/languages/javascript";
 
 import { CopyButton } from "@/components/copy-button";
 import { Button } from "@/registry/new-york/ui/button/button";
 
+hljs.registerLanguage("bash", bash);
+hljs.registerLanguage("javascript", javascript);
+
 const collapseAfterLines = 16;
+
+function highlight(code: string, language?: string) {
+  const grammar =
+    language === "bash"
+      ? "bash"
+      : language === "tsx" || language === "jsx"
+        ? "javascript"
+        : null;
+
+  if (!grammar) {
+    return null;
+  }
+
+  return hljs.highlight(code, { language: grammar }).value;
+}
 
 /**
  * Renders plain text. `language` is part of the API so a highlighter can be
@@ -28,6 +49,7 @@ export function CodeBlock({
   const collapsible = code.split("\n").length > collapseAfterLines;
   const [expanded, setExpanded] = useState(false);
   const collapsed = collapsible && !expanded;
+  const html = highlight(code, language);
 
   return (
     <div
@@ -56,7 +78,12 @@ export function CodeBlock({
             : "overflow-x-auto px-4 py-3 text-[13px] leading-6"
         }
       >
-        <code data-language={language}>{code}</code>
+        <code
+          data-language={language}
+          dangerouslySetInnerHTML={html ? { __html: html } : undefined}
+        >
+          {html ? null : code}
+        </code>
       </pre>
       {collapsible ? (
         <div className="border-border relative flex justify-center border-t px-4 py-2">

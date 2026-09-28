@@ -121,7 +121,7 @@ describe("Avatar", () => {
     const root = container.firstElementChild;
     const icon = container.querySelector("svg");
 
-    expect(root).toHaveClass("size-10");
+    expect(root).toHaveClass("size-10", "border", "border-border");
     expect(icon?.parentElement).toHaveClass(
       "[&_svg]:size-3.5",
       "items-center",

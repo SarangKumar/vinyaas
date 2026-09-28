@@ -165,13 +165,6 @@ function resume(id: string) {
   schedule(id);
 }
 
-function reducedMotion() {
-  return (
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
-
 function ToastIcon({ type }: { type: ToastType }) {
   return (
     <svg
@@ -287,75 +280,63 @@ export function Toaster({
   const fromTop = position.startsWith("top");
 
   return createPortal(
-    <>
-      <style>
-        {`@keyframes vinyaas-toast-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-@keyframes vinyaas-toast-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(6px); } }`}
-      </style>
-      <div
-        data-toaster=""
-        data-position={position}
-        className={cn(
-          "pointer-events-none fixed z-50 flex w-80 max-w-[calc(100vw-2rem)] gap-2",
-          fromTop ? "flex-col" : "flex-col-reverse",
-          positionClass[position],
-        )}
-      >
-        {items.map((item) => (
-          <div
-            key={item.id}
-            role={item.type === "error" ? "alert" : "status"}
-            data-type={item.type}
-            data-exiting={item.exiting ? "true" : undefined}
-            aria-busy={item.type === "loading" ? true : undefined}
-            style={{
-              animation: reducedMotion()
-                ? undefined
-                : item.exiting
-                  ? "vinyaas-toast-out 160ms ease-in forwards"
-                  : "vinyaas-toast-in 180ms ease-out",
-            }}
-            className={cn(
-              "pointer-events-auto flex w-full items-start gap-3 rounded-md border px-3 py-3 text-sm",
-              typeClass[item.type],
-            )}
-            onMouseEnter={() => pause(item.id)}
-            onMouseLeave={() => resume(item.id)}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                event.stopPropagation();
-                dismiss(item.id);
-              }
-            }}
-          >
-            <ToastIcon type={item.type} />
-            <div className="grid min-w-0 flex-1 gap-1">
-              <div className="flex items-start justify-between gap-3">
-                <p className="font-medium">{item.title}</p>
-                <button
-                  type="button"
-                  aria-label="Dismiss"
-                  className="focus-visible:ring-ring focus-visible:ring-offset-background cursor-pointer rounded-md px-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                  onClick={() => dismiss(item.id)}
-                >
-                  ×
-                </button>
-              </div>
-              {item.description ? <p>{item.description}</p> : null}
-              {item.actionProps ? (
-                <button
-                  type="button"
-                  className="border-border bg-background text-foreground hover:bg-accent focus-visible:ring-ring focus-visible:ring-offset-background mt-1 inline-flex h-7 w-fit cursor-pointer items-center rounded-md border px-2 text-xs font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                  onClick={item.actionProps.onClick}
-                >
-                  {item.actionProps.children}
-                </button>
-              ) : null}
+    <div
+      data-toaster=""
+      data-position={position}
+      className={cn(
+        "pointer-events-none fixed z-50 flex w-80 max-w-[calc(100vw-2rem)] gap-2",
+        fromTop ? "flex-col" : "flex-col-reverse",
+        positionClass[position],
+      )}
+    >
+      {items.map((item) => (
+        <div
+          key={item.id}
+          role={item.type === "error" ? "alert" : "status"}
+          data-type={item.type}
+          data-exiting={item.exiting ? "true" : undefined}
+          aria-busy={item.type === "loading" ? true : undefined}
+          className={cn(
+            "pointer-events-auto flex w-full items-start gap-3 rounded-md border px-3 py-3 text-sm",
+            item.exiting ? "vinyaas-toast-out" : "vinyaas-toast-in",
+            typeClass[item.type],
+          )}
+          onMouseEnter={() => pause(item.id)}
+          onMouseLeave={() => resume(item.id)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              event.stopPropagation();
+              dismiss(item.id);
+            }
+          }}
+        >
+          <ToastIcon type={item.type} />
+          <div className="grid min-w-0 flex-1 gap-1">
+            <div className="flex items-start justify-between gap-3">
+              <p className="font-medium">{item.title}</p>
+              <button
+                type="button"
+                aria-label="Dismiss"
+                className="focus-visible:ring-ring focus-visible:ring-offset-background cursor-pointer rounded-md px-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                onClick={() => dismiss(item.id)}
+              >
+                ×
+              </button>
             </div>
+            {item.description ? <p>{item.description}</p> : null}
+            {item.actionProps ? (
+              <button
+                type="button"
+                className="border-border bg-background text-foreground hover:bg-accent focus-visible:ring-ring focus-visible:ring-offset-background mt-1 inline-flex h-7 w-fit cursor-pointer items-center rounded-md border px-2 text-xs font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                onClick={item.actionProps.onClick}
+              >
+                {item.actionProps.children}
+              </button>
+            ) : null}
           </div>
-        ))}
-      </div>
-    </>,
+        </div>
+      ))}
+    </div>,
     document.body,
   );
 }

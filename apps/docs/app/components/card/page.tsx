@@ -31,6 +31,10 @@ import {
   MarkerContent,
   MarkerIcon,
 } from "@/registry/new-york/ui/marker/marker";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@/registry/new-york/ui/native-select/native-select";
 import { Progress } from "@/registry/new-york/ui/progress/progress";
 import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
 import { Separator } from "@/registry/new-york/ui/separator/separator";
@@ -59,7 +63,7 @@ export function Note() {
     <Card>
       <CardHeader>
         <CardTitle>Release notes</CardTitle>
-        <CardDescription>What shipped in v0.2.</CardDescription>
+        <CardDescription>What shipped in v1.0.0.</CardDescription>
       </CardHeader>
       <CardContent>
         <p>Each component still installs on its own.</p>
@@ -189,6 +193,13 @@ const examples: ComponentExample[] = [
           </CardAction>
         </CardHeader>
         <Separator />
+        <CardContent>
+          <Label htmlFor="card-billing">Billing period</Label>
+          <NativeSelect id="card-billing" defaultValue="monthly">
+            <NativeSelectOption value="monthly">Monthly</NativeSelectOption>
+            <NativeSelectOption value="yearly">Yearly</NativeSelectOption>
+          </NativeSelect>
+        </CardContent>
         <CardFooter className="gap-2">
           <Button>Manage subscription</Button>
           <Button variant="destructive">Cancel plan</Button>
@@ -446,6 +457,109 @@ export function ProjectCard() {
 `,
   },
   {
+    id: "security",
+    title: "Security",
+    description:
+      "A switch, a checkbox, and a status badge for account protection.",
+    preview: (
+      <Card className="w-full max-w-sm text-left">
+        <CardHeader>
+          <CardTitle>Security</CardTitle>
+          <CardAction>
+            <Badge variant="secondary">Protected</Badge>
+          </CardAction>
+        </CardHeader>
+        <CardContent className="grid gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="card-session">Sign out other sessions</Label>
+            <Switch id="card-session" defaultChecked />
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox id="card-alerts" defaultChecked />
+            <Label htmlFor="card-alerts">Email me about new sign-ins</Label>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button>Update security</Button>
+        </CardFooter>
+      </Card>
+    ),
+    code: `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
+import { Checkbox } from "@/components/ui/checkbox/checkbox";
+import { Label } from "@/components/ui/label/label";
+import { Switch } from "@/components/ui/switch/switch";
+
+export function SecurityCard() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Security</CardTitle>
+        <CardAction><Badge variant="secondary">Protected</Badge></CardAction>
+      </CardHeader>
+      <CardContent>
+        <Label htmlFor="card-session">Sign out other sessions</Label>
+        <Switch id="card-session" defaultChecked />
+        <Checkbox id="card-alerts" defaultChecked />
+        <Label htmlFor="card-alerts">Email me about new sign-ins</Label>
+      </CardContent>
+      <CardFooter>
+        <Button>Update security</Button>
+      </CardFooter>
+    </Card>
+  );
+}
+`,
+  },
+  {
+    id: "notification",
+    title: "Notification",
+    description:
+      "An avatar, a status badge, a timestamp, and a follow-up action.",
+    preview: (
+      <Card className="w-full max-w-sm text-left">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <Avatar>
+              <AvatarFallback>AL</AvatarFallback>
+            </Avatar>
+            <div>
+              <CardTitle>Ada Lovelace</CardTitle>
+              <CardDescription>Commented 2 minutes ago</CardDescription>
+            </div>
+          </div>
+          <CardAction>
+            <Badge>New</Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter>
+          <Button variant="outline">Reply</Button>
+        </CardFooter>
+      </Card>
+    ),
+    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
+import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
+
+export function NotificationCard() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Ada Lovelace</CardTitle>
+        <CardDescription>Commented 2 minutes ago</CardDescription>
+        <CardAction><Badge>New</Badge></CardAction>
+      </CardHeader>
+      <CardFooter>
+        <Button variant="outline">Reply</Button>
+      </CardFooter>
+    </Card>
+  );
+}
+`,
+  },
+  {
     id: "compact",
     title: "Compact",
     description:
@@ -456,11 +570,11 @@ export function ProjectCard() {
           <div>
             <CardTitle>Catalog</CardTitle>
             <CardDescription>
-              29 components are in the v0.2 registry.
+              The v1.0.0 registry is the production catalog.
             </CardDescription>
           </div>
           <CardAction>
-            <Badge>v0.2</Badge>
+            <Badge>v1.0.0</Badge>
           </CardAction>
         </CardHeader>
         <CardFooter>
@@ -483,9 +597,9 @@ export function CompactCard() {
       <CardHeader>
         <div>
           <CardTitle>Catalog</CardTitle>
-          <CardDescription>29 components are in the v0.2 registry.</CardDescription>
+          <CardDescription>The v1.0.0 registry is the production catalog.</CardDescription>
         </div>
-        <CardAction><Badge>v0.2</Badge></CardAction>
+        <CardAction><Badge>v1.0.0</Badge></CardAction>
       </CardHeader>
       <CardFooter>
         <Button size="sm" variant="outline">View project</Button>

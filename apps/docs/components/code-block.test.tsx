@@ -34,7 +34,7 @@ describe("CodeBlock", () => {
       "data-language",
       "tsx",
     );
-    expect(screen.getByText(/line 20/)).toBeInTheDocument();
+    expect(document.querySelector("code")?.textContent).toContain("line 20");
     fireEvent.click(screen.getByRole("button", { name: "View code" }));
     expect(screen.getByRole("button", { name: "Hide code" })).toHaveAttribute(
       "aria-expanded",
@@ -45,6 +45,19 @@ describe("CodeBlock", () => {
       "aria-expanded",
       "false",
     );
-    expect(screen.getByText(/line 20/)).toBeInTheDocument();
+    expect(document.querySelector("code")?.textContent).toContain("line 20");
+  });
+
+  it("highlights TypeScript and Bash", () => {
+    const { unmount } = render(
+      <CodeBlock code={'const ready = "ok";'} language="tsx" />,
+    );
+
+    expect(document.querySelector(".hljs-keyword")).toHaveTextContent("const");
+    unmount();
+    render(<CodeBlock code="echo hello" language="bash" />);
+    expect(
+      document.querySelector("code .hljs-built_in, code span"),
+    ).not.toBeNull();
   });
 });

@@ -11,7 +11,7 @@ describe("Changelog", () => {
       screen.getByRole("heading", { level: 1, name: "Changelog" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "v0.1" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "v0.2" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "v1.0.0" })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Released" }),
     ).toBeInTheDocument();

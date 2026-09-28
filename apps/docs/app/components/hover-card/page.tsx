@@ -5,6 +5,7 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
+import { Badge } from "@/registry/new-york/ui/badge/badge";
 import { Button } from "@/registry/new-york/ui/button/button";
 import {
   HoverCard,
@@ -109,15 +110,103 @@ const examples: ComponentExample[] = [
             </Avatar>
             <div className="grid gap-1">
               <p className="font-medium">Ada Lovelace</p>
-              <p className="text-muted-foreground">
-                Wrote the first algorithm.
+              <p className="text-muted-foreground text-sm">
+                Mathematician · London
               </p>
+              <p>Wrote the first algorithm for the Analytical Engine.</p>
+              <Badge variant="secondary">Available</Badge>
             </div>
           </div>
         </HoverCardContent>
       </HoverCard>
     ),
     code: { tsx: profileCode, jsx: profileCode },
+  },
+  {
+    id: "message",
+    title: "Message preview",
+    description:
+      "A message reference shows the sender, time, and a short preview.",
+    preview: (
+      <HoverCard openDelay={0}>
+        <HoverCardTrigger>
+          <Button variant="link">Note from Ada</Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <div className="grid gap-2">
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-medium">Ada Lovelace</p>
+              <Badge variant="outline">2m</Badge>
+            </div>
+            <p className="text-muted-foreground text-sm">
+              The notes for the engine are ready to review.
+            </p>
+            <Badge variant="secondary">Unread</Badge>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+    ),
+    code: `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card/hover-card";
+
+export function MessagePreview() {
+  return (
+    <HoverCard>
+      <HoverCardTrigger>
+        <Button variant="link">Note from Ada</Button>
+      </HoverCardTrigger>
+      <HoverCardContent>
+        <p className="font-medium">Ada Lovelace</p>
+        <p>The notes for the engine are ready to review.</p>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+`,
+  },
+  {
+    id: "project",
+    title: "Project preview",
+    description: "A project name opens its language, stars, and status.",
+    preview: (
+      <HoverCard openDelay={0}>
+        <HoverCardTrigger>
+          <Button variant="link">vinyaas</Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <div className="grid gap-2">
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-medium">vinyaas</p>
+              <Badge>Active</Badge>
+            </div>
+            <p className="text-muted-foreground text-sm">
+              TypeScript · 128 stars
+            </p>
+            <p className="text-sm">Updated today</p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+    ),
+    code: `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card/hover-card";
+
+export function ProjectPreview() {
+  return (
+    <HoverCard>
+      <HoverCardTrigger>
+        <Button variant="link">vinyaas</Button>
+      </HoverCardTrigger>
+      <HoverCardContent>
+        <p className="font-medium">vinyaas</p>
+        <p>TypeScript · 128 stars</p>
+        <Badge>Active</Badge>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+`,
   },
 ];
 

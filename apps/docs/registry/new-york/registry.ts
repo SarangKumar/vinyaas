@@ -310,6 +310,50 @@ export const registry: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "input-group",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/input-group/input-group.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "input-otp",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/input-otp/input-otp.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "file-upload",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/file-upload/file-upload.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "command",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/command/command.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "dropdown-menu",
     type: "registry:ui",
     dependencies: ["clsx", "tailwind-merge"],

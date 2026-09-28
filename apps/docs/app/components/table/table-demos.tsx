@@ -20,11 +20,10 @@ import {
   TableRow,
 } from "@/registry/new-york/ui/table/table";
 
-const customers = [
-  ["Aarav Sharma", "aarav@example.com", "Active"],
-  ["Priya Singh", "priya@example.com", "Pending"],
-  ["Noah Chen", "noah@example.com", "Active"],
-  ["Maya Patel", "maya@example.com", "Invited"],
+const users = [
+  ["Aarav Sharma", "Admin", "Active"],
+  ["Priya Singh", "Editor", "Pending"],
+  ["Rahul Mehta", "Viewer", "Disabled"],
 ] as const;
 
 function SearchIcon() {
@@ -59,20 +58,20 @@ function MoreIcon() {
 export function CustomerTable() {
   const [query, setQuery] = useState("");
   const normalized = query.trim().toLowerCase();
-  const visible = customers.filter(([name, email]) =>
-    `${name} ${email}`.toLowerCase().includes(normalized),
+  const visible = users.filter(([name, role, status]) =>
+    `${name} ${role} ${status}`.toLowerCase().includes(normalized),
   );
 
   return (
     <div className="grid w-full max-w-xl gap-3 text-left">
       <div>
-        <h3 className="text-sm font-medium">Customers</h3>
+        <h3 className="text-sm font-medium">Users</h3>
       </div>
       <div className="relative">
         <SearchIcon />
         <Input
-          aria-label="Search customers"
-          placeholder="Search customers..."
+          aria-label="Search users"
+          placeholder="Search users..."
           value={query}
           className="pl-9"
           onChange={(event) => setQuery(event.target.value)}
@@ -82,7 +81,7 @@ export function CustomerTable() {
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -90,13 +89,13 @@ export function CustomerTable() {
         <TableBody>
           {visible.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4}>No customers match that search.</TableCell>
+              <TableCell colSpan={4}>No users match that search.</TableCell>
             </TableRow>
           ) : (
-            visible.map(([name, email, status]) => (
-              <TableRow key={email}>
+            visible.map(([name, role, status]) => (
+              <TableRow key={name}>
                 <TableCell>{name}</TableCell>
-                <TableCell>{email}</TableCell>
+                <TableCell>{role}</TableCell>
                 <TableCell>
                   <Badge
                     variant={status === "Active" ? "secondary" : "outline"}

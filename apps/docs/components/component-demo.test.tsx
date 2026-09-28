@@ -55,7 +55,9 @@ export function SaveButton() {
     );
 
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
-    expect(screen.getByText(/export function SaveButton/)).toBeInTheDocument();
+    expect(document.querySelector("code")?.textContent).toContain(
+      "export function SaveButton",
+    );
     expect(document.querySelector("code")).toHaveAttribute(
       "data-language",
       "tsx",

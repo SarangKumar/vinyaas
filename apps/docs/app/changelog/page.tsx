@@ -8,8 +8,8 @@ export default function ChangelogPage() {
   const v01 = components.filter(
     (component) => component.introducedIn === "0.1",
   );
-  const v02 = components.filter(
-    (component) => component.introducedIn === "0.2",
+  const v10 = components.filter(
+    (component) => component.introducedIn === "1.0.0",
   );
 
   return (
@@ -43,13 +43,15 @@ export default function ChangelogPage() {
         </ul>
       </section>
       <section className="flex flex-col gap-4">
-        <h2 id="v0.2" className={heading}>
-          v0.2
+        <h2 id="v1.0.0" className={heading}>
+          v1.0.0
         </h2>
         <p className="text-body text-base leading-7">
-          v0.2 is the form-focused expansion. It adds {v02.length} components.
+          v1.0.0 is the production release. It adds {v10.length} components.
           Together with v0.1, the catalog has {components.length} of{" "}
-          {targetComponentCount}.
+          {targetComponentCount}. It includes the form, overlay, and display
+          system, documentation search, command navigation, syntax highlighting,
+          and production-oriented examples.
         </p>
         <h3
           id="implemented"
@@ -58,7 +60,7 @@ export default function ChangelogPage() {
           Released
         </h3>
         <ul className="text-body list-disc pl-5 text-base leading-7">
-          {v02.map((component) => (
+          {v10.map((component) => (
             <li key={component.slug}>{component.name}</li>
           ))}
         </ul>
@@ -87,7 +89,6 @@ export default function ChangelogPage() {
           Not in this version
         </h3>
         <ul className="text-body list-disc pl-5 text-base leading-7">
-          <li>Syntax highlighting.</li>
           <li>A custom popup Select.</li>
           <li>Swipe-to-dismiss toasts.</li>
           <li>

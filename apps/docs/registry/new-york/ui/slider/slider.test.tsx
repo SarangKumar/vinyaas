@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
 
-import { Slider } from "./slider";
+import { RangeSlider, Slider } from "./slider";
 
 describe("Slider", () => {
   it("renders a native range input", () => {
@@ -16,6 +16,19 @@ describe("Slider", () => {
     expect(slider).toHaveAttribute("max", "100");
     expect(slider).toHaveValue("40");
     expect(slider).toHaveClass("h-2", "rounded-full");
+    expect(slider).toHaveStyle({
+      background:
+        "linear-gradient(to right, var(--muted) 0%, var(--foreground) 0%, var(--foreground) 40%, var(--muted) 40%)",
+    });
+  });
+
+  it("highlights the selected interval of a range", () => {
+    render(<RangeSlider aria-label="Price" defaultValue={[20, 80]} />);
+
+    expect(screen.getByRole("slider", { name: "Price start" })).toHaveValue(
+      "20",
+    );
+    expect(screen.getByRole("slider", { name: "Price end" })).toHaveValue("80");
   });
 
   it("reports the numeric value and merges className", () => {

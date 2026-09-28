@@ -23,10 +23,14 @@ describe("component metadata", () => {
       "Button",
       "Card",
       "Checkbox",
+      "Command",
       "Dialog",
       "Dropdown Menu",
+      "File Upload",
       "Hover Card",
       "Input",
+      "Input Group",
+      "Input OTP",
       "Kbd",
       "Label",
       "Marker",
@@ -47,8 +51,8 @@ describe("component metadata", () => {
     ]);
   });
 
-  it("treats v0.2 introductions as new and keeps earlier components out", () => {
-    expect(currentVersion).toBe("0.2");
+  it("treats v1.0.0 introductions as new and keeps earlier components out", () => {
+    expect(currentVersion).toBe("1.0.0");
 
     const slugs = new Set(components.map((component) => component.slug));
 
@@ -66,10 +70,14 @@ describe("component metadata", () => {
       "breadcrumb",
       "card",
       "checkbox",
+      "command",
       "dialog",
       "dropdown-menu",
+      "file-upload",
       "hover-card",
       "input",
+      "input-group",
+      "input-otp",
       "kbd",
       "label",
       "marker",

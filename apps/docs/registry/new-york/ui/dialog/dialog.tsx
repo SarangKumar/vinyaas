@@ -250,13 +250,6 @@ export function DialogContent({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <style>
-        {`@keyframes vinyaas-dialog-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: none; } }
-@keyframes vinyaas-dialog-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.98); } }
-@media (prefers-reduced-motion: reduce) {
-  [data-dialog-content] { animation: none !important; }
-}`}
-      </style>
       <div
         data-dialog-overlay=""
         className="absolute inset-0 bg-black/50"
@@ -272,15 +265,9 @@ export function DialogContent({
         tabIndex={-1}
         data-dialog-content=""
         data-state={exiting ? "closed" : "open"}
-        style={{
-          animation: reducedMotion()
-            ? undefined
-            : exiting
-              ? "vinyaas-dialog-out 160ms ease-in forwards"
-              : "vinyaas-dialog-in 160ms ease-out",
-        }}
         className={cn(
           "border-border bg-background text-foreground relative z-10 flex max-h-[min(32rem,calc(100dvh-2rem))] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-md border p-4 shadow-lg",
+          exiting ? "vinyaas-dialog-out" : "vinyaas-dialog-in",
           className,
         )}
         onClick={(event) => event.stopPropagation()}

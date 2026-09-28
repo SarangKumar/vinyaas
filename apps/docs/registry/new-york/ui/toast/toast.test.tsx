@@ -37,8 +37,9 @@ describe("Toast", () => {
     expect(status).toHaveTextContent("Saved");
     expect(screen.getByText("The note was saved.")).toBeInTheDocument();
     expect(status).toHaveAttribute("data-type", "success");
+    expect(status).toHaveClass("vinyaas-toast-in");
+    expect(status.closest("[data-toaster]")?.querySelector("style")).toBeNull();
     expect(status.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
-    expect(status.style.animation).toContain("vinyaas-toast-in");
     expect(screen.getByRole("button", { name: "Page" })).toHaveFocus();
   });
 

@@ -173,11 +173,6 @@ export function Accordion({
         )}
         onKeyDown={onKeyDown}
       >
-        <style>
-          {`@media (prefers-reduced-motion: reduce) {
-  [data-accordion-panel] { transition: none; animation: none; }
-}`}
-        </style>
         {children}
       </div>
     </AccordionContext.Provider>

@@ -52,7 +52,7 @@ describe("homepage", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole("progressbar", {
-        name: "Components in the v0.2 catalog",
+        name: "Components in the v1.0.0 catalog",
       }),
     ).toBeInTheDocument();
 

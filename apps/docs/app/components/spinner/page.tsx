@@ -4,6 +4,7 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { RefreshIcon } from "@/components/icons";
 import { Button } from "@/registry/new-york/ui/button/button";
 import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
 
@@ -97,37 +98,21 @@ export function SubmitSpinner() {
     id: "custom-icon",
     title: "Customization",
     description:
-      "The default graphic lives in Spinner. Replace that svg with another icon. The visible label here is the loading message next to it.",
+      "Swap the default graphic for another icon component. The visible label here is the loading message next to it.",
     preview: (
       <span className="inline-flex items-center gap-2 text-sm">
-        <Spinner label="" />
+        <RefreshIcon className="size-4 animate-spin motion-reduce:animate-none" />
         Loading
       </span>
     ),
-    code: `import React from "react";
+    code: `import { RefreshIcon } from "@/components/icons";
 
-import { cn } from "@/lib/utils";
-
-function Spinner({
-  className,
-  ...props
-}: React.ComponentProps<"svg">) {
+export function LoadingNote() {
   return (
-    <svg
-      role="status"
-      aria-label="Loading"
-      viewBox="0 0 24 24"
-      className={cn("size-4 animate-spin", className)}
-      {...props}
-    >
-      <path
-        d="M12 3a9 9 0 1 0 9 9"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
+    <span className="inline-flex items-center gap-2 text-sm">
+      <RefreshIcon className="size-4 animate-spin motion-reduce:animate-none" />
+      Loading
+    </span>
   );
 }
 `,

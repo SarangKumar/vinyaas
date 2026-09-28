@@ -39,7 +39,7 @@ export function Avatar({ className, ref, ...props }: AvatarProps) {
       <span
         ref={ref}
         className={cn(
-          "relative flex size-10 shrink-0 overflow-hidden rounded-full",
+          "border-border relative flex size-10 shrink-0 overflow-hidden rounded-full border",
           className,
         )}
         {...props}

@@ -40,7 +40,7 @@ const feed = [
   ["AL", "Alex", "deployed an update", "v2.4.1", "8m"],
   ["SK", "Sarah", "invited a reviewer", "Design notes", "21m"],
   ["AL", "Alex", "closed an issue", "Keyboard focus", "1h"],
-  ["SK", "Sarah", "published a release", "v0.2", "3h"],
+  ["SK", "Sarah", "published a release", "v1.0.0", "3h"],
 ] as const;
 
 const shortcuts = [

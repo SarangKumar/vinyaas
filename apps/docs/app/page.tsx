@@ -133,7 +133,7 @@ export default function Home() {
             </div>
           </div>
           <Progress
-            aria-label="Components in the v0.2 catalog"
+            aria-label="Components in the v1.0.0 catalog"
             value={components.length}
             max={targetComponentCount}
           />
@@ -160,9 +160,9 @@ export default function Home() {
           Forms
         </h2>
         <p className="max-w-2xl text-base leading-7">
-          v0.2 is focused on forms. Buttons and fields share one height, type
-          size, border, and focus ring, so a label, an input, and a button sit
-          on the same line.
+          v1.0.0 is the production catalog. Buttons and fields share one height,
+          type size, border, and focus ring, so a label, an input, and a button
+          sit on the same line.
         </p>
         <form className="border-border grid max-w-sm gap-4 rounded-md border px-6 py-8">
           <div className="grid gap-2">

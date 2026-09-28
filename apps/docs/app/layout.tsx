@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 
 import { DocsShell } from "@/components/docs-shell";
 import { CodeLanguageProvider } from "@/components/code-language-store";
@@ -30,8 +31,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
-        {/* Sets the theme class before the body paints. React does not own this class during SSR. */}
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* beforeInteractive runs in the initial HTML, before React hydrates the tree. */}
+        <Script id="vinyaas-theme" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
       </head>
       <body className="bg-background text-foreground h-full overflow-hidden font-sans">
         <DocsShell>

@@ -25,8 +25,10 @@ describe("DocsNavLinks", () => {
       "href",
       "/introduction",
     );
-    expect(screen.getByRole("link", { name: "Installation" })).toHaveClass(
-      "text-sidebar-foreground",
-    );
+    const installation = screen.getAllByRole("link", {
+      name: "Installation",
+    })[0];
+
+    expect(installation).toHaveClass("text-sidebar-foreground");
   });
 });
