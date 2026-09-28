@@ -15,7 +15,7 @@ describe("Alert", () => {
     const alert = screen.getByRole("alert");
 
     expect(alert).toHaveAttribute("data-variant", "default");
-    expect(alert).toHaveClass("bg-background", "text-foreground");
+    expect(alert).toHaveClass("bg-muted", "text-foreground");
     expect(screen.getByText("Deployment complete").tagName).toBe("P");
     expect(screen.getByText("Production is running.").tagName).toBe("P");
   });
@@ -29,10 +29,11 @@ describe("Alert", () => {
     );
 
     expect(screen.getByRole("alert")).toHaveClass(
-      "bg-destructive",
-      "text-destructive-foreground",
-      "border-2",
+      "bg-muted",
+      "text-destructive",
+      "border-destructive",
     );
+    expect(screen.getByRole("alert")).not.toHaveClass("bg-destructive");
   });
 
   it("merges className and forwards native props", () => {

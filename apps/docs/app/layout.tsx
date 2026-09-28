@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { DocsShell } from "@/components/docs-shell";
+import { CodeLanguageProvider } from "@/components/code-language-store";
 import { themeInitScript } from "@/components/theme";
 
 import "./globals.css";
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="bg-background text-foreground h-full overflow-hidden font-sans">
-        <DocsShell>{children}</DocsShell>
+        <DocsShell>
+          <CodeLanguageProvider>{children}</CodeLanguageProvider>
+        </DocsShell>
       </body>
     </html>
   );

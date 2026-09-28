@@ -20,6 +20,8 @@ import DialogPage from "./dialog/page";
 import AccordionPage from "./accordion/page";
 import BreadcrumbDocsPage from "./breadcrumb/page";
 import ScrollAreaPage from "./scroll-area/page";
+import SliderPage from "./slider/page";
+import HoverCardPage from "./hover-card/page";
 
 const pages = [
   {
@@ -135,6 +137,18 @@ const pages = [
     title: "Scroll Area",
     command: "npx @vinyaas/cli add scroll-area",
     api: "orientation",
+  },
+  {
+    load: SliderPage,
+    title: "Slider",
+    command: "npx @vinyaas/cli add slider",
+    api: "onValueChange",
+  },
+  {
+    load: HoverCardPage,
+    title: "Hover Card",
+    command: "npx @vinyaas/cli add hover-card",
+    api: "openDelay",
   },
 ] as const;
 

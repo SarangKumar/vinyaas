@@ -121,7 +121,7 @@ export function RadioGroupItem({
       />
       <span
         aria-hidden="true"
-        className="bg-foreground pointer-events-none absolute top-1/2 left-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 peer-checked:opacity-100"
+        className="bg-foreground pointer-events-none absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 peer-checked:opacity-100"
       />
     </span>
   );

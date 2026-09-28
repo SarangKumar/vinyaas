@@ -1,9 +1,15 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { ReactNode } from "react";
 
 import { InstallCommand } from "./install-command";
 import { CodeBlock } from "./code-block";
 import { ComponentDemo } from "./component-demo";
+import {
+  CodeLanguageProvider,
+  setCodeLanguage,
+  store,
+} from "./code-language-store";
 import { cliCommands } from "./package-managers";
 
 const longSource = Array.from(
@@ -25,8 +31,13 @@ async function settle() {
 describe("ComponentDemo", () => {
   afterEach(() => {
     window.sessionStorage.clear();
+    store.dispatch(setCodeLanguage("tsx"));
     vi.unstubAllGlobals();
   });
+
+  function renderDemo(node: ReactNode) {
+    return render(<CodeLanguageProvider>{node}</CodeLanguageProvider>);
+  }
 
   it("renders the preview, the complete source, and copy", () => {
     const source = `import { Button } from "@/components/ui/button/button";
@@ -36,7 +47,7 @@ export function SaveButton() {
 }
 `;
 
-    render(
+    renderDemo(
       <ComponentDemo
         preview={<button type="button">Save</button>}
         code={source}
@@ -60,7 +71,9 @@ export function SaveButton() {
   });
 
   it("collapses long source and can show it again", () => {
-    render(<ComponentDemo preview={<span>Preview</span>} code={longSource} />);
+    renderDemo(
+      <ComponentDemo preview={<span>Preview</span>} code={longSource} />,
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "View code" }));
     expect(screen.getByRole("button", { name: "Hide code" })).toHaveAttribute(
@@ -74,11 +87,11 @@ export function SaveButton() {
     );
   });
 
-  it("switches TSX and JSX on one demo without changing another or bash", async () => {
+  it("switches TSX and JSX across every demo and leaves bash alone", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal("navigator", { clipboard: { writeText } });
 
-    render(
+    renderDemo(
       <>
         <ComponentDemo preview={<span>Preview</span>} code={pair} />
         <ComponentDemo
@@ -113,8 +126,8 @@ export function SaveButton() {
     expect(codes()[0]).toHaveAttribute("data-language", "jsx");
     expect(codes()[0]).toHaveTextContent("SaveJsx");
     expect(screen.getAllByText("jsx").length).toBeGreaterThan(0);
-    expect(codes()[1]).toHaveAttribute("data-language", "tsx");
-    expect(codes()[1]).toHaveTextContent("export function Other()");
+    expect(codes()[1]).toHaveAttribute("data-language", "jsx");
+    expect(codes()[1]).toHaveTextContent("export function OtherJsx()");
     expect(codes()[2]).toHaveAttribute("data-language", "bash");
     expect(codes()[2]).toHaveTextContent("npx @vinyaas/cli add button");
     expect(
@@ -150,7 +163,7 @@ export function SaveButton() {
   it("starts the next demo from the stored language and ignores invalid values", async () => {
     window.sessionStorage.setItem("vinyaas-code-language", "bash");
 
-    const { unmount } = render(
+    const { unmount } = renderDemo(
       <ComponentDemo preview={<span>Preview</span>} code={pair} />,
     );
 
@@ -164,7 +177,7 @@ export function SaveButton() {
     expect(window.sessionStorage.getItem("vinyaas-code-language")).toBe("jsx");
     unmount();
 
-    render(<ComponentDemo preview={<span>Preview</span>} code={pair} />);
+    renderDemo(<ComponentDemo preview={<span>Preview</span>} code={pair} />);
     await settle();
     expect(document.querySelector("code")).toHaveAttribute(
       "data-language",

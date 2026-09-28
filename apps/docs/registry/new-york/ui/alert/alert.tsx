@@ -3,9 +3,9 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 const alertVariants = {
-  default: "border-border bg-background text-foreground",
+  default: "border-border bg-muted text-foreground",
   destructive:
-    "border-destructive bg-destructive text-destructive-foreground border-2",
+    "border-destructive bg-muted text-destructive [&_svg]:text-destructive [&_button]:border-destructive [&_button]:text-destructive [&_button]:hover:bg-destructive/10",
 } as const;
 
 export type AlertVariant = keyof typeof alertVariants;
@@ -22,7 +22,7 @@ export function Alert({
       role="alert"
       data-variant={variant}
       className={cn(
-        "relative flex w-full flex-col gap-1 rounded-md border px-4 py-3 text-sm",
+        "relative grid w-full grid-cols-[0_minmax(0,1fr)] items-start gap-y-1 rounded-md border px-4 py-3 text-sm has-[>svg]:grid-cols-[1rem_minmax(0,1fr)] has-[>svg]:gap-x-3 [&>*:not(svg)]:col-start-2 [&>svg]:col-start-1 [&>svg]:row-span-2 [&>svg]:row-start-1 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
         alertVariants[variant],
         className,
       )}

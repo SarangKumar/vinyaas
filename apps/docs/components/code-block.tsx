@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react";
 
 import { CopyButton } from "@/components/copy-button";
-import { focusRing } from "@/components/focus-ring";
+import { Button } from "@/registry/new-york/ui/button/button";
 
 const collapseAfterLines = 16;
 
@@ -59,18 +59,19 @@ export function CodeBlock({
         <code data-language={language}>{code}</code>
       </pre>
       {collapsible ? (
-        <div className="border-border relative border-t">
+        <div className="border-border relative flex justify-center border-t px-4 py-2">
           {collapsed ? (
             <div className="from-card pointer-events-none absolute inset-x-0 -top-12 h-12 bg-gradient-to-t to-transparent" />
           ) : null}
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             aria-expanded={expanded}
-            className={`text-subtle-foreground hover:text-foreground w-full cursor-pointer px-4 py-2.5 text-center text-sm ${focusRing}`}
             onClick={() => setExpanded((open) => !open)}
           >
             {expanded ? "Hide code" : "View code"}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>

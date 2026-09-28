@@ -64,6 +64,10 @@ describe("Toast", () => {
     fireEvent.click(screen.getByRole("button", { name: "Undo" }));
 
     expect(onUndo).toHaveBeenCalledOnce();
+    expect(screen.getByRole("button", { name: "Undo" })).toHaveClass(
+      "h-7",
+      "text-xs",
+    );
 
     fireEvent.click(screen.getAllByRole("button", { name: "Dismiss" })[0]!);
 

@@ -93,6 +93,45 @@ export function SubmitSpinner() {
 }
 `,
   },
+  {
+    id: "custom-icon",
+    title: "Customization",
+    description:
+      "The default graphic lives in Spinner. Replace that svg with another icon. The visible label here is the loading message next to it.",
+    preview: (
+      <span className="inline-flex items-center gap-2 text-sm">
+        <Spinner label="" />
+        Loading
+      </span>
+    ),
+    code: `import React from "react";
+
+import { cn } from "@/lib/utils";
+
+function Spinner({
+  className,
+  ...props
+}: React.ComponentProps<"svg">) {
+  return (
+    <svg
+      role="status"
+      aria-label="Loading"
+      viewBox="0 0 24 24"
+      className={cn("size-4 animate-spin", className)}
+      {...props}
+    >
+      <path
+        d="M12 3a9 9 0 1 0 9 9"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+`,
+  },
 ];
 
 export default async function SpinnerPage() {
@@ -108,7 +147,8 @@ export default async function SpinnerPage() {
       overview={
         <p>
           Spinner is a decorative graphic with a text alternative. Size it with{" "}
-          <code>className</code>. The spin stops when the user prefers reduced
+          <code>className</code>. Replace the svg inside the component when you
+          want a different icon. The spin stops when the user prefers reduced
           motion.
         </p>
       }

@@ -500,6 +500,8 @@ describe("registry build output", () => {
     ["accordion", "ui/accordion/accordion.tsx", "aria-expanded"],
     ["breadcrumb", "ui/breadcrumb/breadcrumb.tsx", "breadcrumb"],
     ["scroll-area", "ui/scroll-area/scroll-area.tsx", "data-scroll-area"],
+    ["slider", "ui/slider/slider.tsx", 'type="range"'],
+    ["hover-card", "ui/hover-card/hover-card.tsx", "HoverCardContent"],
   ])(
     "keeps the new-york %s artifact aligned with the source item",
     async (name, filePath, sourceMarker) => {
@@ -557,7 +559,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).rejects.toThrow();
     expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(25);
+    expect(newYork).toHaveLength(27);
   });
 
   it("matches the json schema item types", () => {

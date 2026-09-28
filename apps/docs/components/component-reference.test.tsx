@@ -28,7 +28,7 @@ describe("ComponentReference", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("npx @vinyaas/cli add input")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Usage" })).toBeInTheDocument();
-    expect(screen.getByText("<Input />")).toBeInTheDocument();
+    expect(screen.getAllByText("<Input />").length).toBeGreaterThan(0);
     expect(screen.getByRole("heading", { name: "Source" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Preview" })).toHaveAttribute(
       "id",

@@ -4,7 +4,6 @@ import { ApiTable, type ApiRow } from "@/components/api-table";
 import { CodeBlock } from "@/components/code-block";
 import { ComponentDemo } from "@/components/component-demo";
 import type { CodeLanguage, DemoCode } from "@/components/code-languages";
-import { ComponentPreview } from "@/components/component-preview";
 import { DocsArticle } from "@/components/docs-article";
 import { InstallCommand } from "@/components/install-command";
 import { cliCommands } from "@/components/package-managers";
@@ -68,7 +67,7 @@ export function ComponentReference({
         <h2 id="preview" className={sectionHeading}>
           Preview
         </h2>
-        <ComponentPreview>{children}</ComponentPreview>
+        <ComponentDemo preview={children} code={usage} />
       </section>
       <section className="flex flex-col gap-6">
         <h2 id="installation" className={sectionHeading}>

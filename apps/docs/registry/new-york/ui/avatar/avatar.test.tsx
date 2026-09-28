@@ -108,4 +108,24 @@ describe("Avatar", () => {
     expect(imageRef.current).toHaveClass("object-cover", "opacity-90");
     expect(fallbackRef.current).toHaveClass("bg-muted", "text-sm");
   });
+
+  it("draws icons inside the fallback slightly smaller than the avatar", () => {
+    const { container } = render(
+      <Avatar>
+        <AvatarFallback>
+          <svg aria-hidden="true" />
+        </AvatarFallback>
+      </Avatar>,
+    );
+
+    const root = container.firstElementChild;
+    const icon = container.querySelector("svg");
+
+    expect(root).toHaveClass("size-10");
+    expect(icon?.parentElement).toHaveClass(
+      "[&_svg]:size-3.5",
+      "items-center",
+      "justify-center",
+    );
+  });
 });

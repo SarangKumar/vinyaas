@@ -129,7 +129,7 @@ export function AvatarFallback({
       {...props}
       aria-hidden={status === "loading" ? true : undefined}
       className={cn(
-        "bg-muted text-muted-foreground flex size-full items-center justify-center text-xs font-medium",
+        "bg-muted text-muted-foreground flex size-full items-center justify-center text-xs font-medium [&_svg]:size-3.5",
         className,
       )}
     />

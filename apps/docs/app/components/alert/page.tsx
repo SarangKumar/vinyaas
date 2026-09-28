@@ -12,6 +12,22 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 
+function AlertCircleIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 8v4" strokeLinecap="round" />
+      <path d="M12 16h.01" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 const usage = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert/alert";
 
 export function Notice() {
@@ -49,12 +65,26 @@ export function DeploymentAlert() {
 const failedCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert/alert";
 import { Button } from "@/components/ui/button/button";
 
+function AlertCircleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 8v4" strokeLinecap="round" />
+      <path d="M12 16h.01" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function PaymentAlert() {
   return (
     <Alert variant="destructive" className="max-w-md">
+      <AlertCircleIcon />
       <AlertTitle>Payment failed</AlertTitle>
-      <AlertDescription>Your payment method was declined.</AlertDescription>
-      <Button variant="secondary" className="mt-2 w-fit">
+      <AlertDescription>
+        Your payment could not be processed. Please check your payment method
+        and try again.
+      </AlertDescription>
+      <Button variant="outline" className="mt-2 w-fit">
         Try again
       </Button>
     </Alert>
@@ -68,7 +98,7 @@ const api: ApiRow[] = [
     type: '"default" | "destructive"',
     defaultValue: '"default"',
     description:
-      "default is a neutral notice. destructive uses the danger palette and a thicker border.",
+      "default is a neutral notice on a muted surface. destructive keeps that surface and uses danger text, icon, and border.",
   },
   {
     prop: "className",
@@ -103,12 +133,16 @@ const examples: ComponentExample[] = [
     id: "payment-failed",
     title: "Payment failed",
     description:
-      "The title says the failure. Destructive styling uses the danger background, light foreground, and a thicker border.",
+      "The first svg is the icon. Destructive alerts keep the muted surface and use danger text, icon, and border. The action picks up that color.",
     preview: (
       <Alert variant="destructive" className="max-w-md text-left">
+        <AlertCircleIcon />
         <AlertTitle>Payment failed</AlertTitle>
-        <AlertDescription>Your payment method was declined.</AlertDescription>
-        <Button variant="secondary" className="mt-2 w-fit">
+        <AlertDescription>
+          Your payment could not be processed. Please check your payment method
+          and try again.
+        </AlertDescription>
+        <Button variant="outline" className="mt-2 w-fit">
           Try again
         </Button>
       </Alert>
@@ -130,8 +164,9 @@ export default async function AlertPage() {
       overview={
         <p>
           Alert is a container with <code>role=&quot;alert&quot;</code>. The
-          title and description are paragraphs. Compose a badge or a button
-          inside when the notice needs a status or an action.
+          title and description are paragraphs. Place an svg first when the
+          notice needs an icon. Compose a badge or a button inside when it needs
+          a status or an action.
         </p>
       }
       install="vinyaas add alert"
@@ -149,9 +184,9 @@ export default async function AlertPage() {
       accessibility={
         <p>
           The root is an alert, so assistive technology can announce it. The
-          title and description do not get extra roles. Destructive alerts keep
-          the failure in the text and use a thicker border as well as the danger
-          colors.
+          title and description do not get extra roles. The icon is hidden from
+          assistive technology. Destructive alerts keep the failure in the text
+          and use danger color for the text, icon, and border.
         </p>
       }
       source={source}

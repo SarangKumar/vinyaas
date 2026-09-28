@@ -345,7 +345,7 @@ export function Toaster({
               {item.actionProps ? (
                 <button
                   type="button"
-                  className="focus-visible:ring-ring focus-visible:ring-offset-background mt-1 w-fit cursor-pointer rounded-md underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                  className="border-border bg-background text-foreground hover:bg-accent focus-visible:ring-ring focus-visible:ring-offset-background mt-1 inline-flex h-7 w-fit cursor-pointer items-center rounded-md border px-2 text-xs font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   onClick={item.actionProps.onClick}
                 >
                   {item.actionProps.children}

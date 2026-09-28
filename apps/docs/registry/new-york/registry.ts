@@ -276,4 +276,26 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "slider",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/slider/slider.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "hover-card",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/hover-card/hover-card.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

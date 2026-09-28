@@ -13,17 +13,22 @@ import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
-export type PopoverSide = "top" | "right" | "bottom" | "left";
-export type PopoverAlign = "start" | "center" | "end";
+export type HoverCardSide = "top" | "right" | "bottom" | "left";
+export type HoverCardAlign = "start" | "center" | "end";
 
-type PopoverContextValue = {
+type HoverCardContextValue = {
   open: boolean;
   setOpen: (open: boolean) => void;
+  scheduleOpen: () => void;
+  scheduleClose: () => void;
+  cancelTimers: () => void;
   contentId: string;
   triggerRef: React.RefObject<HTMLElement | null>;
 };
 
-const PopoverContext = React.createContext<PopoverContextValue | null>(null);
+const HoverCardContext = React.createContext<HoverCardContextValue | null>(
+  null,
+);
 
 function assignRef(
   ref: React.Ref<HTMLElement> | undefined,
@@ -39,34 +44,29 @@ function assignRef(
   }
 }
 
-function usePopover() {
-  const context = useContext(PopoverContext);
+function useHoverCard() {
+  const context = useContext(HoverCardContext);
 
   if (!context) {
-    throw new Error("Popover components must render inside Popover.");
+    throw new Error("Hover card components must render inside HoverCard.");
   }
 
   return context;
 }
 
-const focusableSelector = [
-  "button:not([disabled])",
-  "[href]",
-  "input:not([disabled])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
-  '[tabindex]:not([tabindex="-1"])',
-].join(", ");
-
-export function Popover({
+export function HoverCard({
   children,
   open,
   defaultOpen = false,
+  openDelay = 200,
+  closeDelay = 150,
   onOpenChange,
 }: {
   children: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
+  openDelay?: number;
+  closeDelay?: number;
   onOpenChange?: (open: boolean) => void;
 }) {
   const [uncontrolled, setUncontrolled] = useState(defaultOpen);
@@ -74,6 +74,9 @@ export function Popover({
   const isOpen = isControlled ? open : uncontrolled;
   const triggerRef = useRef<HTMLElement>(null);
   const contentId = useId();
+  const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const setOpen = useCallback(
     (next: boolean) => {
       if (!isControlled) {
@@ -81,20 +84,60 @@ export function Popover({
       }
 
       onOpenChange?.(next);
-
-      if (!next) {
-        triggerRef.current?.focus();
-      }
     },
     [isControlled, onOpenChange],
   );
 
+  const cancelTimers = useCallback(() => {
+    if (openTimer.current) {
+      clearTimeout(openTimer.current);
+      openTimer.current = null;
+    }
+
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
+
+  const scheduleOpen = useCallback(() => {
+    cancelTimers();
+
+    if (openDelay <= 0) {
+      setOpen(true);
+      return;
+    }
+
+    openTimer.current = setTimeout(() => setOpen(true), openDelay);
+  }, [cancelTimers, openDelay, setOpen]);
+
+  const scheduleClose = useCallback(() => {
+    cancelTimers();
+
+    if (closeDelay <= 0) {
+      setOpen(false);
+      return;
+    }
+
+    closeTimer.current = setTimeout(() => setOpen(false), closeDelay);
+  }, [cancelTimers, closeDelay, setOpen]);
+
+  useEffect(() => cancelTimers, [cancelTimers]);
+
   return (
-    <PopoverContext.Provider
-      value={{ open: isOpen, setOpen, contentId, triggerRef }}
+    <HoverCardContext.Provider
+      value={{
+        open: isOpen,
+        setOpen,
+        scheduleOpen,
+        scheduleClose,
+        cancelTimers,
+        contentId,
+        triggerRef,
+      }}
     >
       {children}
-    </PopoverContext.Provider>
+    </HoverCardContext.Provider>
   );
 }
 
@@ -102,12 +145,13 @@ type TriggerElementProps = React.HTMLAttributes<HTMLElement> & {
   ref?: React.Ref<HTMLElement>;
 };
 
-export function PopoverTrigger({
+export function HoverCardTrigger({
   children,
 }: {
   children: React.ReactElement<TriggerElementProps>;
 }) {
-  const { open, setOpen, contentId, triggerRef } = usePopover();
+  const { open, scheduleOpen, scheduleClose, contentId, triggerRef } =
+    useHoverCard();
 
   return React.cloneElement(children, {
     "aria-expanded": open,
@@ -117,17 +161,38 @@ export function PopoverTrigger({
       triggerRef.current = node;
       assignRef(children.props.ref, node);
     },
-    onClick: (event: React.MouseEvent<HTMLElement>) => {
-      children.props.onClick?.(event);
+    onMouseEnter: (event: React.MouseEvent<HTMLElement>) => {
+      children.props.onMouseEnter?.(event);
 
       if (!event.defaultPrevented) {
-        setOpen(!open);
+        scheduleOpen();
+      }
+    },
+    onMouseLeave: (event: React.MouseEvent<HTMLElement>) => {
+      children.props.onMouseLeave?.(event);
+
+      if (!event.defaultPrevented) {
+        scheduleClose();
+      }
+    },
+    onFocus: (event: React.FocusEvent<HTMLElement>) => {
+      children.props.onFocus?.(event);
+
+      if (!event.defaultPrevented) {
+        scheduleOpen();
+      }
+    },
+    onBlur: (event: React.FocusEvent<HTMLElement>) => {
+      children.props.onBlur?.(event);
+
+      if (!event.defaultPrevented) {
+        scheduleClose();
       }
     },
   });
 }
 
-export function PopoverContent({
+export function HoverCardContent({
   children,
   className,
   side = "bottom",
@@ -135,10 +200,11 @@ export function PopoverContent({
 }: {
   children: React.ReactNode;
   className?: string;
-  side?: PopoverSide;
-  align?: PopoverAlign;
+  side?: HoverCardSide;
+  align?: HoverCardAlign;
 }) {
-  const { open, setOpen, contentId, triggerRef } = usePopover();
+  const { open, setOpen, scheduleClose, cancelTimers, contentId, triggerRef } =
+    useHoverCard();
   const contentRef = useRef<HTMLDivElement>(null);
   const [point, setPoint] = useState<{ top: number; left: number } | null>(
     null,
@@ -185,26 +251,10 @@ export function PopoverContent({
         if (align === "end") {
           left = trigger.right - content.width;
         }
-      } else {
-        if (align === "center") {
-          top = trigger.top + trigger.height / 2 - content.height / 2;
-        }
-
-        if (align === "end") {
-          top = trigger.bottom - content.height;
-        }
-      }
-
-      const fitsBelow =
-        trigger.bottom + content.height + gap < window.innerHeight;
-      const fitsAbove = trigger.top - content.height - gap > 0;
-
-      if (side === "bottom" && !fitsBelow && fitsAbove) {
-        top = trigger.top - content.height - gap;
-      }
-
-      if (side === "top" && !fitsAbove && fitsBelow) {
-        top = trigger.bottom + gap;
+      } else if (align === "center") {
+        top = trigger.top + trigger.height / 2 - content.height / 2;
+      } else if (align === "end") {
+        top = trigger.bottom - content.height;
       }
 
       left = Math.min(
@@ -219,8 +269,6 @@ export function PopoverContent({
     }
 
     place();
-    // position:fixed does not follow a scrolling ancestor. Scroll events do
-    // not bubble, so listen on each scrollable parent of the trigger.
     const scrollers: EventTarget[] = [window];
     let parent = triggerRef.current?.parentElement ?? null;
 
@@ -255,11 +303,6 @@ export function PopoverContent({
       return;
     }
 
-    const content = contentRef.current;
-    const focusable = content?.querySelector<HTMLElement>(focusableSelector);
-
-    (focusable ?? content)?.focus();
-
     function onKeyDown(event: KeyboardEvent) {
       if (event.key !== "Escape") {
         return;
@@ -269,28 +312,12 @@ export function PopoverContent({
       setOpen(false);
     }
 
-    function onPointerDown(event: PointerEvent) {
-      const target = event.target;
-
-      if (!(target instanceof Node)) {
-        return;
-      }
-
-      if (content?.contains(target) || triggerRef.current?.contains(target)) {
-        return;
-      }
-
-      setOpen(false);
-    }
-
     document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown);
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
     };
-  }, [open, setOpen, triggerRef]);
+  }, [open, setOpen]);
 
   if (!open) {
     return null;
@@ -301,7 +328,7 @@ export function PopoverContent({
       ref={contentRef}
       id={contentId}
       role="dialog"
-      tabIndex={-1}
+      aria-modal="false"
       data-side={side}
       data-align={align}
       style={{
@@ -310,9 +337,11 @@ export function PopoverContent({
         left: point?.left ?? -9999,
       }}
       className={cn(
-        "border-border bg-muted text-foreground z-50 max-h-[min(24rem,calc(100dvh-2rem))] w-72 max-w-[calc(100vw-1rem)] overflow-x-hidden overflow-y-auto rounded-md border p-4 text-sm shadow-sm focus-visible:outline-none",
+        "border-border bg-muted text-foreground z-50 w-64 max-w-[calc(100vw-1rem)] rounded-md border p-3 text-sm shadow-sm",
         className,
       )}
+      onMouseEnter={cancelTimers}
+      onMouseLeave={scheduleClose}
     >
       {children}
     </div>,

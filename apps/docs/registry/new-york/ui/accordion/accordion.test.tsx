@@ -55,6 +55,29 @@ describe("Accordion", () => {
     expect(second).toHaveAttribute("aria-expanded", "false");
   });
 
+  it("shows a chevron and stacks items with shared horizontal borders", () => {
+    render(
+      <Accordion>
+        <Items />
+      </Accordion>,
+    );
+
+    const first = screen.getByRole("button", { name: "First" });
+    const icon = first.querySelector("svg");
+    const root = first.closest("[data-type]");
+    const item = first.parentElement;
+
+    expect(icon).not.toBeNull();
+    expect(icon).toHaveAttribute("aria-hidden", "true");
+    expect(first).toHaveAttribute("data-state", "closed");
+    expect(root).toHaveClass("border-y", "divide-y");
+    expect(root).not.toHaveClass("gap-2");
+    expect(item).not.toHaveClass("border", "rounded-md");
+
+    fireEvent.click(first);
+    expect(first).toHaveAttribute("data-state", "open");
+  });
+
   it("keeps several items open when type is multiple", () => {
     render(
       <Accordion type="multiple">

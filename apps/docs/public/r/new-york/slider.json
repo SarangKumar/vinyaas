@@ -1,0 +1,13 @@
+{
+  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "name": "slider",
+  "type": "registry:ui",
+  "dependencies": ["clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "ui/slider/slider.tsx",
+      "content": "\"use client\";\n\nimport React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type SliderProps = Omit<React.ComponentProps<\"input\">, \"type\"> & {\n  onValueChange?: (value: number) => void;\n};\n\nexport function Slider({\n  className,\n  min = 0,\n  max = 100,\n  step = 1,\n  onChange,\n  onValueChange,\n  ref,\n  ...props\n}: SliderProps) {\n  return (\n    <input\n      ref={ref}\n      type=\"range\"\n      min={min}\n      max={max}\n      step={step}\n      className={cn(\n        \"bg-muted accent-foreground h-2 w-full cursor-pointer appearance-none rounded-full\",\n        \"focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none\",\n        \"disabled:cursor-not-allowed disabled:opacity-50\",\n        \"[&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full\",\n        \"[&::-moz-range-thumb]:bg-foreground [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0\",\n        className,\n      )}\n      {...props}\n      onChange={(event) => {\n        onChange?.(event);\n        onValueChange?.(event.currentTarget.valueAsNumber);\n      }}\n    />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

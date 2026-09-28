@@ -7,7 +7,9 @@ describe("Button", () => {
   it("renders correctly", () => {
     render(<Button>Save</Button>);
 
-    expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass(
+      "active:translate-y-px",
+    );
   });
 
   it("supports native button attributes", () => {

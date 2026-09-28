@@ -24,6 +24,13 @@ describe("RadioGroup", () => {
     expect(comfortable).toBeChecked();
     expect(screen.getByRole("radio", { name: "Default" })).not.toBeChecked();
     expect(comfortable).not.toHaveAttribute("role");
+    expect(comfortable).toHaveClass("size-4");
+    expect(
+      comfortable.parentElement?.querySelector("[aria-hidden]"),
+    ).toHaveClass("size-2");
+    expect(
+      comfortable.parentElement?.querySelector("[aria-hidden]"),
+    ).not.toHaveClass("size-1.5");
   });
 
   it("selects one option at a time", () => {

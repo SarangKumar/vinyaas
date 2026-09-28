@@ -83,6 +83,13 @@ export const components: readonly ComponentMeta[] = [
     introducedIn: "0.2",
   },
   {
+    name: "Hover Card",
+    slug: "hover-card",
+    description: "A preview that opens on hover or focus.",
+    category: "overlay",
+    introducedIn: "0.2",
+  },
+  {
     name: "Input",
     slug: "input",
     description: "A styled native input for single-line user input.",
@@ -153,6 +160,13 @@ export const components: readonly ComponentMeta[] = [
     introducedIn: "0.2",
   },
   {
+    name: "Slider",
+    slug: "slider",
+    description: "A native range input for a value between two bounds.",
+    category: "form",
+    introducedIn: "0.2",
+  },
+  {
     name: "Spinner",
     slug: "spinner",
     description: "A small loading indicator.",
@@ -197,7 +211,7 @@ export const components: readonly ComponentMeta[] = [
 ];
 
 /** v0.2 ships this many components, with forms as the main focus. */
-export const targetComponentCount = 25;
+export const targetComponentCount = 27;
 
 export function componentHref(slug: string) {
   return `/components/${slug}`;

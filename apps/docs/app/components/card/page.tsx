@@ -461,7 +461,7 @@ export function ActivityCard() {
           <div className="min-w-0">
             <CardTitle>Catalog</CardTitle>
             <CardDescription>
-              25 components are in the v0.2 registry.
+              27 components are in the v0.2 registry.
             </CardDescription>
           </div>
           <CardAction>
@@ -492,7 +492,7 @@ export function CompactCard() {
       <CardHeader>
         <div>
           <CardTitle>Catalog</CardTitle>
-          <CardDescription>25 components are in the v0.2 registry.</CardDescription>
+          <CardDescription>27 components are in the v0.2 registry.</CardDescription>
         </div>
         <CardAction>
           <Badge variant="secondary">v0.2</Badge>

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 // Default height is h-9 and matches Input. xs is h-7, sm is h-8, lg is h-10.
 // Icon sizes are square. Text sizes use text-sm except xs.
 const buttonVariants = cva(
-  "inline-flex cursor-pointer items-center justify-center rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+  "inline-flex cursor-pointer items-center justify-center rounded-md text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1.25,0.36,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:translate-y-px active:duration-75 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0",
   {
     variants: {
       variant: {

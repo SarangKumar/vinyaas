@@ -167,7 +167,10 @@ export function Accordion({
       <div
         ref={rootRef}
         data-type={type}
-        className={cn("grid gap-2", className)}
+        className={cn(
+          "border-border divide-border divide-y border-y",
+          className,
+        )}
         onKeyDown={onKeyDown}
       >
         <style>
@@ -205,7 +208,7 @@ export function AccordionItem({
     >
       <div
         data-state={open ? "open" : "closed"}
-        className={cn("border-border rounded-md border", className)}
+        className={className}
         {...props}
       />
     </ItemContext.Provider>
@@ -224,6 +227,7 @@ export function AccordionTrigger({
     <button
       type="button"
       data-accordion-trigger=""
+      data-state={item.open ? "open" : "closed"}
       aria-expanded={item.open}
       aria-controls={item.contentId}
       className={cn(
@@ -243,6 +247,23 @@ export function AccordionTrigger({
       }}
     >
       {children}
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        className={cn(
+          "size-4 shrink-0 transition-transform duration-200 ease-out motion-reduce:transition-none",
+          item.open && "rotate-180",
+        )}
+      >
+        <path
+          d="m6 9 6 6 6-6"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </button>
   );
 }
@@ -264,7 +285,7 @@ export function AccordionContent({
 
     const timeout = window.setTimeout(
       () => setShown(false),
-      reducedMotion() ? 0 : 160,
+      reducedMotion() ? 0 : 200,
     );
 
     return () => window.clearTimeout(timeout);
@@ -278,17 +299,19 @@ export function AccordionContent({
       hidden={!shown && !item.open}
       className={cn(
         "grid overflow-hidden px-3 text-sm motion-reduce:transition-none",
-        item.open ? "grid-rows-[1fr] pb-3" : "grid-rows-[0fr]",
+        item.open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
         className,
       )}
       style={
         reducedMotion()
           ? undefined
-          : { transition: "grid-template-rows 160ms ease" }
+          : { transition: "grid-template-rows 200ms ease" }
       }
       {...props}
     >
-      <div className="min-h-0 overflow-hidden">{children}</div>
+      <div className={cn("min-h-0 overflow-hidden", item.open && "pb-3")}>
+        {children}
+      </div>
     </div>
   );
 }
