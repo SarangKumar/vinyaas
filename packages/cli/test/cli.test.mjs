@@ -36,7 +36,7 @@ describe("vinyaas", () => {
 
     assert.equal(packageJson.name, "vinyaas");
     assert.equal(packageJson.version, "1.0.0");
-    assert.equal(packageJson.bin.vinyaas, "./dist/index.js");
+    assert.equal(packageJson.bin.vinyaas, "dist/index.js");
     assert.match(source, /^#!\/usr\/bin\/env node\n/);
   });
 

@@ -1,8 +1,6 @@
 import { components } from "@/components/component-meta";
 import { componentOgImage, findComponent } from "@/lib/og";
 
-export const runtime = "edge";
-
 export function generateStaticParams() {
   return components.map((component) => ({ slug: component.slug }));
 }

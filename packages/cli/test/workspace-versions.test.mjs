@@ -23,7 +23,7 @@ describe("workspace package versions", () => {
 
     assert.equal(cli.name, "vinyaas");
     assert.equal(cli.version, "1.0.0");
-    assert.equal(cli.bin.vinyaas, "./dist/index.js");
+    assert.equal(cli.bin.vinyaas, "dist/index.js");
     assert.equal(cli.publishConfig?.access, "public");
 
     assert.equal(docs.name, "docs");

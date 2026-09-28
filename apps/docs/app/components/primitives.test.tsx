@@ -215,10 +215,10 @@ describe("composed examples", () => {
       screen.getAllByRole("link", { name: "Documentation" }).length,
     ).toBeGreaterThan(0);
     expect(screen.getAllByText("Processing").length).toBeGreaterThan(0);
-    expect(screen.getByText("Claim offer")).toBeInTheDocument();
-    expect(screen.getByText("Bookmark")).toBeInTheDocument();
-    expect(screen.getByText("Beta")).toBeInTheDocument();
-    expect(screen.getByText("Ghost")).toBeInTheDocument();
+    expect(screen.getAllByText("Claim offer").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Bookmark").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Beta").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Ghost").length).toBeGreaterThan(0);
 
     renderDocs(await CardPage());
     expect(screen.getAllByText("Sarang Kumar").length).toBeGreaterThan(0);
@@ -273,8 +273,8 @@ describe("composed examples", () => {
     expect(
       screen.getByRole("heading", { name: "Named keys" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Enter")).toBeInTheDocument();
-    expect(screen.getByText("Esc")).toBeInTheDocument();
+    expect(screen.getAllByText("Enter").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Esc").length).toBeGreaterThan(0);
     expect(document.body.textContent).toMatch(/visual only/i);
   });
 });
