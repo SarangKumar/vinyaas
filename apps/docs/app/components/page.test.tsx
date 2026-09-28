@@ -1,10 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
+import { components, newComponents } from "@/components/component-meta";
+
 import ComponentsPage from "./page";
 
 describe("components catalog", () => {
-  it("lists every component once in alphabetical order", () => {
+  it("lists names in a responsive grid without cards or descriptions", () => {
     render(<ComponentsPage />);
 
     const headings = screen.getAllByRole("heading").map((heading) => ({
@@ -14,50 +16,46 @@ describe("components catalog", () => {
 
     expect(headings).toEqual([
       { name: "Components", id: "" },
-      { name: "Overview", id: "overview" },
+      { name: "New", id: "new" },
       { name: "All Components", id: "all-components" },
-      { name: "Using Components", id: "using-components" },
     ]);
 
-    const list = document.querySelector("ul");
+    const lists = [...document.querySelectorAll("ul")];
 
-    expect(list).not.toBeNull();
-    expect(list).toHaveClass("divide-y", "border");
-    expect(list).not.toHaveClass("grid-cols-1");
+    expect(lists).toHaveLength(2);
+    for (const list of lists) {
+      expect(list).toHaveClass(
+        "grid",
+        "grid-cols-1",
+        "sm:grid-cols-2",
+        "lg:grid-cols-3",
+      );
+      expect(list).not.toHaveClass("divide-y", "border");
+      expect(list.querySelector("svg")).toBeNull();
+    }
 
+    const added = [...newComponents()]
+      .map((component) => component.name)
+      .sort((a, b) => a.localeCompare(b));
+    const all = [...components]
+      .map((component) => component.name)
+      .sort((a, b) => a.localeCompare(b));
+
+    expect(names(lists[0]!)).toEqual(added);
+    expect(names(lists[1]!)).toEqual(all);
+    expect(added).not.toContain("Button");
+    expect(all).toContain("Button");
     expect(
-      screen.getByText(
+      screen.queryByText(
         "A versatile button primitive for actions and commands.",
       ),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("An image with a fallback for a person or entity."),
-    ).toBeInTheDocument();
-
-    expect(list?.querySelector('a[href="/components/button"]')).not.toBeNull();
-    expect(
-      list?.querySelector('a[href="/components/card"]')?.textContent,
-    ).toContain(", new");
-
-    const allNames = [...(list?.querySelectorAll("a") ?? [])].map((link) =>
-      link.querySelector("span span")?.childNodes[0]?.textContent?.trim(),
-    );
-
-    expect(allNames).toEqual(
-      [...allNames].sort((a, b) => (a ?? "").localeCompare(b ?? "")),
-    );
-
-    expect(
-      document.querySelectorAll('a[href="/components/avatar"]'),
-    ).toHaveLength(1);
-    expect(
-      document.querySelectorAll('a[href="/components/button"]'),
-    ).toHaveLength(1);
-
-    const button = document.querySelector('a[href="/components/button"]');
-
-    expect(button).toHaveClass("no-underline");
-    expect(button?.textContent).not.toContain(", new");
-    expect(button?.querySelector("svg")).not.toBeNull();
+    ).toBeNull();
+    expect(document.body.textContent).not.toContain("An image with a fallback");
   });
 });
+
+function names(list: Element) {
+  return [...list.querySelectorAll("a")].map((link) =>
+    link.textContent?.trim(),
+  );
+}

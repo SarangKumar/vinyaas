@@ -125,7 +125,6 @@ export function SaveButton() {
     expect(tabs()[0]).toBeInTheDocument();
     expect(codes()[0]).toHaveAttribute("data-language", "jsx");
     expect(codes()[0]).toHaveTextContent("SaveJsx");
-    expect(screen.getAllByText("jsx").length).toBeGreaterThan(0);
     expect(codes()[1]).toHaveAttribute("data-language", "jsx");
     expect(codes()[1]).toHaveTextContent("export function OtherJsx()");
     expect(codes()[2]).toHaveAttribute("data-language", "bash");

@@ -24,16 +24,34 @@ describe("DocsNavLinks", () => {
       .map((component) => component.name)
       .sort((a, b) => a.localeCompare(b));
 
-    expect(titles[0]).toBe("Installation");
-    expect(titles[1]).toBe("CLI");
-    expect(titles.slice(2)).toEqual(componentNames);
+    expect(titles[0]).toBe("Introduction");
+    expect(titles[1]).toBe("Components");
+    expect(titles[2]).toBe("Installation");
+    expect(titles[3]).toBe("CLI");
+    expect(titles.slice(4, 4 + componentNames.length)).toEqual(componentNames);
+    expect(titles.slice(-3)).toEqual([
+      "Installation",
+      "components.json",
+      "CLI",
+    ]);
     expect(within(nav).getByText("SECTIONS")).toBeInTheDocument();
     expect(within(nav).getByText("COMPONENTS")).toBeInTheDocument();
+    expect(within(nav).getByText("GET STARTED")).toBeInTheDocument();
+    expect(
+      within(nav).getByRole("link", { name: "Components" }),
+    ).toHaveAttribute("href", "/components");
     expect(within(nav).queryByText("Forms")).toBeNull();
     expect(within(nav).queryByText("Feedback")).toBeNull();
     expect(within(nav).queryByText("Data Display")).toBeNull();
-    expect(within(nav).queryByText("Get Started")).toBeNull();
     expect(nav.querySelector("svg")).toBeNull();
+    expect(
+      within(nav).getByText("COMPONENTS").parentElement?.querySelector("ul"),
+    ).toHaveClass(
+      "grid",
+      "grid-cols-1",
+      "@[22rem]:grid-cols-2",
+      "@[40rem]:grid-cols-3",
+    );
     expect(
       within(nav).getByRole("link", { name: "Input, new" }),
     ).toHaveAttribute("aria-current", "page");

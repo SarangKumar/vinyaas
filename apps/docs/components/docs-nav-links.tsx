@@ -37,15 +37,31 @@ export function DocsNavLinks({ className }: { className?: string }) {
   return (
     <nav className={className} aria-label="Documentation">
       {docsNav.map((group) => (
-        <div key={group.title} className="flex flex-col gap-1">
+        <div
+          key={group.title}
+          className={
+            group.layout === "names"
+              ? "@container flex flex-col gap-1"
+              : "flex flex-col gap-1"
+          }
+        >
           {group.label ? (
             <p className="text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium">
               {group.title}
             </p>
           ) : null}
-          <ul className="flex flex-col gap-0.5">
+          <ul
+            className={
+              group.layout === "names"
+                ? "grid grid-cols-1 gap-0.5 @[22rem]:grid-cols-2 @[40rem]:grid-cols-3"
+                : "flex flex-col gap-0.5"
+            }
+          >
             {group.items.map((item) => (
-              <li key={item.href} className={group.label ? "pl-2" : undefined}>
+              <li
+                key={`${group.title}-${item.href}`}
+                className={group.label ? "pl-2" : undefined}
+              >
                 <NavLink item={item} current={isCurrent(pathname, item.href)} />
               </li>
             ))}

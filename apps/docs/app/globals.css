@@ -225,19 +225,34 @@ code[data-language] .hljs-built_in {
   font-weight: 600;
 }
 
+code[data-language] .hljs-title,
+code[data-language] .hljs-title.function_,
+code[data-language] .hljs-function {
+  color: var(--foreground);
+  font-weight: 500;
+}
+
 code[data-language] .hljs-string,
-code[data-language] .hljs-attr,
+code[data-language] .hljs-regexp,
 code[data-language] .hljs-template-tag {
-  color: var(--muted-foreground);
+  color: var(--new);
+}
+
+code[data-language] .hljs-attr,
+code[data-language] .hljs-attribute,
+code[data-language] .hljs-params,
+code[data-language] .hljs-variable {
+  color: var(--body);
 }
 
 code[data-language] .hljs-comment {
   color: var(--subtle-foreground);
+  font-style: italic;
 }
 
 code[data-language] .hljs-number,
 code[data-language] .hljs-literal {
-  color: var(--foreground);
+  color: var(--muted-foreground);
 }
 
 :not(pre) > code {

@@ -50,6 +50,18 @@ export default function InstallationPage() {
           installed once.
         </p>
         <InstallCommand commands={cliCommands("add button card badge")} />
+        <h3 className="text-foreground text-base font-medium">
+          Install form components
+        </h3>
+        <p className="text-body text-base leading-7">
+          Button, checkbox, radio group, input, and textarea are common building
+          blocks for a form. Add them in one command.
+        </p>
+        <InstallCommand
+          commands={cliCommands(
+            "add button checkbox radio-group input textarea",
+          )}
+        />
       </section>
       <section className="flex flex-col gap-6">
         <h2 id="registry" className={sectionHeading}>

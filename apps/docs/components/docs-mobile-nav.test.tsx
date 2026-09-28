@@ -24,16 +24,22 @@ describe("DocsMobileNav", () => {
       "href",
       "/introduction",
     );
-    expect(screen.getByRole("link", { name: "Components" })).toHaveAttribute(
-      "href",
-      "/components",
-    );
     expect(
-      screen.getByRole("link", { name: "Installation" }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "CLI" })).toBeInTheDocument();
+      screen.getAllByRole("link", { name: "Components" })[0],
+    ).toHaveAttribute("href", "/components");
+    expect(
+      screen.getAllByRole("link", { name: "Installation" }).length,
+    ).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "CLI" }).length).toBeGreaterThan(
+      0,
+    );
     expect(screen.getByText("SECTIONS")).toBeInTheDocument();
     expect(screen.getByText("COMPONENTS")).toBeInTheDocument();
+    expect(screen.getByText("GET STARTED")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Introduction" })).toHaveAttribute(
+      "href",
+      "/introduction",
+    );
     expect(screen.queryByText("Forms")).toBeNull();
 
     fireEvent.keyDown(document, { key: "Escape" });
