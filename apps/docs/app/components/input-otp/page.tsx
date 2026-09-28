@@ -3,8 +3,6 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Label } from "@/registry/new-york/ui/label/label";
 import {
   InputOTP,
   InputOTPGroup,
@@ -13,6 +11,8 @@ import {
 } from "@/registry/new-york/ui/input-otp/input-otp";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+
+import { VerificationCodeDemo } from "./input-otp-demos";
 
 export const metadata: Metadata = componentPageMetadata("input-otp");
 
@@ -68,6 +68,75 @@ export function Code() {
 }
 `;
 
+const verificationCode = `import { useState } from "react";
+
+import { Button } from "@/components/ui/button/button";
+import { Label } from "@/components/ui/label/label";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp/input-otp";
+import { Spinner } from "@/components/ui/spinner/spinner";
+import { toast } from "@/components/ui/toast/toast";
+
+export function VerificationCode() {
+  const [value, setValue] = useState("");
+  const [verifying, setVerifying] = useState(false);
+
+  function verify(code: string) {
+    if (verifying || code.length !== 6) {
+      return;
+    }
+
+    setVerifying(true);
+    toast.add({
+      title: "Verification code",
+      description: code,
+      type: "success",
+    });
+    window.setTimeout(() => setVerifying(false), 1200);
+  }
+
+  return (
+    <form
+      className="grid max-w-sm gap-3"
+      onSubmit={(event) => {
+        event.preventDefault();
+        verify(value);
+      }}
+    >
+      <Label htmlFor="otp">Verification code</Label>
+      <InputOTP
+        id="otp"
+        length={6}
+        value={value}
+        aria-label="Verification code"
+        onChange={setValue}
+        onComplete={verify}
+      >
+        <InputOTPGroup>
+          <InputOTPSlot index={0} />
+          <InputOTPSlot index={1} />
+          <InputOTPSlot index={2} />
+        </InputOTPGroup>
+        <InputOTPSeparator />
+        <InputOTPGroup>
+          <InputOTPSlot index={3} />
+          <InputOTPSlot index={4} />
+          <InputOTPSlot index={5} />
+        </InputOTPGroup>
+      </InputOTP>
+      <Button type="submit" size="sm" className="gap-2" disabled={verifying}>
+        {verifying ? <Spinner label="" /> : null}
+        {verifying ? "Verifying" : "Verify"}
+      </Button>
+    </form>
+  );
+}
+`;
+
 const api: ApiRow[] = [
   {
     prop: "length",
@@ -102,19 +171,9 @@ const examples: ComponentExample[] = [
     id: "otp",
     title: "Verification code",
     description:
-      "Six digits, split into two groups, with a real submit button.",
-    preview: (
-      <form className="grid max-w-sm gap-3 text-left">
-        <Label htmlFor="otp">Verification code</Label>
-        <InputOTP id="otp" length={6} aria-label="Verification code">
-          <Slots length={6} split />
-        </InputOTP>
-        <Button type="submit" size="sm">
-          Verify
-        </Button>
-      </form>
-    ),
-    code: usage,
+      "Six digits, split into two groups. Completing the code submits it, shows a toast, and puts Verify into a verifying state.",
+    preview: <VerificationCodeDemo />,
+    code: verificationCode,
   },
   {
     id: "pin",
