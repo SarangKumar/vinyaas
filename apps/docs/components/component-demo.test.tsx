@@ -5,11 +5,9 @@ import type { ReactNode } from "react";
 import { InstallCommand } from "./install-command";
 import { CodeBlock } from "./code-block";
 import { ComponentDemo } from "./component-demo";
-import {
-  CodeLanguageProvider,
-  setCodeLanguage,
-  store,
-} from "./code-language-store";
+import { DocsStoreProvider } from "@/lib/store/provider";
+import { setCodeLanguage } from "@/lib/store/slices/code-language";
+import { store } from "@/lib/store/store";
 import { cliCommands } from "./package-managers";
 
 const longSource = Array.from(
@@ -36,7 +34,7 @@ describe("ComponentDemo", () => {
   });
 
   function renderDemo(node: ReactNode) {
-    return render(<CodeLanguageProvider>{node}</CodeLanguageProvider>);
+    return render(<DocsStoreProvider>{node}</DocsStoreProvider>);
   }
 
   it("renders the preview, the complete source, and copy", () => {

@@ -11,10 +11,7 @@ import {
   type CodeLanguage,
   type DemoCode,
 } from "@/components/code-languages";
-import {
-  useCodeLanguage,
-  useSetCodeLanguage,
-} from "@/components/code-language-store";
+import { useCodeLanguage, useSetCodeLanguage } from "@/lib/store/hooks";
 
 /**
  * One preview and its complete source. `data-language` on the code element is

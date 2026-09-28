@@ -1,11 +1,17 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, type RenderResult } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import type { ReactNode } from "react";
 
+import { DocsStoreProvider } from "@/lib/store/provider";
 import { ComponentReference } from "./component-reference";
+
+function renderDocs(node: ReactNode): RenderResult {
+  return render(<DocsStoreProvider>{node}</DocsStoreProvider>);
+}
 
 describe("ComponentReference", () => {
   it("renders the shared documentation sections", () => {
-    render(
+    renderDocs(
       <ComponentReference
         title="Input"
         description="A text field."
@@ -56,7 +62,7 @@ describe("ComponentReference", () => {
   });
 
   it("renders optional documentation sections with stable ids", () => {
-    render(
+    renderDocs(
       <ComponentReference
         title="Button"
         description="A button."

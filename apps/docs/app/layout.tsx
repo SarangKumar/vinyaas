@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 
 import { DocsShell } from "@/components/docs-shell";
-import { CodeLanguageProvider } from "@/components/code-language-store";
+import { DocsStoreProvider } from "@/lib/store/provider";
 import { themeStorageKey } from "@/components/theme";
 import { ThemeSync } from "@/components/theme-sync";
 
@@ -41,7 +41,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <body className="bg-background text-foreground h-full overflow-hidden font-sans">
         <ThemeSync />
         <DocsShell>
-          <CodeLanguageProvider>{children}</CodeLanguageProvider>
+          <DocsStoreProvider>{children}</DocsStoreProvider>
         </DocsShell>
       </body>
     </html>

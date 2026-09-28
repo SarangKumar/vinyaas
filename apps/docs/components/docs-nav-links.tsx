@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 
 import { docsNav, type DocsNavItem } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
-import { NavIcon } from "@/components/icons";
 import { NewIndicator } from "@/components/new-indicator";
 
 function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
@@ -16,16 +15,10 @@ function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
       aria-label={item.isNew ? `${item.title}, new` : undefined}
       className={
         current
-          ? `bg-muted text-foreground flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium ${focusRing}`
-          : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm ${focusRing}`
+          ? `bg-muted text-foreground flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm font-medium ${focusRing}`
+          : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm ${focusRing}`
       }
     >
-      {item.icon ? (
-        <NavIcon
-          name={item.icon}
-          className="text-muted-foreground size-3.5 shrink-0"
-        />
-      ) : null}
       <span className="min-w-0 truncate">{item.title}</span>
       {item.isNew ? <NewIndicator /> : null}
     </Link>
@@ -46,23 +39,13 @@ export function DocsNavLinks({ className }: { className?: string }) {
       {docsNav.map((group) => (
         <div key={group.title} className="flex flex-col gap-1">
           {group.label ? (
-            <p className="text-muted-foreground flex items-center gap-2 px-2 py-1 text-xs font-medium tracking-wide uppercase">
-              {group.icon ? (
-                <NavIcon
-                  name={group.icon}
-                  className="text-muted-foreground size-3.5 shrink-0"
-                />
-              ) : null}
+            <p className="text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium">
               {group.title}
             </p>
           ) : null}
-          <ul
-            className={
-              group.label ? "flex flex-col gap-0.5" : "flex flex-col gap-0.5"
-            }
-          >
+          <ul className="flex flex-col gap-0.5">
             {group.items.map((item) => (
-              <li key={item.href}>
+              <li key={item.href} className={group.label ? "pl-2" : undefined}>
                 <NavLink item={item} current={isCurrent(pathname, item.href)} />
               </li>
             ))}

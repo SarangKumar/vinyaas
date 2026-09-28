@@ -282,7 +282,7 @@ export function CommandItem({
       aria-disabled={disabled || undefined}
       disabled={disabled}
       className={cn(
-        "hover:bg-accent hover:text-accent-foreground aria-selected:bg-accent aria-selected:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "hover:bg-accent hover:text-accent-foreground aria-selected:bg-accent aria-selected:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground flex w-full cursor-pointer items-start gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>svg]:mt-0.5 [&>svg]:shrink-0",
         className,
       )}
       onMouseEnter={() => {
@@ -302,7 +302,7 @@ export function CommandShortcut({ className, ...props }: CommandShortcutProps) {
   return (
     <span
       className={cn(
-        "bg-muted text-muted-foreground ml-auto shrink-0 rounded px-1.5 py-0.5 font-mono text-[0.6875rem] leading-none",
+        "bg-muted text-muted-foreground mt-0.5 ml-auto shrink-0 rounded px-1.5 py-0.5 font-mono text-[0.6875rem] leading-none",
         className,
       )}
       {...props}

@@ -4,7 +4,6 @@ import {
   components,
   type ComponentMeta,
 } from "@/components/component-meta";
-import type { NavIconName } from "@/components/icons";
 
 export const githubUrl = "https://github.com/SarangKumar/vinyaas";
 
@@ -21,14 +20,12 @@ export type DocsNavItem = {
   href: string;
   description?: string;
   isNew?: boolean;
-  icon?: NavIconName;
 };
 
 export type DocsNavGroup = {
   title: string;
-  /** Section label above child links. Direct destinations leave this unset. */
+  /** Section label above child links. A single destination leaves this unset. */
   label?: boolean;
-  icon?: NavIconName;
   items: DocsNavItem[];
 };
 
@@ -44,40 +41,27 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
 export const docsNav: DocsNavGroup[] = [
   {
     title: "Introduction",
-    items: [{ title: "Introduction", href: introductionPath, icon: "book" }],
+    items: [{ title: "Introduction", href: introductionPath }],
   },
   {
     title: "Components",
     label: true,
-    icon: "components",
     items: [...components]
       .sort((a, b) => a.name.localeCompare(b.name))
       .map(componentNavItem),
   },
   {
-    title: "GET STARTED",
+    title: "Get Started",
     label: true,
-    icon: "terminal",
     items: [
-      {
-        title: "Installation",
-        href: "/installation",
-        icon: "terminal",
-      },
-      {
-        title: "components.json",
-        href: componentsJsonPath,
-        icon: "file",
-      },
-      {
-        title: "CLI",
-        href: "/installation#cli",
-        icon: "terminal",
-      },
+      { title: "Installation", href: "/installation" },
+      { title: "components.json", href: componentsJsonPath },
+      { title: "CLI", href: "/installation#cli" },
     ],
   },
   {
-    title: "Changelog",
-    items: [{ title: "Changelog", href: "/changelog", icon: "book" }],
+    title: "Resources",
+    label: true,
+    items: [{ title: "Changelog", href: "/changelog" }],
   },
 ];

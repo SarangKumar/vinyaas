@@ -10,7 +10,7 @@ import {
 } from "./docs-nav";
 
 describe("documentation navigation", () => {
-  it("lists introduction, components, get started, and changelog", () => {
+  it("lists introduction, components, get started, and resources", () => {
     expect(githubUrl).toBe("https://github.com/SarangKumar/vinyaas");
     expect(homePath).toBe("/");
     expect(introductionPath).toBe("/introduction");
@@ -18,35 +18,34 @@ describe("documentation navigation", () => {
     expect(docsNav.map((group) => group.title)).toEqual([
       "Introduction",
       "Components",
-      "GET STARTED",
-      "Changelog",
-    ]);
-    expect(docsNav[0]?.items).toEqual([
-      { title: "Introduction", href: "/introduction", icon: "book" },
+      "Get Started",
+      "Resources",
     ]);
     expect(docsNav[0]?.label).toBeUndefined();
+    expect(docsNav[0]?.items).toEqual([
+      { title: "Introduction", href: "/introduction" },
+    ]);
     expect(docsNav[2]?.label).toBe(true);
     expect(docsNav[2]?.items.map((item) => item.title)).toEqual([
       "Installation",
       "components.json",
       "CLI",
     ]);
-    expect(
-      docsNav[2]?.items.find((item) => item.title === "components.json"),
-    ).toEqual({
-      title: "components.json",
-      href: "/components-json",
-      icon: "file",
-    });
+    expect(docsNav[2]?.items.map((item) => item.href)).toEqual([
+      "/installation",
+      "/components-json",
+      "/installation#cli",
+    ]);
+    expect(docsNav[3]?.label).toBe(true);
     expect(docsNav[3]?.items).toEqual([
-      { title: "Changelog", href: "/changelog", icon: "book" },
+      { title: "Changelog", href: "/changelog" },
     ]);
     expect(docsNav.some((group) => group.title === "Forms")).toBe(false);
     expect(docsNav.some((group) => group.title === "CLI")).toBe(false);
-    expect(docsNav.some((group) => group.title === "Resources")).toBe(false);
+    expect(JSON.stringify(docsNav)).not.toContain('"icon"');
   });
 
-  it("builds one alphabetical component list without category icons", () => {
+  it("builds one alphabetical component list", () => {
     const items = docsNav.find((group) => group.title === "Components")?.items;
 
     expect(items?.map((item) => item.title)).toEqual(
@@ -64,6 +63,5 @@ describe("documentation navigation", () => {
         })),
       ),
     );
-    expect(items?.every((item) => item.icon === undefined)).toBe(true);
   });
 });

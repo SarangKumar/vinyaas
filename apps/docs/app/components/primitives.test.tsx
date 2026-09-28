@@ -1,5 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import type { ReactNode } from "react";
+
+import { DocsStoreProvider } from "@/lib/store/provider";
 
 import AvatarPage from "./avatar/page";
 import BadgePage from "./badge/page";
@@ -28,6 +31,10 @@ import InputGroupPage from "./input-group/page";
 import InputOTPPage from "./input-otp/page";
 import FileUploadPage from "./file-upload/page";
 import CommandPage from "./command/page";
+
+function renderDocs(node: ReactNode) {
+  return render(<DocsStoreProvider>{node}</DocsStoreProvider>);
+}
 
 const pages = [
   {
@@ -196,7 +203,7 @@ const pages = [
 
 describe("composed examples", () => {
   it("renders badge and card examples", async () => {
-    render(await BadgePage());
+    renderDocs(await BadgePage());
     expect(
       screen.getAllByRole("link", { name: "Documentation" }).length,
     ).toBeGreaterThan(0);
@@ -206,7 +213,7 @@ describe("composed examples", () => {
     expect(screen.getByText("Beta")).toBeInTheDocument();
     expect(screen.getByText("Ghost")).toBeInTheDocument();
 
-    render(await CardPage());
+    renderDocs(await CardPage());
     expect(screen.getAllByText("Sarang Kumar").length).toBeGreaterThan(0);
     expect(
       screen.getAllByRole("button", { name: "Follow" }).length,
@@ -226,7 +233,7 @@ describe("composed examples", () => {
   });
 
   it("renders dropdown, breadcrumb separator, and kbd named-key examples", async () => {
-    render(await DropdownMenuPage());
+    renderDocs(await DropdownMenuPage());
     expect(
       screen.getByRole("heading", { name: "Account menu" }),
     ).toBeInTheDocument();
@@ -247,7 +254,7 @@ describe("composed examples", () => {
       screen.getByRole("button", { name: "Actions for Aarav Sharma" }),
     ).toBeInTheDocument();
 
-    render(await BreadcrumbDocsPage());
+    renderDocs(await BreadcrumbDocsPage());
     expect(
       screen.getByRole("heading", { name: "Custom separator" }),
     ).toBeInTheDocument();
@@ -255,7 +262,7 @@ describe("composed examples", () => {
       document.querySelectorAll('[aria-hidden="true"] svg').length,
     ).toBeGreaterThan(0);
 
-    render(await KbdPage());
+    renderDocs(await KbdPage());
     expect(
       screen.getByRole("heading", { name: "Named keys" }),
     ).toBeInTheDocument();
@@ -269,7 +276,7 @@ describe("new component pages", () => {
   it.each(pages)(
     "documents $title with preview, install, and API",
     async ({ load, title, command, api }) => {
-      render(await load());
+      renderDocs(await load());
 
       expect(
         screen.getByRole("heading", { level: 1, name: title }),

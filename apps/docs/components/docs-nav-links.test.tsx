@@ -1,6 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
+import { components } from "./component-meta";
 import { DocsNavLinks } from "./docs-nav-links";
 
 vi.mock("next/navigation", () => ({
@@ -8,43 +9,42 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("DocsNavLinks", () => {
-  it("marks the current page and exposes the documentation links", () => {
+  it("follows the documentation hierarchy without navigation icons", () => {
     render(<DocsNavLinks />);
 
+    const nav = screen.getByRole("navigation", { name: "Documentation" });
+    const links = within(nav).getAllByRole("link");
+    const titles = links.map((link) =>
+      (link.getAttribute("aria-label") ?? link.textContent ?? "").replace(
+        /, new$/,
+        "",
+      ),
+    );
+    const componentNames = [...components]
+      .map((component) => component.name)
+      .sort((a, b) => a.localeCompare(b));
+
+    expect(titles[0]).toBe("Introduction");
     expect(
-      screen.getByRole("navigation", { name: "Documentation" }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Input, new" })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
-    expect(screen.getByRole("link", { name: "Button" })).not.toHaveAttribute(
-      "aria-current",
-    );
-    expect(screen.getByRole("link", { name: "Introduction" })).toHaveAttribute(
-      "href",
-      "/introduction",
-    );
-    expect(screen.getByRole("link", { name: "Installation" })).toHaveAttribute(
-      "href",
-      "/installation",
-    );
+      within(nav).getAllByRole("link", { name: "Introduction" }),
+    ).toHaveLength(1);
+    expect(within(nav).getByText("Components")).toBeInTheDocument();
+    expect(titles.slice(1, 1 + componentNames.length)).toEqual(componentNames);
+    expect(within(nav).queryByText("Forms")).toBeNull();
+    expect(within(nav).queryByText("Feedback")).toBeNull();
+    expect(within(nav).queryByText("Data Display")).toBeNull();
+    expect(within(nav).getByText("Get Started")).toBeInTheDocument();
+    expect(titles.at(-4)).toBe("Installation");
+    expect(titles.at(-3)).toBe("components.json");
+    expect(titles.at(-2)).toBe("CLI");
+    expect(within(nav).getByText("Resources")).toBeInTheDocument();
+    expect(titles.at(-1)).toBe("Changelog");
+    expect(nav.querySelector("svg")).toBeNull();
     expect(
-      screen.getByRole("link", { name: "components.json" }),
-    ).toHaveAttribute("href", "/components-json");
-    expect(screen.getByRole("link", { name: "CLI" })).toHaveAttribute(
-      "href",
-      "/installation#cli",
-    );
-    expect(screen.queryByText("Forms")).toBeNull();
-    expect(screen.queryByText("Resources")).toBeNull();
-    expect(screen.getByText("Components")).toBeInTheDocument();
-    expect(screen.getByText("GET STARTED")).toBeInTheDocument();
+      within(nav).getByRole("link", { name: "Input, new" }),
+    ).toHaveAttribute("aria-current", "page");
     expect(
-      screen.getByRole("link", { name: "Introduction" }).querySelector("svg"),
-    ).not.toBeNull();
-    expect(
-      screen.getByRole("link", { name: "Button" }).querySelector("svg"),
-    ).toBeNull();
+      within(nav).getByRole("link", { name: "Button" }),
+    ).not.toHaveAttribute("aria-current");
   });
 });

@@ -8,6 +8,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandShortcut,
 } from "./command";
 
 function Menu({ onSelect = () => undefined }: { onSelect?: () => void }) {
@@ -54,6 +55,41 @@ describe("Command", () => {
 
     expect(calls).toEqual(["button"]);
     expect(screen.getByRole("option", { name: "Input" })).toBeDisabled();
+  });
+
+  it("aligns an icon with the title and keeps the shortcut on that line", () => {
+    render(
+      <Command>
+        <CommandInput aria-label="Search" />
+        <CommandList>
+          <CommandItem value="Open Settings">
+            <svg aria-hidden="true" />
+            <span>
+              <span>Open Settings</span>
+              <span>Configure your account</span>
+            </span>
+            <CommandShortcut>Enter</CommandShortcut>
+          </CommandItem>
+          <CommandItem value="Button">Button</CommandItem>
+          <CommandItem value="Input" disabled>
+            Input
+          </CommandItem>
+        </CommandList>
+      </Command>,
+    );
+
+    const multiline = screen.getByRole("option", { name: /Open Settings/ });
+    const single = screen.getByRole("option", { name: "Button" });
+    const disabled = screen.getByRole("option", { name: "Input" });
+
+    expect(multiline).toHaveClass("items-start");
+    expect(multiline).not.toHaveClass("items-center");
+    expect(multiline).toHaveClass("[&>svg]:mt-0.5");
+    expect(multiline.querySelector("svg")).toBe(multiline.firstElementChild);
+    expect(screen.getByText("Enter")).toHaveClass("ml-auto", "mt-0.5");
+    expect(single).toHaveClass("items-start");
+    expect(disabled).toBeDisabled();
+    expect(disabled).toHaveClass("items-start");
   });
 
   it("merges className", () => {
