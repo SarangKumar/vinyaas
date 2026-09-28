@@ -82,7 +82,7 @@ export function Command({
     >
       <div
         className={cn(
-          "border-border bg-background text-foreground flex w-full flex-col overflow-hidden rounded-lg border",
+          "border-border bg-background text-foreground flex w-full flex-col overflow-hidden rounded-lg border-2 shadow-[0_12px_28px_-16px_var(--foreground)]",
           className,
         )}
         {...props}

@@ -105,10 +105,12 @@ describe("Command", () => {
     expect(
       screen.getByRole("combobox", { name: "Search" }).parentElement
         ?.parentElement,
-    ).toHaveClass("max-w-sm", "border", "bg-background", "rounded-lg");
-    expect(
-      screen.getByRole("combobox", { name: "Search" }).parentElement
-        ?.parentElement,
-    ).not.toHaveClass("shadow-sm");
+    ).toHaveClass(
+      "max-w-sm",
+      "border-2",
+      "bg-background",
+      "rounded-lg",
+      "shadow-[0_12px_28px_-16px_var(--foreground)]",
+    );
   });
 });

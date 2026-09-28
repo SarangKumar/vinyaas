@@ -9,12 +9,14 @@ import type { RegistryItem } from "./types.ts";
 export async function resolveRegistryItems({
   style,
   name,
+  names,
   baseUrl,
   env = process.env,
   fetch: fetchImpl,
 }: {
   style: string;
   name: string;
+  names?: readonly string[];
   baseUrl?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
@@ -55,7 +57,40 @@ export async function resolveRegistryItems({
     order.push(itemName);
   }
 
-  await visit(name);
+  const requested = names && names.length > 0 ? names : [name];
+
+  if (requested.length <= 1) {
+    await visit(requested[0] ?? name);
+  } else {
+    const missing: string[] = [];
+
+    for (const itemName of requested) {
+      try {
+        await visit(itemName);
+      } catch (error) {
+        if (
+          error instanceof RegistryError &&
+          error.message.includes(`/${encodeURIComponent(itemName)}.json`)
+        ) {
+          missing.push(itemName);
+          continue;
+        }
+
+        throw error;
+      }
+    }
+
+    if (missing.length > 0) {
+      throw new RegistryError(
+        [
+          "Unknown component(s):",
+          ...missing.map((itemName) => `- ${itemName}`),
+          "",
+          "No files were changed.",
+        ].join("\n"),
+      );
+    }
+  }
 
   return order.map((itemName) => {
     const item = resolved.get(`${style}\0${itemName}`);

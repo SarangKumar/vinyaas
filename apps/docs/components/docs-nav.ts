@@ -13,6 +13,8 @@ export const homePath = "/";
 /** Canonical introduction. It is not an alias of the homepage. */
 export const introductionPath = "/introduction";
 
+export const componentsPath = "/components";
+
 export const componentsJsonPath = "/components-json";
 
 export type DocsNavItem = {
@@ -24,7 +26,7 @@ export type DocsNavItem = {
 
 export type DocsNavGroup = {
   title: string;
-  /** Section label above child links. A single destination leaves this unset. */
+  /** Section label above child links. */
   label?: boolean;
   items: DocsNavItem[];
 };
@@ -40,28 +42,18 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
 
 export const docsNav: DocsNavGroup[] = [
   {
-    title: "Introduction",
-    items: [{ title: "Introduction", href: introductionPath }],
-  },
-  {
-    title: "Components",
-    label: true,
-    items: [...components]
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(componentNavItem),
-  },
-  {
-    title: "Get Started",
+    title: "SECTIONS",
     label: true,
     items: [
       { title: "Installation", href: "/installation" },
-      { title: "components.json", href: componentsJsonPath },
       { title: "CLI", href: "/installation#cli" },
     ],
   },
   {
-    title: "Resources",
+    title: "COMPONENTS",
     label: true,
-    items: [{ title: "Changelog", href: "/changelog" }],
+    items: [...components]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(componentNavItem),
   },
 ];

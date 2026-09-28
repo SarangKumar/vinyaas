@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import Link from "next/link";
+
+import { componentsPath, introductionPath } from "@/components/docs-nav";
 import { DocsNavLinks } from "@/components/docs-nav-links";
 import { focusRing } from "@/components/focus-ring";
 import { GitHubLink } from "@/components/github-link";
@@ -66,6 +69,14 @@ export function DocsMobileNav() {
               }
             }}
           >
+            <nav aria-label="Site" className="mb-3 flex flex-col gap-0.5">
+              <Link href={introductionPath} className={menuLink}>
+                Docs
+              </Link>
+              <Link href={componentsPath} className={menuLink}>
+                Components
+              </Link>
+            </nav>
             <DocsNavLinks className="flex flex-col gap-4" />
           </div>
           <div className="border-border mt-4 flex flex-col gap-1 border-t pt-3">
@@ -86,6 +97,8 @@ export function DocsMobileNav() {
     </div>
   );
 }
+
+const menuLink = `text-sidebar-foreground hover:bg-muted hover:text-foreground rounded-md px-2 py-1.5 text-sm ${focusRing}`;
 
 function MenuIcon() {
   return (

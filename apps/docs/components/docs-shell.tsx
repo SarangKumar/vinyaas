@@ -7,7 +7,11 @@ import {
   DocsSearchIcon,
   DocsSearchProvider,
 } from "@/components/docs-search";
-import { homePath } from "@/components/docs-nav";
+import {
+  componentsPath,
+  homePath,
+  introductionPath,
+} from "@/components/docs-nav";
 import { portfolioUrl } from "@/lib/public-env";
 import { DocsNavLinks } from "@/components/docs-nav-links";
 import { focusRing } from "@/components/focus-ring";
@@ -26,10 +30,10 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
     <DocsSearchProvider>
       <div className="bg-background text-foreground flex h-full min-h-0 flex-col">
         <header className="border-border bg-background z-20 h-12 shrink-0 border-b">
-          <div className="grid h-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-4">
+          <div className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4">
             <div
               data-header-section="start"
-              className="flex min-w-0 items-center gap-2"
+              className="flex min-w-0 items-center gap-3"
             >
               <DocsMobileNav />
               <Link
@@ -45,14 +49,25 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
                 />
                 <span className="truncate">Vinyaas</span>
               </Link>
-            </div>
-            <div className="hidden min-w-0 justify-center lg:flex">
-              <DocsSearchField />
+              <nav
+                aria-label="Site"
+                className="hidden min-w-0 items-center gap-1 md:flex"
+              >
+                <Link href={introductionPath} className={headerLink}>
+                  Docs
+                </Link>
+                <Link href={componentsPath} className={headerLink}>
+                  Components
+                </Link>
+              </nav>
             </div>
             <div
               data-header-section="end"
-              className="flex shrink-0 items-center gap-2 lg:gap-4"
+              className="flex min-w-0 shrink-0 items-center justify-end gap-2 lg:gap-4"
             >
+              <div className="hidden w-56 min-w-0 md:block lg:w-72">
+                <DocsSearchField />
+              </div>
               <DocsSearchIcon />
               <div className="hidden items-center gap-4 lg:flex">
                 <GitHubLink />

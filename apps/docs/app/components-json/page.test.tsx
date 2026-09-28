@@ -22,13 +22,13 @@ describe("components.json docs", () => {
     expect(document.body.textContent).toContain("aliases");
   });
 
-  it("is linked from the documentation navigation", async () => {
+  it("remains available from documentation search", async () => {
     const source = await readFile(
-      path.join(process.cwd(), "components/docs-nav.ts"),
+      path.join(process.cwd(), "components/docs-search.tsx"),
       "utf8",
     );
 
     expect(source).toContain('title: "components.json"');
-    expect(source).toContain("href: componentsJsonPath");
+    expect(source).toContain('href: "/components-json"');
   });
 });

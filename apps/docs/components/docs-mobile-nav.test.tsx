@@ -20,13 +20,21 @@ describe("DocsMobileNav", () => {
     fireEvent.click(menu);
 
     expect(menu).toHaveAttribute("aria-expanded", "true");
-    expect(
-      screen.getByRole("link", { name: "Introduction" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Docs" })).toHaveAttribute(
+      "href",
+      "/introduction",
+    );
+    expect(screen.getByRole("link", { name: "Components" })).toHaveAttribute(
+      "href",
+      "/components",
+    );
     expect(
       screen.getByRole("link", { name: "Installation" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Changelog" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "CLI" })).toBeInTheDocument();
+    expect(screen.getByText("SECTIONS")).toBeInTheDocument();
+    expect(screen.getByText("COMPONENTS")).toBeInTheDocument();
+    expect(screen.queryByText("Forms")).toBeNull();
 
     fireEvent.keyDown(document, { key: "Escape" });
 

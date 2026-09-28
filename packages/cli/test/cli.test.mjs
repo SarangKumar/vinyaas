@@ -67,6 +67,8 @@ describe("vinyaas", () => {
     assert.match(add.stdout, /--cwd <path>/);
     assert.match(add.stdout, /--force/);
     assert.match(add.stdout, /overwrite existing component files/i);
+    assert.match(add.stdout, /<name\.\.\.>/);
+    assert.match(add.stdout, /vinyaas add button card badge/);
   });
 
   it("rejects --force on init", async () => {

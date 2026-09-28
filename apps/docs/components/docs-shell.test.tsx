@@ -60,7 +60,16 @@ describe("DocsShell", () => {
       "aria-expanded",
       "false",
     );
-    expect(within(start).queryByRole("link", { name: "Docs" })).toBeNull();
+    expect(within(start).getByRole("link", { name: "Docs" })).toHaveAttribute(
+      "href",
+      "/introduction",
+    );
+    expect(
+      within(start).getByRole("link", { name: "Components" }),
+    ).toHaveAttribute("href", "/components");
+    expect(
+      within(start).queryByRole("button", { name: "Search documentation" }),
+    ).toBeNull();
     expect(within(start).queryByRole("link", { name: "GitHub" })).toBeNull();
     fireEvent.click(within(start).getByRole("button", { name: "Menu" }));
     expect(within(start).getByRole("button", { name: "Menu" })).toHaveAttribute(
@@ -83,8 +92,10 @@ describe("DocsShell", () => {
     expect(end.className).toContain("lg:gap-4");
     expect(document.querySelector("header")).toHaveClass("h-12");
     expect(
-      screen.getAllByRole("button", { name: "Search documentation" }).length,
+      within(end).getAllByRole("button", { name: "Search documentation" })
+        .length,
     ).toBeGreaterThan(0);
+    expect(start.className).toContain("min-w-0");
     expect(screen.queryByText("Forms")).toBeNull();
     expect(screen.queryByText("Data Display")).toBeNull();
     expect(

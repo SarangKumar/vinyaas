@@ -24,21 +24,15 @@ describe("DocsNavLinks", () => {
       .map((component) => component.name)
       .sort((a, b) => a.localeCompare(b));
 
-    expect(titles[0]).toBe("Introduction");
-    expect(
-      within(nav).getAllByRole("link", { name: "Introduction" }),
-    ).toHaveLength(1);
-    expect(within(nav).getByText("Components")).toBeInTheDocument();
-    expect(titles.slice(1, 1 + componentNames.length)).toEqual(componentNames);
+    expect(titles[0]).toBe("Installation");
+    expect(titles[1]).toBe("CLI");
+    expect(titles.slice(2)).toEqual(componentNames);
+    expect(within(nav).getByText("SECTIONS")).toBeInTheDocument();
+    expect(within(nav).getByText("COMPONENTS")).toBeInTheDocument();
     expect(within(nav).queryByText("Forms")).toBeNull();
     expect(within(nav).queryByText("Feedback")).toBeNull();
     expect(within(nav).queryByText("Data Display")).toBeNull();
-    expect(within(nav).getByText("Get Started")).toBeInTheDocument();
-    expect(titles.at(-4)).toBe("Installation");
-    expect(titles.at(-3)).toBe("components.json");
-    expect(titles.at(-2)).toBe("CLI");
-    expect(within(nav).getByText("Resources")).toBeInTheDocument();
-    expect(titles.at(-1)).toBe("Changelog");
+    expect(within(nav).queryByText("Get Started")).toBeNull();
     expect(nav.querySelector("svg")).toBeNull();
     expect(
       within(nav).getByRole("link", { name: "Input, new" }),

@@ -38,10 +38,18 @@ export default function InstallationPage() {
           add
         </h2>
         <p className="text-body text-base leading-7">
-          <code>vinyaas add</code> copies one component into the project and
+          <code>vinyaas add</code> copies a component into the project and
           installs only the packages that component declares.
         </p>
         <InstallCommand commands={cliCommands("add button")} />
+        <h3 className="text-foreground text-base font-medium">
+          Install multiple components
+        </h3>
+        <p className="text-body text-base leading-7">
+          Pass more than one name to install them together. Shared packages are
+          installed once.
+        </p>
+        <InstallCommand commands={cliCommands("add button card badge")} />
       </section>
       <section className="flex flex-col gap-6">
         <h2 id="registry" className={sectionHeading}>

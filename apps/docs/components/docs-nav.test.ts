@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { componentIsNew, components } from "./component-meta";
 import {
   componentsJsonPath,
+  componentsPath,
   docsNav,
   githubUrl,
   homePath,
@@ -10,43 +11,33 @@ import {
 } from "./docs-nav";
 
 describe("documentation navigation", () => {
-  it("lists introduction, components, get started, and resources", () => {
+  it("lists major pages before an alphabetical component list", () => {
     expect(githubUrl).toBe("https://github.com/SarangKumar/vinyaas");
     expect(homePath).toBe("/");
     expect(introductionPath).toBe("/introduction");
+    expect(componentsPath).toBe("/components");
     expect(componentsJsonPath).toBe("/components-json");
     expect(docsNav.map((group) => group.title)).toEqual([
-      "Introduction",
-      "Components",
-      "Get Started",
-      "Resources",
+      "SECTIONS",
+      "COMPONENTS",
     ]);
-    expect(docsNav[0]?.label).toBeUndefined();
-    expect(docsNav[0]?.items).toEqual([
-      { title: "Introduction", href: "/introduction" },
-    ]);
-    expect(docsNav[2]?.label).toBe(true);
-    expect(docsNav[2]?.items.map((item) => item.title)).toEqual([
+    expect(docsNav[0]?.label).toBe(true);
+    expect(docsNav[0]?.items.map((item) => item.title)).toEqual([
       "Installation",
-      "components.json",
       "CLI",
     ]);
-    expect(docsNav[2]?.items.map((item) => item.href)).toEqual([
+    expect(docsNav[0]?.items.map((item) => item.href)).toEqual([
       "/installation",
-      "/components-json",
       "/installation#cli",
     ]);
-    expect(docsNav[3]?.label).toBe(true);
-    expect(docsNav[3]?.items).toEqual([
-      { title: "Changelog", href: "/changelog" },
-    ]);
+    expect(docsNav[1]?.label).toBe(true);
     expect(docsNav.some((group) => group.title === "Forms")).toBe(false);
-    expect(docsNav.some((group) => group.title === "CLI")).toBe(false);
+    expect(docsNav.some((group) => group.title === "Feedback")).toBe(false);
     expect(JSON.stringify(docsNav)).not.toContain('"icon"');
   });
 
   it("builds one alphabetical component list", () => {
-    const items = docsNav.find((group) => group.title === "Components")?.items;
+    const items = docsNav.find((group) => group.title === "COMPONENTS")?.items;
 
     expect(items?.map((item) => item.title)).toEqual(
       [...components]
