@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import { Badge } from "@/registry/new-york/ui/badge/badge";
 import { Button } from "@/registry/new-york/ui/button/button";
 import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
@@ -21,6 +20,10 @@ import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("dialog");
 
 const usage = `import { Button } from "@/components/ui/button/button";
 import {

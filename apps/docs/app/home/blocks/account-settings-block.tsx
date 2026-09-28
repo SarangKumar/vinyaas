@@ -1,44 +1,70 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
+import { Badge } from "@/registry/new-york/ui/badge/badge";
 import { Button } from "@/registry/new-york/ui/button/button";
 import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
 import { Input } from "@/registry/new-york/ui/input/input";
 import { Label } from "@/registry/new-york/ui/label/label";
-import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/registry/new-york/ui/native-select/native-select";
+import { Separator } from "@/registry/new-york/ui/separator/separator";
 import { Switch } from "@/registry/new-york/ui/switch/switch";
 
 export function AccountSettingsBlock() {
   return (
-    <PlayBlock title="Account">
-      <form className="grid gap-3" onSubmit={(event) => event.preventDefault()}>
+    <PlayBlock
+      title="Account"
+      description="Profile identity and security preferences."
+    >
+      <form
+        className="grid min-w-0 gap-4"
+        onSubmit={(event) => event.preventDefault()}
+      >
         <div className="grid gap-1.5">
-          <Label htmlFor="play-display">Display name</Label>
+          <Label htmlFor="play-display">Profile name</Label>
           <Input id="play-display" defaultValue="Ada Lovelace" />
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="play-locale">Locale</Label>
-          <NativeSelect id="play-locale" defaultValue="en-IN">
-            <NativeSelectOption value="en-IN">
-              English (India)
-            </NativeSelectOption>
-            <NativeSelectOption value="en-US">English (US)</NativeSelectOption>
-          </NativeSelect>
+          <Label htmlFor="play-account-email">Email</Label>
+          <Input
+            id="play-account-email"
+            type="email"
+            defaultValue="ada@analytical.engine"
+          />
         </div>
-        <div className="flex items-center justify-between gap-3">
-          <Label htmlFor="play-digest">Weekly digest</Label>
-          <Switch id="play-digest" defaultChecked />
+        <div className="grid gap-1.5">
+          <Label htmlFor="play-account-password">Password</Label>
+          <Input
+            id="play-account-password"
+            type="password"
+            defaultValue="············"
+            autoComplete="current-password"
+          />
+        </div>
+        <div className="border-border flex min-w-0 items-center justify-between gap-3 rounded-md border px-3 py-3">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <Label htmlFor="play-2fa">Two-factor authentication</Label>
+              <Badge variant="secondary">Enabled</Badge>
+            </div>
+            <p className="text-muted-foreground mt-1 text-sm">
+              Authenticator app · last verified 2 days ago
+            </p>
+          </div>
+          <Switch id="play-2fa" defaultChecked className="shrink-0" />
         </div>
         <div className="flex items-center gap-2">
           <Checkbox id="play-public" defaultChecked />
           <Label htmlFor="play-public">Show profile in the directory</Label>
         </div>
-        <Button type="submit" size="sm">
-          Save account
-        </Button>
+        <Separator />
+        <div className="flex min-w-0 flex-wrap gap-2">
+          <Button type="submit" size="sm">
+            Save changes
+          </Button>
+          <Button type="button" size="sm" variant="outline">
+            Cancel
+          </Button>
+        </div>
       </form>
     </PlayBlock>
   );

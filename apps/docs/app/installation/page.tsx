@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
+
 import { DocsArticle } from "@/components/docs-article";
 import { InstallCommand } from "@/components/install-command";
 import {
   cliCommands,
   packageInstallCommands,
 } from "@/components/package-managers";
+import { pageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Installation",
+  description:
+    "Install the Vinyaas CLI, initialize a React, Next.js, or Vite project, and add components as source.",
+});
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";

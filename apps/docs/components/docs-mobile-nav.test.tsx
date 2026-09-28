@@ -1,25 +1,41 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { DocsMobileNav } from "./docs-mobile-nav";
 
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/",
+  usePathname: () => "/introduction",
   useRouter: () => ({ push: vi.fn() }),
 }));
 
+async function settle() {
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
 describe("DocsMobileNav", () => {
-  it("names the menu and closes it with Escape", () => {
+  afterEach(() => {
+    document.body.style.overflow = "";
+  });
+
+  it("opens a navigation drawer and closes it with Escape", async () => {
     render(<DocsMobileNav />);
+    await settle();
 
     const menu = screen.getByRole("button", { name: "Menu" });
 
     expect(menu).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByText("Forms")).toBeNull();
+    expect(screen.queryByRole("dialog", { name: "Navigation" })).toBeNull();
 
     fireEvent.click(menu);
+    await settle();
 
     expect(menu).toHaveAttribute("aria-expanded", "true");
+    expect(
+      screen.getByRole("dialog", { name: "Navigation" }),
+    ).toBeInTheDocument();
+    expect(document.body.style.overflow).toBe("hidden");
     expect(screen.getByRole("link", { name: "Docs" })).toHaveAttribute(
       "href",
       "/introduction",
@@ -36,14 +52,43 @@ describe("DocsMobileNav", () => {
     expect(screen.getByText("SECTIONS")).toBeInTheDocument();
     expect(screen.getByText("COMPONENTS")).toBeInTheDocument();
     expect(screen.getByText("GET STARTED")).toBeInTheDocument();
+    expect(screen.getByText("RESOURCES")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Introduction" })).toHaveAttribute(
       "href",
       "/introduction",
     );
-    expect(screen.queryByText("Forms")).toBeNull();
+    expect(screen.getByRole("link", { name: "Changelog" })).toHaveAttribute(
+      "href",
+      "/changelog",
+    );
 
     fireEvent.keyDown(document, { key: "Escape" });
+    await settle();
 
-    expect(menu).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("button", { name: "Menu" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+    expect(screen.queryByRole("dialog", { name: "Navigation" })).toBeNull();
+    expect(document.body.style.overflow).toBe("");
+  });
+
+  it("closes when a navigation link is clicked or the overlay is used", async () => {
+    render(<DocsMobileNav />);
+    await settle();
+
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
+    await settle();
+    fireEvent.click(screen.getByRole("link", { name: "Changelog" }));
+    await settle();
+
+    expect(screen.queryByRole("dialog", { name: "Navigation" })).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
+    await settle();
+    fireEvent.click(screen.getAllByRole("button", { name: "Close menu" })[0]!);
+    await settle();
+
+    expect(screen.queryByRole("dialog", { name: "Navigation" })).toBeNull();
   });
 });

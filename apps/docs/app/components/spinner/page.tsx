@@ -1,14 +1,16 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { RefreshIcon } from "@/components/icons";
 import { Button } from "@/registry/new-york/ui/button/button";
 import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
-
 import { SubmitSpinner } from "./spinner-demos";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("spinner");
 
 const usage = `import { Spinner } from "@/components/ui/spinner/spinner";
 

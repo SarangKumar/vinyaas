@@ -6,9 +6,8 @@ import { CodeBlock } from "@/components/code-block";
 import { type CodeLanguage, type DemoCode } from "@/components/code-languages";
 
 /**
- * One preview and its source. TSX and JSX share the Redux preference inside
- * CodeBlock, so every eligible example switches together. A string source and
- * bash blocks stay on the language they are given.
+ * One preview and its source. String and dual TSX/JSX sources both follow the
+ * shared Redux preference inside CodeBlock. Bash and other languages stay fixed.
  */
 export function ComponentDemo({
   preview,
@@ -29,7 +28,7 @@ export function ComponentDemo({
       {typeof code === "string" ? (
         <CodeBlock attached code={code} language={language} />
       ) : (
-        <CodeBlock attached source={code} language={language} />
+        <CodeBlock attached source={code} />
       )}
     </div>
   );

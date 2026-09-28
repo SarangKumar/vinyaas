@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -12,6 +11,10 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/registry/new-york/ui/input-otp/input-otp";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("input-otp");
 
 function Slots({ length, split }: { length: number; split?: boolean }) {
   const indexes = Array.from({ length }, (_, index) => index);
@@ -80,6 +83,12 @@ const api: ApiRow[] = [
     prop: "onChange",
     type: "(value: string) => void",
     description: "Called with the cleaned digit string.",
+  },
+  {
+    prop: "onComplete",
+    type: "(value: string) => void",
+    description:
+      "Called once when the value reaches length. Fires again after a digit is removed and the code is completed again. Does not fire while disabled.",
   },
   {
     prop: "invalid",
@@ -161,7 +170,8 @@ export default async function InputOTPPage() {
         <p>
           One native input holds the digits, so paste, arrows, and backspace
           stay with the browser. The slots are visual. Set <code>name</code>{" "}
-          when the value should submit with a form.
+          when the value should submit with a form. Use <code>onComplete</code>{" "}
+          to react when every digit is filled.
         </p>
       }
       install="vinyaas add input-otp"

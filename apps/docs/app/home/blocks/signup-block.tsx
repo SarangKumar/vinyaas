@@ -8,7 +8,10 @@ import { Label } from "@/registry/new-york/ui/label/label";
 
 export function SignupBlock() {
   return (
-    <PlayBlock title="Create an account">
+    <PlayBlock
+      title="Create an account"
+      description="Open a workspace for your team."
+    >
       <form className="grid gap-3" onSubmit={(event) => event.preventDefault()}>
         <div className="grid gap-1.5">
           <Label htmlFor="play-name">Name</Label>

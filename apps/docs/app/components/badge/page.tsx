@@ -1,11 +1,14 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Badge } from "@/registry/new-york/ui/badge/badge";
 import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("badge");
 
 const usage = `import { Badge } from "@/components/ui/badge/badge";
 

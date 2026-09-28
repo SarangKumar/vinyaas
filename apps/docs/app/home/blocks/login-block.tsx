@@ -13,29 +13,30 @@ export function LoginBlock() {
   const [visible, setVisible] = useState(false);
 
   return (
-    <PlayBlock title="Sign in">
+    <PlayBlock title="Sign in" description="Return to your workspace.">
       <form
-        className="grid gap-3"
+        className="grid gap-4"
         onSubmit={(event) => {
           event.preventDefault();
           toast.add({ title: "Signed in", description: "Welcome back, Ada." });
         }}
       >
-        <div className="grid gap-1.5">
+        <div className="grid gap-2">
           <Label htmlFor="play-email">Email</Label>
           <Input
             id="play-email"
             type="email"
             autoComplete="username"
             defaultValue="ada@analytical.engine"
+            className="max-w-full min-w-0"
           />
         </div>
-        <div className="grid gap-1.5">
-          <div className="flex items-center justify-between gap-2">
+        <div className="grid gap-2">
+          <div className="flex min-w-0 items-center justify-between gap-2">
             <Label htmlFor="play-password">Password</Label>
             <button
               type="button"
-              className="text-muted-foreground text-xs underline-offset-2 hover:underline"
+              className="text-muted-foreground shrink-0 text-xs underline-offset-2 hover:underline"
             >
               Forgot password
             </button>
@@ -45,6 +46,7 @@ export function LoginBlock() {
             type={visible ? "text" : "password"}
             autoComplete="current-password"
             defaultValue="notes"
+            className="max-w-full min-w-0"
           />
           <button
             type="button"
@@ -58,7 +60,9 @@ export function LoginBlock() {
           <Checkbox id="play-remember" defaultChecked />
           <Label htmlFor="play-remember">Remember this device</Label>
         </div>
-        <Button type="submit">Sign in</Button>
+        <Button type="submit" className="w-full sm:w-auto">
+          Sign in
+        </Button>
       </form>
     </PlayBlock>
   );

@@ -60,10 +60,13 @@ export function SaveButton() {
       "data-language",
       "tsx",
     );
-    expect(screen.getByText("tsx")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "TSX" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
     expect(
-      screen.queryByRole("tablist", { name: "Component example language" }),
-    ).toBeNull();
+      screen.getByRole("tablist", { name: "Component example language" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Copy code" }),
     ).toBeInTheDocument();
@@ -87,9 +90,16 @@ export function SaveButton() {
     );
   });
 
-  it("switches TSX and JSX across every demo and leaves bash alone", async () => {
+  it("switches TSX and JSX across demos and standalone blocks together", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal("navigator", { clipboard: { writeText } });
+
+    const stringSource = `import type { Name } from "./name";
+
+export function Alone(props: Name) {
+  return null;
+}
+`;
 
     renderDemo(
       <>
@@ -101,6 +111,7 @@ export function SaveButton() {
             jsx: "export function OtherJsx() { return null }",
           }}
         />
+        <CodeBlock code={stringSource} language="tsx" />
         <CodeBlock language="bash" code="npx @vinyaas/cli add button" />
         <InstallCommand commands={cliCommands("add button")} />
       </>,
@@ -109,8 +120,6 @@ export function SaveButton() {
     await settle();
 
     const codes = () => [...document.querySelectorAll("code")];
-    const tabs = () =>
-      screen.getAllByRole("tab", { name: "JSX", selected: true });
 
     expect(codes()[0]).toHaveAttribute("data-language", "tsx");
     expect(codes()[0]).toHaveTextContent("export function Save()");
@@ -119,16 +128,18 @@ export function SaveButton() {
       "true",
     );
     expect(screen.queryByRole("tab", { name: "bash" })).toBeNull();
+    expect(codes()[2]?.textContent).toContain("import type");
 
-    fireEvent.click(screen.getAllByRole("tab", { name: "JSX" })[0]!);
+    fireEvent.click(screen.getAllByRole("tab", { name: "JSX" })[2]!);
 
-    expect(tabs()[0]).toBeInTheDocument();
     expect(codes()[0]).toHaveAttribute("data-language", "jsx");
     expect(codes()[0]).toHaveTextContent("SaveJsx");
     expect(codes()[1]).toHaveAttribute("data-language", "jsx");
     expect(codes()[1]).toHaveTextContent("export function OtherJsx()");
-    expect(codes()[2]).toHaveAttribute("data-language", "bash");
-    expect(codes()[2]).toHaveTextContent("npx @vinyaas/cli add button");
+    expect(codes()[2]).toHaveAttribute("data-language", "jsx");
+    expect(codes()[2]?.textContent).not.toContain("import type");
+    expect(codes()[3]).toHaveAttribute("data-language", "bash");
+    expect(codes()[3]).toHaveTextContent("npx @vinyaas/cli add button");
     expect(
       screen.getAllByText("npx @vinyaas/cli add button").length,
     ).toBeGreaterThan(0);
@@ -136,6 +147,9 @@ export function SaveButton() {
       "aria-selected",
       "true",
     );
+    for (const tab of screen.getAllByRole("tab", { name: "JSX" })) {
+      expect(tab).toHaveAttribute("aria-selected", "true");
+    }
 
     fireEvent.click(screen.getAllByRole("tab", { name: "pnpm" })[0]!);
 
@@ -156,7 +170,9 @@ export function SaveButton() {
       "aria-selected",
       "true",
     );
-    expect(codes()[2]).toHaveAttribute("data-language", "bash");
+    expect(codes()[2]).toHaveAttribute("data-language", "tsx");
+    expect(codes()[2]?.textContent).toContain("import type");
+    expect(codes()[3]).toHaveAttribute("data-language", "bash");
   });
 
   it("starts the next demo from the stored language and ignores invalid values", async () => {

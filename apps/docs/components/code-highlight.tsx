@@ -2,9 +2,12 @@ import type { ReactNode } from "react";
 import hljs from "highlight.js/lib/core";
 import bash from "highlight.js/lib/languages/bash";
 import javascript from "highlight.js/lib/languages/javascript";
+import xml from "highlight.js/lib/languages/xml";
 
 hljs.registerLanguage("bash", bash);
 hljs.registerLanguage("javascript", javascript);
+// JSX in TSX/JSX demos is highlighted via the javascript → xml sublanguage.
+hljs.registerLanguage("xml", xml);
 
 function decodeEntity(entity: string) {
   switch (entity) {

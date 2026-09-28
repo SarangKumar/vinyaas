@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -36,6 +42,8 @@ export type InputOTPProps = Omit<
   value?: string;
   defaultValue?: string;
   onChange?: (value: string) => void;
+  /** Fires once when the value reaches `length`. Resets after a digit is removed. */
+  onComplete?: (value: string) => void;
   disabled?: boolean;
   invalid?: boolean;
   name?: string;
@@ -48,6 +56,7 @@ export function InputOTP({
   value,
   defaultValue = "",
   onChange,
+  onComplete,
   disabled = false,
   invalid = false,
   name,
@@ -60,8 +69,35 @@ export function InputOTP({
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const [focused, setFocused] = useState(false);
   const current = digits(value ?? uncontrolled, length);
+  const completedRef = useRef(false);
+  const onCompleteRef = useRef(onComplete);
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  useEffect(() => {
+    if (disabled) {
+      completedRef.current = false;
+      return;
+    }
+
+    if (current.length === length) {
+      if (!completedRef.current) {
+        completedRef.current = true;
+        onCompleteRef.current?.(current);
+      }
+      return;
+    }
+
+    completedRef.current = false;
+  }, [current, length, disabled]);
 
   function update(next: string) {
+    if (disabled) {
+      return;
+    }
+
     const cleaned = digits(next, length);
 
     if (value === undefined) {
@@ -73,7 +109,11 @@ export function InputOTP({
 
   return (
     <div
-      className={cn("relative inline-flex items-center", className)}
+      data-slot="input-otp"
+      className={cn(
+        "relative flex w-full max-w-full min-w-0 flex-nowrap items-center justify-center gap-1.5 sm:gap-2",
+        className,
+      )}
       {...props}
     >
       <input
@@ -116,7 +156,11 @@ export function InputOTPGroup({ className, ...props }: InputOTPGroupProps) {
   return (
     <div
       aria-hidden="true"
-      className={cn("flex items-center gap-2", className)}
+      data-slot="input-otp-group"
+      className={cn(
+        "flex min-w-0 flex-nowrap items-center gap-1.5 sm:gap-2",
+        className,
+      )}
       {...props}
     />
   );
@@ -136,9 +180,10 @@ export function InputOTPSlot({
 
   return (
     <span
+      data-slot="input-otp-slot"
       data-active={active ? "true" : undefined}
       className={cn(
-        "border-input bg-muted text-foreground inline-flex size-9 items-center justify-center rounded-md border text-sm",
+        "border-input bg-muted text-foreground inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-sm sm:h-9 sm:w-9",
         active && "ring-ring ring-offset-background ring-2 ring-offset-2",
         otp.invalid && "border-destructive text-destructive",
         otp.disabled && "opacity-50",
@@ -160,7 +205,11 @@ export function InputOTPSeparator({
   return (
     <span
       aria-hidden="true"
-      className={cn("text-muted-foreground px-1 text-sm", className)}
+      data-slot="input-otp-separator"
+      className={cn(
+        "text-muted-foreground shrink-0 px-0.5 text-sm sm:px-1",
+        className,
+      )}
       {...props}
     />
   );

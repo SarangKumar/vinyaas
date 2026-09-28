@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -10,6 +9,10 @@ import {
   MarkerIcon,
 } from "@/registry/new-york/ui/marker/marker";
 import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("marker");
 
 const usage = `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker/marker";
 

@@ -1,10 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-
 import {
   AccountMenu,
   CardActionsMenu,
@@ -12,6 +10,10 @@ import {
   TableRowMenu,
   UserMenu,
 } from "./dropdown-menu-demos";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("dropdown-menu");
 
 const usage = `import { Button } from "@/components/ui/button/button";
 import {

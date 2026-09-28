@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
 import { Badge } from "@/registry/new-york/ui/badge/badge";
 import { Separator } from "@/registry/new-york/ui/separator/separator";
@@ -8,6 +7,10 @@ import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("scroll-area");
 
 const usage = `import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";
 

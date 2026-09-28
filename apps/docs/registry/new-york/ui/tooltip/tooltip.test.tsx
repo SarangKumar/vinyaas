@@ -74,5 +74,6 @@ describe("Tooltip", () => {
     });
 
     expect(screen.getByRole("tooltip")).toHaveClass("text-sm", "max-w-sm");
+    expect(screen.getByRole("tooltip")).toHaveClass("vinyaas-tooltip-in");
   });
 });

@@ -43,13 +43,13 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
 
 export const cliPath = "/installation#cli";
 
+export const changelogPath = "/changelog";
+
 export const docsNav: DocsNavGroup[] = [
   {
     title: "SECTIONS",
     label: true,
     items: [
-      { title: "Introduction", href: introductionPath },
-      { title: "Components", href: componentsPath },
       { title: "Installation", href: "/installation" },
       { title: "CLI", href: cliPath },
     ],
@@ -66,9 +66,14 @@ export const docsNav: DocsNavGroup[] = [
     title: "GET STARTED",
     label: true,
     items: [
-      { title: "Installation", href: "/installation" },
+      { title: "Introduction", href: introductionPath },
+      { title: "Components", href: componentsPath },
       { title: "components.json", href: componentsJsonPath },
-      { title: "CLI", href: cliPath },
     ],
+  },
+  {
+    title: "RESOURCES",
+    label: true,
+    items: [{ title: "Changelog", href: changelogPath }],
   },
 ];

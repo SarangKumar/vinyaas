@@ -10,6 +10,7 @@ import {
 } from "@/components/code-languages";
 import { CopyButton } from "@/components/copy-button";
 import { focusRing } from "@/components/focus-ring";
+import { tsxToJsx } from "@/components/tsx-to-jsx";
 import { useCodeLanguage, useSetCodeLanguage } from "@/lib/store/hooks";
 import { Button } from "@/registry/new-york/ui/button/button";
 
@@ -19,9 +20,8 @@ export type CodeSource = Partial<Record<CodeLanguage, string>>;
 
 /**
  * Renders a code sample.
- * `source` with both TSX and JSX follows the shared Redux language.
- * `code` with `language="bash"` stays a terminal block: no language switch,
- * no line numbers.
+ * TSX/JSX strings and dual sources follow the shared Redux language.
+ * Bash, JSON, CSS, and other languages stay fixed: no language switch.
  */
 export function CodeBlock({
   code,
@@ -38,19 +38,20 @@ export function CodeBlock({
   /** Replaces the language label. `language` still sets data-language. */
   leading?: ReactNode;
 }) {
-  const choices = sourceLanguages(source);
+  const dual = expandSwitchableSource(code, language, source);
 
-  if (choices.length > 1 && source) {
+  if (dual) {
     return (
       <SwitchableCodeBlock
-        source={source}
-        choices={choices}
+        source={dual}
+        choices={[...codeLanguages]}
         attached={attached}
         leading={leading}
       />
     );
   }
 
+  const choices = sourceLanguages(source);
   const single = choices[0];
   const resolvedCode = single && source ? (source[single] ?? "") : (code ?? "");
   const resolvedLanguage = single ?? language;
@@ -66,13 +67,45 @@ export function CodeBlock({
   );
 }
 
+/**
+ * Every TSX/JSX example becomes a dual source so Redux can switch presentation.
+ * Non-TSX/JSX languages return null and stay fixed.
+ */
+function expandSwitchableSource(
+  code: string | undefined,
+  language: string | undefined,
+  source: CodeSource | undefined,
+): Record<CodeLanguage, string> | null {
+  if (source?.tsx !== undefined && source.jsx !== undefined) {
+    return { tsx: source.tsx, jsx: source.jsx };
+  }
+
+  if (source?.tsx !== undefined) {
+    return { tsx: source.tsx, jsx: tsxToJsx(source.tsx) };
+  }
+
+  if (source?.jsx !== undefined) {
+    return { tsx: source.jsx, jsx: source.jsx };
+  }
+
+  if (code !== undefined && isSourceLanguage(language)) {
+    if (language === "tsx") {
+      return { tsx: code, jsx: tsxToJsx(code) };
+    }
+
+    return { tsx: code, jsx: code };
+  }
+
+  return null;
+}
+
 function SwitchableCodeBlock({
   source,
   choices,
   attached,
   leading,
 }: {
-  source: CodeSource;
+  source: Record<CodeLanguage, string>;
   choices: CodeLanguage[];
   attached: boolean;
   leading?: ReactNode;
@@ -85,7 +118,7 @@ function SwitchableCodeBlock({
 
   return (
     <CodeFrame
-      code={source[selected] ?? ""}
+      code={source[selected]}
       language={selected}
       numbered
       attached={attached}
@@ -129,7 +162,7 @@ function LanguageTabs({
             className={
               active
                 ? `bg-muted text-foreground cursor-pointer rounded-md px-2 py-1 text-xs font-medium ${focusRing}`
-                : `text-subtle-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-md px-2 py-1 text-xs ${focusRing}`
+                : `text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-md px-2 py-1 text-xs ${focusRing}`
             }
             onClick={() => onSelect(item)}
           >
@@ -162,15 +195,15 @@ function CodeFrame({
     <div
       className={
         attached
-          ? "border-border bg-secondary text-secondary-foreground overflow-hidden border-t"
-          : "border-border bg-secondary text-secondary-foreground overflow-hidden rounded-md border"
+          ? "border-border bg-card text-card-foreground overflow-hidden border-t"
+          : "border-border bg-card text-card-foreground overflow-hidden rounded-md border"
       }
     >
-      <div className="border-border flex items-center justify-between gap-3 border-b px-3 py-1.5">
+      <div className="border-border bg-muted/60 flex items-center justify-between gap-3 border-b px-3 py-1.5">
         {leading ? (
           leading
         ) : language ? (
-          <span className="text-subtle-foreground font-mono text-xs">
+          <span className="text-muted-foreground font-mono text-xs">
             {language}
           </span>
         ) : (
@@ -178,14 +211,14 @@ function CodeFrame({
         )}
         <CopyButton value={code} />
       </div>
-      <div className="relative">
+      <div className="bg-card relative">
         <pre
           className={
             collapsed
-              ? "max-h-72 overflow-hidden py-2 text-[13px] leading-6"
+              ? "m-0 max-h-72 overflow-hidden text-[13px] leading-6"
               : numbered
-                ? "overflow-x-auto py-2 text-[13px] leading-6"
-                : "overflow-x-auto py-4 text-[13px] leading-6"
+                ? "m-0 overflow-x-auto text-[13px] leading-6"
+                : "m-0 overflow-x-auto px-0 py-4 text-[13px] leading-6"
           }
         >
           {numbered ? (
@@ -199,7 +232,7 @@ function CodeFrame({
         {collapsed ? (
           <div
             data-code-fade
-            className="from-secondary absolute inset-x-0 bottom-0 flex h-24 items-end justify-center bg-gradient-to-t to-transparent pb-3"
+            className="from-card absolute inset-x-0 bottom-0 flex h-24 items-end justify-center bg-gradient-to-t to-transparent pb-3"
           >
             <Button
               type="button"
@@ -237,17 +270,17 @@ function NumberedSource({
   code: string;
   language?: string;
 }) {
-  const lines = code.split("\n");
+  const lines = code.replace(/\n$/, "").split("\n");
 
   return (
-    <div className="flex min-w-full">
+    <div className="flex min-w-full items-stretch">
       <div
         data-line-numbers
         aria-hidden="true"
-        className="text-secondary-foreground/60 border-border bg-secondary sticky left-0 shrink-0 border-r pr-2 pl-3 text-right tabular-nums select-none"
+        className="text-muted-foreground border-border bg-muted/40 sticky left-0 shrink-0 self-stretch border-r py-0 pr-2 pl-3 text-right tabular-nums select-none"
       >
         {lines.map((_, index) => (
-          <div key={index} className="min-h-6 leading-6">
+          <div key={index} className="h-6 leading-6">
             {index + 1}
           </div>
         ))}
@@ -256,7 +289,8 @@ function NumberedSource({
         data-language={language}
         className="block min-w-max flex-1 pr-3 pl-3 whitespace-pre"
       >
-        {highlightCode(code, language) ?? code}
+        {highlightCode(code.replace(/\n$/, ""), language) ??
+          code.replace(/\n$/, "")}
       </code>
     </div>
   );

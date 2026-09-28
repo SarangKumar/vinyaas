@@ -15,8 +15,8 @@ function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
       aria-label={item.isNew ? `${item.title}, new` : undefined}
       className={
         current
-          ? `bg-muted text-foreground flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm font-medium ${focusRing}`
-          : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm ${focusRing}`
+          ? `bg-muted text-foreground flex min-h-9 cursor-pointer items-center rounded-md px-2 py-2 text-sm font-medium ${focusRing}`
+          : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex min-h-9 cursor-pointer items-center rounded-md px-2 py-2 text-sm ${focusRing}`
       }
     >
       <span className="min-w-0 truncate">{item.title}</span>

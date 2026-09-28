@@ -1,10 +1,13 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Skeleton } from "@/registry/new-york/ui/skeleton/skeleton";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("skeleton");
 
 const usage = `import { Skeleton } from "@/components/ui/skeleton/skeleton";
 

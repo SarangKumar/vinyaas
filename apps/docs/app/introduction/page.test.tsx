@@ -1,69 +1,87 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
+import { DocsStoreProvider } from "@/lib/store/provider";
+
 import IntroductionPage from "./page";
 
 describe("introduction", () => {
   it("introduces Vinyaas and links into the docs", () => {
-    render(<IntroductionPage />);
+    render(
+      <DocsStoreProvider>
+        <IntroductionPage />
+      </DocsStoreProvider>,
+    );
 
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Accessible React components you can own.",
+        name: "Accessible React components you install as source.",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Get Started" })).toHaveAttribute(
-      "href",
-      "/installation",
-    );
-    expect(screen.getByRole("link", { name: "Get Started" })).toHaveClass(
-      "h-8",
-    );
+    expect(
+      screen.getAllByRole("link", { name: "Get Started" })[0],
+    ).toHaveAttribute("href", "/installation");
     expect(
       screen.getByRole("link", { name: "Browse Components" }),
     ).toHaveAttribute("href", "/components");
+    expect(
+      screen.getByRole("heading", { name: "What Vinyaas is" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Why it exists" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Core philosophy" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "How the components work" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Installation and usage flow" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Customization" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Registry and CLI model" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Component composition" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Accessibility and design principles",
+      }),
+    ).toBeInTheDocument();
     expect(screen.getByText("npx @vinyaas/cli init")).toBeInTheDocument();
     expect(screen.getByText("npx @vinyaas/cli add button")).toBeInTheDocument();
-    expect(screen.getAllByText("bash").length).toBeGreaterThan(0);
     expect(
-      screen.getByRole("heading", { name: "Philosophy" }),
-    ).toBeInTheDocument();
+      screen.getAllByRole("tablist", { name: "Package manager" }).length,
+    ).toBeGreaterThan(0);
     expect(
-      screen.getByRole("heading", { name: "Own your components" }),
+      screen.getByRole("tablist", { name: "Component example language" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: "Email" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Button" })).toHaveAttribute(
+    expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Installation" })).toHaveAttribute(
       "href",
-      "/components/button",
-    );
-    expect(screen.getByRole("link", { name: "Checkbox" })).toHaveAttribute(
-      "href",
-      "/components/checkbox",
-    );
-    expect(screen.getByRole("link", { name: "Input" })).toHaveAttribute(
-      "href",
-      "/components/input",
-    );
-    expect(screen.getByRole("link", { name: "Label" })).toHaveAttribute(
-      "href",
-      "/components/label",
-    );
-    expect(screen.getByRole("link", { name: "Radio Group" })).toHaveAttribute(
-      "href",
-      "/components/radio-group",
-    );
-    expect(screen.getByRole("link", { name: "Textarea" })).toHaveAttribute(
-      "href",
-      "/components/textarea",
+      "/installation",
     );
     expect(
-      screen.getByRole("checkbox", { name: "Accept terms" }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: "Comfortable" })).toBeChecked();
-    expect(
-      screen.getByRole("textbox", { name: "Message" }),
-    ).toBeInTheDocument();
+      screen.getByRole("link", { name: "components.json" }),
+    ).toHaveAttribute("href", "/components-json");
+    expect(screen.getByRole("link", { name: "CLI" })).toHaveAttribute(
+      "href",
+      "/installation#cli",
+    );
+    expect(screen.getByRole("link", { name: "Components" })).toHaveAttribute(
+      "href",
+      "/components",
+    );
+    expect(screen.getByRole("link", { name: "Changelog" })).toHaveAttribute(
+      "href",
+      "/changelog",
+    );
   });
 });

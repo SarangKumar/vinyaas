@@ -26,6 +26,7 @@ const people = [
   ["AL", "Ada Lovelace", "Active", "Writer"],
   ["PS", "Priya Shah", "Away", "Finance"],
   ["RM", "Rahul Mehta", "Active", "Platform"],
+  ["SK", "Sarang Kumar", "Active", "Design"],
 ];
 
 export function TableBlock() {
@@ -35,17 +36,22 @@ export function TableBlock() {
   );
 
   return (
-    <PlayBlock title="Directory">
-      <Input
-        aria-label="Search people"
-        placeholder="Search people"
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-      />
+    <PlayBlock title="Directory" description="People across the workspace.">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+        <Input
+          aria-label="Search people"
+          placeholder="Search people"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          className="max-w-sm min-w-0"
+        />
+        <p className="text-muted-foreground text-xs">{rows.length} people</p>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
+            <TableHead>Role</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
@@ -53,7 +59,7 @@ export function TableBlock() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {rows.map(([initials, name, status]) => (
+          {rows.map(([initials, name, status, role]) => (
             <TableRow key={name}>
               <TableCell>
                 <span className="flex min-w-0 items-center gap-2">
@@ -62,9 +68,10 @@ export function TableBlock() {
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate">{name}</span>
+                  <span className="truncate font-medium">{name}</span>
                 </span>
               </TableCell>
+              <TableCell className="text-muted-foreground">{role}</TableCell>
               <TableCell>
                 <Badge variant={status === "Away" ? "outline" : "secondary"}>
                   {status}
@@ -92,7 +99,6 @@ export function TableBlock() {
           ))}
         </TableBody>
       </Table>
-      <p className="text-muted-foreground text-xs">{rows.length} people</p>
     </PlayBlock>
   );
 }

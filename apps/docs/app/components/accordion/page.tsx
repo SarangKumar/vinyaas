@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
 import { Label } from "@/registry/new-york/ui/label/label";
 import { Switch } from "@/registry/new-york/ui/switch/switch";
@@ -13,6 +12,10 @@ import {
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("accordion");
 
 const usage = `import {
   Accordion,

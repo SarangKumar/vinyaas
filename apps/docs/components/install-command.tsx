@@ -62,37 +62,40 @@ export function InstallCommand({
   }, []);
 
   return (
-    <div className="flex flex-col gap-2">
-      <div
-        role="tablist"
-        aria-label="Package manager"
-        className="flex flex-wrap gap-1"
-      >
-        {packageManagers.map((name) => {
-          const selected = manager === name;
+    <CodeBlock
+      language="bash"
+      code={commands[manager]}
+      leading={
+        <div
+          role="tablist"
+          aria-label="Package manager"
+          className="flex flex-wrap gap-1"
+        >
+          {packageManagers.map((name) => {
+            const selected = manager === name;
 
-          return (
-            <button
-              key={name}
-              type="button"
-              role="tab"
-              aria-selected={selected}
-              className={
-                selected
-                  ? `bg-muted text-foreground cursor-pointer rounded-md px-2 py-1 text-xs font-medium ${focusRing}`
-                  : `text-subtle-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-md px-2 py-1 text-xs ${focusRing}`
-              }
-              onClick={() => {
-                setManager(name);
-                remember(name);
-              }}
-            >
-              {name}
-            </button>
-          );
-        })}
-      </div>
-      <CodeBlock language="bash" code={commands[manager]} />
-    </div>
+            return (
+              <button
+                key={name}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                className={
+                  selected
+                    ? `bg-muted text-foreground cursor-pointer rounded-md px-2 py-1 text-xs font-medium ${focusRing}`
+                    : `text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-md px-2 py-1 text-xs ${focusRing}`
+                }
+                onClick={() => {
+                  setManager(name);
+                  remember(name);
+                }}
+              >
+                {name}
+              </button>
+            );
+          })}
+        </div>
+      }
+    />
   );
 }

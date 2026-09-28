@@ -10,7 +10,7 @@ const docsRoot = path.resolve(
 );
 
 describe("docs theme", () => {
-  it("maps semantic colors through the Tailwind v4 theme", async () => {
+  it("maps semantic OKLCH colors through the Tailwind v4 theme", async () => {
     const css = await fs.readFile(
       path.join(docsRoot, "app/globals.css"),
       "utf8",
@@ -19,21 +19,36 @@ describe("docs theme", () => {
     expect(css).toContain('@import "tailwindcss"');
     expect(css).toContain("@custom-variant dark (&:where(.dark, .dark *))");
     expect(css).toContain("@theme inline");
+    expect(css).toContain("--radius: 0.5rem");
+    expect(css).toContain("--radius-lg: var(--radius)");
     expect(css).toContain("--color-background: var(--background)");
     expect(css).toContain("--color-foreground: var(--foreground)");
+    expect(css).toContain("--color-primary: var(--primary)");
+    expect(css).toContain("--color-card: var(--card)");
     expect(css).toContain("--color-sidebar: var(--sidebar)");
-    expect(css).toContain("--foreground: var(--palette-neutral-950)");
-    expect(css).toContain("--foreground: var(--palette-white)");
-    expect(css).toContain("--background: var(--palette-white)");
-    expect(css).toContain("--body: var(--palette-neutral-800)");
-    expect(css).toContain("--body: var(--palette-neutral-200)");
-    expect(css).toContain("--muted-foreground: var(--palette-neutral-300)");
-    expect(css).toContain("--sidebar-foreground: var(--palette-neutral-200)");
-    expect(css).toContain("--subtle-foreground: var(--palette-neutral-500)");
-    expect(css).toContain("--new: var(--palette-new)");
+    expect(css).toContain("--color-sidebar-primary: var(--sidebar-primary)");
+    expect(css).toContain("--color-chart-1: var(--chart-1)");
+    expect(css).toContain("--color-chart-5: var(--chart-5)");
+    expect(css).toContain("--background: oklch(1 0 0)");
+    expect(css).toContain("--foreground: oklch(0.141 0.005 285.823)");
+    expect(css).toContain("--primary: oklch(0.21 0.006 285.885)");
+    expect(css).toContain("--primary-foreground: oklch(0.985 0 0)");
+    expect(css).toContain("--ring: oklch(0.705 0.015 286.067)");
+    expect(css).toContain("--card: oklch(1 0 0)");
+    expect(css).toContain("--background: oklch(0.141 0.005 285.823)");
+    expect(css).toContain("--card: oklch(0.21 0.006 285.885)");
+    expect(css).toContain("--primary: oklch(0.92 0.004 286.32)");
+    expect(css).toContain("--ring: oklch(0.552 0.016 285.938)");
+    expect(css).toContain("--sidebar-primary: oklch(0.488 0.243 264.376)");
+    expect(css).toContain("--border: oklch(1 0 0 / 10%)");
+    expect(css).toContain("--body: var(--foreground)");
+    expect(css).toContain("--subtle-foreground: var(--muted-foreground)");
+    expect(css).toContain("--new: var(--primary)");
     expect(css).toContain("--color-body: var(--body)");
     expect(css).toContain("--color-new: var(--new)");
-    expect(css).toContain("--background: var(--palette-black)");
+    expect(css).toContain("--playground-gap: 1rem");
+    expect(css).toContain("--playground-gap-2xl: 2.5rem");
+    expect(css).toContain("--spacing-playground-gap: var(--playground-gap)");
     expect(css).toContain(
       "--font-mono: var(--font-geist-mono), ui-monospace, monospace",
     );
@@ -41,8 +56,7 @@ describe("docs theme", () => {
     expect(css).toContain("color-scheme: dark");
     expect(css).toContain(":root");
     expect(css).toContain(".dark");
-    expect(css).not.toMatch(/--foreground:\s*var\(--palette-mist\)/);
-    expect(css).not.toMatch(/--background:\s*var\(--palette-ink\)/);
+    expect(css).not.toContain("--palette-");
     await expect(
       fs.access(path.join(docsRoot, "tailwind.config.ts")),
     ).rejects.toThrow();

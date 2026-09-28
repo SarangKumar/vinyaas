@@ -28,16 +28,16 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
   return (
     <DocsSearchProvider>
       <div className="bg-background text-foreground flex h-full min-h-0 flex-col">
-        <header className="border-border bg-background z-20 h-12 shrink-0 border-b">
-          <div className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4">
+        <header className="border-border bg-background sticky top-0 z-30 h-12 shrink-0 border-b">
+          <div className="grid h-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 px-4">
             <div
               data-header-section="start"
-              className="flex min-w-0 items-center gap-3"
+              className="flex shrink-0 items-center gap-3"
             >
               <DocsMobileNav />
               <Link
                 href={homePath}
-                className={`text-foreground inline-flex min-w-0 items-center gap-2 rounded-md text-sm font-medium ${focusRing}`}
+                className={`text-foreground inline-flex shrink-0 items-center gap-2 rounded-md text-sm font-medium ${focusRing}`}
               >
                 <Image
                   src={logo}
@@ -46,11 +46,11 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
                   height={20}
                   className="h-5 w-5"
                 />
-                <span className="truncate">Vinyaas</span>
+                <span>Vinyaas</span>
               </Link>
               <nav
                 aria-label="Site"
-                className="hidden min-w-0 items-center gap-1 md:flex"
+                className="hidden shrink-0 items-center gap-1 md:flex"
               >
                 <Link href={introductionPath} className={headerLink}>
                   Docs
@@ -62,13 +62,13 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
             </div>
             <div
               data-header-section="end"
-              className="flex min-w-0 shrink-0 items-center justify-end gap-2 lg:gap-4"
+              className="flex min-w-0 items-center justify-end gap-2 lg:gap-4"
             >
-              <div className="hidden w-56 min-w-0 md:block lg:w-72">
+              <div className="hidden min-w-0 flex-1 md:block md:max-w-56 lg:max-w-72">
                 <DocsSearchField />
               </div>
               <DocsSearchIcon />
-              <div className="hidden items-center gap-4 lg:flex">
+              <div className="hidden shrink-0 items-center gap-4 lg:flex">
                 <GitHubLink />
                 {portfolio ? (
                   <a

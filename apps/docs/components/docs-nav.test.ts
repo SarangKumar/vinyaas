@@ -23,30 +23,29 @@ describe("documentation navigation", () => {
       "SECTIONS",
       "COMPONENTS",
       "GET STARTED",
+      "RESOURCES",
     ]);
     expect(docsNav[0]?.items.map((item) => item.title)).toEqual([
-      "Introduction",
-      "Components",
       "Installation",
       "CLI",
     ]);
     expect(docsNav[0]?.items.map((item) => item.href)).toEqual([
-      "/introduction",
-      "/components",
       "/installation",
       "/installation#cli",
     ]);
     expect(docsNav[1]?.layout).toBe("names");
     expect(docsNav[2]?.items.map((item) => item.title)).toEqual([
-      "Installation",
+      "Introduction",
+      "Components",
       "components.json",
-      "CLI",
     ]);
     expect(docsNav[2]?.items.map((item) => item.href)).toEqual([
-      "/installation",
+      "/introduction",
+      "/components",
       "/components-json",
-      "/installation#cli",
     ]);
+    expect(docsNav[3]?.items.map((item) => item.title)).toEqual(["Changelog"]);
+    expect(docsNav[3]?.items.map((item) => item.href)).toEqual(["/changelog"]);
     expect(docsNav.some((group) => group.title === "Forms")).toBe(false);
     expect(JSON.stringify(docsNav)).not.toContain('"icon"');
   });

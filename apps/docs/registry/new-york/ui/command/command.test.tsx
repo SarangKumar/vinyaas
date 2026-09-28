@@ -24,6 +24,9 @@ function Menu({ onSelect = () => undefined }: { onSelect?: () => void }) {
           <CommandItem value="Input" disabled>
             Input
           </CommandItem>
+          <CommandItem value="Dialog" onClick={onSelect}>
+            Dialog
+          </CommandItem>
         </CommandGroup>
       </CommandList>
     </Command>
@@ -55,6 +58,31 @@ describe("Command", () => {
 
     expect(calls).toEqual(["button"]);
     expect(screen.getByRole("option", { name: "Input" })).toBeDisabled();
+  });
+
+  it("highlights on hover and focuses options with the keyboard", () => {
+    render(<Menu />);
+    const button = screen.getByRole("option", { name: "Button" });
+    const dialog = screen.getByRole("option", { name: "Dialog" });
+
+    expect(button).toHaveAttribute("tabIndex", "0");
+    expect(dialog).toHaveAttribute("tabIndex", "0");
+    expect(screen.getByRole("option", { name: "Input" })).toHaveAttribute(
+      "tabIndex",
+      "-1",
+    );
+
+    fireEvent.mouseEnter(dialog);
+    expect(dialog).toHaveAttribute("aria-selected", "true");
+    expect(dialog).toHaveAttribute("data-selected");
+    expect(button).toHaveAttribute("aria-selected", "false");
+
+    fireEvent.focus(dialog);
+    expect(dialog).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(dialog, { key: "ArrowUp" });
+    expect(button).toHaveAttribute("aria-selected", "true");
+    expect(button).toHaveFocus();
   });
 
   it("aligns an icon with the title and keeps the shortcut on that line", () => {
@@ -90,6 +118,7 @@ describe("Command", () => {
     expect(single).toHaveClass("items-start");
     expect(disabled).toBeDisabled();
     expect(disabled).toHaveClass("items-start");
+    expect(single).toHaveClass("hover:bg-accent", "data-selected:bg-accent");
   });
 
   it("merges className", () => {
@@ -107,10 +136,11 @@ describe("Command", () => {
         ?.parentElement,
     ).toHaveClass(
       "max-w-sm",
-      "border-2",
-      "bg-background",
+      "border",
+      "bg-popover",
       "rounded-lg",
-      "shadow-[0_12px_28px_-16px_var(--foreground)]",
+      "shadow-[0_14px_32px_-10px_oklch(0_0_0/0.28)]",
+      "dark:shadow-[0_14px_32px_-10px_oklch(0_0_0/0.55)]",
     );
   });
 });

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import Link from "next/link";
 
@@ -10,9 +11,16 @@ import { focusRing } from "@/components/focus-ring";
 import { GitHubLink } from "@/components/github-link";
 import { portfolioUrl } from "@/lib/public-env";
 
+/**
+ * Mobile documentation drawer.
+ * Drawer content portals to document.body only after the user opens it
+ * (`open` starts false), so server HTML and the first client paint match.
+ */
 export function DocsMobileNav() {
   const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const panelId = useId();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const portfolio = portfolioUrl();
 
   useEffect(() => {
@@ -20,85 +28,118 @@ export function DocsMobileNav() {
       return;
     }
 
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setOpen(false);
-      }
-    }
-
-    function onPointerDown(event: PointerEvent) {
-      const target = event.target;
-
-      if (
-        rootRef.current &&
-        target instanceof Node &&
-        !rootRef.current.contains(target)
-      ) {
-        setOpen(false);
+        triggerRef.current?.focus();
       }
     }
 
     document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown);
 
     return () => {
+      document.body.style.overflow = previous;
       document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
     };
   }, [open]);
 
+  // `open` starts false on server and first client paint, so createPortal
+  // (and document.body) only run after a user click on the client.
+  const drawer = open
+    ? createPortal(
+        <div className="fixed inset-0 z-40 lg:hidden" role="presentation">
+          <button
+            type="button"
+            aria-label="Close menu"
+            className="bg-background/80 absolute inset-0 backdrop-blur-[1px]"
+            onClick={() => {
+              setOpen(false);
+              triggerRef.current?.focus();
+            }}
+          />
+          <div
+            ref={panelRef}
+            id={panelId}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation"
+            className="border-border bg-background absolute inset-y-0 left-0 flex w-[min(20rem,calc(100vw-2.5rem))] max-w-full flex-col border-r shadow-[0_12px_40px_-24px_var(--foreground)]"
+          >
+            <div className="border-border flex items-center justify-between gap-3 border-b px-4 py-3">
+              <p className="text-foreground text-sm font-medium">Navigation</p>
+              <button
+                type="button"
+                aria-label="Close menu"
+                className={`text-sidebar-foreground hover:bg-muted hover:text-foreground flex size-9 cursor-pointer items-center justify-center rounded-md ${focusRing}`}
+                onClick={() => {
+                  setOpen(false);
+                  triggerRef.current?.focus();
+                }}
+              >
+                <CloseIcon />
+              </button>
+            </div>
+            <div
+              className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-3 py-4"
+              onClick={(event) => {
+                const target = event.target;
+
+                if (target instanceof Element && target.closest("a")) {
+                  setOpen(false);
+                }
+              }}
+            >
+              <nav aria-label="Site" className="mb-4 flex flex-col gap-0.5">
+                <Link href={introductionPath} className={menuLink}>
+                  Docs
+                </Link>
+                <Link href={componentsPath} className={menuLink}>
+                  Components
+                </Link>
+              </nav>
+              <DocsNavLinks className="flex flex-col gap-5" />
+            </div>
+            <div className="border-border flex flex-col gap-1 border-t px-3 py-3">
+              <GitHubLink />
+              {portfolio ? (
+                <a
+                  href={portfolio}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`text-sidebar-foreground hover:text-foreground rounded-md px-2 py-2.5 text-sm ${focusRing}`}
+                >
+                  Portfolio
+                </a>
+              ) : null}
+            </div>
+          </div>
+        </div>,
+        document.body,
+      )
+    : null;
+
   return (
-    <div ref={rootRef} className="relative lg:hidden">
+    <div className="lg:hidden">
       <button
+        ref={triggerRef}
         type="button"
         aria-label="Menu"
         aria-expanded={open}
-        className={`text-sidebar-foreground hover:bg-muted hover:text-foreground flex size-8 cursor-pointer items-center justify-center rounded-md ${focusRing}`}
+        aria-controls={open ? panelId : undefined}
+        className={`text-sidebar-foreground hover:bg-muted hover:text-foreground flex size-9 cursor-pointer items-center justify-center rounded-md ${focusRing}`}
         onClick={() => setOpen((current) => !current)}
       >
-        <MenuIcon />
+        {open ? <CloseIcon /> : <MenuIcon />}
       </button>
-      {open ? (
-        <div className="border-border bg-background absolute top-full left-0 z-30 mt-2 max-h-[min(32rem,calc(100dvh-4rem))] w-72 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-md border p-3 shadow-sm">
-          <div
-            onClick={(event) => {
-              const target = event.target;
-
-              if (target instanceof Element && target.closest("a")) {
-                setOpen(false);
-              }
-            }}
-          >
-            <nav aria-label="Site" className="mb-3 flex flex-col gap-0.5">
-              <Link href={introductionPath} className={menuLink}>
-                Docs
-              </Link>
-              <Link href={componentsPath} className={menuLink}>
-                Components
-              </Link>
-            </nav>
-            <DocsNavLinks className="flex flex-col gap-4" />
-          </div>
-          <div className="border-border mt-4 flex flex-col gap-1 border-t pt-3">
-            <GitHubLink />
-            {portfolio ? (
-              <a
-                href={portfolio}
-                target="_blank"
-                rel="noreferrer"
-                className={`text-sidebar-foreground hover:text-foreground rounded-md px-2 py-1.5 text-sm ${focusRing}`}
-              >
-                Portfolio
-              </a>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
+      {drawer}
     </div>
   );
 }
 
-const menuLink = `text-sidebar-foreground hover:bg-muted hover:text-foreground rounded-md px-2 py-1.5 text-sm ${focusRing}`;
+const menuLink = `text-sidebar-foreground hover:bg-muted hover:text-foreground rounded-md px-2 py-2.5 text-sm ${focusRing}`;
 
 function MenuIcon() {
   return (
@@ -112,6 +153,22 @@ function MenuIcon() {
       strokeLinecap="round"
     >
       <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="size-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <path d="M6 6l12 12M18 6L6 18" />
     </svg>
   );
 }

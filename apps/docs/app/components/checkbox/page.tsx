@@ -1,11 +1,14 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
 import { Label } from "@/registry/new-york/ui/label/label";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("checkbox");
 
 const usage = `import { Checkbox } from "@/components/ui/checkbox/checkbox";
 import { Label } from "@/components/ui/label/label";

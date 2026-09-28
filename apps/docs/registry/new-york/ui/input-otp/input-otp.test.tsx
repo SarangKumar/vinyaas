@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
   InputOTP,
@@ -85,5 +85,121 @@ describe("Input OTP", () => {
     );
 
     expect(screen.getByRole("textbox", { name: "Code" })).toBeDisabled();
+  });
+
+  it("keeps the control on one horizontal row", () => {
+    const { container } = render(
+      <InputOTP aria-label="Code">
+        <Slots />
+      </InputOTP>,
+    );
+
+    expect(container.querySelector('[data-slot="input-otp"]')).toHaveClass(
+      "flex-nowrap",
+      "justify-center",
+    );
+    expect(
+      container.querySelector('[data-slot="input-otp-group"]'),
+    ).toHaveClass("flex-nowrap");
+    expect(
+      container.querySelector('[data-slot="input-otp-group"]'),
+    ).not.toHaveClass("flex-wrap");
+  });
+
+  it("calls onComplete once when all digits are entered", () => {
+    const onComplete = vi.fn();
+
+    render(
+      <InputOTP aria-label="Code" onComplete={onComplete}>
+        <Slots />
+      </InputOTP>,
+    );
+
+    const input = screen.getByRole("textbox", { name: "Code" });
+
+    fireEvent.change(input, { target: { value: "12345" } });
+    expect(onComplete).not.toHaveBeenCalled();
+
+    fireEvent.change(input, { target: { value: "123456" } });
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onComplete).toHaveBeenCalledWith("123456");
+
+    fireEvent.change(input, { target: { value: "123456" } });
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls onComplete after paste and again after delete then complete", () => {
+    const onComplete = vi.fn();
+
+    render(
+      <InputOTP aria-label="Code" onComplete={onComplete}>
+        <Slots />
+      </InputOTP>,
+    );
+
+    const input = screen.getByRole("textbox", { name: "Code" });
+
+    fireEvent.paste(input, {
+      clipboardData: { getData: () => "654321" },
+    });
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onComplete).toHaveBeenCalledWith("654321");
+
+    fireEvent.change(input, { target: { value: "65432" } });
+    fireEvent.change(input, { target: { value: "654321" } });
+    expect(onComplete).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not complete when disabled or incomplete", () => {
+    const onComplete = vi.fn();
+
+    const { unmount } = render(
+      <InputOTP aria-label="Code" disabled onComplete={onComplete}>
+        <Slots />
+      </InputOTP>,
+    );
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Code" }), {
+      target: { value: "123456" },
+    });
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(screen.getByRole("textbox", { name: "Code" })).toHaveValue("");
+    unmount();
+
+    render(
+      <InputOTP aria-label="Code" onComplete={onComplete}>
+        <Slots />
+      </InputOTP>,
+    );
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Code" }), {
+      target: { value: "12" },
+    });
+    expect(onComplete).not.toHaveBeenCalled();
+  });
+
+  it("completes in controlled mode", () => {
+    const onComplete = vi.fn();
+
+    function Field() {
+      const [value, setValue] = useState("");
+
+      return (
+        <InputOTP
+          aria-label="Code"
+          value={value}
+          onChange={setValue}
+          onComplete={onComplete}
+        >
+          <Slots />
+        </InputOTP>
+      );
+    }
+
+    render(<Field />);
+    fireEvent.change(screen.getByRole("textbox", { name: "Code" }), {
+      target: { value: "112233" },
+    });
+    expect(onComplete).toHaveBeenCalledWith("112233");
   });
 });

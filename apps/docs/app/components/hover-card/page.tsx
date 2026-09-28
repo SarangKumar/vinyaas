@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -12,6 +11,10 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/registry/new-york/ui/hover-card/hover-card";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("hover-card");
 
 const usage = `import { Button } from "@/components/ui/button/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card/hover-card";

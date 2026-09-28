@@ -24,19 +24,22 @@ describe("DocsNavLinks", () => {
       .map((component) => component.name)
       .sort((a, b) => a.localeCompare(b));
 
-    expect(titles[0]).toBe("Introduction");
-    expect(titles[1]).toBe("Components");
-    expect(titles[2]).toBe("Installation");
-    expect(titles[3]).toBe("CLI");
-    expect(titles.slice(4, 4 + componentNames.length)).toEqual(componentNames);
-    expect(titles.slice(-3)).toEqual([
-      "Installation",
+    expect(titles[0]).toBe("Installation");
+    expect(titles[1]).toBe("CLI");
+    expect(titles.slice(2, 2 + componentNames.length)).toEqual(componentNames);
+    expect(titles.slice(-4)).toEqual([
+      "Introduction",
+      "Components",
       "components.json",
-      "CLI",
+      "Changelog",
     ]);
     expect(within(nav).getByText("SECTIONS")).toBeInTheDocument();
     expect(within(nav).getByText("COMPONENTS")).toBeInTheDocument();
     expect(within(nav).getByText("GET STARTED")).toBeInTheDocument();
+    expect(within(nav).getByText("RESOURCES")).toBeInTheDocument();
+    expect(
+      within(nav).getByRole("link", { name: "Changelog" }),
+    ).toHaveAttribute("href", "/changelog");
     expect(
       within(nav).getByRole("link", { name: "Components" }),
     ).toHaveAttribute("href", "/components");

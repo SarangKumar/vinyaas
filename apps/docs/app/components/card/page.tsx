@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -31,8 +30,11 @@ import {
 import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
 import { Separator } from "@/registry/new-york/ui/separator/separator";
 import { Switch } from "@/registry/new-york/ui/switch/switch";
-
 import { ProfileCardDemo, ProjectCardDemo } from "./card-demos";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("card");
 
 const usage = `import {
   Card,

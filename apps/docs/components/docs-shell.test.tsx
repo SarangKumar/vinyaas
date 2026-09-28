@@ -106,7 +106,13 @@ describe("DocsShell", () => {
       "true",
     );
     expect(
-      within(start).getByRole("link", { name: "GitHub" }),
+      screen.getByRole("dialog", { name: "Navigation" }),
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("dialog", { name: "Navigation" })).getByRole(
+        "link",
+        { name: "GitHub" },
+      ),
     ).toBeInTheDocument();
 
     const github = within(end).getByRole("link", { name: "GitHub" });
@@ -119,12 +125,17 @@ describe("DocsShell", () => {
     expect(github).not.toHaveTextContent("GitHub");
     expect(github.querySelector("svg")).toBeInTheDocument();
     expect(end.className).toContain("lg:gap-4");
-    expect(document.querySelector("header")).toHaveClass("h-12");
+    expect(document.querySelector("header")).toHaveClass(
+      "h-12",
+      "sticky",
+      "top-0",
+      "z-30",
+    );
     expect(
       within(end).getAllByRole("button", { name: "Search documentation" })
         .length,
     ).toBeGreaterThan(0);
-    expect(start.className).toContain("min-w-0");
+    expect(start.className).toContain("shrink-0");
     expect(screen.queryByText("Forms")).toBeNull();
     expect(screen.queryByText("Data Display")).toBeNull();
     expect(

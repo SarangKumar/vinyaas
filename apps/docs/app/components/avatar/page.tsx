@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -9,6 +8,10 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/registry/new-york/ui/avatar/avatar";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("avatar");
 
 const usage = `import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar/avatar";
 

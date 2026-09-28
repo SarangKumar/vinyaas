@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -18,6 +17,10 @@ import {
   TypographyP,
   TypographySmall,
 } from "@/registry/new-york/ui/typography/typography";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("typography");
 
 const usage = `import {
   Typography,
@@ -150,6 +153,86 @@ const examples: ComponentExample[] = [
   <TypographyH1>128</TypographyH1>
   <TypographyMuted>Signups in the last 7 days</TypographyMuted>
 </Typography>`,
+  },
+  {
+    id: "document",
+    title: "Long-form document",
+    description:
+      "Headings, lead, body, ordered list, inline code, and muted metadata.",
+    preview: (
+      <Typography className="typeset-docs max-w-md text-left">
+        <TypographyH2>Installing components</TypographyH2>
+        <TypographyLead>
+          Copy source into the repository, then edit it like any other file.
+        </TypographyLead>
+        <TypographyP>
+          Run <code>vinyaas add button</code> after <code>vinyaas init</code>.
+          The CLI writes the file under <code>components/ui</code>.
+        </TypographyP>
+        <ol className="text-body list-decimal pl-5 text-base leading-7 [&>li]:mt-2">
+          <li>Initialize the project</li>
+          <li>Add the components you need</li>
+          <li>Commit the installed source</li>
+        </ol>
+        <TypographyMuted>Updated for v1.0.0</TypographyMuted>
+      </Typography>
+    ),
+    code: `<Typography className="typeset-docs">
+  <TypographyH2>Installing components</TypographyH2>
+  <TypographyLead>
+    Copy source into the repository, then edit it like any other file.
+  </TypographyLead>
+  <TypographyP>
+    Run <code>vinyaas add button</code> after <code>vinyaas init</code>.
+  </TypographyP>
+  <ol className="list-decimal pl-5">
+    <li>Initialize the project</li>
+    <li>Add the components you need</li>
+    <li>Commit the installed source</li>
+  </ol>
+  <TypographyMuted>Updated for v1.0.0</TypographyMuted>
+</Typography>`,
+  },
+  {
+    id: "customize",
+    title: "Customize with CSS variables",
+    description:
+      "Define .typeset-docs tokens in your stylesheet, then wrap Typography in that class. Size, leading, and flow control density without changing the component API.",
+    preview: (
+      <div className="typeset-docs border-border bg-card w-full max-w-md rounded-md border p-4 text-left">
+        <Typography>
+          <TypographyH3>Docs density</TypographyH3>
+          <TypographyP>
+            This preview uses <code>.typeset-docs</code> tokens for body size,
+            leading, and flow.
+          </TypographyP>
+          <TypographyMuted>
+            Override the variables in your global stylesheet.
+          </TypographyMuted>
+        </Typography>
+      </div>
+    ),
+    code: `/* globals.css
+.typeset-docs {
+  --typeset-font-body: var(--font-geist-sans);
+  --typeset-font-heading: var(--font-geist-sans);
+  --typeset-font-mono: var(--font-geist-mono);
+  --typeset-size: 15px;
+  --typeset-leading: 1.75;
+  --typeset-flow: 1.25em;
+}
+*/
+
+export function DocsCopy() {
+  return (
+    <div className="typeset-docs">
+      <Typography>
+        <TypographyH3>Docs density</TypographyH3>
+        <TypographyP>Scoped tokens control size and rhythm.</TypographyP>
+      </Typography>
+    </div>
+  );
+}`,
   },
 ];
 

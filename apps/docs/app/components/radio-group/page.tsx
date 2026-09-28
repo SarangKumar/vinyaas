@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -9,6 +8,10 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/registry/new-york/ui/radio-group/radio-group";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("radio-group");
 
 const usage = `import { Label } from "@/components/ui/label/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group/radio-group";

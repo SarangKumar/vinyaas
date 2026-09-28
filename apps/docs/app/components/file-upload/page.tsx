@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -11,6 +10,10 @@ import {
   FileUploadDropzone,
   FileUploadList,
 } from "@/registry/new-york/ui/file-upload/file-upload";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("file-upload");
 
 const usage = `import { FileUpload, FileUploadDropzone, FileUploadList } from "@/components/ui/file-upload/file-upload";
 

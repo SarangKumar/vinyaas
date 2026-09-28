@@ -20,8 +20,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vinyaas",
-  description: "UI components installed into your project as source.",
+  title: {
+    default: "Vinyaas",
+    template: "%s · Vinyaas",
+  },
+  description:
+    "Composable React UI components installed into your project as source.",
 };
 
 /**

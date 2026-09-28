@@ -9,7 +9,7 @@ import {
 
 export function UploadBlock() {
   return (
-    <PlayBlock title="Documents">
+    <PlayBlock title="Uploads" description="Drop files into the workspace.">
       <FileUpload accept=".pdf,.png" multiple>
         <FileUploadDropzone>Drop a PDF or PNG</FileUploadDropzone>
         <FileUploadList />

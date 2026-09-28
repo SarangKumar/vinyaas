@@ -42,8 +42,9 @@ describe("Button", () => {
 
     rerender(<Button variant="destructive">Save</Button>);
     expect(button()).toHaveClass(
-      "bg-destructive",
-      "text-destructive-foreground",
+      "bg-destructive/10",
+      "text-destructive",
+      "hover:bg-destructive/20",
     );
     expect(button()).toHaveClass("disabled:opacity-50");
   });

@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -10,6 +9,10 @@ import {
   NativeSelectOptGroup,
   NativeSelectOption,
 } from "@/registry/new-york/ui/native-select/native-select";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("native-select");
 
 const usage = `import { Label } from "@/components/ui/label/label";
 import {

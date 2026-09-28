@@ -14,8 +14,8 @@ export function codeLanguageLabel(language: CodeLanguage) {
 }
 
 /**
- * A string stays in its declared language.
- * A TSX/JSX record follows the language selected in that demo when that source exists.
+ * Resolves example source for the current global preference.
+ * String demos stay on the declared language label; dual records follow Redux.
  */
 export function resolveDemoCode(
   code: DemoCode,

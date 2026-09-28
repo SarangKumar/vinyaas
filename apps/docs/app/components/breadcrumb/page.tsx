@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import { Card } from "@/registry/new-york/ui/card/card";
 import {
   Breadcrumb,
@@ -15,6 +14,10 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { ChevronRightIcon } from "@/components/icons";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("breadcrumb");
 
 const usage = `import {
   Breadcrumb,

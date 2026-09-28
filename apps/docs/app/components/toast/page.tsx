@@ -1,10 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-
 import {
   ActionToastDemo,
   DefaultToastDemo,
@@ -16,6 +14,10 @@ import {
   SuccessToastDemo,
   WarningToastDemo,
 } from "./toast-demos";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("toast");
 
 const usage = `import { Button } from "@/components/ui/button/button";
 import { toast, Toaster } from "@/components/ui/toast/toast";

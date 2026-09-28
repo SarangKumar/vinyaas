@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import {
@@ -10,12 +11,19 @@ import {
 import { DocsArticle } from "@/components/docs-article";
 import { focusRing } from "@/components/focus-ring";
 import { NewIndicator } from "@/components/new-indicator";
+import { pageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Components",
+  description:
+    "Browse the Vinyaas catalog of accessible UI primitives you install as source with the CLI.",
+});
 
 const heading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 
 const nameGrid =
-  "grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3";
+  "grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 md:grid-cols-3";
 
 export default function ComponentsPage() {
   const added = [...newComponents()].sort((a, b) =>

@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
+
 import { components, targetComponentCount } from "@/components/component-meta";
 import { DocsArticle } from "@/components/docs-article";
+import { pageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Changelog",
+  description:
+    "Release notes for Vinyaas v0.1 and v1.0.0, including the components shipped in each version.",
+});
 
 const heading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";

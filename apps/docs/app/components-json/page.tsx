@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
+
 import { DocsArticle } from "@/components/docs-article";
 import { CodeBlock } from "@/components/code-block";
+import { pageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = pageMetadata({
+  title: "components.json",
+  description:
+    "Configure the Vinyaas style, aliases, and Tailwind CSS path in components.json after vinyaas init.",
+});
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
@@ -86,7 +95,7 @@ export default function ComponentsJsonPage() {
         <CodeBlock
           code={example.trim()}
           leading={
-            <span className="text-subtle-foreground font-mono text-xs">
+            <span className="text-muted-foreground font-mono text-xs">
               json
             </span>
           }

@@ -27,7 +27,10 @@ describe("InstallCommand", () => {
     for (const block of document.querySelectorAll("code")) {
       expect(block).toHaveAttribute("data-language", "bash");
     }
-    expect(screen.getAllByText("bash")).toHaveLength(2);
+    expect(screen.queryByText("bash")).toBeNull();
+    expect(
+      screen.getAllByRole("tablist", { name: "Package manager" }),
+    ).toHaveLength(2);
     expect(screen.getByText("npx @vinyaas/cli init")).toBeInTheDocument();
     expect(screen.getAllByRole("tab", { name: "npm" })[0]).toHaveAttribute(
       "aria-selected",

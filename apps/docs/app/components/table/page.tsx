@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -15,6 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/registry/new-york/ui/table/table";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("table");
 
 const rows = [
   ["Ada Lovelace", "Writer"],

@@ -28,7 +28,7 @@ describe("components catalog", () => {
         "grid",
         "grid-cols-1",
         "sm:grid-cols-2",
-        "lg:grid-cols-3",
+        "md:grid-cols-3",
       );
       expect(list).not.toHaveClass("divide-y", "border");
       expect(list.querySelector("svg")).toBeNull();
