@@ -112,7 +112,7 @@ export function Alone(props: Name) {
           }}
         />
         <CodeBlock code={stringSource} language="tsx" />
-        <CodeBlock language="bash" code="npx @vinyaas/cli add button" />
+        <CodeBlock language="bash" code="npx vinyaas add button" />
         <InstallCommand commands={cliCommands("add button")} />
       </>,
     );
@@ -139,9 +139,9 @@ export function Alone(props: Name) {
     expect(codes()[2]).toHaveAttribute("data-language", "jsx");
     expect(codes()[2]?.textContent).not.toContain("import type");
     expect(codes()[3]).toHaveAttribute("data-language", "bash");
-    expect(codes()[3]).toHaveTextContent("npx @vinyaas/cli add button");
+    expect(codes()[3]).toHaveTextContent("npx vinyaas add button");
     expect(
-      screen.getAllByText("npx @vinyaas/cli add button").length,
+      screen.getAllByText("npx vinyaas add button").length,
     ).toBeGreaterThan(0);
     expect(screen.getAllByRole("tab", { name: "npm" })[0]).toHaveAttribute(
       "aria-selected",
@@ -153,9 +153,7 @@ export function Alone(props: Name) {
 
     fireEvent.click(screen.getAllByRole("tab", { name: "pnpm" })[0]!);
 
-    expect(
-      screen.getByText("pnpm dlx @vinyaas/cli add button"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("pnpm dlx vinyaas add button")).toBeInTheDocument();
     expect(codes()[0]).toHaveAttribute("data-language", "jsx");
     expect(codes()[0]).toHaveTextContent("SaveJsx");
 

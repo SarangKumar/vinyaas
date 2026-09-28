@@ -32,7 +32,7 @@ describe("ComponentReference", () => {
     expect(
       screen.getByRole("heading", { name: "Installation" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("npx @vinyaas/cli add input")).toBeInTheDocument();
+    expect(screen.getByText("npx vinyaas add input")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Usage" })).toBeInTheDocument();
     expect(
       [...document.querySelectorAll("code")].some((node) =>

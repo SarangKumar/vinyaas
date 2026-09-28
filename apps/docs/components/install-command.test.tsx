@@ -23,7 +23,7 @@ describe("InstallCommand", () => {
       </>,
     );
 
-    expect(screen.getByText("npx @vinyaas/cli add button")).toBeInTheDocument();
+    expect(screen.getByText("npx vinyaas add button")).toBeInTheDocument();
     for (const block of document.querySelectorAll("code")) {
       expect(block).toHaveAttribute("data-language", "bash");
     }
@@ -31,7 +31,7 @@ describe("InstallCommand", () => {
     expect(
       screen.getAllByRole("tablist", { name: "Package manager" }),
     ).toHaveLength(2);
-    expect(screen.getByText("npx @vinyaas/cli init")).toBeInTheDocument();
+    expect(screen.getByText("npx vinyaas init")).toBeInTheDocument();
     expect(screen.getAllByRole("tab", { name: "npm" })[0]).toHaveAttribute(
       "aria-selected",
       "true",
@@ -39,10 +39,8 @@ describe("InstallCommand", () => {
 
     fireEvent.click(screen.getAllByRole("tab", { name: "pnpm" })[0]);
 
-    expect(
-      screen.getByText("pnpm dlx @vinyaas/cli add button"),
-    ).toBeInTheDocument();
-    expect(screen.getByText("pnpm dlx @vinyaas/cli init")).toBeInTheDocument();
+    expect(screen.getByText("pnpm dlx vinyaas add button")).toBeInTheDocument();
+    expect(screen.getByText("pnpm dlx vinyaas init")).toBeInTheDocument();
     expect(screen.getAllByRole("tab", { name: "pnpm" })[0]).toHaveAttribute(
       "aria-selected",
       "true",
@@ -53,20 +51,16 @@ describe("InstallCommand", () => {
     );
 
     fireEvent.click(screen.getAllByRole("tab", { name: "yarn" })[0]);
-    expect(
-      screen.getByText("yarn dlx @vinyaas/cli add button"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("yarn dlx vinyaas add button")).toBeInTheDocument();
 
     fireEvent.click(screen.getAllByRole("tab", { name: "bun" })[0]);
-    expect(
-      screen.getByText("bunx @vinyaas/cli add button"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("bunx vinyaas add button")).toBeInTheDocument();
     for (const block of document.querySelectorAll("code")) {
       expect(block).toHaveAttribute("data-language", "bash");
     }
 
     fireEvent.click(screen.getAllByRole("button", { name: "Copy code" })[0]);
-    expect(writeText).toHaveBeenCalledWith("bunx @vinyaas/cli add button");
+    expect(writeText).toHaveBeenCalledWith("bunx vinyaas add button");
     expect(window.sessionStorage.getItem("vinyaas-package-manager")).toBe(
       "bun",
     );

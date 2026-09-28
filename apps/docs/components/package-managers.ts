@@ -6,10 +6,10 @@ export type PackageManagerCommands = Record<PackageManager, string>;
 
 export function cliCommands(args: string): PackageManagerCommands {
   return {
-    npm: `npx @vinyaas/cli ${args}`,
-    pnpm: `pnpm dlx @vinyaas/cli ${args}`,
-    yarn: `yarn dlx @vinyaas/cli ${args}`,
-    bun: `bunx @vinyaas/cli ${args}`,
+    npm: `npx vinyaas ${args}`,
+    pnpm: `pnpm dlx vinyaas ${args}`,
+    yarn: `yarn dlx vinyaas ${args}`,
+    bun: `bunx vinyaas ${args}`,
   };
 }
 

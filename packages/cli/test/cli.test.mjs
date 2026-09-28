@@ -34,7 +34,7 @@ describe("vinyaas", () => {
   it("points the vinyaas binary at the built entrypoint", () => {
     const source = readFileSync(entrypoint, "utf8");
 
-    assert.equal(packageJson.name, "@vinyaas/cli");
+    assert.equal(packageJson.name, "vinyaas");
     assert.equal(packageJson.bin.vinyaas, "./dist/index.js");
     assert.match(source, /^#!\/usr\/bin\/env node\n/);
   });

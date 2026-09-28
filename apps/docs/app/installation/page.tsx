@@ -30,7 +30,7 @@ export default function InstallationPage() {
         <p className="text-body text-base leading-7">
           Add the CLI to a project, or run it without a global install.
         </p>
-        <InstallCommand commands={packageInstallCommands("@vinyaas/cli")} />
+        <InstallCommand commands={packageInstallCommands("vinyaas")} />
       </section>
       <section className="flex flex-col gap-6">
         <h2 id="init" className={sectionHeading}>

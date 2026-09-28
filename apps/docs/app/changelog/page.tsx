@@ -117,7 +117,7 @@ export default function ChangelogPage() {
           packages install once:
         </p>
         <pre className="border-border bg-card text-card-foreground overflow-x-auto rounded-md border p-4 font-mono text-[13px] leading-6">
-          <code>npx @vinyaas/cli add button card badge</code>
+          <code>npx vinyaas add button card badge</code>
         </pre>
         <h3
           id="implemented"

@@ -35,7 +35,7 @@ describe("Changelog", () => {
       screen.getByRole("heading", { name: "Planned" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(`npx @vinyaas/cli add button card badge`),
+      screen.getByText(`npx vinyaas add button card badge`),
     ).toBeInTheDocument();
     expect(document.body.textContent).toContain(
       `${components.length} components in total`,

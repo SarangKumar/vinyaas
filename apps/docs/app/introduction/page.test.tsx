@@ -57,8 +57,8 @@ describe("introduction", () => {
         name: "Accessibility and design principles",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("npx @vinyaas/cli init")).toBeInTheDocument();
-    expect(screen.getByText("npx @vinyaas/cli add button")).toBeInTheDocument();
+    expect(screen.getByText("npx vinyaas init")).toBeInTheDocument();
+    expect(screen.getByText("npx vinyaas add button")).toBeInTheDocument();
     expect(
       screen.getAllByRole("tablist", { name: "Package manager" }).length,
     ).toBeGreaterThan(0);

@@ -17,24 +17,24 @@ Vinyaas detects the package manager from the project lockfile: `pnpm-lock.yaml`,
 Install the published package with the project's package manager:
 
 ```bash
-npm install @vinyaas/cli
-pnpm add @vinyaas/cli
-yarn add @vinyaas/cli
-bun add @vinyaas/cli
+npm install vinyaas
+pnpm add vinyaas
+yarn add vinyaas
+bun add vinyaas
 ```
 
 Run it without a global install:
 
 ```bash
-npx @vinyaas/cli init
-pnpm dlx @vinyaas/cli init
-yarn dlx @vinyaas/cli init
-bunx @vinyaas/cli init
+npx vinyaas init
+pnpm dlx vinyaas init
+yarn dlx vinyaas init
+bunx vinyaas init
 ```
 
 ```bash
-npx @vinyaas/cli --version
-npx @vinyaas/cli --help
+npx vinyaas --version
+npx vinyaas --help
 ```
 
 ## Initialize a project
@@ -82,7 +82,7 @@ vinyaas add button
 Install multiple components in one call. Shared packages install once:
 
 ```bash
-npx @vinyaas/cli add button card badge
+npx vinyaas add button card badge
 ```
 
 For each component, Vinyaas:
@@ -145,7 +145,7 @@ REGISTRY_BASE_URL=http://localhost:3000 vinyaas add button
 From a Next.js app:
 
 ```bash
-npm install -g @vinyaas/cli
+npm install -g vinyaas
 
 cd my-next-app
 
@@ -210,7 +210,7 @@ The CLI is `packages/cli`. The registry and docs app are `apps/docs`.
 
 ```bash
 pnpm install
-pnpm --filter @vinyaas/cli build
-pnpm --filter @vinyaas/cli test
+pnpm --filter vinyaas build
+pnpm --filter vinyaas test
 pnpm test
 ```
