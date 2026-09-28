@@ -22,6 +22,8 @@ import BreadcrumbDocsPage from "./breadcrumb/page";
 import ScrollAreaPage from "./scroll-area/page";
 import SliderPage from "./slider/page";
 import HoverCardPage from "./hover-card/page";
+import MarkerPage from "./marker/page";
+import DropdownMenuPage from "./dropdown-menu/page";
 
 const pages = [
   {
@@ -149,6 +151,18 @@ const pages = [
     title: "Hover Card",
     command: "npx @vinyaas/cli add hover-card",
     api: "openDelay",
+  },
+  {
+    load: MarkerPage,
+    title: "Marker",
+    command: "npx @vinyaas/cli add marker",
+    api: "variant",
+  },
+  {
+    load: DropdownMenuPage,
+    title: "Dropdown Menu",
+    command: "npx @vinyaas/cli add dropdown-menu",
+    api: "align",
   },
 ] as const;
 

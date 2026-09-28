@@ -502,6 +502,12 @@ describe("registry build output", () => {
     ["scroll-area", "ui/scroll-area/scroll-area.tsx", "data-scroll-area"],
     ["slider", "ui/slider/slider.tsx", 'type="range"'],
     ["hover-card", "ui/hover-card/hover-card.tsx", "HoverCardContent"],
+    ["marker", "ui/marker/marker.tsx", "MarkerContent"],
+    [
+      "dropdown-menu",
+      "ui/dropdown-menu/dropdown-menu.tsx",
+      "DropdownMenuContent",
+    ],
   ])(
     "keeps the new-york %s artifact aligned with the source item",
     async (name, filePath, sourceMarker) => {
@@ -559,7 +565,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).rejects.toThrow();
     expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(27);
+    expect(newYork).toHaveLength(29);
   });
 
   it("matches the json schema item types", () => {

@@ -22,7 +22,7 @@ describe("NativeSelect", () => {
 
     expect(select.tagName).toBe("SELECT");
     expect(select).toHaveValue("in");
-    expect(select).toHaveClass("h-9", "text-sm", "max-w-sm");
+    expect(select).toHaveClass("h-9", "text-sm", "max-w-sm", "pl-3", "pr-10");
     expect(document.querySelector("optgroup")).toHaveAttribute("label", "Asia");
     expect(screen.getByRole("option", { name: "India" }).tagName).toBe(
       "OPTION",
@@ -74,8 +74,9 @@ describe("NativeSelect", () => {
 
     expect(select.tagName).toBe("SELECT");
     expect(select).toHaveAttribute("multiple");
-    expect(select).toHaveClass("h-auto");
+    expect(select).toHaveClass("h-auto", "px-3");
     expect(select).not.toHaveClass("h-9");
+    expect(select).not.toHaveClass("pr-10");
     expect(onChange).toHaveBeenCalled();
   });
 });

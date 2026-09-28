@@ -17,33 +17,53 @@ import {
   CardTitle,
 } from "@/registry/new-york/ui/card/card";
 import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
 import { Input } from "@/registry/new-york/ui/input/input";
 import { Label } from "@/registry/new-york/ui/label/label";
+import {
+  Marker,
+  MarkerContent,
+  MarkerIcon,
+} from "@/registry/new-york/ui/marker/marker";
+import { Progress } from "@/registry/new-york/ui/progress/progress";
 import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
 import { Separator } from "@/registry/new-york/ui/separator/separator";
 import { Switch } from "@/registry/new-york/ui/switch/switch";
 
+function MoreIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
+      <circle cx="5" cy="12" r="1.5" />
+      <circle cx="12" cy="12" r="1.5" />
+      <circle cx="19" cy="12" r="1.5" />
+    </svg>
+  );
+}
+
 const usage = `import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/card";
-import { Badge } from "@/components/ui/badge/badge";
 
 export function Note() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Notes</CardTitle>
-        <CardDescription>Private to this workspace.</CardDescription>
-        <CardAction>
-          <Badge variant="secondary">Draft</Badge>
-        </CardAction>
+        <CardTitle>Release notes</CardTitle>
+        <CardDescription>What shipped in v0.2.</CardDescription>
       </CardHeader>
-      <CardContent>Drafts stay on this device.</CardContent>
+      <CardContent>
+        <p>Each component still installs on its own.</p>
+      </CardContent>
     </Card>
   );
 }
@@ -67,185 +87,94 @@ const api: ApiRow[] = [
 const profileCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
 import { Badge } from "@/components/ui/badge/badge";
 import { Button } from "@/components/ui/button/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu/dropdown-menu";
 
 export function ProfileCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
         <div className="flex min-w-0 items-start gap-3">
-          <Avatar>
-            <AvatarFallback>SK</AvatarFallback>
-          </Avatar>
+          <Avatar><AvatarFallback>SK</AvatarFallback></Avatar>
           <div className="min-w-0">
             <CardTitle>Sarang Kumar</CardTitle>
-            <CardDescription>
-              Developer. Building accessible UI that you install as source.
-            </CardDescription>
+            <CardDescription>Developer. Building accessible UI that you install as source.</CardDescription>
           </div>
         </div>
         <CardAction>
-          <Button variant="ghost" size="icon-sm" aria-label="More actions">
-            <svg viewBox="0 0 16 16" className="size-4" fill="currentColor" aria-hidden="true">
-              <circle cx="3" cy="8" r="1.2" />
-              <circle cx="8" cy="8" r="1.2" />
-              <circle cx="13" cy="8" r="1.2" />
-            </svg>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button variant="ghost" size="icon-sm" aria-label="More actions">⋮</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>View profile</DropdownMenuItem>
+              <DropdownMenuItem>Copy link</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </CardAction>
       </CardHeader>
-      <CardContent>
-        <Badge variant="secondary">Verified</Badge>
-      </CardContent>
+      <Badge>Verified</Badge>
       <CardFooter>
         <Button variant="outline">Message</Button>
-        <Button variant="secondary">Follow</Button>
+        <Button>Follow</Button>
       </CardFooter>
     </Card>
   );
 }
 `;
 
-function MoreIcon() {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      className="size-4"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <circle cx="3" cy="8" r="1.2" />
-      <circle cx="8" cy="8" r="1.2" />
-      <circle cx="13" cy="8" r="1.2" />
-    </svg>
-  );
-}
-
-function ProfileCard() {
-  return (
-    <Card className="w-full max-w-sm text-left">
-      <CardHeader>
-        <div className="flex min-w-0 items-start gap-3">
-          <Avatar>
-            <AvatarFallback>SK</AvatarFallback>
-          </Avatar>
-          <div className="min-w-0">
-            <CardTitle>Sarang Kumar</CardTitle>
-            <CardDescription>
-              Developer. Building accessible UI that you install as source.
-            </CardDescription>
-          </div>
-        </div>
-        <CardAction>
-          <Button variant="ghost" size="icon-sm" aria-label="More actions">
-            <MoreIcon />
-          </Button>
-        </CardAction>
-      </CardHeader>
-      <CardContent>
-        <Badge variant="secondary">Verified</Badge>
-      </CardContent>
-      <CardFooter>
-        <Button variant="outline">Message</Button>
-        <Button variant="secondary">Follow</Button>
-      </CardFooter>
-    </Card>
-  );
-}
-
-const activity = [
-  ["SK", "Sarang Kumar", "Opened a pull request", "2m"],
-  ["AL", "Ada Lovelace", "Published the notes", "8m"],
-  ["VW", "vinyaas-web", "Deployment succeeded", "14m"],
-  ["AL", "Ada Lovelace", "Left a comment", "1h"],
-  ["SK", "Sarang Kumar", "Updated the catalog", "3h"],
-] as const;
-
 const examples: ComponentExample[] = [
   {
     id: "profile",
     title: "Profile",
     description:
-      "The header keeps the avatar and name beside a CardAction. A long role wraps instead of pushing the icon off the card.",
-    preview: <ProfileCard />,
-    code: { tsx: profileCode, jsx: profileCode },
-  },
-  {
-    id: "account",
-    title: "Account settings",
-    description:
-      "Labels name the fields. The footer holds the actions for the form.",
+      "A person card with a verified badge, a three-dot menu in CardAction, and follow actions.",
     preview: (
       <Card className="w-full max-w-sm text-left">
         <CardHeader>
-          <CardTitle>Account settings</CardTitle>
-          <CardDescription>
-            Update the name and email on your profile.
-          </CardDescription>
+          <div className="flex min-w-0 items-start gap-3">
+            <Avatar>
+              <AvatarFallback>SK</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <CardTitle>Sarang Kumar</CardTitle>
+              <CardDescription>
+                Developer. Building accessible UI that you install as source.
+              </CardDescription>
+            </div>
+          </div>
+          <CardAction>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="More actions"
+                >
+                  <MoreIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>View profile</DropdownMenuItem>
+                <DropdownMenuItem>Copy link</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </CardAction>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-2">
-            <Label htmlFor="card-name">Display name</Label>
-            <Input id="card-name" defaultValue="Sarang Kumar" />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="card-email">Email</Label>
-            <Input id="card-email" defaultValue="sarang@example.com" />
-          </div>
-        </CardContent>
-        <CardFooter className="justify-end">
-          <Button variant="outline">Cancel</Button>
-          <Button>Save changes</Button>
+        <Badge>Verified</Badge>
+        <CardFooter className="gap-2">
+          <Button variant="outline">Message</Button>
+          <Button>Follow</Button>
         </CardFooter>
       </Card>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
-
-export function AccountCard() {
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Account settings</CardTitle>
-        <CardDescription>Update the name and email on your profile.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Label htmlFor="card-name">Display name</Label>
-        <Input id="card-name" defaultValue="Sarang Kumar" />
-        <Label htmlFor="card-email">Email</Label>
-        <Input id="card-email" defaultValue="sarang@example.com" />
-      </CardContent>
-      <CardFooter className="justify-end">
-        <Button variant="outline">Cancel</Button>
-        <Button>Save changes</Button>
-      </CardFooter>
-    </Card>
-  );
-}
-`,
+    code: { tsx: profileCode, jsx: profileCode },
   },
   {
     id: "subscription",
     title: "Subscription",
     description:
-      "CardAction holds the status badge so the price can use the rest of the header.",
+      "Plan price, an active badge, and a destructive cancel action.",
     preview: (
       <Card className="w-full max-w-sm text-left">
         <CardHeader>
@@ -260,21 +189,15 @@ export function AccountCard() {
           </CardAction>
         </CardHeader>
         <Separator />
-        <CardFooter>
+        <CardFooter className="gap-2">
           <Button>Manage subscription</Button>
+          <Button variant="destructive">Cancel plan</Button>
         </CardFooter>
       </Card>
     ),
     code: `import { Badge } from "@/components/ui/badge/badge";
 import { Button } from "@/components/ui/button/button";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
 import { Separator } from "@/components/ui/separator/separator";
 
 export function SubscriptionCard() {
@@ -285,13 +208,12 @@ export function SubscriptionCard() {
           <CardTitle>Pro Plan</CardTitle>
           <CardDescription>$24 / month. Renews on October 12.</CardDescription>
         </div>
-        <CardAction>
-          <Badge>Active</Badge>
-        </CardAction>
+        <CardAction><Badge>Active</Badge></CardAction>
       </CardHeader>
       <Separator />
       <CardFooter>
         <Button>Manage subscription</Button>
+        <Button variant="destructive">Cancel plan</Button>
       </CardFooter>
     </Card>
   );
@@ -299,77 +221,73 @@ export function SubscriptionCard() {
 `,
   },
   {
-    id: "security",
-    title: "Security",
+    id: "account",
+    title: "Account settings",
     description:
-      "A switch and a checkbox live in the body. The header action names the current state.",
+      "A real settings form: labelled fields, a switch, a checkbox, help text, and save.",
     preview: (
       <Card className="w-full max-w-sm text-left">
         <CardHeader>
-          <div className="min-w-0">
-            <CardTitle>Security</CardTitle>
-            <CardDescription>
-              Two-factor authentication protects the account with an extra step.
-            </CardDescription>
-          </div>
-          <CardAction>
-            <Badge variant="secondary">Enabled</Badge>
-          </CardAction>
+          <CardTitle>Account</CardTitle>
+          <CardDescription>
+            Update the name and email on your profile.
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="grid gap-3">
+          <div className="grid gap-2">
+            <Label htmlFor="card-name">Display name</Label>
+            <Input id="card-name" defaultValue="Sarang Kumar" />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="card-email">Email</Label>
+            <Input
+              id="card-email"
+              type="email"
+              defaultValue="sarang@example.com"
+            />
+            <p className="text-muted-foreground text-xs">
+              We send receipts to this address.
+            </p>
+          </div>
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="card-2fa">
-              Require verification for new devices
-            </Label>
+            <Label htmlFor="card-2fa">Two-factor authentication</Label>
             <Switch id="card-2fa" defaultChecked />
           </div>
+          <Badge variant="secondary">Enabled</Badge>
           <div className="flex items-center gap-2">
             <Checkbox id="card-trusted" defaultChecked />
             <Label htmlFor="card-trusted">Remember trusted devices</Label>
           </div>
         </CardContent>
-        <CardFooter>
-          <Button variant="outline">Review sessions</Button>
+        <CardFooter className="gap-2">
+          <Button variant="outline">Cancel</Button>
+          <Button>Save changes</Button>
         </CardFooter>
       </Card>
     ),
     code: `import { Badge } from "@/components/ui/badge/badge";
 import { Button } from "@/components/ui/button/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
 import { Checkbox } from "@/components/ui/checkbox/checkbox";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label/label";
 import { Switch } from "@/components/ui/switch/switch";
 
-export function SecurityCard() {
+export function AccountCard() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card>
       <CardHeader>
-        <div>
-          <CardTitle>Security</CardTitle>
-          <CardDescription>
-            Two-factor authentication protects the account with an extra step.
-          </CardDescription>
-        </div>
-        <CardAction>
-          <Badge variant="secondary">Enabled</Badge>
-        </CardAction>
+        <CardTitle>Account</CardTitle>
+        <CardDescription>Update the name and email on your profile.</CardDescription>
       </CardHeader>
       <CardContent>
-        <Label htmlFor="card-2fa">Require verification for new devices</Label>
+        <Label htmlFor="card-name">Display name</Label>
+        <Input id="card-name" defaultValue="Sarang Kumar" />
         <Switch id="card-2fa" defaultChecked />
         <Checkbox id="card-trusted" defaultChecked />
-        <Label htmlFor="card-trusted">Remember trusted devices</Label>
       </CardContent>
       <CardFooter>
-        <Button variant="outline">Review sessions</Button>
+        <Button>Save changes</Button>
       </CardFooter>
     </Card>
   );
@@ -380,71 +298,148 @@ export function SecurityCard() {
     id: "activity",
     title: "Activity",
     description:
-      "The feed scrolls inside the card. The page around it stays still.",
+      "A feed scrolls inside the card. Each row uses an avatar, a marker, and a time badge.",
     preview: (
       <Card className="w-full max-w-sm text-left">
         <CardHeader>
-          <CardTitle>Recent activity</CardTitle>
+          <CardTitle>Activity</CardTitle>
           <CardDescription>Updates from the last day.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <ScrollArea
-            className="border-border bg-background h-40 rounded-md border"
-            aria-label="Recent activity"
-          >
-            <ul className="grid">
-              {activity.map(([initials, name, text, time]) => (
-                <li key={text} className="grid gap-3 p-3">
-                  <div className="flex items-start gap-3">
-                    <Avatar>
-                      <AvatarFallback>{initials}</AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium">{name}</p>
-                      <p className="text-muted-foreground text-sm">{text}</p>
-                    </div>
-                    <Badge variant="outline">{time}</Badge>
+        <ScrollArea
+          className="border-border h-40 rounded-md border"
+          aria-label="Recent activity"
+        >
+          <ul>
+            {[
+              ["SK", "Sarang Kumar", "Opened a pull request", "2m"],
+              ["AL", "Ada Lovelace", "Published the notes", "8m"],
+              ["VW", "vinyaas-web", "Deployment succeeded", "14m"],
+            ].map(([initials, name, action, time]) => (
+              <li key={action} className="grid gap-2 p-3">
+                <div className="flex items-start gap-3">
+                  <Avatar>
+                    <AvatarFallback>{initials}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium">{name}</p>
+                    <Marker>
+                      <MarkerIcon>
+                        <span className="bg-foreground size-1.5 rounded-full" />
+                      </MarkerIcon>
+                      <MarkerContent>{action}</MarkerContent>
+                    </Marker>
                   </div>
-                  <Separator />
-                </li>
-              ))}
-            </ul>
-          </ScrollArea>
-        </CardContent>
+                  <Badge variant="outline">{time}</Badge>
+                </div>
+                <Separator />
+              </li>
+            ))}
+          </ul>
+        </ScrollArea>
       </Card>
     ),
     code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
 import { Badge } from "@/components/ui/badge/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card/card";
+import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker/marker";
 import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";
 import { Separator } from "@/components/ui/separator/separator";
 
 export function ActivityCard() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card>
       <CardHeader>
-        <CardTitle>Recent activity</CardTitle>
+        <CardTitle>Activity</CardTitle>
         <CardDescription>Updates from the last day.</CardDescription>
       </CardHeader>
+      <ScrollArea className="h-40 rounded-md border" aria-label="Recent activity">
+        <Marker>
+          <MarkerIcon><span /></MarkerIcon>
+          <MarkerContent>Opened a pull request</MarkerContent>
+        </Marker>
+        <Separator />
+        <Badge variant="outline">2m</Badge>
+      </ScrollArea>
+    </Card>
+  );
+}
+`,
+  },
+  {
+    id: "project",
+    title: "Project",
+    description: "Status, a progress bar, and project actions in a menu.",
+    preview: (
+      <Card className="w-full max-w-sm text-left">
+        <CardHeader>
+          <div>
+            <CardTitle>Production Dashboard</CardTitle>
+            <CardDescription>
+              Updated 2 hours ago by Sarang Kumar.
+            </CardDescription>
+          </div>
+          <CardAction>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="Project actions"
+                >
+                  <MoreIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>Open project</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive">
+                  Archive
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </CardAction>
+        </CardHeader>
+        <CardContent className="grid gap-2">
+          <Badge variant="secondary">On track</Badge>
+          <Progress aria-label="Project progress" value={72} />
+        </CardContent>
+        <CardFooter>
+          <Button variant="outline">View project</Button>
+        </CardFooter>
+      </Card>
+    ),
+    code: `import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu/dropdown-menu";
+import { Progress } from "@/components/ui/progress/progress";
+
+export function ProjectCard() {
+  return (
+    <Card>
+      <CardHeader>
+        <div>
+          <CardTitle>Production Dashboard</CardTitle>
+          <CardDescription>Updated 2 hours ago.</CardDescription>
+        </div>
+        <CardAction>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button variant="ghost" size="icon-sm" aria-label="Project actions">⋮</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Open project</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardAction>
+      </CardHeader>
       <CardContent>
-        <ScrollArea className="border-border bg-background h-40 rounded-md border" aria-label="Recent activity">
-          <ul>
-            <li>
-              <Avatar><AvatarFallback>SK</AvatarFallback></Avatar>
-              <span>Sarang Kumar</span>
-              <span>Opened a pull request</span>
-              <Badge variant="outline">2m</Badge>
-              <Separator />
-            </li>
-          </ul>
-        </ScrollArea>
+        <Badge variant="secondary">On track</Badge>
+        <Progress aria-label="Project progress" value={72} />
       </CardContent>
+      <CardFooter>
+        <Button variant="outline">View project</Button>
+      </CardFooter>
     </Card>
   );
 }
@@ -454,22 +449,25 @@ export function ActivityCard() {
     id: "compact",
     title: "Compact",
     description:
-      'size="sm" tightens the card padding and the gap between sections. CardAction still sits at the top right.',
+      'size="sm" tightens the card. The action stays a small badge and an icon button.',
     preview: (
       <Card size="sm" className="w-full max-w-sm text-left">
         <CardHeader>
-          <div className="min-w-0">
+          <div>
             <CardTitle>Catalog</CardTitle>
             <CardDescription>
-              27 components are in the v0.2 registry.
+              29 components are in the v0.2 registry.
             </CardDescription>
           </div>
           <CardAction>
-            <Badge variant="secondary">v0.2</Badge>
+            <Badge>v0.2</Badge>
           </CardAction>
         </CardHeader>
         <CardFooter>
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="icon-sm" aria-label="Open catalog">
+            <MoreIcon />
+          </Button>
+          <Button size="sm" variant="outline">
             View project
           </Button>
         </CardFooter>
@@ -477,29 +475,20 @@ export function ActivityCard() {
     ),
     code: `import { Badge } from "@/components/ui/badge/badge";
 import { Button } from "@/components/ui/button/button";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/card";
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
 
 export function CompactCard() {
   return (
-    <Card size="sm" className="w-full max-w-sm">
+    <Card size="sm">
       <CardHeader>
         <div>
           <CardTitle>Catalog</CardTitle>
-          <CardDescription>27 components are in the v0.2 registry.</CardDescription>
+          <CardDescription>29 components are in the v0.2 registry.</CardDescription>
         </div>
-        <CardAction>
-          <Badge variant="secondary">v0.2</Badge>
-        </CardAction>
+        <CardAction><Badge>v0.2</Badge></CardAction>
       </CardHeader>
       <CardFooter>
-        <Button variant="outline" size="sm">View project</Button>
+        <Button size="sm" variant="outline">View project</Button>
       </CardFooter>
     </Card>
   );
@@ -522,8 +511,7 @@ export default async function CardPage() {
         <p>
           Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent,
           and CardFooter are layout wrappers. <code>size=&quot;sm&quot;</code>{" "}
-          only tightens spacing. CardAction sits at the top right of the header,
-          including when the title is long.
+          only tightens spacing. CardAction sits at the top right of the header.
         </p>
       }
       install="vinyaas add card"
@@ -541,13 +529,21 @@ export default async function CardPage() {
       accessibility={
         <p>
           Card does not add a role. Controls inside the card keep their own
-          names through Label, Button, or visible text. CardAction is a layout
-          wrapper, so the control inside it supplies the name.
+          names through Label, Button, or visible text. A three-dot menu trigger
+          needs an accessible name.
         </p>
       }
       source={source}
     >
-      <ProfileCard />
+      <Card className="w-full max-w-sm text-left">
+        <CardHeader>
+          <CardTitle>Sarang Kumar</CardTitle>
+          <CardDescription>Developer.</CardDescription>
+        </CardHeader>
+        <CardFooter>
+          <Button>Follow</Button>
+        </CardFooter>
+      </Card>
     </ComponentReference>
   );
 }

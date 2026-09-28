@@ -48,7 +48,7 @@ describe("Textarea", () => {
     expect(field).toHaveAttribute("aria-describedby", "message-hint");
     expect(field).toHaveAttribute("aria-invalid", "true");
     expect(field).toHaveClass("max-w-sm");
-    expect(field).toHaveClass("min-h-20");
+    expect(field).toHaveClass("min-h-20", "bg-muted");
   });
 
   it("uses a default value without becoming controlled", () => {

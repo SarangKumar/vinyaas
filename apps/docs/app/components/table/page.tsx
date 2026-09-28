@@ -4,6 +4,7 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { CustomerTable } from "./table-demos";
 import {
   Table,
   TableBody,
@@ -158,6 +159,92 @@ const examples: ComponentExample[] = [
     </TableRow>
   </TableHeader>
 </Table>`,
+  },
+  {
+    id: "customers",
+    title: "Customers",
+    description:
+      "Search filters the rows in the page. Status uses a badge. The row menu is a dropdown. The table component itself stays a set of table elements.",
+    preview: <CustomerTable />,
+    code: `import { useState } from "react";
+
+import { Badge } from "@/components/ui/badge/badge";
+import { Button } from "@/components/ui/button/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu/dropdown-menu";
+import { Input } from "@/components/ui/input/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table/table";
+
+const customers = [
+  ["Aarav Sharma", "aarav@example.com", "Active"],
+  ["Priya Singh", "priya@example.com", "Pending"],
+];
+
+export function CustomerTable() {
+  const [query, setQuery] = useState("");
+  const visible = customers.filter(([name, email]) =>
+    \`\${name} \${email}\`.toLowerCase().includes(query.trim().toLowerCase()),
+  );
+
+  return (
+    <div>
+      <Input
+        aria-label="Search customers"
+        placeholder="Search customers..."
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+      />
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {visible.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={4}>No customers match that search.</TableCell>
+            </TableRow>
+          ) : (
+            visible.map(([name, email, status]) => (
+              <TableRow key={email}>
+                <TableCell>{name}</TableCell>
+                <TableCell>{email}</TableCell>
+                <TableCell><Badge>{status}</Badge></TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Button aria-label={\`Actions for \${name}\`}>⋮</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>View profile</DropdownMenuItem>
+                      <DropdownMenuItem variant="destructive">Remove</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+`,
   },
 ];
 

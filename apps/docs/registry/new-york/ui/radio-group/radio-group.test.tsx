@@ -27,10 +27,10 @@ describe("RadioGroup", () => {
     expect(comfortable).toHaveClass("size-4");
     expect(
       comfortable.parentElement?.querySelector("[aria-hidden]"),
-    ).toHaveClass("size-2");
+    ).toHaveClass("size-1.5", "ring-background", "bg-foreground");
     expect(
       comfortable.parentElement?.querySelector("[aria-hidden]"),
-    ).not.toHaveClass("size-1.5");
+    ).not.toHaveClass("size-2");
   });
 
   it("selects one option at a time", () => {

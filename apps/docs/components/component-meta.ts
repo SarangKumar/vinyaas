@@ -83,6 +83,13 @@ export const components: readonly ComponentMeta[] = [
     introducedIn: "0.2",
   },
   {
+    name: "Dropdown Menu",
+    slug: "dropdown-menu",
+    description: "A menu of actions anchored to a button.",
+    category: "overlay",
+    introducedIn: "0.2",
+  },
+  {
     name: "Hover Card",
     slug: "hover-card",
     description: "A preview that opens on hover or focus.",
@@ -108,6 +115,13 @@ export const components: readonly ComponentMeta[] = [
     slug: "label",
     description: "An accessible label for form controls.",
     category: "form",
+    introducedIn: "0.2",
+  },
+  {
+    name: "Marker",
+    slug: "marker",
+    description: "An inline status, bordered row, or labeled divider.",
+    category: "display",
     introducedIn: "0.2",
   },
   {
@@ -211,7 +225,7 @@ export const components: readonly ComponentMeta[] = [
 ];
 
 /** v0.2 ships this many components, with forms as the main focus. */
-export const targetComponentCount = 27;
+export const targetComponentCount = 29;
 
 export function componentHref(slug: string) {
   return `/components/${slug}`;

@@ -10,7 +10,7 @@ describe("Badge", () => {
 
     expect(badge().tagName).toBe("SPAN");
     expect(badge()).toHaveClass(
-      "rounded-md",
+      "rounded-full",
       "bg-primary",
       "text-primary-foreground",
     );

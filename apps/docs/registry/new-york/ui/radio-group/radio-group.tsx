@@ -108,7 +108,7 @@ export function RadioGroupItem({
         disabled={disabled || group?.disabled}
         required={required ?? group?.required}
         className={cn(
-          "peer border-input bg-background focus-visible:ring-ring focus-visible:ring-offset-background checked:border-foreground size-4 cursor-pointer appearance-none rounded-full border focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          "peer border-input bg-background focus-visible:ring-ring focus-visible:ring-offset-background checked:border-foreground checked:bg-background size-4 cursor-pointer appearance-none rounded-full border focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
         onChange={(event) => {
@@ -121,7 +121,7 @@ export function RadioGroupItem({
       />
       <span
         aria-hidden="true"
-        className="bg-foreground pointer-events-none absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 peer-checked:opacity-100"
+        className="bg-foreground ring-background pointer-events-none absolute top-1/2 left-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 ring-2 peer-checked:opacity-100"
       />
     </span>
   );

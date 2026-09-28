@@ -298,4 +298,26 @@ export const registry: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "marker",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/marker/marker.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "dropdown-menu",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/dropdown-menu/dropdown-menu.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
