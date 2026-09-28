@@ -5,6 +5,7 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
+import { FileStatusPreview } from "./file-upload-demos";
 import {
   FileUpload,
   FileUploadDropzone,
@@ -107,6 +108,14 @@ const examples: ComponentExample[] = [
     ),
     code: usage,
   },
+  {
+    id: "status",
+    title: "File states",
+    description:
+      "A long name truncates. Uploading, uploaded, failed, and pending rows share the dropzone width.",
+    preview: <FileStatusPreview />,
+    code: usage,
+  },
 ];
 
 export default async function FileUploadPage() {
@@ -126,9 +135,9 @@ export default async function FileUploadPage() {
         <p>
           FileUpload keeps a hidden file input. The dropzone is a button, so
           keyboard users open the same picker. Dropping files uses the same
-          validation as the picker. Removing a file stays in the page. Progress
-          is a native progress element the parent can update through{" "}
-          <code>files</code>.
+          validation as the picker. A selected file stays pending until{" "}
+          <code>progress</code> is set. An error shows a retry and a remove
+          control. The list uses the same width as the dropzone.
         </p>
       }
       install="vinyaas add file-upload"

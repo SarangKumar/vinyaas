@@ -4,8 +4,12 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Tooltip } from "@/registry/new-york/ui/tooltip/tooltip";
+
+import {
+  BasicTooltip,
+  KeyboardTooltip,
+  PositionTooltips,
+} from "./tooltip-demos";
 
 const usage = `import { Button } from "@/components/ui/button/button";
 import { Tooltip } from "@/components/ui/tooltip/tooltip";
@@ -51,11 +55,7 @@ const examples: ComponentExample[] = [
     id: "basic",
     title: "Basic",
     description: "Hover the button or move focus to it.",
-    preview: (
-      <Tooltip content="Saved locally">
-        <Button type="button">Hint</Button>
-      </Tooltip>
-    ),
+    preview: <BasicTooltip />,
     code: `<Tooltip content="Saved locally">
   <Button type="button">Hint</Button>
 </Tooltip>`,
@@ -65,11 +65,7 @@ const examples: ComponentExample[] = [
     title: "Keyboard",
     description:
       "Focus opens the tooltip. Escape closes it. Focus stays on the trigger.",
-    preview: (
-      <Tooltip content="Saved locally">
-        <Button type="button">Focus me</Button>
-      </Tooltip>
-    ),
+    preview: <KeyboardTooltip />,
     code: `<Tooltip content="Saved locally">
   <Button type="button">Focus me</Button>
 </Tooltip>`,
@@ -79,30 +75,7 @@ const examples: ComponentExample[] = [
     title: "Position",
     description:
       "side places the tooltip and its pointer above, below, or beside the trigger.",
-    preview: (
-      <>
-        <Tooltip content="Above the trigger" side="top">
-          <Button type="button" variant="outline">
-            Top
-          </Button>
-        </Tooltip>
-        <Tooltip content="Below the trigger" side="bottom">
-          <Button type="button" variant="outline">
-            Bottom
-          </Button>
-        </Tooltip>
-        <Tooltip content="Left of the trigger" side="left">
-          <Button type="button" variant="outline">
-            Left
-          </Button>
-        </Tooltip>
-        <Tooltip content="Right of the trigger" side="right">
-          <Button type="button" variant="outline">
-            Right
-          </Button>
-        </Tooltip>
-      </>
-    ),
+    preview: <PositionTooltips />,
     code: `import { Button } from "@/components/ui/button/button";
 import { Tooltip } from "@/components/ui/tooltip/tooltip";
 
@@ -182,9 +155,7 @@ export default async function TooltipPage() {
       }
       source={source}
     >
-      <Tooltip content="Saved locally">
-        <Button type="button">Hint</Button>
-      </Tooltip>
+      <BasicTooltip />
     </ComponentReference>
   );
 }

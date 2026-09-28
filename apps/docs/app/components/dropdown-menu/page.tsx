@@ -4,59 +4,14 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Button } from "@/registry/new-york/ui/button/button";
+
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
-import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
-
-function MoreIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
-      <circle cx="5" cy="12" r="1.5" />
-      <circle cx="12" cy="12" r="1.5" />
-      <circle cx="19" cy="12" r="1.5" />
-    </svg>
-  );
-}
-
-function Actions() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          aria-label="More actions"
-        >
-          <MoreIcon />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Account</DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>Billing</DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive">
-          Delete account
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
+  AccountMenu,
+  CardActionsMenu,
+  ProjectMenu,
+  TableRowMenu,
+  UserMenu,
+} from "./dropdown-menu-demos";
 
 const usage = `import { Button } from "@/components/ui/button/button";
 import {
@@ -73,43 +28,8 @@ export function Actions() {
         <Button variant="ghost" size="icon-sm" aria-label="More actions">⋮</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem>Edit</DropdownMenuItem>
         <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-`;
-
-const menuCode = `import { Button } from "@/components/ui/button/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu/dropdown-menu";
-
-export function AccountMenu() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button variant="ghost" size="icon-sm" aria-label="More actions">⋮</Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Account</DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>Billing</DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive">Delete account</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -157,38 +77,41 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
-    id: "actions",
-    title: "Actions",
+    id: "account",
+    title: "Account menu",
     description:
-      "A named icon button opens the menu. Items can show a shortcut, stay disabled, or use the destructive color.",
-    preview: <Actions />,
-    code: { tsx: menuCode, jsx: menuCode },
+      "Avatar, name, and email sit beside a menu for profile, settings, theme, and sign out.",
+    preview: <AccountMenu />,
+    code: usage,
   },
   {
-    id: "in-a-scroll-area",
-    title: "In a scrolling region",
+    id: "card-actions",
+    title: "Card actions",
     description:
-      "The menu is portaled and follows the trigger when the region scrolls.",
-    preview: (
-      <ScrollArea
-        className="border-border h-32 w-full max-w-sm rounded-md border"
-        aria-label="Toolbar"
-      >
-        <div className="flex h-48 items-start justify-end p-3">
-          <Actions />
-        </div>
-      </ScrollArea>
-    ),
-    code: `import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";
-
-export function ScrollingActions() {
-  return (
-    <ScrollArea className="h-32 rounded-md border" aria-label="Toolbar">
-      <div className="flex h-48 justify-end p-3">{/* menu trigger */}</div>
-    </ScrollArea>
-  );
-}
-`,
+      "A three-dot CardAction opens Edit, Duplicate, Archive, and Delete.",
+    preview: <CardActionsMenu />,
+    code: usage,
+  },
+  {
+    id: "table-row",
+    title: "Table row actions",
+    description: "A row menu for View, Edit, Copy ID, and Delete.",
+    preview: <TableRowMenu />,
+    code: usage,
+  },
+  {
+    id: "project",
+    title: "Project actions",
+    description: "Open, Rename, Move, Share, and Archive for a project.",
+    preview: <ProjectMenu />,
+    code: usage,
+  },
+  {
+    id: "user",
+    title: "User actions",
+    description: "View profile, Message, Copy email, and Block.",
+    preview: <UserMenu />,
+    code: usage,
   },
 ];
 
@@ -243,7 +166,7 @@ export default async function DropdownMenuPage() {
       }
       source={source}
     >
-      <Actions />
+      <ProjectMenu />
     </ComponentReference>
   );
 }

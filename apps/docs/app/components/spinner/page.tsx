@@ -12,8 +12,13 @@ import { SubmitSpinner } from "./spinner-demos";
 
 const usage = `import { Spinner } from "@/components/ui/spinner/spinner";
 
-export function Loading() {
-  return <Spinner />;
+export function RefreshingData() {
+  return (
+    <span className="inline-flex items-center gap-2 text-sm">
+      <Spinner label="Refreshing data" />
+      Refreshing data...
+    </span>
+  );
 }
 `;
 
@@ -35,9 +40,14 @@ const api: ApiRow[] = [
 const examples: ComponentExample[] = [
   {
     id: "standalone",
-    title: "Standalone",
-    description: "Use a spinner when the only content is a loading state.",
-    preview: <Spinner />,
+    title: "Refreshing",
+    description: "Pair the spinner with the work that is in progress.",
+    preview: (
+      <span className="inline-flex items-center gap-2 text-sm">
+        <Spinner label="Refreshing data" />
+        Refreshing data...
+      </span>
+    ),
     code: usage,
   },
   {
@@ -98,20 +108,20 @@ export function SubmitSpinner() {
     id: "custom-icon",
     title: "Customization",
     description:
-      "Swap the default graphic for another icon component. The visible label here is the loading message next to it.",
+      "Swap the default graphic for another icon component. The label names the work that is in progress.",
     preview: (
       <span className="inline-flex items-center gap-2 text-sm">
         <RefreshIcon className="size-4 animate-spin motion-reduce:animate-none" />
-        Loading
+        Refreshing data...
       </span>
     ),
     code: `import { RefreshIcon } from "@/components/icons";
 
-export function LoadingNote() {
+export function RefreshingNote() {
   return (
     <span className="inline-flex items-center gap-2 text-sm">
       <RefreshIcon className="size-4 animate-spin motion-reduce:animate-none" />
-      Loading
+      Refreshing data...
     </span>
   );
 }
@@ -163,7 +173,10 @@ export default async function SpinnerPage() {
       }
       source={source}
     >
-      <Spinner />
+      <span className="inline-flex items-center gap-2 text-sm">
+        <Spinner label="Refreshing data" />
+        Refreshing data...
+      </span>
       <Button type="button" className="gap-2" disabled>
         <Spinner label="" />
         Saving

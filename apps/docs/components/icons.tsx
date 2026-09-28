@@ -114,11 +114,37 @@ export function TerminalIcon(props: IconProps) {
   );
 }
 
+export function ComponentIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="4" y="4" width="16" height="16" rx="2" />
+      <path d="M9 9h6M9 13h6M9 17h3" />
+    </Icon>
+  );
+}
+
 export function BookIcon(props: IconProps) {
   return (
     <Icon {...props}>
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
       <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+    </Icon>
+  );
+}
+
+export function FileIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5" />
+    </Icon>
+  );
+}
+
+export function ChevronRightIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="m9 6 6 6-6 6" />
     </Icon>
   );
 }
@@ -131,8 +157,10 @@ const navIcons = {
   display: TableIcon,
   overlays: LayersIcon,
   utilities: ToolboxIcon,
+  components: ComponentIcon,
   terminal: TerminalIcon,
   book: BookIcon,
+  file: FileIcon,
 } as const;
 
 export type NavIconName = keyof typeof navIcons;

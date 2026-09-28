@@ -293,15 +293,10 @@ export function AccordionContent({
       data-state={item.open ? "open" : "closed"}
       hidden={!shown && !item.open}
       className={cn(
-        "grid overflow-hidden px-3 text-sm motion-reduce:transition-none",
+        "grid overflow-hidden px-3 text-sm transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none",
         item.open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
         className,
       )}
-      style={
-        reducedMotion()
-          ? undefined
-          : { transition: "grid-template-rows 200ms ease" }
-      }
       {...props}
     >
       <div className={cn("min-h-0 overflow-hidden", item.open && "pb-3")}>

@@ -4,22 +4,16 @@ import {
   componentHref,
   componentIsNew,
   components,
-  currentVersion,
-  newComponents,
-  type ComponentMeta,
 } from "@/components/component-meta";
 import { DocsArticle } from "@/components/docs-article";
 import { focusRing } from "@/components/focus-ring";
+import { ComponentIcon } from "@/components/icons";
 import { NewIndicator } from "@/components/new-indicator";
 
 const heading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 
-const gridClass = "grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3";
-
 export default function ComponentsPage() {
-  const recent = newComponents();
-
   return (
     <DocsArticle
       title="Components"
@@ -42,17 +36,6 @@ export default function ComponentsPage() {
           </p>
         </div>
       </section>
-      {recent.length > 0 ? (
-        <section className="flex flex-col gap-4">
-          <h2 id="new-components" className={heading}>
-            New Components
-          </h2>
-          <p className="text-body text-base leading-7">
-            Components introduced in v{currentVersion}.
-          </p>
-          <ComponentGrid items={recent} />
-        </section>
-      ) : null}
       <section className="flex flex-col gap-4">
         <h2 id="all-components" className={heading}>
           All Components
@@ -61,7 +44,27 @@ export default function ComponentsPage() {
           The full catalog, in alphabetical order. Install one at a time with{" "}
           <code>vinyaas add</code>.
         </p>
-        <ComponentGrid items={components} />
+        <ul className="divide-border border-border divide-y rounded-md border">
+          {components.map((item) => (
+            <li key={item.slug}>
+              <Link
+                href={componentHref(item.slug)}
+                className={`hover:bg-muted flex cursor-pointer items-start gap-3 px-3 py-3 no-underline ${focusRing}`}
+              >
+                <ComponentIcon className="text-muted-foreground mt-0.5 size-4 shrink-0" />
+                <span className="grid min-w-0 flex-1 gap-0.5">
+                  <span className="text-foreground flex items-center text-sm font-medium">
+                    {item.name}
+                    {componentIsNew(item) ? <NewIndicator /> : null}
+                  </span>
+                  <span className="text-muted-foreground text-sm leading-6">
+                    {item.description}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
       <section className="flex flex-col gap-4">
         <h2 id="using-components" className={heading}>
@@ -74,38 +77,6 @@ export default function ComponentsPage() {
           follow the theme variables in your stylesheet.
         </p>
       </section>
-      <section className="flex flex-col gap-4">
-        <h2 id="whats-next" className={heading}>
-          What&apos;s Next
-        </h2>
-        <p className="text-body text-base leading-7">
-          The introduction lives at <code>/introduction</code>. The homepage
-          showcases the components that are already in the catalog.
-        </p>
-      </section>
     </DocsArticle>
-  );
-}
-
-function ComponentGrid({ items }: { items: readonly ComponentMeta[] }) {
-  return (
-    <ul className={gridClass}>
-      {items.map((item) => (
-        <li key={item.slug}>
-          <Link
-            href={componentHref(item.slug)}
-            className={`border-border hover:bg-muted flex h-full cursor-pointer flex-col gap-1 rounded-md border px-3 py-3 no-underline ${focusRing}`}
-          >
-            <span className="text-foreground flex items-center text-sm font-medium">
-              {item.name}
-              {componentIsNew(item) ? <NewIndicator /> : null}
-            </span>
-            <span className="text-muted-foreground text-sm leading-6">
-              {item.description}
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
   );
 }

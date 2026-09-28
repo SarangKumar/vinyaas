@@ -1,8 +1,7 @@
 import {
-  categoryOrder,
   componentHref,
   componentIsNew,
-  componentsInCategory,
+  components,
   type ComponentMeta,
 } from "@/components/component-meta";
 import type { NavIconName } from "@/components/icons";
@@ -15,6 +14,8 @@ export const homePath = "/";
 /** Canonical introduction. It is not an alias of the homepage. */
 export const introductionPath = "/introduction";
 
+export const componentsJsonPath = "/components-json";
+
 export type DocsNavItem = {
   title: string;
   href: string;
@@ -23,16 +24,12 @@ export type DocsNavItem = {
   icon?: NavIconName;
 };
 
-export type DocsNavSection = {
-  title: string;
-  icon: NavIconName;
-  items: DocsNavItem[];
-};
-
 export type DocsNavGroup = {
   title: string;
-  items?: DocsNavItem[];
-  sections?: DocsNavSection[];
+  /** Section label above child links. Direct destinations leave this unset. */
+  label?: boolean;
+  icon?: NavIconName;
+  items: DocsNavItem[];
 };
 
 function componentNavItem(component: ComponentMeta): DocsNavItem {
@@ -44,55 +41,43 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
   };
 }
 
-const categoryIcons: Record<(typeof categoryOrder)[number][0], NavIconName> = {
-  form: "forms",
-  feedback: "feedback",
-  layout: "layout",
-  navigation: "navigation",
-  display: "display",
-  overlay: "overlays",
-  utility: "utilities",
-};
-
 export const docsNav: DocsNavGroup[] = [
   {
-    title: "Getting Started",
-    items: [
-      { title: "Introduction", href: introductionPath, icon: "book" },
-      { title: "Installation", href: "/installation", icon: "terminal" },
-      { title: "Changelog", href: "/changelog", icon: "book" },
-    ],
+    title: "Introduction",
+    items: [{ title: "Introduction", href: introductionPath, icon: "book" }],
   },
   {
     title: "Components",
-    sections: categoryOrder.map(([category, title]) => ({
-      title,
-      icon: categoryIcons[category],
-      items: componentsInCategory(category).map(componentNavItem),
-    })),
+    label: true,
+    icon: "components",
+    items: [...components]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(componentNavItem),
   },
   {
-    title: "CLI",
+    title: "GET STARTED",
+    label: true,
+    icon: "terminal",
     items: [
-      { title: "Installation", href: "/installation#cli", icon: "terminal" },
-      { title: "init", href: "/installation#init", icon: "terminal" },
-      { title: "add", href: "/installation#add", icon: "terminal" },
-      { title: "Registry", href: "/installation#registry", icon: "terminal" },
+      {
+        title: "Installation",
+        href: "/installation",
+        icon: "terminal",
+      },
+      {
+        title: "components.json",
+        href: componentsJsonPath,
+        icon: "file",
+      },
+      {
+        title: "CLI",
+        href: "/installation#cli",
+        icon: "terminal",
+      },
     ],
   },
   {
-    title: "Resources",
-    items: [
-      {
-        title: "Examples",
-        href: "/components#using-components",
-        icon: "layout",
-      },
-      {
-        title: "API Reference",
-        href: "/components#all-components",
-        icon: "book",
-      },
-    ],
+    title: "Changelog",
+    items: [{ title: "Changelog", href: "/changelog", icon: "book" }],
   },
 ];

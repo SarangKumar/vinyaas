@@ -30,18 +30,36 @@ export function preferredTheme(): ThemeName {
   return "light";
 }
 
+export function writeThemeCookie(theme: ThemeName) {
+  document.cookie = `${themeStorageKey}=${theme}; Path=/; Max-Age=31536000; SameSite=Lax`;
+}
+
 export function applyTheme(theme: ThemeName) {
   document.documentElement.classList.toggle("dark", theme === "dark");
 
   try {
     localStorage.setItem(themeStorageKey, theme);
+    writeThemeCookie(theme);
   } catch {
     // Storage can be unavailable. The class still updates for this view.
   }
 }
 
 /**
- * Runs while the HTML is parsed, before the body paints.
- * It only sets the class. The user's choice is stored later, on toggle.
+ * Re-applies the saved theme, or the system preference when nothing is saved.
+ * It does not invent a preference. A saved choice is mirrored into the cookie
+ * so the next server render keeps the same class.
  */
-export const themeInitScript = `(function(){try{var stored=localStorage.getItem(${JSON.stringify(themeStorageKey)});var theme=stored==="light"||stored==="dark"?stored:(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.classList.toggle("dark",theme==="dark");}catch(e){}})();`;
+export function syncDocumentTheme() {
+  const stored = readStoredTheme();
+  const theme = preferredTheme();
+  const dark = theme === "dark";
+
+  if (document.documentElement.classList.contains("dark") !== dark) {
+    document.documentElement.classList.toggle("dark", dark);
+  }
+
+  if (stored) {
+    writeThemeCookie(stored);
+  }
+}

@@ -5,23 +5,31 @@ import { DocsMobileNav } from "./docs-mobile-nav";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 describe("DocsMobileNav", () => {
   it("names the menu and closes it with Escape", () => {
     render(<DocsMobileNav />);
 
-    const menu = screen.getByText("Menu");
-    const details = menu.closest("details");
+    const menu = screen.getByRole("button", { name: "Menu" });
 
-    if (!details) {
-      throw new Error("Expected the menu disclosure");
-    }
+    expect(menu).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText("Forms")).toBeNull();
 
-    details.open = true;
-    fireEvent.keyDown(details, { key: "Escape" });
+    fireEvent.click(menu);
 
-    expect(menu.tagName).toBe("SUMMARY");
-    expect(details.open).toBe(false);
+    expect(menu).toHaveAttribute("aria-expanded", "true");
+    expect(
+      screen.getByRole("link", { name: "Introduction" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Installation" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Changelog" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(menu).toHaveAttribute("aria-expanded", "false");
   });
 });

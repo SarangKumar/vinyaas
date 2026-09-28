@@ -17,13 +17,6 @@ import {
   CardTitle,
 } from "@/registry/new-york/ui/card/card";
 import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
 import { Input } from "@/registry/new-york/ui/input/input";
 import { Label } from "@/registry/new-york/ui/label/label";
 import {
@@ -35,20 +28,11 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from "@/registry/new-york/ui/native-select/native-select";
-import { Progress } from "@/registry/new-york/ui/progress/progress";
 import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
 import { Separator } from "@/registry/new-york/ui/separator/separator";
 import { Switch } from "@/registry/new-york/ui/switch/switch";
 
-function MoreIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
-      <circle cx="5" cy="12" r="1.5" />
-      <circle cx="12" cy="12" r="1.5" />
-      <circle cx="19" cy="12" r="1.5" />
-    </svg>
-  );
-}
+import { ProfileCardDemo, ProjectCardDemo } from "./card-demos";
 
 const usage = `import {
   Card,
@@ -133,45 +117,7 @@ const examples: ComponentExample[] = [
     title: "Profile",
     description:
       "A person card with a verified badge, a three-dot menu in CardAction, and follow actions.",
-    preview: (
-      <Card className="w-full max-w-sm text-left">
-        <CardHeader>
-          <div className="flex min-w-0 items-start gap-3">
-            <Avatar>
-              <AvatarFallback>SK</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              <CardTitle>Sarang Kumar</CardTitle>
-              <CardDescription>
-                Developer. Building accessible UI that you install as source.
-              </CardDescription>
-            </div>
-          </div>
-          <CardAction>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label="More actions"
-                >
-                  <MoreIcon />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>View profile</DropdownMenuItem>
-                <DropdownMenuItem>Copy link</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </CardAction>
-        </CardHeader>
-        <Badge>Verified</Badge>
-        <CardFooter className="gap-2">
-          <Button variant="outline">Message</Button>
-          <Button>Follow</Button>
-        </CardFooter>
-      </Card>
-    ),
+    preview: <ProfileCardDemo />,
     code: { tsx: profileCode, jsx: profileCode },
   },
   {
@@ -380,45 +326,7 @@ export function ActivityCard() {
     id: "project",
     title: "Project",
     description: "Status, a progress bar, and project actions in a menu.",
-    preview: (
-      <Card className="w-full max-w-sm text-left">
-        <CardHeader>
-          <div>
-            <CardTitle>Production Dashboard</CardTitle>
-            <CardDescription>
-              Updated 2 hours ago by Sarang Kumar.
-            </CardDescription>
-          </div>
-          <CardAction>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label="Project actions"
-                >
-                  <MoreIcon />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>Open project</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
-                  Archive
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </CardAction>
-        </CardHeader>
-        <CardContent className="grid gap-2">
-          <Badge variant="secondary">On track</Badge>
-          <Progress aria-label="Project progress" value={72} />
-        </CardContent>
-        <CardFooter>
-          <Button variant="outline">View project</Button>
-        </CardFooter>
-      </Card>
-    ),
+    preview: <ProjectCardDemo />,
     code: `import { Badge } from "@/components/ui/badge/badge";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
@@ -579,7 +487,15 @@ export function NotificationCard() {
         </CardHeader>
         <CardFooter>
           <Button variant="ghost" size="icon-sm" aria-label="Open catalog">
-            <MoreIcon />
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="size-4 fill-current"
+            >
+              <circle cx="5" cy="12" r="1.5" />
+              <circle cx="12" cy="12" r="1.5" />
+              <circle cx="19" cy="12" r="1.5" />
+            </svg>
           </Button>
           <Button size="sm" variant="outline">
             View project

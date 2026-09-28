@@ -12,7 +12,7 @@ export function DocsArticle({
   return (
     <article
       data-docs-article
-      className="text-body mx-auto flex w-full max-w-3xl flex-col gap-20 px-6 py-14"
+      className="text-body mx-auto flex w-full max-w-3xl flex-col gap-14 px-6 py-10"
     >
       <header className="flex flex-col gap-4">
         <h1 className="text-foreground text-3xl font-semibold tracking-tight">

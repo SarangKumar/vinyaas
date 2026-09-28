@@ -9,19 +9,26 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { toast, Toaster } from "./toast";
 
+async function flushMount() {
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
 describe("Toast", () => {
   afterEach(() => {
     toast.dismiss();
     vi.useRealTimers();
   });
 
-  it("adds a toast without moving focus", () => {
+  it("adds a toast without moving focus", async () => {
     render(
       <>
         <button type="button">Page</button>
         <Toaster />
       </>,
     );
+    await flushMount();
 
     screen.getByRole("button", { name: "Page" }).focus();
     act(() => {
@@ -47,6 +54,7 @@ describe("Toast", () => {
     const onUndo = vi.fn();
 
     render(<Toaster position="top-right" />);
+    await flushMount();
     act(() => {
       toast.add({ title: "Saved", type: "info" });
       toast.add({
@@ -80,6 +88,9 @@ describe("Toast", () => {
   it("dismisses automatically and pauses while hovered", () => {
     vi.useFakeTimers();
     render(<Toaster />);
+    act(() => {
+      vi.advanceTimersByTime(0);
+    });
 
     act(() => {
       toast.add({ title: "Saved", duration: 1000 });
@@ -112,6 +123,7 @@ describe("Toast", () => {
 
   it("keeps a loading toast until it is updated", async () => {
     render(<Toaster />);
+    await flushMount();
 
     let resolve: (value: string) => void = () => {};
     const promise = new Promise<string>((done) => {
@@ -138,8 +150,9 @@ describe("Toast", () => {
     expect(screen.getByText("Saved")).toBeInTheDocument();
   });
 
-  it("announces an error with an alert", () => {
+  it("announces an error with an alert", async () => {
     render(<Toaster />);
+    await flushMount();
 
     act(() => {
       toast.add({ title: "Could not save", type: "error" });

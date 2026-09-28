@@ -14,6 +14,7 @@ import {
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { ChevronRightIcon } from "@/components/icons";
 
 const usage = `import {
   Breadcrumb,
@@ -198,6 +199,67 @@ export function LongTrail() {
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbPage>Checkbox</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+}
+`,
+  },
+  {
+    id: "custom-separator",
+    title: "Custom separator",
+    description:
+      "Pass an icon into BreadcrumbSeparator. The separator stays decorative.",
+    preview: (
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/introduction">Docs</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <ChevronRightIcon className="size-3.5" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <ChevronRightIcon className="size-3.5" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    ),
+    code: `import { ChevronRightIcon } from "@/components/icons";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb/breadcrumb";
+
+export function ChevronTrail() {
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/introduction">Docs</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator>
+          <ChevronRightIcon className="size-3.5" />
+        </BreadcrumbSeparator>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator>
+          <ChevronRightIcon className="size-3.5" />
+        </BreadcrumbSeparator>
+        <BreadcrumbItem>
+          <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

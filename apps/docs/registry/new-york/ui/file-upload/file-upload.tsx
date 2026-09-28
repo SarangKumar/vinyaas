@@ -24,6 +24,7 @@ type FileUploadContextValue = {
   inputId: string;
   open: () => void;
   remove: (id: string) => void;
+  retry: (id: string) => void;
   add: (list: FileList | readonly File[]) => void;
   setDragOver: (dragOver: boolean) => void;
 };
@@ -114,16 +115,15 @@ export function FileUpload({
       let error: string | undefined;
 
       if (maxSize !== undefined && file.size > maxSize) {
-        error = `${file.name} is larger than the limit.`;
+        error = `Upload failed. ${file.name} is larger than the limit.`;
       } else if (accept && !matchesAccept(file, accept)) {
-        error = `${file.name} is not an accepted file type.`;
+        error = `Upload failed. ${file.name} is not an accepted file type.`;
       }
 
       next.push({
         id: `${file.name}-${sequence.current}`,
         file,
         error,
-        progress: error ? undefined : 0,
       });
 
       if (!multiple) {
@@ -132,6 +132,34 @@ export function FileUpload({
     }
 
     commit(next);
+  }
+
+  function retry(id: string) {
+    const item = files.find((entry) => entry.id === id);
+
+    if (!item || disabled) {
+      return;
+    }
+
+    let error: string | undefined;
+
+    if (maxSize !== undefined && item.file.size > maxSize) {
+      error = `Upload failed. ${item.file.name} is larger than the limit.`;
+    } else if (accept && !matchesAccept(item.file, accept)) {
+      error = `Upload failed. ${item.file.name} is not an accepted file type.`;
+    }
+
+    commit(
+      files.map((entry) =>
+        entry.id === id
+          ? {
+              ...entry,
+              error,
+              progress: error ? undefined : 0,
+            }
+          : entry,
+      ),
+    );
   }
 
   return (
@@ -143,11 +171,18 @@ export function FileUpload({
         inputId,
         open: () => inputRef.current?.click(),
         remove: (id) => commit(files.filter((item) => item.id !== id)),
+        retry,
         add,
         setDragOver,
       }}
     >
-      <div className={cn("grid gap-3", className)} {...props}>
+      <div
+        className={cn(
+          "grid w-full max-w-full min-w-0 grid-cols-[minmax(0,1fr)] gap-3 overflow-hidden",
+          className,
+        )}
+        {...props}
+      >
         <input
           ref={inputRef}
           id={inputId}
@@ -174,6 +209,7 @@ export type FileUploadDropzoneProps = React.ComponentProps<"button">;
 
 export function FileUploadDropzone({
   className,
+  children,
   ...props
 }: FileUploadDropzoneProps) {
   const upload = useFileUpload();
@@ -184,7 +220,7 @@ export function FileUploadDropzone({
       disabled={upload.disabled}
       data-dragover={upload.dragOver ? "true" : undefined}
       className={cn(
-        "border-input bg-muted text-muted-foreground focus-visible:ring-ring focus-visible:ring-offset-background flex min-h-28 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-dashed px-4 py-6 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "border-input bg-muted text-muted-foreground focus-visible:ring-ring focus-visible:ring-offset-background flex min-h-28 w-full max-w-full min-w-0 cursor-pointer flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed px-4 py-6 text-center text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         upload.dragOver && "border-foreground bg-accent text-foreground",
         className,
       )}
@@ -200,7 +236,9 @@ export function FileUploadDropzone({
         upload.add(event.dataTransfer.files);
       }}
       {...props}
-    />
+    >
+      {upload.dragOver ? "Drag files here" : children}
+    </button>
   );
 }
 
@@ -215,38 +253,182 @@ export function FileUploadList({
   }
 
   return (
-    <ul className={cn("grid gap-2", className)} {...props}>
-      {upload.files.map((item) => (
-        <li
-          key={item.id}
-          className="border-border flex items-center gap-3 rounded-md border px-3 py-2 text-sm"
-        >
-          <div className="grid min-w-0 flex-1 gap-1">
-            <span className="truncate">{item.file.name}</span>
-            {item.error ? (
-              <span className="text-destructive text-xs" role="alert">
-                {item.error}
-              </span>
-            ) : null}
-            {item.progress !== undefined && !item.error ? (
-              <progress
-                value={item.progress}
-                max={100}
-                aria-label={`Upload progress for ${item.file.name}`}
-                className="h-1 w-full"
-              />
-            ) : null}
-          </div>
-          <button
-            type="button"
-            className="text-muted-foreground hover:text-foreground cursor-pointer rounded-md px-1"
-            onClick={() => upload.remove(item.id)}
+    <ul
+      className={cn(
+        "grid w-full max-w-full min-w-0 grid-cols-[minmax(0,1fr)] gap-2",
+        className,
+      )}
+      {...props}
+    >
+      {upload.files.map((item) => {
+        const status = fileStatus(item);
+
+        return (
+          <li
+            key={item.id}
+            className="border-border flex w-full min-w-0 items-center gap-3 overflow-hidden rounded-md border px-3 py-2 text-sm"
           >
-            Remove
-            <span className="sr-only"> {item.file.name}</span>
-          </button>
-        </li>
-      ))}
+            <FileStatusIcon status={status} />
+            <div className="grid min-w-0 flex-1 gap-0.5">
+              <span className="truncate">{item.file.name}</span>
+              {status === "uploading" ? (
+                <span className="text-muted-foreground text-xs">
+                  Uploading...
+                </span>
+              ) : null}
+              {status === "uploaded" ? (
+                <span className="text-muted-foreground text-xs">Uploaded</span>
+              ) : null}
+              {status === "error" ? (
+                <span className="text-destructive text-xs" role="alert">
+                  {item.error}
+                </span>
+              ) : null}
+            </div>
+            {status === "error" ? (
+              <button
+                type="button"
+                aria-label="Retry upload"
+                title="Retry upload"
+                className="text-muted-foreground hover:text-foreground cursor-pointer rounded-md p-1"
+                onClick={() => upload.retry(item.id)}
+              >
+                <RetryIcon />
+              </button>
+            ) : null}
+            <button
+              type="button"
+              aria-label="Remove file"
+              title="Remove file"
+              className="text-muted-foreground hover:text-foreground cursor-pointer rounded-md p-1"
+              onClick={() => upload.remove(item.id)}
+            >
+              <CloseIcon />
+            </button>
+          </li>
+        );
+      })}
     </ul>
+  );
+}
+
+function fileStatus(item: FileUploadFile) {
+  if (item.error) {
+    return "error" as const;
+  }
+
+  if (item.progress === undefined) {
+    return "pending" as const;
+  }
+
+  if (item.progress >= 100) {
+    return "uploaded" as const;
+  }
+
+  return "uploading" as const;
+}
+
+function FileStatusIcon({
+  status,
+}: {
+  status: "error" | "uploading" | "uploaded" | "pending";
+}) {
+  if (status === "uploading") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className="size-4 shrink-0 animate-spin motion-reduce:animate-none"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M12 3a9 9 0 1 0 9 9" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (status === "uploaded") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className="size-4 shrink-0"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="m5 12 5 5L20 7" />
+      </svg>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className="text-destructive size-4 shrink-0"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8v5M12 16h.01" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="text-muted-foreground size-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="size-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <path d="M6 6l12 12M18 6 6 18" />
+    </svg>
+  );
+}
+
+function RetryIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="size-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 12a9 9 0 1 1-2.6-6.3" />
+      <path d="M21 3v6h-6" />
+    </svg>
   );
 }

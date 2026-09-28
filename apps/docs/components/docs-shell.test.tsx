@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DocsShell } from "./docs-shell";
@@ -56,16 +56,20 @@ describe("DocsShell", () => {
     expect(
       within(start).getByRole("link", { name: "Vinyaas" }),
     ).toHaveAttribute("href", "/");
-    expect(within(start).getByRole("link", { name: "Docs" })).toHaveAttribute(
-      "href",
-      "/introduction",
+    expect(within(start).getByRole("button", { name: "Menu" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+    expect(within(start).queryByRole("link", { name: "Docs" })).toBeNull();
+    expect(within(start).queryByRole("link", { name: "GitHub" })).toBeNull();
+    fireEvent.click(within(start).getByRole("button", { name: "Menu" }));
+    expect(within(start).getByRole("button", { name: "Menu" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
     );
     expect(
-      within(start).getByRole("link", { name: "Components" }),
-    ).toHaveAttribute("href", "/components");
-    expect(
-      within(start).queryByRole("link", { name: "GitHub" }),
-    ).not.toBeInTheDocument();
+      within(start).getByRole("link", { name: "GitHub" }),
+    ).toBeInTheDocument();
 
     const github = within(end).getByRole("link", { name: "GitHub" });
 
@@ -76,13 +80,23 @@ describe("DocsShell", () => {
     expect(github).toHaveAttribute("title", "GitHub");
     expect(github).not.toHaveTextContent("GitHub");
     expect(github.querySelector("svg")).toBeInTheDocument();
-    expect(end.className).toContain("sm:gap-4");
+    expect(end.className).toContain("lg:gap-4");
+    expect(document.querySelector("header")).toHaveClass("h-12");
+    expect(
+      screen.getAllByRole("button", { name: "Search documentation" }).length,
+    ).toBeGreaterThan(0);
+    expect(screen.queryByText("Forms")).toBeNull();
+    expect(screen.queryByText("Data Display")).toBeNull();
     expect(
       within(end).queryByRole("combobox", {
         name: "Component example language",
       }),
     ).toBeNull();
-    expect(within(end).getByRole("button")).toBeInTheDocument();
+    expect(
+      within(end).getByRole("button", {
+        name: /color theme|dark mode|light mode/,
+      }),
+    ).toBeInTheDocument();
   });
 
   it("links to the portfolio when the environment variable is a web url", () => {
@@ -96,7 +110,9 @@ describe("DocsShell", () => {
       </DocsShell>,
     );
 
-    const portfolio = screen.getByRole("link", { name: "Portfolio" });
+    const portfolio = within(
+      document.querySelector("[data-header-section='end']") as HTMLElement,
+    ).getByRole("link", { name: "Portfolio" });
 
     expect(portfolio).toHaveAttribute(
       "href",
@@ -125,9 +141,11 @@ describe("DocsShell", () => {
       </DocsShell>,
     );
 
-    const github = await screen.findByRole("link", { name: "GitHub" });
+    const github = within(
+      document.querySelector("[data-header-section='end']") as HTMLElement,
+    ).getByRole("link", { name: "GitHub" });
 
-    expect(await screen.findByText("12")).toBeInTheDocument();
+    expect(await screen.findAllByText("12")).not.toHaveLength(0);
     expect(github).toHaveAccessibleName("GitHub");
     expect(github.querySelector("svg")).toBeInTheDocument();
   });
@@ -141,7 +159,9 @@ describe("DocsShell", () => {
       </DocsShell>,
     );
 
-    const github = screen.getByRole("link", { name: "GitHub" });
+    const github = within(
+      document.querySelector("[data-header-section='end']") as HTMLElement,
+    ).getByRole("link", { name: "GitHub" });
 
     await vi.waitFor(() => {
       expect(fetch).toHaveBeenCalled();

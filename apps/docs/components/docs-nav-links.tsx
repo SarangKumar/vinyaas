@@ -20,11 +20,22 @@ function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
           : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm ${focusRing}`
       }
     >
-      {item.icon ? <NavIcon name={item.icon} /> : null}
+      {item.icon ? (
+        <NavIcon
+          name={item.icon}
+          className="text-muted-foreground size-3.5 shrink-0"
+        />
+      ) : null}
       <span className="min-w-0 truncate">{item.title}</span>
       {item.isNew ? <NewIndicator /> : null}
     </Link>
   );
+}
+
+function isCurrent(pathname: string, href: string) {
+  const path = href.split("#")[0] ?? href;
+
+  return pathname === path && !href.includes("#");
 }
 
 export function DocsNavLinks({ className }: { className?: string }) {
@@ -33,46 +44,29 @@ export function DocsNavLinks({ className }: { className?: string }) {
   return (
     <nav className={className} aria-label="Documentation">
       {docsNav.map((group) => (
-        <div key={group.title} className="flex flex-col gap-4">
-          <p className="text-subtle-foreground px-2 text-xs font-medium tracking-wide uppercase">
-            {group.title}
-          </p>
-          {group.sections ? (
-            <div className="flex flex-col gap-4">
-              {group.sections.map((section) => (
-                <div key={section.title} className="flex flex-col gap-1.5">
-                  <p className="text-foreground flex items-center gap-2 px-2 text-sm font-medium">
-                    <NavIcon name={section.icon} />
-                    {section.title}
-                  </p>
-                  <ul className="flex flex-col gap-1">
-                    {section.items.map((item) => (
-                      <li key={item.href}>
-                        <NavLink
-                          item={item}
-                          current={pathname === item.href.split("#")[0]}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <ul className="flex flex-col gap-1.5">
-              {group.items?.map((item) => (
-                <li key={item.href}>
-                  <NavLink
-                    item={item}
-                    current={
-                      pathname === item.href.split("#")[0] &&
-                      !item.href.includes("#")
-                    }
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
+        <div key={group.title} className="flex flex-col gap-1">
+          {group.label ? (
+            <p className="text-muted-foreground flex items-center gap-2 px-2 py-1 text-xs font-medium tracking-wide uppercase">
+              {group.icon ? (
+                <NavIcon
+                  name={group.icon}
+                  className="text-muted-foreground size-3.5 shrink-0"
+                />
+              ) : null}
+              {group.title}
+            </p>
+          ) : null}
+          <ul
+            className={
+              group.label ? "flex flex-col gap-0.5" : "flex flex-col gap-0.5"
+            }
+          >
+            {group.items.map((item) => (
+              <li key={item.href}>
+                <NavLink item={item} current={isCurrent(pathname, item.href)} />
+              </li>
+            ))}
+          </ul>
         </div>
       ))}
     </nav>

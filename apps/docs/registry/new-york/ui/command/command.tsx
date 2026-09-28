@@ -39,13 +39,25 @@ function visibleOptions(list: HTMLElement | null) {
   ];
 }
 
-export type CommandProps = React.ComponentProps<"div">;
+export type CommandProps = React.ComponentProps<"div"> & {
+  onQueryChange?: (query: string) => void;
+};
 
-export function Command({ className, children, ...props }: CommandProps) {
-  const [query, setQuery] = useState("");
+export function Command({
+  className,
+  children,
+  onQueryChange,
+  ...props
+}: CommandProps) {
+  const [query, setQueryState] = useState("");
   const [activeId, setActiveId] = useState("");
   const listId = useId();
   const inputId = useId();
+
+  function setQuery(next: string) {
+    setQueryState(next);
+    onQueryChange?.(next);
+  }
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -70,7 +82,7 @@ export function Command({ className, children, ...props }: CommandProps) {
     >
       <div
         className={cn(
-          "bg-muted text-foreground flex w-full flex-col overflow-hidden rounded-md border",
+          "border-border bg-background text-foreground flex w-full flex-col overflow-hidden rounded-lg border",
           className,
         )}
         {...props}
@@ -99,44 +111,65 @@ export function CommandInput({ className, ...props }: CommandInputProps) {
   }
 
   return (
-    <input
-      {...props}
-      id={command.inputId}
-      role="combobox"
-      aria-expanded="true"
-      aria-controls={command.listId}
-      aria-autocomplete="list"
-      aria-activedescendant={command.activeId || undefined}
-      value={command.query}
-      className={cn(
-        "placeholder:text-muted-foreground h-9 border-b bg-transparent px-3 text-sm outline-none",
-        className,
-      )}
-      onChange={(event) => {
-        command.setQuery(event.currentTarget.value);
-        props.onChange?.(event);
-      }}
-      onKeyDown={(event) => {
-        if (event.key === "ArrowDown") {
-          event.preventDefault();
-          move(1);
-        }
+    <div className="border-border flex items-center gap-2 border-b px-3">
+      <SearchGlyph />
+      <input
+        {...props}
+        id={command.inputId}
+        role="combobox"
+        aria-expanded="true"
+        aria-controls={command.listId}
+        aria-autocomplete="list"
+        aria-activedescendant={command.activeId || undefined}
+        value={command.query}
+        className={cn(
+          "placeholder:text-muted-foreground h-11 w-full min-w-0 bg-transparent text-sm outline-none",
+          className,
+        )}
+        onChange={(event) => {
+          command.setQuery(event.currentTarget.value);
+          props.onChange?.(event);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown") {
+            event.preventDefault();
+            move(1);
+          }
 
-        if (event.key === "ArrowUp") {
-          event.preventDefault();
-          move(-1);
-        }
+          if (event.key === "ArrowUp") {
+            event.preventDefault();
+            move(-1);
+          }
 
-        if (event.key === "Enter" && command.activeId) {
-          event.preventDefault();
-          visibleOptions(document.getElementById(command.listId))
-            .find((option) => option.id === command.activeId)
-            ?.click();
-        }
+          if (event.key === "Enter" && command.activeId) {
+            event.preventDefault();
+            visibleOptions(document.getElementById(command.listId))
+              .find((option) => option.id === command.activeId)
+              ?.click();
+          }
 
-        props.onKeyDown?.(event);
-      }}
-    />
+          props.onKeyDown?.(event);
+        }}
+      />
+    </div>
+  );
+}
+
+function SearchGlyph() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="text-muted-foreground size-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </svg>
   );
 }
 
@@ -151,7 +184,10 @@ export function CommandList({ className, ...props }: CommandListProps) {
       id={command.listId}
       role="listbox"
       aria-labelledby={command.inputId}
-      className={cn("max-h-72 overflow-y-auto p-1", className)}
+      className={cn(
+        "max-h-80 overflow-y-auto overscroll-contain p-1.5",
+        className,
+      )}
     />
   );
 }
@@ -201,10 +237,13 @@ export function CommandGroup({
     <div
       role="group"
       aria-label={heading}
-      className={cn("grid gap-1", className)}
+      className={cn(
+        "grid gap-0.5 py-1 [:not(:has([role=option]))]:hidden",
+        className,
+      )}
       {...props}
     >
-      <p className="text-subtle-foreground px-2 py-1 text-xs font-medium">
+      <p className="text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium">
         {heading}
       </p>
       {children}
@@ -243,7 +282,7 @@ export function CommandItem({
       aria-disabled={disabled || undefined}
       disabled={disabled}
       className={cn(
-        "hover:bg-accent aria-selected:bg-accent flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm disabled:cursor-not-allowed disabled:opacity-50",
+        "hover:bg-accent hover:text-accent-foreground aria-selected:bg-accent aria-selected:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       onMouseEnter={() => {
@@ -262,7 +301,10 @@ export type CommandShortcutProps = React.ComponentProps<"span">;
 export function CommandShortcut({ className, ...props }: CommandShortcutProps) {
   return (
     <span
-      className={cn("text-muted-foreground ml-auto text-xs", className)}
+      className={cn(
+        "bg-muted text-muted-foreground ml-auto shrink-0 rounded px-1.5 py-0.5 font-mono text-[0.6875rem] leading-none",
+        className,
+      )}
       {...props}
     />
   );

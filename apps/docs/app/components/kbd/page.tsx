@@ -32,38 +32,84 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
-    id: "single-key",
-    title: "Single key",
-    description: "One key is one kbd element.",
-    preview: <Kbd>Esc</Kbd>,
-    code: `<Kbd>Esc</Kbd>`,
-  },
-  {
-    id: "shortcut",
-    title: "Shortcut",
-    description: "Place keys next to each other for a shortcut.",
+    id: "named-keys",
+    title: "Named keys",
+    description:
+      "Use readable labels for Enter, Return, Space, and Escape. Kbd is visual only. It does not listen for those keys.",
     preview: (
-      <span className="inline-flex items-center gap-1 text-sm">
-        <Kbd>⌘</Kbd>
-        <Kbd>K</Kbd>
+      <span className="flex flex-wrap items-center gap-2 text-sm">
+        <Kbd>Enter</Kbd>
+        <Kbd>Return</Kbd>
+        <Kbd>Space</Kbd>
+        <Kbd>Esc</Kbd>
       </span>
     ),
-    code: `<span>
-  <Kbd>⌘</Kbd> <Kbd>K</Kbd>
+    code: `<span className="flex flex-wrap gap-2">
+  <Kbd>Enter</Kbd>
+  <Kbd>Return</Kbd>
+  <Kbd>Space</Kbd>
+  <Kbd>Esc</Kbd>
 </span>`,
   },
   {
-    id: "multiple-keys",
-    title: "Multiple keys",
-    description: "Write the modifier the way the platform shows it.",
+    id: "arrows",
+    title: "Arrow keys",
+    description: "Show the four directions with arrow glyphs.",
     preview: (
       <span className="inline-flex items-center gap-1 text-sm">
-        <Kbd>Ctrl</Kbd>
-        <Kbd>K</Kbd>
+        <Kbd>↑</Kbd>
+        <Kbd>↓</Kbd>
+        <Kbd>←</Kbd>
+        <Kbd>→</Kbd>
+      </span>
+    ),
+    code: `<span className="inline-flex gap-1">
+  <Kbd>↑</Kbd>
+  <Kbd>↓</Kbd>
+  <Kbd>←</Kbd>
+  <Kbd>→</Kbd>
+</span>`,
+  },
+  {
+    id: "command-k",
+    title: "Command palette",
+    description: "Document the macOS and Windows shortcuts for search.",
+    preview: (
+      <span className="flex flex-wrap items-center gap-4 text-sm">
+        <span className="inline-flex items-center gap-1">
+          <Kbd>⌘</Kbd>
+          <Kbd>K</Kbd>
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <Kbd>Ctrl</Kbd>
+          <Kbd>K</Kbd>
+        </span>
+      </span>
+    ),
+    code: `<span className="inline-flex gap-1">
+  <Kbd>⌘</Kbd>
+  <Kbd>K</Kbd>
+</span>
+<span className="inline-flex gap-1">
+  <Kbd>Ctrl</Kbd>
+  <Kbd>K</Kbd>
+</span>`,
+  },
+  {
+    id: "save",
+    title: "Save shortcut",
+    description: "A realistic modifier combination next to its action.",
+    preview: (
+      <span className="text-sm">
+        Save with{" "}
+        <span className="inline-flex items-center gap-1">
+          <Kbd>⌘</Kbd>
+          <Kbd>S</Kbd>
+        </span>
       </span>
     ),
     code: `<span>
-  <Kbd>Ctrl</Kbd> <Kbd>K</Kbd>
+  Save with <Kbd>⌘</Kbd> <Kbd>S</Kbd>
 </span>`,
   },
 ];
@@ -81,7 +127,8 @@ export default async function KbdPage() {
       overview={
         <p>
           Kbd renders a native <code>kbd</code> element. It displays a key. It
-          does not listen for that key or become a button.
+          does not listen for that key or become a button. Pair it with real
+          keyboard handlers elsewhere when the shortcut must work.
         </p>
       }
       install="vinyaas add kbd"
@@ -99,22 +146,16 @@ export default async function KbdPage() {
       accessibility={
         <>
           <p>
-            The element is a native <code>kbd</code>. It is not focusable and
-            does not add a role.
+            The element is presentational. Visible text is the accessible name.
+            Do not rely on Kbd alone to expose a keyboard shortcut to assistive
+            technology when the control needs one.
           </p>
-          <ul className="list-disc pl-5">
-            <li>The visible key label is the accessible text.</li>
-            <li>
-              Put a shortcut in the sentence around the keys, such as “Press ⌘
-              K”.
-            </li>
-          </ul>
         </>
       }
       source={source}
     >
       <span className="inline-flex items-center gap-1 text-sm">
-        Press <Kbd>⌘</Kbd>
+        <Kbd>⌘</Kbd>
         <Kbd>K</Kbd>
       </span>
     </ComponentReference>

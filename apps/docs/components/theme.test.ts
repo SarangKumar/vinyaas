@@ -4,7 +4,7 @@ import {
   applyTheme,
   preferredTheme,
   readStoredTheme,
-  themeInitScript,
+  syncDocumentTheme,
   themeStorageKey,
 } from "./theme";
 
@@ -12,6 +12,7 @@ describe("theme preference", () => {
   afterEach(() => {
     localStorage.clear();
     document.documentElement.classList.remove("dark");
+    document.cookie = `${themeStorageKey}=; Path=/; Max-Age=0`;
     vi.unstubAllGlobals();
   });
 
@@ -35,17 +36,43 @@ describe("theme preference", () => {
 
     expect(document.documentElement.classList.contains("dark")).toBe(true);
     expect(localStorage.getItem(themeStorageKey)).toBe("dark");
+    expect(document.cookie).toContain(`${themeStorageKey}=dark`);
 
     applyTheme("light");
 
     expect(document.documentElement.classList.contains("dark")).toBe(false);
     expect(localStorage.getItem(themeStorageKey)).toBe("light");
+    expect(document.cookie).toContain(`${themeStorageKey}=light`);
   });
 
-  it("initializes from storage or the system preference before paint", () => {
-    expect(themeInitScript).toContain(themeStorageKey);
-    expect(themeInitScript).toContain("prefers-color-scheme: dark");
-    expect(themeInitScript).toContain('classList.toggle("dark"');
-    expect(themeInitScript).not.toContain("localStorage.setItem");
+  it("restores a saved dark theme without overwriting storage", () => {
+    localStorage.setItem(themeStorageKey, "dark");
+    document.documentElement.classList.remove("dark");
+
+    syncDocumentTheme();
+
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
+    expect(localStorage.getItem(themeStorageKey)).toBe("dark");
+    expect(document.cookie).toContain(`${themeStorageKey}=dark`);
+  });
+
+  it("restores a saved light theme when the document is dark", () => {
+    localStorage.setItem(themeStorageKey, "light");
+    document.documentElement.classList.add("dark");
+
+    syncDocumentTheme();
+
+    expect(document.documentElement.classList.contains("dark")).toBe(false);
+    expect(localStorage.getItem(themeStorageKey)).toBe("light");
+  });
+
+  it("does not write a preference when only the system is dark", () => {
+    vi.stubGlobal("matchMedia", () => ({ matches: true }));
+    document.documentElement.classList.remove("dark");
+
+    syncDocumentTheme();
+
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
+    expect(localStorage.getItem(themeStorageKey)).toBeNull();
   });
 });

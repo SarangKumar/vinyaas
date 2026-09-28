@@ -4,6 +4,7 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
 import { Badge } from "@/registry/new-york/ui/badge/badge";
 import {
   Command,
@@ -53,19 +54,36 @@ const examples: ComponentExample[] = [
     description:
       "Groups filter as the query changes. Enter activates the highlighted item.",
     preview: (
-      <Command className="max-w-sm">
-        <CommandInput aria-label="Search pages" placeholder="Search pages" />
+      <Command className="w-full max-w-md">
+        <CommandInput
+          aria-label="Search pages"
+          placeholder="Search components..."
+        />
         <CommandList>
-          <CommandEmpty>No matching pages.</CommandEmpty>
-          <CommandGroup heading="Getting Started">
-            <CommandItem value="Installation setup">
-              Installation
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Components">
+            <CommandItem value="Accordion">
+              Accordion
+              <CommandShortcut>↵</CommandShortcut>
+            </CommandItem>
+            <CommandItem value="Alert">
+              Alert
+              <CommandShortcut>↵</CommandShortcut>
+            </CommandItem>
+            <CommandItem value="Avatar">
+              Avatar
               <CommandShortcut>↵</CommandShortcut>
             </CommandItem>
           </CommandGroup>
-          <CommandGroup heading="Components">
-            <CommandItem value="Button">Button</CommandItem>
-            <CommandItem value="Input field">Input</CommandItem>
+          <CommandGroup heading="Getting Started">
+            <CommandItem value="Introduction">
+              Introduction
+              <CommandShortcut>↵</CommandShortcut>
+            </CommandItem>
+            <CommandItem value="Installation">
+              Installation
+              <CommandShortcut>↵</CommandShortcut>
+            </CommandItem>
           </CommandGroup>
         </CommandList>
       </Command>
@@ -74,28 +92,131 @@ const examples: ComponentExample[] = [
   },
   {
     id: "actions",
-    title: "Actions",
-    description: "A command list can mix status and a disabled action.",
+    title: "Quick actions",
+    description: "A palette can open settings, a profile, or sign out.",
     preview: (
-      <Command className="max-w-sm">
+      <Command className="w-full max-w-md">
+        <CommandInput aria-label="Quick actions" placeholder="Quick actions" />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Actions">
+            <CommandItem value="Create project">Create project</CommandItem>
+            <CommandItem value="Open settings">Open settings</CommandItem>
+            <CommandItem value="View profile">View profile</CommandItem>
+            <CommandItem value="Sign out">Sign out</CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    ),
+    code: `import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command/command";
+
+export function QuickActions() {
+  return (
+    <Command>
+      <CommandInput aria-label="Quick actions" placeholder="Quick actions" />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup heading="Actions">
+          <CommandItem value="Create project">Create project</CommandItem>
+          <CommandItem value="Open settings">Open settings</CommandItem>
+          <CommandItem value="View profile">View profile</CommandItem>
+          <CommandItem value="Sign out">Sign out</CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
+`,
+  },
+  {
+    id: "palette",
+    title: "Command palette",
+    description: "Navigation and actions can share one list.",
+    preview: (
+      <Command className="w-full max-w-md">
         <CommandInput
-          aria-label="Project actions"
-          placeholder="Project actions"
+          aria-label="Command palette"
+          placeholder="Type a command"
         />
         <CommandList>
-          <CommandEmpty>No matching actions.</CommandEmpty>
-          <CommandGroup heading="Project">
-            <CommandItem value="Publish">
-              Publish <Badge variant="secondary">Ready</Badge>
-            </CommandItem>
-            <CommandItem value="Archive" disabled>
-              Archive
-            </CommandItem>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Navigation">
+            <CommandItem value="Introduction">Introduction</CommandItem>
+            <CommandItem value="Components">Components</CommandItem>
+            <CommandItem value="Installation">Installation</CommandItem>
+          </CommandGroup>
+          <CommandGroup heading="Actions">
+            <CommandItem value="Create component">Create component</CommandItem>
+            <CommandItem value="Copy CLI command">Copy CLI command</CommandItem>
+            <CommandItem value="Open GitHub">Open GitHub</CommandItem>
           </CommandGroup>
         </CommandList>
       </Command>
     ),
     code: usage,
+  },
+  {
+    id: "people",
+    title: "Searchable people",
+    description: "A result can include an avatar and a status badge.",
+    preview: (
+      <Command className="w-full max-w-md">
+        <CommandInput aria-label="Search people" placeholder="Search people" />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="People">
+            <CommandItem value="Ada Lovelace mathematician">
+              <Avatar>
+                <AvatarFallback>AL</AvatarFallback>
+              </Avatar>
+              <span className="grid min-w-0">
+                <span>Ada Lovelace</span>
+                <span className="text-muted-foreground text-xs">
+                  Mathematician
+                </span>
+              </span>
+              <Badge>Available</Badge>
+            </CommandItem>
+            <CommandItem value="Grace Hopper">
+              <Avatar>
+                <AvatarFallback>GH</AvatarFallback>
+              </Avatar>
+              <span className="grid min-w-0">
+                <span>Grace Hopper</span>
+                <span className="text-muted-foreground text-xs">
+                  Computer scientist
+                </span>
+              </span>
+              <Badge variant="secondary">Away</Badge>
+            </CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    ),
+    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
+import { Badge } from "@/components/ui/badge/badge";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command/command";
+
+export function PeopleSearch() {
+  return (
+    <Command>
+      <CommandInput aria-label="Search people" placeholder="Search people" />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup heading="People">
+          <CommandItem value="Ada Lovelace">
+            <Avatar>
+              <AvatarFallback>AL</AvatarFallback>
+            </Avatar>
+            Ada Lovelace
+            <Badge>Available</Badge>
+          </CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
+`,
   },
 ];
 
@@ -112,8 +233,8 @@ export default async function CommandPage() {
       overview={
         <p>
           CommandInput filters CommandItem values. Arrow keys move the active
-          item. Enter activates it. The docs navbar uses this list inside a
-          dialog and opens it with ⌘K or Ctrl K.
+          item. Enter activates it. The docs search dialog uses this list, and
+          the component itself stays free of documentation routes.
         </p>
       }
       install="vinyaas add command"
@@ -141,13 +262,22 @@ export default async function CommandPage() {
       }
       source={source}
     >
-      <Command className="max-w-sm">
-        <CommandInput aria-label="Search pages" placeholder="Search pages" />
+      <Command className="w-full max-w-md">
+        <CommandInput
+          aria-label="Search pages"
+          placeholder="Search components..."
+        />
         <CommandList>
-          <CommandEmpty>No matching pages.</CommandEmpty>
+          <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Components">
-            <CommandItem value="Button">Button</CommandItem>
-            <CommandItem value="Input">Input</CommandItem>
+            <CommandItem value="Button">
+              Button
+              <CommandShortcut>↵</CommandShortcut>
+            </CommandItem>
+            <CommandItem value="Input">
+              Input
+              <CommandShortcut>↵</CommandShortcut>
+            </CommandItem>
           </CommandGroup>
         </CommandList>
       </Command>

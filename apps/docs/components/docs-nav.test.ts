@@ -1,55 +1,58 @@
 import { describe, expect, it } from "vitest";
 
 import { componentIsNew, components } from "./component-meta";
-import { docsNav, githubUrl, homePath, introductionPath } from "./docs-nav";
+import {
+  componentsJsonPath,
+  docsNav,
+  githubUrl,
+  homePath,
+  introductionPath,
+} from "./docs-nav";
 
 describe("documentation navigation", () => {
-  it("points introduction and home at different routes", () => {
+  it("lists introduction, components, get started, and changelog", () => {
     expect(githubUrl).toBe("https://github.com/SarangKumar/vinyaas");
     expect(homePath).toBe("/");
     expect(introductionPath).toBe("/introduction");
-    expect(docsNav[0]?.items?.[0]).toEqual({
-      title: "Introduction",
-      href: "/introduction",
-      icon: "book",
-    });
-    expect(docsNav[0]?.items?.[1]).toEqual({
-      title: "Installation",
-      href: "/installation",
-      icon: "terminal",
-    });
-    expect(docsNav[0]?.items?.[2]).toEqual({
-      title: "Changelog",
-      href: "/changelog",
-      icon: "book",
-    });
+    expect(componentsJsonPath).toBe("/components-json");
     expect(docsNav.map((group) => group.title)).toEqual([
-      "Getting Started",
+      "Introduction",
       "Components",
-      "CLI",
-      "Resources",
+      "GET STARTED",
+      "Changelog",
     ]);
+    expect(docsNav[0]?.items).toEqual([
+      { title: "Introduction", href: "/introduction", icon: "book" },
+    ]);
+    expect(docsNav[0]?.label).toBeUndefined();
+    expect(docsNav[2]?.label).toBe(true);
+    expect(docsNav[2]?.items.map((item) => item.title)).toEqual([
+      "Installation",
+      "components.json",
+      "CLI",
+    ]);
+    expect(
+      docsNav[2]?.items.find((item) => item.title === "components.json"),
+    ).toEqual({
+      title: "components.json",
+      href: "/components-json",
+      icon: "file",
+    });
+    expect(docsNav[3]?.items).toEqual([
+      { title: "Changelog", href: "/changelog", icon: "book" },
+    ]);
+    expect(docsNav.some((group) => group.title === "Forms")).toBe(false);
+    expect(docsNav.some((group) => group.title === "CLI")).toBe(false);
+    expect(docsNav.some((group) => group.title === "Resources")).toBe(false);
   });
 
-  it("builds the component sidebar from the shared catalog", () => {
-    const sections = docsNav.find(
-      (group) => group.title === "Components",
-    )?.sections;
+  it("builds one alphabetical component list without category icons", () => {
+    const items = docsNav.find((group) => group.title === "Components")?.items;
 
-    expect(sections?.map((section) => section.title)).toEqual([
-      "Forms",
-      "Feedback",
-      "Layout",
-      "Navigation",
-      "Data Display",
-      "Overlays",
-      "Utilities",
-    ]);
-
-    const items = sections?.flatMap((section) => section.items) ?? [];
-
-    expect(items.map((item) => item.title).sort()).toEqual(
-      components.map((component) => component.name).sort(),
+    expect(items?.map((item) => item.title)).toEqual(
+      [...components]
+        .map((component) => component.name)
+        .sort((a, b) => a.localeCompare(b)),
     );
     expect(items).toEqual(
       expect.arrayContaining(
@@ -61,12 +64,6 @@ describe("documentation navigation", () => {
         })),
       ),
     );
-
-    for (const section of sections ?? []) {
-      const titles = section.items.map((item) => item.title);
-
-      expect(titles).toEqual([...titles].sort((a, b) => a.localeCompare(b)));
-      expect(section.icon).toBeTruthy();
-    }
+    expect(items?.every((item) => item.icon === undefined)).toBe(true);
   });
 });

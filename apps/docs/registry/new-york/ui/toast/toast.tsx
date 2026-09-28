@@ -261,7 +261,8 @@ export function Toaster({
   position?: ToastPosition;
 }) {
   const [items, setItems] = useState<readonly ToastRecord[]>([]);
-  const [mounted, setMounted] = useState(() => typeof document !== "undefined");
+  // Start false so the server render and the first client render both omit the portal.
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const timeout = setTimeout(() => setMounted(true), 0);

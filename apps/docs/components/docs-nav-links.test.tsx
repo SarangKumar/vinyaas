@@ -25,10 +25,26 @@ describe("DocsNavLinks", () => {
       "href",
       "/introduction",
     );
-    const installation = screen.getAllByRole("link", {
-      name: "Installation",
-    })[0];
-
-    expect(installation).toHaveClass("text-sidebar-foreground");
+    expect(screen.getByRole("link", { name: "Installation" })).toHaveAttribute(
+      "href",
+      "/installation",
+    );
+    expect(
+      screen.getByRole("link", { name: "components.json" }),
+    ).toHaveAttribute("href", "/components-json");
+    expect(screen.getByRole("link", { name: "CLI" })).toHaveAttribute(
+      "href",
+      "/installation#cli",
+    );
+    expect(screen.queryByText("Forms")).toBeNull();
+    expect(screen.queryByText("Resources")).toBeNull();
+    expect(screen.getByText("Components")).toBeInTheDocument();
+    expect(screen.getByText("GET STARTED")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Introduction" }).querySelector("svg"),
+    ).not.toBeNull();
+    expect(
+      screen.getByRole("link", { name: "Button" }).querySelector("svg"),
+    ).toBeNull();
   });
 });

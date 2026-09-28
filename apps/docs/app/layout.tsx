@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
+import { cookies } from "next/headers";
 
 import { DocsShell } from "@/components/docs-shell";
 import { CodeLanguageProvider } from "@/components/code-language-store";
-import { themeInitScript } from "@/components/theme";
+import { themeStorageKey } from "@/components/theme";
+import { ThemeSync } from "@/components/theme-sync";
 
 import "./globals.css";
 
@@ -23,20 +24,22 @@ export const metadata: Metadata = {
   description: "UI components installed into your project as source.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+/**
+ * Theme class comes from the cookie the toggle writes.
+ * ThemeSync reconciles localStorage after mount. There is no inline script,
+ * so the server and the first client paint share the same class string.
+ */
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const stored = (await cookies()).get(themeStorageKey)?.value;
+  const themeClass = stored === "dark" ? "dark" : "";
+
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased${themeClass ? ` ${themeClass}` : ""}`}
     >
-      <head>
-        {/* beforeInteractive runs in the initial HTML, before React hydrates the tree. */}
-        <Script id="vinyaas-theme" strategy="beforeInteractive">
-          {themeInitScript}
-        </Script>
-      </head>
       <body className="bg-background text-foreground h-full overflow-hidden font-sans">
+        <ThemeSync />
         <DocsShell>
           <CodeLanguageProvider>{children}</CodeLanguageProvider>
         </DocsShell>

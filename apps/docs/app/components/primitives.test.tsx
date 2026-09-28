@@ -224,6 +224,45 @@ describe("composed examples", () => {
       'from "@/components/ui/select/select"',
     );
   });
+
+  it("renders dropdown, breadcrumb separator, and kbd named-key examples", async () => {
+    render(await DropdownMenuPage());
+    expect(
+      screen.getByRole("heading", { name: "Account menu" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Card actions" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Table row actions" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Project actions" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "User actions" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Sarang Kumar")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Actions for Aarav Sharma" }),
+    ).toBeInTheDocument();
+
+    render(await BreadcrumbDocsPage());
+    expect(
+      screen.getByRole("heading", { name: "Custom separator" }),
+    ).toBeInTheDocument();
+    expect(
+      document.querySelectorAll('[aria-hidden="true"] svg').length,
+    ).toBeGreaterThan(0);
+
+    render(await KbdPage());
+    expect(
+      screen.getByRole("heading", { name: "Named keys" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Enter")).toBeInTheDocument();
+    expect(screen.getByText("Esc")).toBeInTheDocument();
+    expect(document.body.textContent).toMatch(/visual only/i);
+  });
 });
 
 describe("new component pages", () => {

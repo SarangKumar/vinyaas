@@ -48,16 +48,32 @@ describe("CodeBlock", () => {
     expect(document.querySelector("code")?.textContent).toContain("line 20");
   });
 
-  it("highlights TypeScript and Bash", () => {
+  it("highlights TypeScript and Bash without injecting HTML", () => {
     const { unmount } = render(
       <CodeBlock code={'const ready = "ok";'} language="tsx" />,
     );
 
     expect(document.querySelector(".hljs-keyword")).toHaveTextContent("const");
+    expect(document.querySelector("code")?.innerHTML).not.toContain(
+      "dangerouslySetInnerHTML",
+    );
+    expect(
+      document.querySelector("code")?.querySelector("span"),
+    ).not.toBeNull();
     unmount();
     render(<CodeBlock code="echo hello" language="bash" />);
     expect(
       document.querySelector("code .hljs-built_in, code span"),
     ).not.toBeNull();
+  });
+
+  it("keeps bash independent of the component language preference", () => {
+    render(<CodeBlock code="pnpm add button" language="bash" />);
+
+    expect(document.querySelector("code")).toHaveAttribute(
+      "data-language",
+      "bash",
+    );
+    expect(document.querySelector("code")?.textContent).toBe("pnpm add button");
   });
 });
