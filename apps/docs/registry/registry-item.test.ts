@@ -26,19 +26,10 @@ function buttonItem() {
 }
 
 describe("button registry item", () => {
-  it("declares its npm dependencies and an explicit utils dependency", () => {
+  it("declares its npm dependencies and no registry dependency", () => {
     const button = buttonItem();
-    const utils = newYork.find((item) => item.name === "utils");
 
-    expect(utils?.type).toBe("registry:ui");
-    expect(utils?.dependencies).toEqual(["clsx", "tailwind-merge"]);
-    expect(utils?.registryDependencies).toBeUndefined();
-    expect(utils?.files).toEqual([
-      {
-        path: "lib/utils.ts",
-        type: "registry:ui",
-      },
-    ]);
+    expect(newYork.some((item) => item.name === "utils")).toBe(false);
     expect(button.type).toBe("registry:ui");
     expect(button.dependencies).toEqual([
       "class-variance-authority",
@@ -48,7 +39,7 @@ describe("button registry item", () => {
     expect(
       button.dependencies?.some((dependency) => dependency.startsWith("@/")),
     ).toBe(false);
-    expect(button.registryDependencies).toEqual(["utils"]);
+    expect(button.registryDependencies).toBeUndefined();
     expect(button.files).toEqual([
       {
         path: "ui/button/button.tsx",
@@ -208,6 +199,22 @@ describe("serializeRegistryItem", () => {
   });
 });
 
+describe("input registry item", () => {
+  it("declares the class-name dependencies and no registry dependency", () => {
+    const input = newYork.find((item) => item.name === "input");
+
+    expect(input?.type).toBe("registry:ui");
+    expect(input?.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(input?.registryDependencies).toBeUndefined();
+    expect(input?.files).toEqual([
+      {
+        path: "ui/input/input.tsx",
+        type: "registry:ui",
+      },
+    ]);
+  });
+});
+
 describe("registry build output", () => {
   it("keeps the new-york button artifact aligned with the source item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/button.json");
@@ -245,7 +252,7 @@ describe("registry build output", () => {
     ]);
     expect(generated.files[0]?.content).toBe(source);
     expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
-    expect(generated.registryDependencies).toEqual(["utils"]);
+    expect(generated).not.toHaveProperty("registryDependencies");
     expect(generated).not.toHaveProperty("devDependencies");
     expect(generated).not.toHaveProperty("cssVars");
     expect(generated).not.toHaveProperty("css");
@@ -253,44 +260,317 @@ describe("registry build output", () => {
     expect(generated).not.toHaveProperty("docs");
   });
 
-  it("embeds the utils source and does not scan its imports", async () => {
-    const outputPath = path.join(docsRoot, "public/r/new-york/utils.json");
-    const sourcePath = path.join(docsRoot, "registry/new-york/lib/utils.ts");
-    const docsUtilsPath = path.join(docsRoot, "lib/utils.ts");
-    const [rawOutput, source, docsUtils] = await Promise.all([
+  it("keeps the new-york input artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/input.json");
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/input/input.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
       fs.readFile(outputPath, "utf8"),
       fs.readFile(sourcePath, "utf8"),
-      fs.readFile(docsUtilsPath, "utf8"),
     ]);
     const generated = JSON.parse(rawOutput) as {
+      $schema: string;
       name: string;
+      type: string;
       dependencies: string[];
       files: { path: string; content: string }[];
     };
-    const utils = newYork.find((item) => item.name === "utils");
+    const input = newYork.find((item) => item.name === "input");
 
-    if (!utils) {
-      throw new Error("Expected a utils registry item");
+    if (!input) {
+      throw new Error("Expected an input registry item");
     }
 
-    const files = await readRegistryItemFiles(utils, async (relativePath) => {
-      expect(relativePath).toBe("lib/utils.ts");
+    const files = await readRegistryItemFiles(input, async (relativePath) => {
+      expect(relativePath).toBe("ui/input/input.tsx");
       return source;
     });
+    const payload = serializeRegistryItem(input, files, generated.$schema);
 
-    expect(source).toBe(docsUtils);
-    expect(generated.name).toBe("utils");
+    expect(generated).toEqual(payload);
+    expect(generated.$schema).toBe(
+      "https://vinyaas.vercel.app/schema/registry-item.json",
+    );
+    expect(generated.name).toBe("input");
+    expect(generated.type).toBe("registry:ui");
     expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
     expect(generated).not.toHaveProperty("registryDependencies");
-    expect(generated.files).toEqual([
-      {
-        path: "lib/utils.ts",
-        content: source,
-        type: "registry:ui",
-      },
+  });
+
+  it("keeps the new-york textarea artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/textarea.json");
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/textarea/textarea.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
     ]);
-    expect(generated.files[0]?.content).toContain("export function cn");
-    expect(files).toHaveLength(1);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      files: { path: string; content: string }[];
+    };
+    const textarea = newYork.find((item) => item.name === "textarea");
+
+    if (!textarea) {
+      throw new Error("Expected a textarea registry item");
+    }
+
+    const files = await readRegistryItemFiles(
+      textarea,
+      async (relativePath) => {
+        expect(relativePath).toBe("ui/textarea/textarea.tsx");
+        return source;
+      },
+    );
+    const payload = serializeRegistryItem(textarea, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.$schema).toBe(
+      "https://vinyaas.vercel.app/schema/registry-item.json",
+    );
+    expect(generated.name).toBe("textarea");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(textarea.registryDependencies).toBeUndefined();
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
+    expect(generated).not.toHaveProperty("registryDependencies");
+  });
+
+  it("keeps the new-york label artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/label.json");
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/label/label.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
+    ]);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      files: { path: string; content: string }[];
+    };
+    const label = newYork.find((item) => item.name === "label");
+
+    if (!label) {
+      throw new Error("Expected a label registry item");
+    }
+
+    const files = await readRegistryItemFiles(label, async (relativePath) => {
+      expect(relativePath).toBe("ui/label/label.tsx");
+      return source;
+    });
+    const payload = serializeRegistryItem(label, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.$schema).toBe(
+      "https://vinyaas.vercel.app/schema/registry-item.json",
+    );
+    expect(generated.name).toBe("label");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(label.registryDependencies).toBeUndefined();
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
+    expect(generated).not.toHaveProperty("registryDependencies");
+  });
+
+  it("keeps the new-york checkbox artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/checkbox.json");
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/checkbox/checkbox.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
+    ]);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      files: { path: string; content: string }[];
+    };
+    const checkbox = newYork.find((item) => item.name === "checkbox");
+
+    if (!checkbox) {
+      throw new Error("Expected a checkbox registry item");
+    }
+
+    const files = await readRegistryItemFiles(
+      checkbox,
+      async (relativePath) => {
+        expect(relativePath).toBe("ui/checkbox/checkbox.tsx");
+        return source;
+      },
+    );
+    const payload = serializeRegistryItem(checkbox, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.$schema).toBe(
+      "https://vinyaas.vercel.app/schema/registry-item.json",
+    );
+    expect(generated.name).toBe("checkbox");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(checkbox.registryDependencies).toBeUndefined();
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated).not.toHaveProperty("registryDependencies");
+  });
+
+  it("keeps the new-york radio-group artifact aligned with the source item", async () => {
+    const outputPath = path.join(
+      docsRoot,
+      "public/r/new-york/radio-group.json",
+    );
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/radio-group/radio-group.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
+    ]);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      files: { path: string; content: string }[];
+    };
+    const radioGroup = newYork.find((item) => item.name === "radio-group");
+
+    if (!radioGroup) {
+      throw new Error("Expected a radio-group registry item");
+    }
+
+    const files = await readRegistryItemFiles(
+      radioGroup,
+      async (relativePath) => {
+        expect(relativePath).toBe("ui/radio-group/radio-group.tsx");
+        return source;
+      },
+    );
+    const payload = serializeRegistryItem(radioGroup, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.$schema).toBe(
+      "https://vinyaas.vercel.app/schema/registry-item.json",
+    );
+    expect(generated.name).toBe("radio-group");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(radioGroup.registryDependencies).toBeUndefined();
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain('"use client"');
+    expect(generated).not.toHaveProperty("registryDependencies");
+  });
+
+  it.each([
+    ["avatar", "ui/avatar/avatar.tsx", '"use client"'],
+    ["progress", "ui/progress/progress.tsx", "<progress"],
+    ["skeleton", "ui/skeleton/skeleton.tsx", "aria-hidden"],
+    ["separator", "ui/separator/separator.tsx", "<hr"],
+    ["kbd", "ui/kbd/kbd.tsx", "<kbd"],
+    ["switch", "ui/switch/switch.tsx", 'role="switch"'],
+    ["table", "ui/table/table.tsx", "<table"],
+    ["tooltip", "ui/tooltip/tooltip.tsx", 'role="tooltip"'],
+    ["native-select", "ui/native-select/native-select.tsx", "<select"],
+    ["toast", "ui/toast/toast.tsx", "toast.add"],
+    ["popover", "ui/popover/popover.tsx", "PopoverContent"],
+    ["badge", "ui/badge/badge.tsx", "<span"],
+    ["spinner", "ui/spinner/spinner.tsx", "aria-hidden"],
+    ["card", "ui/card/card.tsx", "CardAction"],
+    ["alert", "ui/alert/alert.tsx", 'role="alert"'],
+    ["dialog", "ui/dialog/dialog.tsx", 'role="dialog"'],
+    ["accordion", "ui/accordion/accordion.tsx", "aria-expanded"],
+    ["breadcrumb", "ui/breadcrumb/breadcrumb.tsx", "breadcrumb"],
+    ["scroll-area", "ui/scroll-area/scroll-area.tsx", "data-scroll-area"],
+    ["slider", "ui/slider/slider.tsx", 'type="range"'],
+    ["hover-card", "ui/hover-card/hover-card.tsx", "HoverCardContent"],
+    ["marker", "ui/marker/marker.tsx", "MarkerContent"],
+    ["input-group", "ui/input-group/input-group.tsx", "InputGroupInput"],
+    ["input-otp", "ui/input-otp/input-otp.tsx", "InputOTPSlot"],
+    ["file-upload", "ui/file-upload/file-upload.tsx", "FileUploadDropzone"],
+    ["command", "ui/command/command.tsx", "CommandInput"],
+    [
+      "dropdown-menu",
+      "ui/dropdown-menu/dropdown-menu.tsx",
+      "DropdownMenuContent",
+    ],
+    ["typography", "ui/typography/typography.tsx", "TypographyH1"],
+  ])(
+    "keeps the new-york %s artifact aligned with the source item",
+    async (name, filePath, sourceMarker) => {
+      const outputPath = path.join(docsRoot, `public/r/new-york/${name}.json`);
+      const sourcePath = path.join(docsRoot, `registry/new-york/${filePath}`);
+      const [rawOutput, source] = await Promise.all([
+        fs.readFile(outputPath, "utf8"),
+        fs.readFile(sourcePath, "utf8"),
+      ]);
+      const generated = JSON.parse(rawOutput) as {
+        $schema: string;
+        name: string;
+        type: string;
+        dependencies: string[];
+        files: { path: string; content: string }[];
+      };
+      const item = newYork.find((entry) => entry.name === name);
+
+      if (!item) {
+        throw new Error(`Expected a ${name} registry item`);
+      }
+
+      const files = await readRegistryItemFiles(item, async (relativePath) => {
+        expect(relativePath).toBe(filePath);
+        return source;
+      });
+      const payload = serializeRegistryItem(item, files, generated.$schema);
+
+      expect(generated).toEqual(payload);
+      expect(generated.$schema).toBe(
+        "https://vinyaas.vercel.app/schema/registry-item.json",
+      );
+      expect(generated.name).toBe(name);
+      expect(generated.type).toBe("registry:ui");
+      expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+      expect(item.registryDependencies).toBeUndefined();
+      expect(generated.files.map((file) => file.path)).toEqual([filePath]);
+      expect(generated.files[0]?.content).toBe(source);
+      expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
+      expect(generated.files[0]?.content).toContain(sourceMarker);
+      expect(generated).not.toHaveProperty("registryDependencies");
+      expect(JSON.stringify(generated)).not.toContain("utils.json");
+    },
+  );
+
+  it("does not publish utils as a registry item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/utils.json");
+
+    await expect(fs.access(outputPath)).rejects.toThrow();
+    expect(newYork.some((item) => item.name === "utils")).toBe(false);
+  });
+
+  it("does not publish a Select registry item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/select.json");
+
+    await expect(fs.access(outputPath)).rejects.toThrow();
+    expect(newYork.some((item) => item.name === "select")).toBe(false);
+    expect(newYork).toHaveLength(34);
   });
 
   it("matches the json schema item types", () => {

@@ -105,7 +105,9 @@ describe("components.json", () => {
     expect(validComponentsConfig().$schema).toBe(
       "https://registry.example/schema/components.json",
     );
-    expect(example.trim()).toBe(`REGISTRY_BASE_URL=${defaultRegistryBaseUrl}`);
+    expect(example.trim()).toBe(
+      `REGISTRY_BASE_URL=${defaultRegistryBaseUrl}\n\n# Docs site only. Read by apps/docs at build and dev time.\nNEXT_PUBLIC_PORTFOLIO_URL=https://sarangkumar.vercel.app`,
+    );
     expect(registryBaseUrlFromEnv({})).toBe(defaultRegistryBaseUrl);
     expect(
       registryBaseUrlFromEnv({ REGISTRY_BASE_URL: "http://localhost:3000" }),

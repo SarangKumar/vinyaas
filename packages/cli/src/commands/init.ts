@@ -14,6 +14,7 @@ import {
 import { CliError } from "../lib/cli-error.js";
 import { detectProject } from "../lib/detect-project.js";
 import { resolveProjectRoot } from "../lib/project/cwd.js";
+import { ensureProjectUtils } from "../lib/project/utils-file.js";
 
 const alreadyExistsMessage = [
   "components.json already exists.",
@@ -23,7 +24,9 @@ const alreadyExistsMessage = [
 export function registerInitCommand(program: Command): void {
   program
     .command("init")
-    .description("Create components.json for the current project.")
+    .description(
+      "Create components.json and lib/utils.ts for the current project.",
+    )
     .option("--cwd <path>", "Consumer project directory.")
     .action(async (options: { cwd?: string }) => {
       try {
@@ -75,7 +78,16 @@ export async function runInit({
     flag: "wx",
   });
 
+  const utils = await ensureProjectUtils(cwd);
+
   console.log("Created components.json.");
+
+  if (utils === "created") {
+    console.log("Created lib/utils.ts.");
+    return;
+  }
+
+  console.log("lib/utils.ts already exists.\nVinyaas will not overwrite it.");
 }
 
 function createConfig(

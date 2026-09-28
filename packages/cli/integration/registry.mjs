@@ -75,19 +75,8 @@ assert.ok(
       file.content.includes("export function Button"),
   ),
 );
-assert.deepEqual(item.registryDependencies, ["utils"]);
+assert.equal(item.registryDependencies, undefined);
 assert.deepEqual(item, generated);
-
-const utilsPath = join(repoRoot, "apps/docs/public/r/new-york/utils.json");
-const generatedUtils = JSON.parse(await readFile(utilsPath, "utf8"));
-const utils = await fetchRegistryItem({
-  baseUrl,
-  style: "new-york",
-  name: "utils",
-});
-
-assert.equal(utils.name, "utils");
-assert.deepEqual(utils, generatedUtils);
 
 await assert.rejects(
   () =>
@@ -147,6 +136,11 @@ try {
     `${JSON.stringify({ name: "vinyaas-add-fixture", private: true }, null, 2)}\n`,
   );
   await writeFile(join(fixture, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+  await mkdir(join(fixture, "lib"));
+  await writeFile(
+    join(fixture, "lib/utils.ts"),
+    "export function cn(...inputs) { return inputs; }\n",
+  );
 
   await runAdd({
     cwd: fixture,

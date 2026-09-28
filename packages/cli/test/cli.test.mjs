@@ -34,8 +34,9 @@ describe("vinyaas", () => {
   it("points the vinyaas binary at the built entrypoint", () => {
     const source = readFileSync(entrypoint, "utf8");
 
-    assert.equal(packageJson.name, "@vinyaas/cli");
-    assert.equal(packageJson.bin.vinyaas, "./dist/index.js");
+    assert.equal(packageJson.name, "vinyaas");
+    assert.equal(packageJson.version, "1.0.0");
+    assert.equal(packageJson.bin.vinyaas, "dist/index.js");
     assert.match(source, /^#!\/usr\/bin\/env node\n/);
   });
 
@@ -43,7 +44,7 @@ describe("vinyaas", () => {
     const result = await run(["--version"]);
 
     assert.equal(result.exitCode, 0);
-    assert.equal(result.stdout, `${packageJson.version}\n`);
+    assert.equal(result.stdout, "1.0.0\n");
   });
 
   it("prints help", async () => {
@@ -67,6 +68,8 @@ describe("vinyaas", () => {
     assert.match(add.stdout, /--cwd <path>/);
     assert.match(add.stdout, /--force/);
     assert.match(add.stdout, /overwrite existing component files/i);
+    assert.match(add.stdout, /<name\.\.\.>/);
+    assert.match(add.stdout, /vinyaas add button card badge/);
   });
 
   it("rejects --force on init", async () => {

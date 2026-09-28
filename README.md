@@ -2,6 +2,8 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
+v1.0.0 is the major production-focused catalog release. v0.1 contains Button. v1.0.0 contains every other catalog component: forms, feedback, layout, navigation, data display, overlays, and utilities. Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` stays the documentation introduction.
+
 ## Prerequisites
 
 - Node.js 20 or newer
@@ -12,15 +14,27 @@ Vinyaas detects the package manager from the project lockfile: `pnpm-lock.yaml`,
 
 ## Installation
 
-`@vinyaas/cli` is the package prepared for release. After it is published, install it with:
+Install the published package with the project's package manager:
 
 ```bash
-npm install -g @vinyaas/cli
+npm install vinyaas
+pnpm add vinyaas
+yarn add vinyaas
+bun add vinyaas
+```
+
+Run it without a global install:
+
+```bash
+npx vinyaas init
+pnpm dlx vinyaas init
+yarn dlx vinyaas init
+bunx vinyaas init
 ```
 
 ```bash
-vinyaas --version
-vinyaas --help
+npx vinyaas --version
+npx vinyaas --help
 ```
 
 ## Initialize a project
@@ -31,7 +45,7 @@ From the project root:
 vinyaas init
 ```
 
-`init` detects the project and creates `components.json`. It does not overwrite an existing `components.json`.
+`init` detects the project and creates `components.json` and `lib/utils.ts`. It does not overwrite an existing `components.json`. If `lib/utils.ts` already exists, that file is left unchanged. `lib/utils.ts` is project infrastructure, not a registry component. It exports `cn` for class names.
 
 A TypeScript Next.js app with `app/globals.css` gets:
 
@@ -57,7 +71,7 @@ A TypeScript Next.js app with `app/globals.css` gets:
 - `tailwind.css` is the stylesheet Vinyaas updates. It is `app/globals.css` or `src/app/globals.css`, whichever exists.
 - `tailwind.baseColor` is `neutral`. `tailwind.cssVariables` is `true`.
 - `tsx` is `true` when `tsconfig.json` exists, and `false` otherwise.
-- `aliases` map registry files onto import paths. `ui` is where UI components are installed. `utils` is the `cn` helper.
+- `aliases` map registry files onto import paths. `ui` is where UI components are installed. `utils` is the import path for the `cn` helper at `lib/utils.ts`.
 
 ## Add a component
 
@@ -65,10 +79,16 @@ A TypeScript Next.js app with `app/globals.css` gets:
 vinyaas add button
 ```
 
+Install multiple components in one call. Shared packages install once:
+
+```bash
+npx vinyaas add button card badge
+```
+
 For each component, Vinyaas:
 
 1. Fetches the registry item.
-2. Resolves registry dependencies, such as `utils` for Button.
+2. Resolves registry dependencies when the item declares them. Button does not declare any.
 3. Collects the npm dependencies declared by those items.
 4. Installs dependencies that the project does not already declare.
 5. Writes the component source files.
@@ -82,7 +102,7 @@ Not every component includes CSS, environment variables, or documentation.
 
 The `ui` alias controls UI component paths. The default `@/components/ui` installs files under `components/ui/`.
 
-Other registry files follow the configured aliases. The default `utils` alias is `@/lib/utils`, so the `utils` item is installed as `lib/utils.ts`.
+`lib/utils.ts` is created by `vinyaas init`. Registry items do not install it.
 
 ## `--cwd`
 
@@ -125,7 +145,7 @@ REGISTRY_BASE_URL=http://localhost:3000 vinyaas add button
 From a Next.js app:
 
 ```bash
-npm install -g @vinyaas/cli
+npm install -g vinyaas
 
 cd my-next-app
 
@@ -133,7 +153,7 @@ vinyaas init
 vinyaas add button
 ```
 
-Button depends on the `utils` registry item. The install adds `class-variance-authority`, `clsx`, and `tailwind-merge` when they are not already declared, and writes:
+`vinyaas init` writes `components.json` and `lib/utils.ts`. `vinyaas add button` adds `class-variance-authority`, `clsx`, and `tailwind-merge` when they are not already declared, and writes the button source:
 
 ```text
 components.json
@@ -143,13 +163,54 @@ components/ui/button/button.tsx
 
 The current Button item does not declare CSS, environment variables, or a documentation URL, so those steps do not change `app/globals.css` and do not print an environment or documentation section.
 
+## Component conventions
+
+v1.0.0 components follow the existing Button.
+
+- Registry name, folder, and file use the same lowercase name: `button` → `ui/button/button.tsx`.
+- `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/button.tsx`.
+- The file exports a PascalCase component, `Button`, and a props type, `ButtonProps`.
+- Variants use `class-variance-authority` when a component has more than one visual style. Input, Textarea, Label, Checkbox, Radio Group, Avatar, Progress, Skeleton, Separator, and Kbd do not use it.
+- Class names are merged with `cn` from `@/lib/utils`.
+- Form controls share one height scale: `sm` is `h-8`, the default is `h-9`, and `lg` is `h-10`. Button `md` and Input are both `h-9` and `text-sm`. Textarea uses the same border, type, padding, focus, and disabled treatment, with a content height.
+- Components render the native element and pass through its attributes, including `disabled` and `aria-*`.
+- Colors use semantic utilities such as `bg-primary`, `text-foreground`, and `border-border`. The docs site defines those tokens in `apps/docs/app/globals.css`. Installed projects do not receive that theme file yet.
+- Documentation pages live at `/components/<name>`. Each page shows a live example, the install command, a usage snippet, and the registry source.
+
+## Accessibility
+
+Components use the native element and the browser’s keyboard behavior.
+
+- Button is a `<button>`. Enter and Space activate it. `disabled` blocks activation. Visible text is the accessible name. It is not a clickable `<div>`.
+- Input is an `<input>`. A label associates with `htmlFor` and `id`. `disabled`, `aria-invalid`, and other ARIA attributes pass through. It does not wrap the control in an extra element.
+- Textarea is a `<textarea>`. It uses the same label, focus, and disabled behavior as Input, and it passes through `rows`, `cols`, and the other native attributes.
+- Label is a `<label>`. `htmlFor` matches the control `id`. It does not validate, store form state, or mark a field required.
+- Checkbox is a native checkbox. Space toggles it. `name` and `value` submit with the form. `indeterminate` is the native mixed state.
+- Radio Group is a set of native radios that share a name. Arrow keys move the selection. One option is submitted.
+- Avatar is an image plus a fallback. The image uses `alt`. The fallback is not announced together with a loaded image.
+- Progress is a native `<progress>` element. Omit `value` for the indeterminate state.
+- Skeleton is a decorative placeholder with `aria-hidden`. The pulse stops under `prefers-reduced-motion`.
+- Separator is an `<hr>` when horizontal. A vertical separator sets `aria-orientation="vertical"`.
+- Kbd is a native `<kbd>`. It displays a key and does not handle keyboard events.
+- Switch is a button with `role="switch"`. Click, Space, and Enter toggle it. It is not submitted with a form.
+- Table is a native `<table>` with header, body, footer, and caption elements. It does not sort or paginate. A wide table scrolls inside its wrapper.
+- Tooltip shows short, non-interactive text on hover and keyboard focus. Escape hides it. It does not take focus.
+- Native Select is a composed native `<select>`, `<option>`, and `<optgroup>`. A plain `<select>` is enough when the composed parts are not needed. A custom popup Select is not implemented.
+- Toast renders through an explicit `<Toaster />`. Error toasts use `role="alert"`. Other toasts use `role="status"`. A toast does not take focus when it appears.
+- Popover opens a non-modal dialog. Escape and an outside click close it and return focus to the trigger. The panel may contain controls. It follows its trigger while the page scrolls, and long content scrolls inside the panel.
+- Spinner hides its graphic from assistive technology and exposes a text label. The animation stops under `prefers-reduced-motion`.
+- Badge is an inline label. It is not a button.
+- Interactive elements use a visible `focus-visible` ring. Disabled controls use `cursor-not-allowed`.
+- Future components should keep native semantics before adding custom keyboard behavior.
+- Registry JSON embeds that source. It lists npm dependencies. It does not list `lib/utils.ts`.
+
 ## Development
 
 The CLI is `packages/cli`. The registry and docs app are `apps/docs`.
 
 ```bash
 pnpm install
-pnpm --filter @vinyaas/cli build
-pnpm --filter @vinyaas/cli test
+pnpm --filter vinyaas build
+pnpm --filter vinyaas test
 pnpm test
 ```

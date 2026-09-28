@@ -1,0 +1,146 @@
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from "./command";
+
+function Menu({ onSelect = () => undefined }: { onSelect?: () => void }) {
+  return (
+    <Command>
+      <CommandInput aria-label="Search" />
+      <CommandList>
+        <CommandEmpty>No matching pages.</CommandEmpty>
+        <CommandGroup heading="Components">
+          <CommandItem value="Button" onClick={onSelect}>
+            Button
+          </CommandItem>
+          <CommandItem value="Input" disabled>
+            Input
+          </CommandItem>
+          <CommandItem value="Dialog" onClick={onSelect}>
+            Dialog
+          </CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
+
+describe("Command", () => {
+  it("filters items and announces an empty list", async () => {
+    render(<Menu />);
+    const input = screen.getByRole("combobox", { name: "Search" });
+
+    expect(input).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("option", { name: "Button" })).toBeInTheDocument();
+
+    fireEvent.change(input, { target: { value: "missing" } });
+
+    expect(screen.queryByRole("option", { name: "Button" })).toBeNull();
+    expect(await screen.findByText("No matching pages.")).toBeInTheDocument();
+  });
+
+  it("moves with the arrow keys and activates the item", () => {
+    const calls: string[] = [];
+
+    render(<Menu onSelect={() => calls.push("button")} />);
+    const input = screen.getByRole("combobox", { name: "Search" });
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(calls).toEqual(["button"]);
+    expect(screen.getByRole("option", { name: "Input" })).toBeDisabled();
+  });
+
+  it("highlights on hover and focuses options with the keyboard", () => {
+    render(<Menu />);
+    const button = screen.getByRole("option", { name: "Button" });
+    const dialog = screen.getByRole("option", { name: "Dialog" });
+
+    expect(button).toHaveAttribute("tabIndex", "0");
+    expect(dialog).toHaveAttribute("tabIndex", "0");
+    expect(screen.getByRole("option", { name: "Input" })).toHaveAttribute(
+      "tabIndex",
+      "-1",
+    );
+
+    fireEvent.mouseEnter(dialog);
+    expect(dialog).toHaveAttribute("aria-selected", "true");
+    expect(dialog).toHaveAttribute("data-selected");
+    expect(button).toHaveAttribute("aria-selected", "false");
+
+    fireEvent.focus(dialog);
+    expect(dialog).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(dialog, { key: "ArrowUp" });
+    expect(button).toHaveAttribute("aria-selected", "true");
+    expect(button).toHaveFocus();
+  });
+
+  it("aligns an icon with the title and keeps the shortcut on that line", () => {
+    render(
+      <Command>
+        <CommandInput aria-label="Search" />
+        <CommandList>
+          <CommandItem value="Open Settings">
+            <svg aria-hidden="true" />
+            <span>
+              <span>Open Settings</span>
+              <span>Configure your account</span>
+            </span>
+            <CommandShortcut>Enter</CommandShortcut>
+          </CommandItem>
+          <CommandItem value="Button">Button</CommandItem>
+          <CommandItem value="Input" disabled>
+            Input
+          </CommandItem>
+        </CommandList>
+      </Command>,
+    );
+
+    const multiline = screen.getByRole("option", { name: /Open Settings/ });
+    const single = screen.getByRole("option", { name: "Button" });
+    const disabled = screen.getByRole("option", { name: "Input" });
+
+    expect(multiline).toHaveClass("items-start");
+    expect(multiline).not.toHaveClass("items-center");
+    expect(multiline).toHaveClass("[&>svg]:mt-0.5");
+    expect(multiline.querySelector("svg")).toBe(multiline.firstElementChild);
+    expect(screen.getByText("Enter")).toHaveClass("ml-auto", "mt-0.5");
+    expect(single).toHaveClass("items-start");
+    expect(disabled).toBeDisabled();
+    expect(disabled).toHaveClass("items-start");
+    expect(single).toHaveClass("hover:bg-accent", "data-selected:bg-accent");
+  });
+
+  it("merges className", () => {
+    render(
+      <Command className="max-w-sm">
+        <CommandInput aria-label="Search" />
+        <CommandList>
+          <CommandItem value="Button">Button</CommandItem>
+        </CommandList>
+      </Command>,
+    );
+
+    expect(
+      screen.getByRole("combobox", { name: "Search" }).parentElement
+        ?.parentElement,
+    ).toHaveClass(
+      "max-w-sm",
+      "border",
+      "bg-popover",
+      "rounded-lg",
+      "shadow-[0_14px_32px_-10px_oklch(0_0_0/0.28)]",
+      "dark:shadow-[0_14px_32px_-10px_oklch(0_0_0/0.55)]",
+    );
+  });
+});

@@ -46,15 +46,17 @@ const missingConfigMessage = [
 export function registerAddCommand(program: Command): void {
   program
     .command("add")
-    .description("Add a component from the Vinyaas registry.")
-    .argument("<name>", "Registry item name")
+    .description("Add one or more components from the Vinyaas registry.")
+    .argument("<name...>", "Registry item names")
     .option("--cwd <path>", "Consumer project directory.")
     .option("--force", "Overwrite existing component files.")
+    .addHelpText("after", "\nExample:\n  $ vinyaas add button card badge")
     .action(
-      async (name: string, options: { cwd?: string; force?: boolean }) => {
+      async (name: string[], options: { cwd?: string; force?: boolean }) => {
         try {
           await executeAdd({
-            name,
+            name: name[0] ?? "",
+            names: name,
             cwd: options.cwd,
             force: options.force === true,
             env: process.env,
@@ -84,6 +86,7 @@ interface AddMutations {
 
 export async function executeAdd({
   name,
+  names,
   cwd,
   force = false,
   from = process.cwd(),
@@ -93,6 +96,7 @@ export async function executeAdd({
   mutations,
 }: {
   name: string;
+  names?: readonly string[];
   cwd?: string;
   force?: boolean;
   from?: string;
@@ -104,6 +108,7 @@ export async function executeAdd({
   return runAdd({
     cwd: await resolveProjectRoot(cwd, from),
     name,
+    ...(names ? { names } : {}),
     force,
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
@@ -115,6 +120,7 @@ export async function executeAdd({
 export async function runAdd({
   cwd,
   name,
+  names,
   force = false,
   env = process.env,
   fetch: fetchImpl,
@@ -123,20 +129,28 @@ export async function runAdd({
 }: {
   cwd: string;
   name: string;
+  names?: readonly string[];
   force?: boolean;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
   runPackageManager?: RunPackageManager;
   mutations?: AddMutations;
 }): Promise<InstallPlan> {
+  const requested = uniqueNames(names && names.length > 0 ? names : [name]);
   const config = await readComponentsConfig(cwd);
   const items = await resolveRegistryItems({
     style: config.style,
-    name,
+    name: requested[0] ?? name,
+    names: requested,
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
   });
-  const plan = await createInstallPlan({ cwd, config, name, items });
+  const plan = await createInstallPlan({
+    cwd,
+    config,
+    name: requested[0] ?? name,
+    items,
+  });
 
   await assertDestinationsAvailable(cwd, plan, force);
   const cssUpdate = await createCssUpdate({
@@ -179,7 +193,7 @@ export async function runAdd({
     await rollbackMutation(cwd, snapshot, error, mutations?.restoreFiles);
   }
 
-  console.log(formatAdded(plan, dependencyInstall));
+  console.log(formatAdded(plan, dependencyInstall, requested));
 
   const envReport = formatEnvPlan(envPlan);
 
@@ -249,13 +263,22 @@ async function writeCssUpdate(cwd: string, update: CssUpdate): Promise<void> {
 function formatAdded(
   plan: InstallPlan,
   dependencyInstall: DependencyInstallPlan,
+  requested: readonly string[],
 ): string {
-  const lines = [
-    `Added ${plan.name}.`,
+  const lines =
+    requested.length === 1
+      ? [`Added ${requested[0]}.`]
+      : [
+          ...requested.map((component) => `Added ${component}.`),
+          "",
+          `Installed ${requested.length} components.`,
+        ];
+
+  lines.push(
     "",
     "Files:",
     ...plan.entries.map((entry) => `  ${entry.destinationPath}`),
-  ];
+  );
 
   if (dependencyInstall.installDependencies.length > 0) {
     lines.push(
@@ -284,6 +307,22 @@ function formatAdded(
   }
 
   return lines.join("\n");
+}
+
+function uniqueNames(names: readonly string[]): string[] {
+  const seen = new Set<string>();
+  const unique: string[] = [];
+
+  for (const name of names) {
+    if (seen.has(name)) {
+      continue;
+    }
+
+    seen.add(name);
+    unique.push(name);
+  }
+
+  return unique;
 }
 
 function isNotFound(error: unknown): boolean {

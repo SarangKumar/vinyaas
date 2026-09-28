@@ -103,6 +103,11 @@ describe("vinyaas init", () => {
       )}\n`,
     );
     assert.equal(raw.endsWith("\n"), true);
+    assert.match(result.stdout, /Created lib\/utils\.ts\./);
+    assert.match(
+      await readFile(join(cwd, "lib/utils.ts"), "utf8"),
+      /export function cn/,
+    );
   });
 
   it("uses src/app/globals.css when that is the global stylesheet", async () => {
@@ -270,7 +275,7 @@ describe("vinyaas init", () => {
     await assert.rejects(readFile(join(cwd, "components.json"), "utf8"));
   });
 
-  it("fails when the project is not Next.js", async () => {
+  it("fails when React is incomplete", async () => {
     const cwd = await writeProject({
       "package.json": `${JSON.stringify({ dependencies: { react: "19.0.0" } })}\n`,
       "app/globals.css": '@import "tailwindcss";\n',
@@ -278,15 +283,43 @@ describe("vinyaas init", () => {
     const result = await run(cwd);
 
     assert.notEqual(result.exitCode, 0);
-    assert.match(result.stderr, /Vinyaas currently supports Next\.js projects/);
-    assert.match(result.stderr, /No Next\.js dependency was found/);
+    assert.match(result.stderr, /react and react-dom were not found/);
     await assert.rejects(readFile(join(cwd, "components.json"), "utf8"));
+  });
+
+  it("initializes a Vite React project from src/index.css", async () => {
+    const cwd = await writeProject({
+      "package.json": `${JSON.stringify(
+        {
+          dependencies: {
+            react: "19.0.0",
+            "react-dom": "19.0.0",
+            vite: "6.0.0",
+          },
+          devDependencies: { tailwindcss: "4.0.0" },
+        },
+        null,
+        2,
+      )}\n`,
+      "tsconfig.json": aliasConfig,
+      "src/index.css": '@import "tailwindcss";\n',
+    });
+    const result = await run(cwd, {
+      REGISTRY_BASE_URL: "https://vinyaas.vercel.app",
+    });
+
+    assert.equal(result.exitCode, 0, result.stderr);
+    const config = JSON.parse(
+      await readFile(join(cwd, "components.json"), "utf8"),
+    );
+    assert.equal(config.tailwind.css, "src/index.css");
   });
 
   it("does not overwrite an existing components.json", async () => {
     const cwd = await writeProject({
       ...nextProject(),
       "components.json": '{"keep":true}\n',
+      "lib/utils.ts": "export const kept = true;\n",
     });
     const result = await run(cwd);
 
@@ -296,6 +329,29 @@ describe("vinyaas init", () => {
     assert.equal(
       await readFile(join(cwd, "components.json"), "utf8"),
       '{"keep":true}\n',
+    );
+    assert.equal(
+      await readFile(join(cwd, "lib/utils.ts"), "utf8"),
+      "export const kept = true;\n",
+    );
+  });
+
+  it("does not overwrite an existing lib/utils.ts", async () => {
+    const cwd = await writeProject({
+      ...nextProject(),
+      "lib/utils.ts": "export const kept = true;\n",
+    });
+    const result = await run(cwd, {
+      REGISTRY_BASE_URL: "https://vinyaas.vercel.app",
+    });
+
+    assert.equal(result.exitCode, 0);
+    assert.match(result.stdout, /Created components\.json\./);
+    assert.match(result.stdout, /lib\/utils\.ts already exists/);
+    assert.match(result.stdout, /will not overwrite it/);
+    assert.equal(
+      await readFile(join(cwd, "lib/utils.ts"), "utf8"),
+      "export const kept = true;\n",
     );
   });
 

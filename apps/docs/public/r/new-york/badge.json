@@ -1,0 +1,13 @@
+{
+  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "name": "badge",
+  "type": "registry:ui",
+  "dependencies": ["clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "ui/badge/badge.tsx",
+      "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst badgeVariants = {\n  default: \"bg-primary text-primary-foreground\",\n  secondary: \"bg-secondary text-secondary-foreground\",\n  destructive: \"bg-destructive text-destructive-foreground\",\n  outline: \"border border-border text-foreground\",\n  ghost: \"text-foreground hover:bg-accent hover:text-accent-foreground\",\n  link: \"text-primary underline-offset-4 hover:underline\",\n} as const;\n\nexport type BadgeVariant = keyof typeof badgeVariants;\n\nexport function Badge({\n  className,\n  variant = \"default\",\n  ...props\n}: React.HTMLAttributes<HTMLSpanElement> & {\n  variant?: BadgeVariant;\n}) {\n  return (\n    <span\n      className={cn(\n        \"inline-flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap [&>svg]:size-3\",\n        badgeVariants[variant],\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

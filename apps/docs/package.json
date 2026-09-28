@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,11 +13,14 @@
     "test:run": "vitest run"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "highlight.js": "^11.12.0",
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-redux": "^9.3.0",
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {

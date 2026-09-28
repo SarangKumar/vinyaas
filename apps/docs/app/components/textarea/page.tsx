@@ -1,0 +1,220 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import type { ApiRow } from "@/components/api-table";
+import type { ComponentExample } from "@/components/component-reference";
+import { ComponentReference } from "@/components/component-reference";
+import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
+import type { Metadata } from "next";
+import { componentPageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = componentPageMetadata("textarea");
+
+const usage = `import { Textarea } from "@/components/ui/textarea/textarea";
+
+export function MessageField() {
+  return (
+    <label htmlFor="message" className="flex flex-col gap-2 text-sm">
+      Message
+      <Textarea id="message" name="message" rows={4} placeholder="Write a message" />
+    </label>
+  );
+}
+`;
+
+const api: ApiRow[] = [
+  {
+    prop: "className",
+    type: "string",
+    description: "Merged onto the textarea with cn.",
+  },
+  {
+    prop: "rows",
+    type: "number",
+    description: "Native row count. The field also has a minimum height.",
+  },
+  {
+    prop: "cols",
+    type: "number",
+    description: "Native column count.",
+  },
+  {
+    prop: "disabled",
+    type: "boolean",
+    description:
+      "Native disabled state. Uses a not-allowed cursor and reduced opacity.",
+  },
+  {
+    prop: "required",
+    type: "boolean",
+    description: "Native required state.",
+  },
+  {
+    prop: "placeholder",
+    type: "string",
+    description: "Placeholder text. It is not a label.",
+  },
+  {
+    prop: "value",
+    type: "string",
+    description: "Controlled value. Pair it with onChange.",
+  },
+  {
+    prop: "defaultValue",
+    type: "string",
+    description: "Uncontrolled initial value.",
+  },
+  {
+    prop: "aria-invalid",
+    type: '"true" | "false"',
+    description:
+      "Passed through. Textarea does not add a separate invalid color.",
+  },
+];
+
+const examples: ComponentExample[] = [
+  {
+    id: "basic",
+    title: "Basic",
+    description: "A multiline field. It can be resized vertically.",
+    preview: <Textarea aria-label="Message" placeholder="Write a message" />,
+    code: `<Textarea aria-label="Message" placeholder="Write a message" />`,
+  },
+  {
+    id: "label",
+    title: "Label",
+    description: "Associate the label with htmlFor and id.",
+    preview: (
+      <div className="flex w-full max-w-sm flex-col gap-2 text-left">
+        <label htmlFor="message-field" className="text-foreground text-sm">
+          Message
+        </label>
+        <Textarea id="message-field" rows={4} placeholder="Write a message" />
+      </div>
+    ),
+    code: `<label htmlFor="message-field">Message</label>
+<Textarea id="message-field" rows={4} placeholder="Write a message" />`,
+  },
+  {
+    id: "description",
+    title: "Description",
+    description: "aria-describedby connects the help text to the field.",
+    preview: (
+      <div className="flex w-full max-w-sm flex-col gap-2 text-left">
+        <label htmlFor="notes" className="text-foreground text-sm">
+          Notes
+        </label>
+        <Textarea id="notes" rows={4} aria-describedby="notes-hint" />
+        <p id="notes-hint" className="text-muted-foreground text-sm">
+          Visible to the project team.
+        </p>
+      </div>
+    ),
+    code: `<label htmlFor="notes">Notes</label>
+<Textarea id="notes" rows={4} aria-describedby="notes-hint" />
+<p id="notes-hint">Visible to the project team.</p>`,
+  },
+  {
+    id: "rows",
+    title: "Rows",
+    description:
+      "rows sets the initial height. The field still has a minimum height from its styles.",
+    preview: (
+      <Textarea aria-label="Message" rows={6} placeholder="A taller field" />
+    ),
+    code: `<Textarea aria-label="Message" rows={6} placeholder="A taller field" />`,
+  },
+  {
+    id: "required",
+    title: "Required",
+    description: "required is the native constraint.",
+    preview: <Textarea aria-label="Message, required" required rows={4} />,
+    code: `<Textarea aria-label="Message, required" required rows={4} />`,
+  },
+  {
+    id: "disabled",
+    title: "Disabled",
+    description:
+      "A disabled textarea cannot be edited and uses the not-allowed cursor.",
+    preview: (
+      <Textarea aria-label="Message" defaultValue="Locked note" disabled />
+    ),
+    code: `<Textarea aria-label="Message" defaultValue="Locked note" disabled />`,
+  },
+  {
+    id: "invalid",
+    title: "Invalid",
+    description:
+      "aria-invalid is forwarded. Textarea does not change its border for that state.",
+    preview: (
+      <Textarea
+        aria-label="Message"
+        defaultValue="Too short"
+        aria-invalid="true"
+      />
+    ),
+    code: `<Textarea aria-label="Message" defaultValue="Too short" aria-invalid="true" />`,
+  },
+];
+
+export default async function TextareaPage() {
+  const source = await readFile(
+    path.join(process.cwd(), "registry/new-york/ui/textarea/textarea.tsx"),
+    "utf8",
+  );
+
+  return (
+    <ComponentReference
+      title="Textarea"
+      description="A multiline text field that passes through native textarea attributes."
+      overview={
+        <p>
+          Textarea renders a native textarea. It uses the same border, type
+          size, focus ring, and disabled treatment as Input, with a minimum
+          height and vertical resizing.
+        </p>
+      }
+      install="vinyaas add textarea"
+      manual={
+        <p>
+          After <code>vinyaas init</code>, place the source at{" "}
+          <code>components/ui/textarea/textarea.tsx</code>. It imports{" "}
+          <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
+          <code>clsx</code> and <code>tailwind-merge</code>.
+        </p>
+      }
+      usage={usage}
+      examples={examples}
+      api={api}
+      accessibility={
+        <>
+          <p>Textarea is a native textarea. It does not add an ARIA role.</p>
+          <ul className="list-disc pl-5">
+            <li>Name it with a label and matching id, or with aria-label.</li>
+            <li>Placeholder text is not a replacement for the label.</li>
+            <li>
+              Keyboard behavior is the browser default, including line breaks.
+            </li>
+            <li>
+              disabled prevents editing. Focus uses a visible focus-visible
+              ring.
+            </li>
+            <li>aria-invalid and aria-describedby are passed through.</li>
+          </ul>
+        </>
+      }
+      source={source}
+    >
+      <div className="w-full max-w-sm">
+        <label htmlFor="message" className="text-foreground mb-2 block text-sm">
+          Message
+        </label>
+        <Textarea
+          id="message"
+          name="message"
+          rows={4}
+          placeholder="Write a message"
+        />
+      </div>
+    </ComponentReference>
+  );
+}
