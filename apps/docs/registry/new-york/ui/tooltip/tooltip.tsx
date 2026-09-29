@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
+import "./tooltip.css";
+
 export type TooltipSide = "top" | "right" | "bottom" | "left";
 
 type TriggerProps = React.HTMLAttributes<HTMLElement> & {

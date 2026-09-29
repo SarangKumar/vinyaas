@@ -168,6 +168,11 @@ describe("installable tooltip registry", () => {
           join(cwd, "components/ui/tooltip/tooltip.tsx"),
           "utf8",
         );
+        const animationCss = await readFile(
+          join(cwd, "components/ui/tooltip/tooltip.css"),
+          "utf8",
+        );
+        const globalsCss = await readFile(join(cwd, "app/globals.css"), "utf8");
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");
         const config = await readFile(join(cwd, "components.json"), "utf8");
         const packageJson = JSON.parse(
@@ -175,7 +180,14 @@ describe("installable tooltip registry", () => {
         );
 
         assert.match(sourceFile, /from "@\/lib\/utils"/);
+        assert.match(sourceFile, /import "\.\/tooltip\.css"/);
         assert.match(sourceFile, /role="tooltip"/);
+        assert.doesNotMatch(sourceFile, /dangerouslySetInnerHTML/);
+        assert.doesNotMatch(sourceFile, /<style/);
+        assert.match(animationCss, /@keyframes vinyaas-tooltip-in/);
+        assert.match(animationCss, /data-side="bottom"/);
+        assert.match(animationCss, /prefers-reduced-motion: reduce/);
+        assert.doesNotMatch(globalsCss, /vinyaas-tooltip-/);
         assert.match(utils, /export function cn/);
         assert.match(config, /"style": "new-york"/);
         assert.deepEqual(

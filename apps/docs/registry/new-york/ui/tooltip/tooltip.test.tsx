@@ -1,7 +1,13 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { Tooltip } from "./tooltip";
+
+const tooltipDir = path.dirname(fileURLToPath(import.meta.url));
 
 describe("Tooltip", () => {
   afterEach(() => {
@@ -75,5 +81,37 @@ describe("Tooltip", () => {
 
     expect(screen.getByRole("tooltip")).toHaveClass("text-sm", "max-w-sm");
     expect(screen.getByRole("tooltip")).toHaveClass("vinyaas-tooltip-in");
+    expect(document.querySelector("style")).toBeNull();
+  });
+
+  it("ships directional tooltip motion CSS beside the component", async () => {
+    const css = await fs.readFile(path.join(tooltipDir, "tooltip.css"), "utf8");
+    const source = await fs.readFile(
+      path.join(tooltipDir, "tooltip.tsx"),
+      "utf8",
+    );
+
+    expect(source).toContain('import "./tooltip.css"');
+    expect(source).not.toContain("dangerouslySetInnerHTML");
+    expect(source).not.toContain("<style");
+    expect(css).toContain("@keyframes vinyaas-tooltip-in");
+    expect(css).toContain("@keyframes vinyaas-tooltip-in-bottom");
+    expect(css).toContain("@keyframes vinyaas-tooltip-in-left");
+    expect(css).toContain("@keyframes vinyaas-tooltip-in-right");
+    expect(css).toContain(".vinyaas-tooltip-in");
+    expect(css).toContain('.vinyaas-tooltip-in[data-side="bottom"]');
+    expect(css).toContain('.vinyaas-tooltip-in[data-side="left"]');
+    expect(css).toContain('.vinyaas-tooltip-in[data-side="right"]');
+    expect(css).toContain("transform-origin: center bottom");
+    expect(css).toContain("transform-origin: center top");
+    expect(css).toContain("transform-origin: right center");
+    expect(css).toContain("transform-origin: left center");
+    expect(css).toContain(
+      "animation: vinyaas-tooltip-in 160ms cubic-bezier(0.22, 1.25, 0.36, 1)",
+    );
+    expect(css).toContain("@media (prefers-reduced-motion: reduce)");
+    expect(css).toMatch(
+      /prefers-reduced-motion: reduce[\s\S]*\.vinyaas-tooltip-in[\s\S]*animation:\s*none/,
+    );
   });
 });

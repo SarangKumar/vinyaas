@@ -481,47 +481,62 @@ describe("registry build output", () => {
   });
 
   it.each([
-    ["avatar", "ui/avatar/avatar.tsx", '"use client"'],
-    ["progress", "ui/progress/progress.tsx", "<progress"],
-    ["skeleton", "ui/skeleton/skeleton.tsx", "aria-hidden"],
-    ["separator", "ui/separator/separator.tsx", "<hr"],
-    ["kbd", "ui/kbd/kbd.tsx", "<kbd"],
-    ["switch", "ui/switch/switch.tsx", 'role="switch"'],
-    ["table", "ui/table/table.tsx", "<table"],
-    ["tooltip", "ui/tooltip/tooltip.tsx", 'role="tooltip"'],
-    ["native-select", "ui/native-select/native-select.tsx", "<select"],
-    ["toast", "ui/toast/toast.tsx", "toast.add"],
-    ["popover", "ui/popover/popover.tsx", "PopoverContent"],
-    ["badge", "ui/badge/badge.tsx", "<span"],
-    ["spinner", "ui/spinner/spinner.tsx", "aria-hidden"],
-    ["card", "ui/card/card.tsx", "CardAction"],
-    ["alert", "ui/alert/alert.tsx", 'role="alert"'],
-    ["dialog", "ui/dialog/dialog.tsx", 'role="dialog"'],
-    ["accordion", "ui/accordion/accordion.tsx", "aria-expanded"],
-    ["breadcrumb", "ui/breadcrumb/breadcrumb.tsx", "breadcrumb"],
-    ["scroll-area", "ui/scroll-area/scroll-area.tsx", "data-scroll-area"],
-    ["slider", "ui/slider/slider.tsx", 'type="range"'],
-    ["hover-card", "ui/hover-card/hover-card.tsx", "HoverCardContent"],
-    ["marker", "ui/marker/marker.tsx", "MarkerContent"],
-    ["input-group", "ui/input-group/input-group.tsx", "InputGroupInput"],
-    ["input-otp", "ui/input-otp/input-otp.tsx", "InputOTPSlot"],
-    ["file-upload", "ui/file-upload/file-upload.tsx", "FileUploadDropzone"],
-    ["command", "ui/command/command.tsx", "CommandInput"],
+    ["avatar", ["ui/avatar/avatar.tsx"], '"use client"'],
+    ["progress", ["ui/progress/progress.tsx"], "<progress"],
+    ["skeleton", ["ui/skeleton/skeleton.tsx"], "aria-hidden"],
+    ["separator", ["ui/separator/separator.tsx"], "<hr"],
+    ["kbd", ["ui/kbd/kbd.tsx"], "<kbd"],
+    ["switch", ["ui/switch/switch.tsx"], 'role="switch"'],
+    ["table", ["ui/table/table.tsx"], "<table"],
+    [
+      "tooltip",
+      ["ui/tooltip/tooltip.tsx", "ui/tooltip/tooltip.css"],
+      'role="tooltip"',
+    ],
+    ["native-select", ["ui/native-select/native-select.tsx"], "<select"],
+    ["toast", ["ui/toast/toast.tsx", "ui/toast/toast.css"], "toast.add"],
+    ["popover", ["ui/popover/popover.tsx"], "PopoverContent"],
+    ["badge", ["ui/badge/badge.tsx"], "<span"],
+    ["spinner", ["ui/spinner/spinner.tsx"], "aria-hidden"],
+    ["card", ["ui/card/card.tsx"], "CardAction"],
+    ["alert", ["ui/alert/alert.tsx"], 'role="alert"'],
+    [
+      "dialog",
+      ["ui/dialog/dialog.tsx", "ui/dialog/dialog.css"],
+      'role="dialog"',
+    ],
+    ["accordion", ["ui/accordion/accordion.tsx"], "aria-expanded"],
+    ["breadcrumb", ["ui/breadcrumb/breadcrumb.tsx"], "breadcrumb"],
+    ["scroll-area", ["ui/scroll-area/scroll-area.tsx"], "data-scroll-area"],
+    ["slider", ["ui/slider/slider.tsx"], 'type="range"'],
+    ["hover-card", ["ui/hover-card/hover-card.tsx"], "HoverCardContent"],
+    ["marker", ["ui/marker/marker.tsx"], "MarkerContent"],
+    ["input-group", ["ui/input-group/input-group.tsx"], "InputGroupInput"],
+    ["input-otp", ["ui/input-otp/input-otp.tsx"], "InputOTPSlot"],
+    ["file-upload", ["ui/file-upload/file-upload.tsx"], "FileUploadDropzone"],
+    ["command", ["ui/command/command.tsx"], "CommandInput"],
     [
       "dropdown-menu",
-      "ui/dropdown-menu/dropdown-menu.tsx",
+      ["ui/dropdown-menu/dropdown-menu.tsx"],
       "DropdownMenuContent",
     ],
-    ["typography", "ui/typography/typography.tsx", "TypographyH1"],
+    ["typography", ["ui/typography/typography.tsx"], "TypographyH1"],
   ])(
     "keeps the new-york %s artifact aligned with the source item",
-    async (name, filePath, sourceMarker) => {
+    async (name, filePaths, sourceMarker) => {
       const outputPath = path.join(docsRoot, `public/r/new-york/${name}.json`);
-      const sourcePath = path.join(docsRoot, `registry/new-york/${filePath}`);
-      const [rawOutput, source] = await Promise.all([
-        fs.readFile(outputPath, "utf8"),
-        fs.readFile(sourcePath, "utf8"),
-      ]);
+      const sources = Object.fromEntries(
+        await Promise.all(
+          filePaths.map(async (filePath) => {
+            const source = await fs.readFile(
+              path.join(docsRoot, `registry/new-york/${filePath}`),
+              "utf8",
+            );
+            return [filePath, source] as const;
+          }),
+        ),
+      );
+      const rawOutput = await fs.readFile(outputPath, "utf8");
       const generated = JSON.parse(rawOutput) as {
         $schema: string;
         name: string;
@@ -536,10 +551,13 @@ describe("registry build output", () => {
       }
 
       const files = await readRegistryItemFiles(item, async (relativePath) => {
-        expect(relativePath).toBe(filePath);
-        return source;
+        expect(filePaths).toContain(relativePath);
+        return sources[relativePath]!;
       });
       const payload = serializeRegistryItem(item, files, generated.$schema);
+      const componentFile = generated.files.find((file) =>
+        file.path.endsWith(".tsx"),
+      );
 
       expect(generated).toEqual(payload);
       expect(generated.$schema).toBe(
@@ -549,12 +567,26 @@ describe("registry build output", () => {
       expect(generated.type).toBe("registry:ui");
       expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
       expect(item.registryDependencies).toBeUndefined();
-      expect(generated.files.map((file) => file.path)).toEqual([filePath]);
-      expect(generated.files[0]?.content).toBe(source);
-      expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
-      expect(generated.files[0]?.content).toContain(sourceMarker);
+      expect(generated.files.map((file) => file.path)).toEqual(filePaths);
+      expect(componentFile?.content).toBe(sources[filePaths[0]!]!);
+      expect(componentFile?.content).toContain('from "@/lib/utils"');
+      expect(componentFile?.content).toContain(sourceMarker);
+      expect(componentFile?.content).not.toContain("dangerouslySetInnerHTML");
+      expect(componentFile?.content).not.toContain("<style");
       expect(generated).not.toHaveProperty("registryDependencies");
       expect(JSON.stringify(generated)).not.toContain("utils.json");
+
+      for (const filePath of filePaths.filter((path) =>
+        path.endsWith(".css"),
+      )) {
+        const cssFile = generated.files.find((file) => file.path === filePath);
+        expect(cssFile?.content).toBe(sources[filePath]);
+        expect(cssFile?.content).toContain("@keyframes");
+        expect(cssFile?.content).toContain("prefers-reduced-motion");
+        expect(componentFile?.content).toContain(
+          `import "./${path.basename(filePath)}"`,
+        );
+      }
     },
   );
 

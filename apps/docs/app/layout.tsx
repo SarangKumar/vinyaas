@@ -8,6 +8,7 @@ import { themeStorageKey } from "@/components/theme";
 import { ThemeSync } from "@/components/theme-sync";
 
 import "./globals.css";
+import "./docs.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

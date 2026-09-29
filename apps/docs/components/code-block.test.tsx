@@ -43,7 +43,12 @@ describe("CodeBlock", () => {
     expect(document.querySelector("[data-code-fade]")).toBeNull();
     expect(document.querySelector("[data-line-numbers]")).toBeNull();
     expect(document.querySelector("code")).toHaveClass("px-5");
-    expect(document.querySelector("pre")).toHaveClass("m-0", "py-4");
+    expect(document.querySelector("code")).toHaveClass("font-mono");
+    expect(document.querySelector("pre")).toHaveClass(
+      "m-0",
+      "py-4",
+      "font-mono",
+    );
     expect(
       document.querySelector("code")?.closest("[class*=bg-card]")
         ?.previousElementSibling ??

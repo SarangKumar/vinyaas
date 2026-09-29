@@ -1,0 +1,163 @@
+/*
+ * Docs site only — not part of the consumer theme stylesheet.
+ * Imported by the docs app layout after globals.css.
+ */
+
+:root {
+  --new: var(--primary);
+  --sidebar-foreground: var(--muted-foreground);
+
+  /*
+   * Homepage playground rhythm. --gap is set from these on the shell
+   * and shrinks on smaller viewports.
+   * Aligns with Tailwind spacing: 4=1rem, 6=1.5rem, 8=2rem, 10=2.5rem.
+   */
+  --playground-gap: 1rem;
+  --playground-gap-md: 1.5rem;
+  --playground-gap-xl: 2rem;
+  --playground-gap-2xl: 2.5rem;
+  --playground-pad: 1.5rem;
+  --playground-pad-lg: 1.5rem;
+  --playground-pad-xl: 3rem;
+
+  /*
+   * Soft syntax colors — muted chroma, no bold keyword punches.
+   * Keywords stay quiet so code reads evenly.
+   */
+  --syntax-plain: oklch(0.42 0.02 286);
+  --syntax-keyword: oklch(0.5 0.07 300);
+  --syntax-fn: oklch(0.48 0.07 250);
+  --syntax-string: oklch(0.48 0.07 165);
+  --syntax-param: oklch(0.5 0.055 55);
+  --syntax-number: oklch(0.5 0.065 35);
+  --syntax-comment: oklch(0.58 0.012 286);
+  --syntax-punct: oklch(0.55 0.012 286);
+}
+
+.dark {
+  --new: var(--primary);
+  --sidebar-foreground: var(--muted-foreground);
+
+  --syntax-plain: oklch(0.78 0.015 286);
+  --syntax-keyword: oklch(0.78 0.055 300);
+  --syntax-fn: oklch(0.8 0.055 250);
+  --syntax-string: oklch(0.8 0.06 165);
+  --syntax-param: oklch(0.8 0.045 55);
+  --syntax-number: oklch(0.8 0.05 35);
+  --syntax-comment: oklch(0.66 0.012 286);
+  --syntax-punct: oklch(0.64 0.012 286);
+}
+
+@theme inline {
+  --color-new: var(--new);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+
+  --spacing-playground-gap: var(--playground-gap);
+  --spacing-playground-gap-md: var(--playground-gap-md);
+  --spacing-playground-gap-xl: var(--playground-gap-xl);
+  --spacing-playground-gap-2xl: var(--playground-gap-2xl);
+}
+
+/*
+ * Docs prose inline code (installation pages, component notes, etc.).
+ * CodeBlock uses data-language and is excluded. Consumers do not get this
+ * from globals.css — opt into .typeset-docs when wrapping Typography.
+ */
+:not(pre) > code:not([data-language]) {
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  padding: 0.125rem 0.375rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  color: var(--foreground);
+}
+
+code[data-language] {
+  color: var(--syntax-plain);
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+code[data-language] .hljs-keyword,
+code[data-language] .hljs-selector-tag,
+code[data-language] .hljs-built_in,
+code[data-language] .hljs-type {
+  color: var(--syntax-keyword);
+  font-weight: 400;
+}
+
+code[data-language] .hljs-title,
+code[data-language] .hljs-title.function_,
+code[data-language] .hljs-title.class_,
+code[data-language] .hljs-function,
+code[data-language] .hljs-name {
+  color: var(--syntax-fn);
+  font-weight: 400;
+}
+
+code[data-language] .hljs-string,
+code[data-language] .hljs-regexp,
+code[data-language] .hljs-template-tag,
+code[data-language] .hljs-template-variable {
+  color: var(--syntax-string);
+}
+
+code[data-language] .hljs-attr,
+code[data-language] .hljs-attribute,
+code[data-language] .hljs-params,
+code[data-language] .hljs-variable {
+  color: var(--syntax-param);
+}
+
+code[data-language] .hljs-tag {
+  color: var(--syntax-punct);
+}
+
+code[data-language] .hljs-comment,
+code[data-language] .hljs-doctag {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+code[data-language] .hljs-number,
+code[data-language] .hljs-literal,
+code[data-language] .hljs-meta {
+  color: var(--syntax-number);
+}
+
+code[data-language] .hljs-punctuation,
+code[data-language] .hljs-operator {
+  color: var(--syntax-punct);
+}
+
+/*
+ * Optional long-form density for Typography. Documented on the Typography
+ * page — consumers copy this pattern into their own stylesheet when needed.
+ */
+.typeset-docs {
+  --typeset-font-body: var(--font-geist-sans);
+  --typeset-font-heading: var(--font-geist-sans);
+  --typeset-font-mono: var(--font-geist-mono);
+  --typeset-size: 15px;
+  --typeset-leading: 1.75;
+  --typeset-flow: 1.25em;
+  font-family: var(--typeset-font-body), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--typeset-size);
+  line-height: var(--typeset-leading);
+}
+
+.typeset-docs :where(h1, h2, h3, h4) {
+  font-family:
+    var(--typeset-font-heading), ui-sans-serif, system-ui, sans-serif;
+}
+
+.typeset-docs :where(code, kbd, samp) {
+  font-family: var(--typeset-font-mono), ui-monospace, monospace;
+}
+
+.typeset-docs :where(:not(pre) > code) {
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  padding: 0.125rem 0.375rem;
+  font-size: 0.875em;
+  color: var(--foreground);
+}

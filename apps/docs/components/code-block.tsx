@@ -215,16 +215,16 @@ function CodeFrame({
         <pre
           className={
             collapsed
-              ? "m-0 max-h-72 overflow-hidden text-[13px] leading-6"
+              ? "m-0 max-h-72 overflow-hidden font-mono text-[13px] leading-6"
               : numbered
-                ? "m-0 overflow-x-auto text-[13px] leading-6"
-                : "m-0 overflow-x-auto px-0 py-4 text-[13px] leading-6"
+                ? "m-0 overflow-x-auto font-mono text-[13px] leading-6"
+                : "m-0 overflow-x-auto px-0 py-4 font-mono text-[13px] leading-6"
           }
         >
           {numbered ? (
             <NumberedSource code={code} language={language} />
           ) : (
-            <code data-language={language} className="block px-5">
+            <code data-language={language} className="block px-5 font-mono">
               {highlightCode(code, language) ?? code}
             </code>
           )}
@@ -287,7 +287,7 @@ function NumberedSource({
       </div>
       <code
         data-language={language}
-        className="block min-w-max flex-1 pr-3 pl-3 whitespace-pre"
+        className="block min-w-max flex-1 pr-3 pl-3 font-mono whitespace-pre"
       >
         {highlightCode(code.replace(/\n$/, ""), language) ??
           code.replace(/\n$/, "")}

@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
+import "./toast.css";
+
 export type ToastType =
   "default" | "success" | "info" | "warning" | "error" | "loading";
 

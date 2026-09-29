@@ -12,6 +12,8 @@ import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
+import "./dialog.css";
+
 type DialogContextValue = {
   open: boolean;
   setOpen: (open: boolean) => void;

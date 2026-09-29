@@ -153,6 +153,10 @@ export const registry: readonly RegistryItem[] = [
         path: "ui/tooltip/tooltip.tsx",
         type: "registry:ui",
       },
+      {
+        path: "ui/tooltip/tooltip.css",
+        type: "registry:ui",
+      },
     ],
   },
   {
@@ -173,6 +177,10 @@ export const registry: readonly RegistryItem[] = [
     files: [
       {
         path: "ui/toast/toast.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/toast/toast.css",
         type: "registry:ui",
       },
     ],
@@ -239,6 +247,10 @@ export const registry: readonly RegistryItem[] = [
     files: [
       {
         path: "ui/dialog/dialog.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/dialog/dialog.css",
         type: "registry:ui",
       },
     ],

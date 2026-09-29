@@ -165,6 +165,11 @@ describe("installable dialog registry", () => {
           join(cwd, "components/ui/dialog/dialog.tsx"),
           "utf8",
         );
+        const animationCss = await readFile(
+          join(cwd, "components/ui/dialog/dialog.css"),
+          "utf8",
+        );
+        const globalsCss = await readFile(join(cwd, "app/globals.css"), "utf8");
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");
         const config = await readFile(join(cwd, "components.json"), "utf8");
         const packageJson = JSON.parse(
@@ -172,7 +177,13 @@ describe("installable dialog registry", () => {
         );
 
         assert.match(card, /from "@\/lib\/utils"/);
+        assert.match(card, /import "\.\/dialog\.css"/);
         assert.match(card, /DialogContent/);
+        assert.doesNotMatch(card, /dangerouslySetInnerHTML/);
+        assert.doesNotMatch(card, /<style/);
+        assert.match(animationCss, /@keyframes vinyaas-dialog-in/);
+        assert.match(animationCss, /prefers-reduced-motion: reduce/);
+        assert.doesNotMatch(globalsCss, /vinyaas-dialog-/);
         assert.match(utils, /export function cn/);
         assert.match(config, /"style": "new-york"/);
         assert.deepEqual(
