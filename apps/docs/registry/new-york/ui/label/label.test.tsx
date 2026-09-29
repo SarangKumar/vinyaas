@@ -2,7 +2,7 @@ import { createRef } from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Label } from "./label";
+import { Label } from ".";
 
 describe("Label", () => {
   it("renders its children in a native label", () => {

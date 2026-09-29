@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
-import { Button } from "../button/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from ".";
+import { Button } from "../button";
 
 function Card({
   openDelay = 0,

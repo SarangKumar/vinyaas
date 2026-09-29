@@ -1,14 +1,14 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Label } from "@/registry/new-york/ui/label";
+import { Switch } from "@/registry/new-york/ui/switch";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/registry/new-york/ui/accordion/accordion";
+} from "@/registry/new-york/ui/accordion";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -22,7 +22,7 @@ const usage = `import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion/accordion";
+} from "@/components/ui/accordion";
 
 export function Faq() {
   return (
@@ -145,10 +145,10 @@ const examples: ComponentExample[] = [
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion/accordion";
-import { Checkbox } from "@/components/ui/checkbox/checkbox";
-import { Label } from "@/components/ui/label/label";
-import { Switch } from "@/components/ui/switch/switch";
+} from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export function SettingsAccordion() {
   return (
@@ -176,7 +176,7 @@ export function SettingsAccordion() {
 
 export default async function AccordionPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/accordion/accordion.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/accordion/index.tsx"),
     "utf8",
   );
 
@@ -195,7 +195,7 @@ export default async function AccordionPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/accordion/accordion.tsx</code>. It imports{" "}
+          <code>components/ui/accordion/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

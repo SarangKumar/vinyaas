@@ -152,7 +152,7 @@ describe("installable marker registry", () => {
         await writeFile(
           join(cwd, "components/ui/marker/example.tsx"),
           [
-            'import { Marker } from "@/components/ui/marker/marker";',
+            'import { Marker } from "@/components/ui/marker";',
             "",
             "export function Note() {",
             "  return <Marker>Explored 4 files</Marker>;",
@@ -162,7 +162,7 @@ describe("installable marker registry", () => {
         );
 
         const installed = await readFile(
-          join(cwd, "components/ui/marker/marker.tsx"),
+          join(cwd, "components/ui/marker/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

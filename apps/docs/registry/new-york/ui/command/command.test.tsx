@@ -9,7 +9,7 @@ import {
   CommandItem,
   CommandList,
   CommandShortcut,
-} from "./command";
+} from ".";
 
 function Menu({ onSelect = () => undefined }: { onSelect?: () => void }) {
   return (

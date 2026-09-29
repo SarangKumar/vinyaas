@@ -2,7 +2,7 @@ import { createRef, useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Checkbox } from "./checkbox";
+import { Checkbox } from ".";
 
 describe("Checkbox", () => {
   it("renders a native checkbox that a label can name", () => {

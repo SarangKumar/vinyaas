@@ -152,7 +152,7 @@ describe("installable switch registry", () => {
         await writeFile(
           join(cwd, "components/ui/switch/example.tsx"),
           [
-            'import { Switch } from "@/components/ui/switch/switch";',
+            'import { Switch } from "@/components/ui/switch";',
             "",
             "export function Alerts() {",
             '  return <Switch aria-label="Alerts" />;',
@@ -162,7 +162,7 @@ describe("installable switch registry", () => {
         );
 
         const source = await readFile(
-          join(cwd, "components/ui/switch/switch.tsx"),
+          join(cwd, "components/ui/switch/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

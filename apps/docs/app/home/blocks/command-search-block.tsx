@@ -1,7 +1,7 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
+import { Badge } from "@/registry/new-york/ui/badge";
 import {
   Command,
   CommandEmpty,
@@ -10,8 +10,8 @@ import {
   CommandItem,
   CommandList,
   CommandShortcut,
-} from "@/registry/new-york/ui/command/command";
-import { Kbd } from "@/registry/new-york/ui/kbd/kbd";
+} from "@/registry/new-york/ui/command";
+import { Kbd } from "@/registry/new-york/ui/kbd";
 
 export function CommandSearchBlock() {
   return (

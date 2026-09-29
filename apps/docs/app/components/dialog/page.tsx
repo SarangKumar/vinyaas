@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -12,11 +12,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/registry/new-york/ui/dialog/dialog";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
-import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
+} from "@/registry/new-york/ui/dialog";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { Switch } from "@/registry/new-york/ui/switch";
+import { Textarea } from "@/registry/new-york/ui/textarea";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -25,7 +25,7 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("dialog");
 
-const usage = `import { Button } from "@/components/ui/button/button";
+const usage = `import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -33,7 +33,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog/dialog";
+} from "@/components/ui/dialog";
 
 export function EditDialog() {
   return (
@@ -111,7 +111,7 @@ const examples: ComponentExample[] = [
         </DialogContent>
       </Dialog>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
+    code: `import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -121,10 +121,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog/dialog";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
-import { Textarea } from "@/components/ui/textarea/textarea";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export function EditProfileDialog() {
   return (
@@ -175,8 +175,8 @@ export function EditProfileDialog() {
         </DialogContent>
       </Dialog>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -186,7 +186,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog/dialog";
+} from "@/components/ui/dialog";
 
 export function DeleteProjectDialog() {
   return (
@@ -266,8 +266,8 @@ export function DeleteProjectDialog() {
         </DialogContent>
       </Dialog>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
-import { Checkbox } from "@/components/ui/checkbox/checkbox";
+    code: `import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -277,10 +277,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog/dialog";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
-import { Switch } from "@/components/ui/switch/switch";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export function AccountDialog() {
   return (
@@ -315,7 +315,7 @@ export function AccountDialog() {
 
 export default async function DialogPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/dialog/dialog.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/dialog/index.tsx"),
     "utf8",
   );
 
@@ -342,7 +342,7 @@ export default async function DialogPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/dialog/dialog.tsx</code>. It imports{" "}
+          <code>components/ui/dialog/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

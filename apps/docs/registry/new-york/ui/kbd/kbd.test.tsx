@@ -2,7 +2,7 @@ import { createRef } from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Kbd } from "./kbd";
+import { Kbd } from ".";
 
 describe("Kbd", () => {
   it("renders a native keyboard element", () => {

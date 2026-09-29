@@ -5,7 +5,7 @@
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
-      "path": "ui/alert/alert.tsx",
+      "path": "ui/alert/index.tsx",
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst alertVariants = {\n  default: \"border-border bg-muted text-foreground\",\n  destructive:\n    \"border-destructive bg-muted text-destructive [&_svg]:text-destructive [&_button]:border-destructive [&_button]:text-destructive [&_button]:hover:bg-destructive/10\",\n} as const;\n\nexport type AlertVariant = keyof typeof alertVariants;\n\nexport function Alert({\n  className,\n  variant = \"default\",\n  ...props\n}: React.HTMLAttributes<HTMLDivElement> & {\n  variant?: AlertVariant;\n}) {\n  return (\n    <div\n      role=\"alert\"\n      data-variant={variant}\n      className={cn(\n        \"relative grid w-full grid-cols-[0_minmax(0,1fr)] items-start gap-y-1 rounded-md border px-4 py-3 text-sm has-[>svg]:grid-cols-[1rem_minmax(0,1fr)] has-[>svg]:gap-x-3 [&>*:not(svg)]:col-start-2 [&>svg]:col-start-1 [&>svg]:row-span-2 [&>svg]:row-start-1 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current\",\n        alertVariants[variant],\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function AlertTitle({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLParagraphElement>) {\n  return (\n    <p\n      className={cn(\"text-sm leading-none font-medium\", className)}\n      {...props}\n    />\n  );\n}\n\nexport function AlertDescription({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLParagraphElement>) {\n  return (\n    <p className={cn(\"text-sm leading-6 opacity-90\", className)} {...props} />\n  );\n}\n",
       "type": "registry:ui"
     }

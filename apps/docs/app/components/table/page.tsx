@@ -13,7 +13,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/new-york/ui/table/table";
+} from "@/registry/new-york/ui/table";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -69,7 +69,7 @@ const usage = `import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table/table";
+} from "@/components/ui/table";
 
 export function Team() {
   return (
@@ -171,15 +171,15 @@ const examples: ComponentExample[] = [
     preview: <CustomerTable />,
     code: `import { useState } from "react";
 
-import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu/dropdown-menu";
-import { Input } from "@/components/ui/input/input";
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -187,7 +187,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table/table";
+} from "@/components/ui/table";
 
 const customers = [
   ["Aarav Sharma", "aarav@example.com", "Active"],
@@ -253,7 +253,7 @@ export function CustomerTable() {
 
 export default async function TablePage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/table/table.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/table/index.tsx"),
     "utf8",
   );
 
@@ -280,7 +280,7 @@ export default async function TablePage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/table/table.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/table/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

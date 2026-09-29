@@ -1,5 +1,5 @@
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
+import { Badge } from "@/registry/new-york/ui/badge";
 
 export function ClaimableBalanceBlock() {
   return (

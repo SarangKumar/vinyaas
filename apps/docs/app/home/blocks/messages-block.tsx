@@ -1,14 +1,14 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Marker, MarkerContent } from "@/registry/new-york/ui/marker/marker";
-import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
-import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
-import { toast } from "@/registry/new-york/ui/toast/toast";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Marker, MarkerContent } from "@/registry/new-york/ui/marker";
+import { ScrollArea } from "@/registry/new-york/ui/scroll-area";
+import { Separator } from "@/registry/new-york/ui/separator";
+import { Textarea } from "@/registry/new-york/ui/textarea";
+import { toast } from "@/registry/new-york/ui/toast";
 
 export function MessagesBlock() {
   return (

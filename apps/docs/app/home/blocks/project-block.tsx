@@ -1,16 +1,16 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
-import { Progress } from "@/registry/new-york/ui/progress/progress";
+} from "@/registry/new-york/ui/dropdown-menu";
+import { Progress } from "@/registry/new-york/ui/progress";
 
 export function ProjectBlock() {
   return (

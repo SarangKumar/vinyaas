@@ -12,7 +12,7 @@ import { CopyButton } from "@/components/copy-button";
 import { focusRing } from "@/components/focus-ring";
 import { tsxToJsx } from "@/components/tsx-to-jsx";
 import { useCodeLanguage, useSetCodeLanguage } from "@/lib/store/hooks";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Button } from "@/registry/new-york/ui/button";
 
 const collapseAfterLines = 16;
 

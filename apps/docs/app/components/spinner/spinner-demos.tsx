@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
+import { Button } from "@/registry/new-york/ui/button";
+import { Spinner } from "@/registry/new-york/ui/spinner";
 
 export function SubmitSpinner() {
   const [pending, setPending] = useState(false);

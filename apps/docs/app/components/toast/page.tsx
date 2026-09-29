@@ -19,8 +19,8 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("toast");
 
-const usage = `import { Button } from "@/components/ui/button/button";
-import { toast, Toaster } from "@/components/ui/toast/toast";
+const usage = `import { Button } from "@/components/ui/button";
+import { toast, Toaster } from "@/components/ui/toast";
 
 export function Notices() {
   return (
@@ -85,8 +85,8 @@ const examples: ComponentExample[] = [
     description:
       "A successful save uses the success status, an icon, and a description.",
     preview: <SuccessToastDemo />,
-    code: `import { Button } from "@/components/ui/button/button";
-import { toast } from "@/components/ui/toast/toast";
+    code: `import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
 
 export function SaveProfile() {
   return (
@@ -125,8 +125,8 @@ export function SaveProfile() {
     title: "Error",
     description: "An error toast is an alert with a destructive treatment.",
     preview: <ErrorToastDemo />,
-    code: `import { Button } from "@/components/ui/button/button";
-import { toast } from "@/components/ui/toast/toast";
+    code: `import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
 
 export function SaveAndFail() {
   return (
@@ -160,8 +160,8 @@ export function SaveAndFail() {
     title: "Action",
     description: "An action button stays in the toast so the user can undo.",
     preview: <ActionToastDemo />,
-    code: `import { Button } from "@/components/ui/button/button";
-import { toast } from "@/components/ui/toast/toast";
+    code: `import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
 
 export function DeleteFile() {
   return (
@@ -208,7 +208,7 @@ toast.add({ title: "Second", type: "info" })`,
 
 export default async function ToastPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/toast/toast.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/toast/index.tsx"),
     "utf8",
   );
 
@@ -235,7 +235,7 @@ export default async function ToastPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/toast/toast.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/toast/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>. Mount{" "}
           <code>Toaster</code> yourself.

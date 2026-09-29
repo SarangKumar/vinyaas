@@ -5,7 +5,7 @@
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
-      "path": "ui/separator/separator.tsx",
+      "path": "ui/separator/index.tsx",
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type SeparatorProps = {\n  orientation?: \"horizontal\" | \"vertical\";\n} & React.ComponentProps<\"div\">;\n\nexport function Separator({\n  orientation = \"horizontal\",\n  className,\n  ref,\n  ...props\n}: SeparatorProps) {\n  if (orientation === \"vertical\") {\n    return (\n      <div\n        ref={ref}\n        {...props}\n        role=\"separator\"\n        aria-orientation=\"vertical\"\n        className={cn(\"bg-border inline-block h-4 w-px shrink-0\", className)}\n      />\n    );\n  }\n\n  return (\n    <hr\n      {...props}\n      ref={ref as React.Ref<HTMLHRElement>}\n      className={cn(\"bg-border my-0 h-px w-full shrink-0 border-0\", className)}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }

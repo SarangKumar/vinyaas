@@ -152,7 +152,7 @@ describe("installable popover registry", () => {
         await writeFile(
           join(cwd, "components/ui/popover/example.tsx"),
           [
-            'import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover/popover";',
+            'import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";',
             "",
             "export function Details() {",
             "  return (",
@@ -168,7 +168,7 @@ describe("installable popover registry", () => {
         );
 
         const sourceFile = await readFile(
-          join(cwd, "components/ui/popover/popover.tsx"),
+          join(cwd, "components/ui/popover/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

@@ -152,7 +152,7 @@ describe("installable kbd registry", () => {
         await writeFile(
           join(cwd, "components/ui/kbd/example.tsx"),
           [
-            'import { Kbd } from "@/components/ui/kbd/kbd";',
+            'import { Kbd } from "@/components/ui/kbd";',
             "",
             "export function CommandShortcut() {",
             "  return (",
@@ -166,7 +166,7 @@ describe("installable kbd registry", () => {
         );
 
         const kbd = await readFile(
-          join(cwd, "components/ui/kbd/kbd.tsx"),
+          join(cwd, "components/ui/kbd/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

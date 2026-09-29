@@ -8,7 +8,7 @@ import {
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/registry/new-york/ui/input-otp/input-otp";
+} from "@/registry/new-york/ui/input-otp";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -47,7 +47,7 @@ function Slots({ length, split }: { length: number; split?: boolean }) {
   );
 }
 
-const usage = `import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp/input-otp";
+const usage = `import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 
 export function Code() {
   return (
@@ -70,16 +70,16 @@ export function Code() {
 
 const verificationCode = `import { useState } from "react";
 
-import { Button } from "@/components/ui/button/button";
-import { Label } from "@/components/ui/label/label";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/ui/input-otp/input-otp";
-import { Spinner } from "@/components/ui/spinner/spinner";
-import { toast } from "@/components/ui/toast/toast";
+} from "@/components/ui/input-otp";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/components/ui/toast";
 
 export function VerificationCode() {
   const [value, setValue] = useState("");
@@ -217,7 +217,7 @@ const examples: ComponentExample[] = [
 
 export default async function InputOTPPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/input-otp/input-otp.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/input-otp/index.tsx"),
     "utf8",
   );
 
@@ -237,7 +237,7 @@ export default async function InputOTPPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/input-otp/input-otp.tsx</code>. It imports{" "}
+          <code>components/ui/input-otp/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

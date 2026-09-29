@@ -152,7 +152,7 @@ describe("installable toast registry", () => {
         await writeFile(
           join(cwd, "components/ui/toast/example.tsx"),
           [
-            'import { toast, Toaster } from "@/components/ui/toast/toast";',
+            'import { toast, Toaster } from "@/components/ui/toast";',
             "",
             "export function Notice() {",
             "  return (",
@@ -168,7 +168,7 @@ describe("installable toast registry", () => {
         );
 
         const sourceFile = await readFile(
-          join(cwd, "components/ui/toast/toast.tsx"),
+          join(cwd, "components/ui/toast/index.tsx"),
           "utf8",
         );
         const animationCss = await readFile(

@@ -5,7 +5,7 @@
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
-      "path": "ui/textarea/textarea.tsx",
+      "path": "ui/textarea/index.tsx",
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type TextareaProps = React.ComponentProps<\"textarea\">;\n\nexport function Textarea({ className, ref, ...props }: TextareaProps) {\n  return (\n    <textarea\n      ref={ref}\n      className={cn(\n        \"border-input bg-muted text-foreground placeholder:text-muted-foreground focus-visible:ring-ring focus-visible:ring-offset-background flex min-h-20 w-full resize-y rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }

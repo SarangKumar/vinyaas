@@ -16,7 +16,7 @@ import {
   TypographyMuted,
   TypographyP,
   TypographySmall,
-} from "@/registry/new-york/ui/typography/typography";
+} from "@/registry/new-york/ui/typography";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -26,7 +26,7 @@ const usage = `import {
   Typography,
   TypographyH1,
   TypographyP,
-} from "@/components/ui/typography/typography";
+} from "@/components/ui/typography";
 
 export function Article() {
   return (
@@ -238,7 +238,7 @@ export function DocsCopy() {
 
 export default async function TypographyPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/typography/typography.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/typography/index.tsx"),
     "utf8",
   );
 
@@ -257,7 +257,7 @@ export default async function TypographyPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/typography/typography.tsx</code>. It imports{" "}
+          <code>components/ui/typography/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

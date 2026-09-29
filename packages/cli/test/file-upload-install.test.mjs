@@ -152,7 +152,7 @@ describe("installable file-upload registry", () => {
         await writeFile(
           join(cwd, "components/ui/file-upload/example.tsx"),
           [
-            'import { FileUpload, FileUploadDropzone } from "@/components/ui/file-upload/file-upload";',
+            'import { FileUpload, FileUploadDropzone } from "@/components/ui/file-upload";',
             "",
             "export function Resume() {",
             "  return (",
@@ -166,7 +166,7 @@ describe("installable file-upload registry", () => {
         );
 
         const installed = await readFile(
-          join(cwd, "components/ui/file-upload/file-upload.tsx"),
+          join(cwd, "components/ui/file-upload/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

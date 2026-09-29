@@ -235,7 +235,7 @@ describe("composed examples", () => {
     expect(screen.getByLabelText("Recent activity")).toBeInTheDocument();
     expect(screen.getAllByText("v1.0.0").length).toBeGreaterThan(0);
     expect(document.body.textContent).not.toContain(
-      'from "@/components/ui/select/select"',
+      'from "@/components/ui/select"',
     );
   });
 

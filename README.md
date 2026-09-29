@@ -158,17 +158,18 @@ vinyaas add button
 ```text
 components.json
 lib/utils.ts
-components/ui/button/button.tsx
+components/ui/button/index.tsx
 ```
 
 The current Button item does not declare CSS, environment variables, or a documentation URL, so those steps do not change `app/globals.css` and do not print an environment or documentation section.
 
 ## Component conventions
 
-v1.0.0 components follow the existing Button.
+v1.1.0 components follow the existing Button.
 
-- Registry name, folder, and file use the same lowercase name: `button` → `ui/button/button.tsx`.
-- `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/button.tsx`.
+- Registry name and folder use the same lowercase name; the entry file is `index.tsx`: `button` → `ui/button/index.tsx`.
+- `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/index.tsx`.
+- Consumers import the directory: `import { Button } from "@/components/ui/button"`.
 - The file exports a PascalCase component, `Button`, and a props type, `ButtonProps`.
 - Variants use `class-variance-authority` when a component has more than one visual style. Input, Textarea, Label, Checkbox, Radio Group, Avatar, Progress, Skeleton, Separator, and Kbd do not use it.
 - Class names are merged with `cn` from `@/lib/utils`.

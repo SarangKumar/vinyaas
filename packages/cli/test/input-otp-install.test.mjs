@@ -152,7 +152,7 @@ describe("installable input-otp registry", () => {
         await writeFile(
           join(cwd, "components/ui/input-otp/example.tsx"),
           [
-            'import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp/input-otp";',
+            'import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";',
             "",
             "export function Code() {",
             "  return (",
@@ -168,7 +168,7 @@ describe("installable input-otp registry", () => {
         );
 
         const installed = await readFile(
-          join(cwd, "components/ui/input-otp/input-otp.tsx"),
+          join(cwd, "components/ui/input-otp/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

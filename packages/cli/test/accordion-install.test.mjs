@@ -152,7 +152,7 @@ describe("installable accordion registry", () => {
         await writeFile(
           join(cwd, "components/ui/accordion/example.tsx"),
           [
-            'import { AccordionTrigger } from "@/components/ui/accordion/accordion";',
+            'import { AccordionTrigger } from "@/components/ui/accordion";',
             "",
             "export function Example() {",
             "  return <AccordionTrigger>Notes</AccordionTrigger>;",
@@ -162,7 +162,7 @@ describe("installable accordion registry", () => {
         );
 
         const card = await readFile(
-          join(cwd, "components/ui/accordion/accordion.tsx"),
+          join(cwd, "components/ui/accordion/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

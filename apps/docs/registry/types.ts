@@ -10,7 +10,7 @@ export type RegistryItemType = (typeof registryItemTypes)[number];
 
 /** File delivered to a consumer project. Content is added during the build. */
 export interface RegistryFile {
-  /** Path relative to the theme directory, such as `ui/button/button.tsx`. */
+  /** Path relative to the theme directory, such as `ui/button/index.tsx`. */
   path: string;
   type?: RegistryItemType;
   /** Optional destination hint for a future CLI. */

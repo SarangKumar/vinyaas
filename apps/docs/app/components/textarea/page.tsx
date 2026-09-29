@@ -3,13 +3,13 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
+import { Textarea } from "@/registry/new-york/ui/textarea";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("textarea");
 
-const usage = `import { Textarea } from "@/components/ui/textarea/textarea";
+const usage = `import { Textarea } from "@/components/ui/textarea";
 
 export function MessageField() {
   return (
@@ -158,7 +158,7 @@ const examples: ComponentExample[] = [
 
 export default async function TextareaPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/textarea/textarea.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/textarea/index.tsx"),
     "utf8",
   );
 
@@ -177,7 +177,7 @@ export default async function TextareaPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/textarea/textarea.tsx</code>. It imports{" "}
+          <code>components/ui/textarea/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

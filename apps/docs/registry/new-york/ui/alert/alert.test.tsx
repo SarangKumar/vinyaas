@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Alert, AlertDescription, AlertTitle } from "./alert";
+import { Alert, AlertDescription, AlertTitle } from ".";
 
 describe("Alert", () => {
   it("renders a default alert with a title and description", () => {

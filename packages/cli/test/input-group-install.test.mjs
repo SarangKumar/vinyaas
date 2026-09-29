@@ -152,7 +152,7 @@ describe("installable input-group registry", () => {
         await writeFile(
           join(cwd, "components/ui/input-group/example.tsx"),
           [
-            'import { InputGroup, InputGroupInput } from "@/components/ui/input-group/input-group";',
+            'import { InputGroup, InputGroupInput } from "@/components/ui/input-group";',
             "",
             "export function SearchField() {",
             "  return (",
@@ -166,7 +166,7 @@ describe("installable input-group registry", () => {
         );
 
         const installed = await readFile(
-          join(cwd, "components/ui/input-group/input-group.tsx"),
+          join(cwd, "components/ui/input-group/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

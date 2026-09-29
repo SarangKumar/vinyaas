@@ -11,7 +11,7 @@ import {
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { toast, Toaster } from "./toast";
+import { toast, Toaster } from ".";
 
 const toastDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -59,7 +59,7 @@ describe("Toast", () => {
 
   it("ships toast motion CSS beside the component", async () => {
     const css = await fs.readFile(path.join(toastDir, "toast.css"), "utf8");
-    const source = await fs.readFile(path.join(toastDir, "toast.tsx"), "utf8");
+    const source = await fs.readFile(path.join(toastDir, "index.tsx"), "utf8");
 
     expect(source).toContain('import "./toast.css"');
     expect(source).not.toContain("dangerouslySetInnerHTML");

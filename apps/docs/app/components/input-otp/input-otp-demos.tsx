@@ -2,16 +2,16 @@
 
 import { useRef, useState } from "react";
 
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Button } from "@/registry/new-york/ui/button";
+import { Label } from "@/registry/new-york/ui/label";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/registry/new-york/ui/input-otp/input-otp";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
-import { toast } from "@/registry/new-york/ui/toast/toast";
+} from "@/registry/new-york/ui/input-otp";
+import { Spinner } from "@/registry/new-york/ui/spinner";
+import { toast } from "@/registry/new-york/ui/toast";
 
 function Slots() {
   return (

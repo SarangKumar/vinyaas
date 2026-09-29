@@ -7,14 +7,14 @@ import {
   Marker,
   MarkerContent,
   MarkerIcon,
-} from "@/registry/new-york/ui/marker/marker";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
+} from "@/registry/new-york/ui/marker";
+import { Spinner } from "@/registry/new-york/ui/spinner";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("marker");
 
-const usage = `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker/marker";
+const usage = `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
 
 export function Note() {
   return (
@@ -55,8 +55,8 @@ const examples: ComponentExample[] = [
         <MarkerContent>Compacting conversation</MarkerContent>
       </Marker>
     ),
-    code: `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker/marker";
-import { Spinner } from "@/components/ui/spinner/spinner";
+    code: `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
+import { Spinner } from "@/components/ui/spinner";
 
 export function Running() {
   return (
@@ -82,7 +82,7 @@ export function Running() {
         </Marker>
       </div>
     ),
-    code: `import { Marker, MarkerContent } from "@/components/ui/marker/marker";
+    code: `import { Marker, MarkerContent } from "@/components/ui/marker";
 
 export function Notes() {
   return (
@@ -103,7 +103,7 @@ export function Notes() {
         <MarkerContent>Today</MarkerContent>
       </Marker>
     ),
-    code: `import { Marker, MarkerContent } from "@/components/ui/marker/marker";
+    code: `import { Marker, MarkerContent } from "@/components/ui/marker";
 
 export function Day() {
   return (
@@ -128,7 +128,7 @@ export function Day() {
         </MarkerContent>
       </Marker>
     ),
-    code: `import { Marker, MarkerContent } from "@/components/ui/marker/marker";
+    code: `import { Marker, MarkerContent } from "@/components/ui/marker";
 
 export function PullRequest() {
   return (
@@ -145,7 +145,7 @@ export function PullRequest() {
 
 export default async function MarkerPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/marker/marker.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/marker/index.tsx"),
     "utf8",
   );
 
@@ -165,7 +165,7 @@ export default async function MarkerPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/marker/marker.tsx</code>. It imports{" "}
+          <code>components/ui/marker/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

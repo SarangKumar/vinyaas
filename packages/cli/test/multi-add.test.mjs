@@ -34,7 +34,7 @@ function registryItem(name, extra = {}) {
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
-        path: `ui/${name}/${name}.tsx`,
+        path: `ui/${name}/index.tsx`,
         content: `export function ${name}() { return null; }\n`,
       },
     ],
@@ -152,7 +152,7 @@ describe("vinyaas add multiple components", () => {
     assert.equal(plan.name, "button");
     assert.deepEqual(plan.items, ["card", "button"]);
     const written = await readFile(
-      join(cwd, "components/ui/button/button.tsx"),
+      join(cwd, "components/ui/button/index.tsx"),
       "utf8",
     );
     assert.match(written, /function button/);
@@ -169,8 +169,8 @@ describe("vinyaas add multiple components", () => {
     assert.ok(
       plan.entries.some((entry) => entry.destinationPath.includes("badge")),
     );
-    await access(join(cwd, "components/ui/badge/badge.tsx"));
-    await access(join(cwd, "components/ui/button/button.tsx"));
+    await access(join(cwd, "components/ui/badge/index.tsx"));
+    await access(join(cwd, "components/ui/button/index.tsx"));
   });
 
   it("installs three components and resolves each registry item once", async () => {
@@ -192,7 +192,7 @@ describe("vinyaas add multiple components", () => {
     assert.equal(registry.counts.button, 1);
     assert.equal(registry.counts.card, 1);
     assert.equal(registry.counts.badge, 1);
-    await access(join(cwd, "components/ui/card/card.tsx"));
+    await access(join(cwd, "components/ui/card/index.tsx"));
   });
 
   it("installs shared npm dependencies once", async () => {
@@ -232,8 +232,8 @@ describe("vinyaas add multiple components", () => {
         return true;
       },
     );
-    await assert.rejects(access(join(cwd, "components/ui/button/button.tsx")));
-    await assert.rejects(access(join(cwd, "components/ui/card/card.tsx")));
+    await assert.rejects(access(join(cwd, "components/ui/button/index.tsx")));
+    await assert.rejects(access(join(cwd, "components/ui/card/index.tsx")));
     assert.equal(
       await readFile(join(cwd, "app/globals.css"), "utf8"),
       cssContent,
@@ -242,7 +242,7 @@ describe("vinyaas add multiple components", () => {
 
   it("keeps the existing conflict error and skips later files", async () => {
     const cwd = await writeProject({
-      "components/ui/button/button.tsx": "export const existing = true;\n",
+      "components/ui/button/index.tsx": "export const existing = true;\n",
     });
     const registry = fetchCatalog(catalog);
 
@@ -251,20 +251,20 @@ describe("vinyaas add multiple components", () => {
       (error) => {
         assert.ok(error instanceof CliError);
         assert.match(error.message, /File already exists:/);
-        assert.match(error.message, /button\.tsx/);
+        assert.match(error.message, /index\.tsx/);
         return true;
       },
     );
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       "export const existing = true;\n",
     );
-    await assert.rejects(access(join(cwd, "components/ui/card/card.tsx")));
+    await assert.rejects(access(join(cwd, "components/ui/card/index.tsx")));
   });
 
   it("overwrites existing files when --force is set", async () => {
     const cwd = await writeProject({
-      "components/ui/button/button.tsx": "export const existing = true;\n",
+      "components/ui/button/index.tsx": "export const existing = true;\n",
     });
     const registry = fetchCatalog(catalog);
     const { plan } = await add(cwd, ["button", "badge"], {
@@ -273,14 +273,15 @@ describe("vinyaas add multiple components", () => {
     });
 
     assert.equal(
-      plan.entries.find((entry) => entry.destinationPath.endsWith("button.tsx"))
-        ?.overwrite,
+      plan.entries.find(
+        (entry) => entry.destinationPath === "components/ui/button/index.tsx",
+      )?.overwrite,
       true,
     );
     assert.match(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       /function button/,
     );
-    await access(join(cwd, "components/ui/badge/badge.tsx"));
+    await access(join(cwd, "components/ui/badge/index.tsx"));
   });
 });

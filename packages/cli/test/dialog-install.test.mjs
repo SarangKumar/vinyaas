@@ -152,7 +152,7 @@ describe("installable dialog registry", () => {
         await writeFile(
           join(cwd, "components/ui/dialog/example.tsx"),
           [
-            'import { DialogContent } from "@/components/ui/dialog/dialog";',
+            'import { DialogContent } from "@/components/ui/dialog";',
             "",
             "export function Example() {",
             "  return <DialogContent>Notes</DialogContent>;",
@@ -162,7 +162,7 @@ describe("installable dialog registry", () => {
         );
 
         const card = await readFile(
-          join(cwd, "components/ui/dialog/dialog.tsx"),
+          join(cwd, "components/ui/dialog/index.tsx"),
           "utf8",
         );
         const animationCss = await readFile(

@@ -3,8 +3,8 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
 import {
   Command,
   CommandEmpty,
@@ -13,13 +13,13 @@ import {
   CommandItem,
   CommandList,
   CommandShortcut,
-} from "@/registry/new-york/ui/command/command";
+} from "@/registry/new-york/ui/command";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("command");
 
-const usage = `import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command/command";
+const usage = `import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 export function PageSearch() {
   return (
@@ -111,7 +111,7 @@ const examples: ComponentExample[] = [
         </CommandList>
       </Command>
     ),
-    code: `import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command/command";
+    code: `import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 export function QuickActions() {
   return (
@@ -196,9 +196,9 @@ export function QuickActions() {
         </CommandList>
       </Command>
     ),
-    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
-import { Badge } from "@/components/ui/badge/badge";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command/command";
+    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 export function PeopleSearch() {
   return (
@@ -225,7 +225,7 @@ export function PeopleSearch() {
 
 export default async function CommandPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/command/command.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/command/index.tsx"),
     "utf8",
   );
 
@@ -244,7 +244,7 @@ export default async function CommandPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/command/command.tsx</code>. It imports{" "}
+          <code>components/ui/command/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

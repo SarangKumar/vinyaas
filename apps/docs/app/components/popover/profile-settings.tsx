@@ -1,16 +1,16 @@
 "use client";
 
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover/popover";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
+} from "@/registry/new-york/ui/popover";
+import { Separator } from "@/registry/new-york/ui/separator";
+import { Switch } from "@/registry/new-york/ui/switch";
 
 export function ProfileSettings() {
   return (

@@ -3,13 +3,13 @@
 import { useState } from "react";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/registry/new-york/ui/input-otp/input-otp";
+} from "@/registry/new-york/ui/input-otp";
 
 export function OtpBlock() {
   const [code, setCode] = useState("");

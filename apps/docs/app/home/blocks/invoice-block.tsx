@@ -3,9 +3,9 @@
 import { useState } from "react";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Alert, AlertTitle } from "@/registry/new-york/ui/alert/alert";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
+import { Alert, AlertTitle } from "@/registry/new-york/ui/alert";
+import { Button } from "@/registry/new-york/ui/button";
+import { Separator } from "@/registry/new-york/ui/separator";
 
 export function InvoiceBlock() {
   const [paid, setPaid] = useState(false);

@@ -13,8 +13,8 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("tooltip");
 
-const usage = `import { Button } from "@/components/ui/button/button";
-import { Tooltip } from "@/components/ui/tooltip/tooltip";
+const usage = `import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export function Hint() {
   return (
@@ -78,8 +78,8 @@ const examples: ComponentExample[] = [
     description:
       "side places the tooltip and its pointer above, below, or beside the trigger.",
     preview: <PositionTooltips />,
-    code: `import { Button } from "@/components/ui/button/button";
-import { Tooltip } from "@/components/ui/tooltip/tooltip";
+    code: `import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export function Placements() {
   return (
@@ -105,7 +105,7 @@ export function Placements() {
 
 export default async function TooltipPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/tooltip/tooltip.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/tooltip/index.tsx"),
     "utf8",
   );
 
@@ -130,7 +130,7 @@ export default async function TooltipPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/tooltip/tooltip.tsx</code>. It imports{" "}
+          <code>components/ui/tooltip/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

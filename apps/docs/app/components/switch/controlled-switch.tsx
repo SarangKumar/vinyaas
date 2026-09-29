@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
+import { Label } from "@/registry/new-york/ui/label";
+import { Switch } from "@/registry/new-york/ui/switch";
 
 export function ControlledSwitch() {
   const [checked, setChecked] = useState(true);

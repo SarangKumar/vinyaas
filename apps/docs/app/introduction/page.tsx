@@ -7,9 +7,9 @@ import { focusRing } from "@/components/focus-ring";
 import { InstallCommand } from "@/components/install-command";
 import { cliCommands } from "@/components/package-managers";
 import { pageMetadata } from "@/lib/page-metadata";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Button } from "@/registry/new-york/ui/button";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
 
 export const metadata: Metadata = pageMetadata({
   title: "Introduction",
@@ -23,9 +23,9 @@ const body = "text-body text-base leading-7";
 const actionLink = `inline-flex h-9 cursor-pointer items-center rounded-md px-4 text-sm font-medium ${focusRing}`;
 
 const usageExample = {
-  tsx: `import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+  tsx: `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SaveName() {
   return (
@@ -39,9 +39,9 @@ export function SaveName() {
   );
 }
 `,
-  jsx: `import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+  jsx: `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SaveName() {
   return (
@@ -223,8 +223,8 @@ export default function IntroductionPage() {
           </li>
           <li>
             Import from your local path (for example{" "}
-            <code>@/components/ui/button/button</code>) and compose like any
-            other React code.
+            <code>@/components/ui/button</code>) and compose like any other
+            React code.
           </li>
         </ol>
         <InstallCommand commands={cliCommands("init")} />

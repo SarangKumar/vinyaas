@@ -3,24 +3,24 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover/popover";
+} from "@/registry/new-york/ui/popover";
 import { ProfileSettings } from "./profile-settings";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("popover");
 
-const usage = `import { Button } from "@/components/ui/button/button";
+const usage = `import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover/popover";
+} from "@/components/ui/popover";
 
 export function Details() {
   return (
@@ -67,17 +67,17 @@ const api: ApiRow[] = [
   },
 ];
 
-const profileSource = `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+const profileSource = `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover/popover";
-import { Separator } from "@/components/ui/separator/separator";
-import { Switch } from "@/components/ui/switch/switch";
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 
 export function ProfileSettings() {
   return (
@@ -132,12 +132,12 @@ const examples: ComponentExample[] = [
         </PopoverContent>
       </Popover>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
+    code: `import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover/popover";
+} from "@/components/ui/popover";
 
 export function Details() {
   return (
@@ -178,12 +178,12 @@ export function Details() {
         </PopoverContent>
       </Popover>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
+    code: `import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover/popover";
+} from "@/components/ui/popover";
 
 export function AlignedDetails() {
   return (
@@ -205,7 +205,7 @@ export function AlignedDetails() {
 
 export default async function PopoverPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/popover/popover.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/popover/index.tsx"),
     "utf8",
   );
 
@@ -232,7 +232,7 @@ export default async function PopoverPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/popover/popover.tsx</code>. It imports{" "}
+          <code>components/ui/popover/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

@@ -1,11 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import {
-  NativeSelect,
-  NativeSelectOptGroup,
-  NativeSelectOption,
-} from "./native-select";
+import { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from ".";
 
 describe("NativeSelect", () => {
   it("renders a native select, options, and an optgroup", () => {

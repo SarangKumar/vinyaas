@@ -4,15 +4,15 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { RefreshIcon } from "@/components/icons";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
+import { Button } from "@/registry/new-york/ui/button";
+import { Spinner } from "@/registry/new-york/ui/spinner";
 import { SubmitSpinner } from "./spinner-demos";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("spinner");
 
-const usage = `import { Spinner } from "@/components/ui/spinner/spinner";
+const usage = `import { Spinner } from "@/components/ui/spinner";
 
 export function RefreshingData() {
   return (
@@ -63,8 +63,8 @@ const examples: ComponentExample[] = [
         Saving
       </Button>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
-import { Spinner } from "@/components/ui/spinner/spinner";
+    code: `import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 export function SavingButton() {
   return (
@@ -83,8 +83,8 @@ export function SavingButton() {
     preview: <SubmitSpinner />,
     code: `import { useState } from "react";
 
-import { Button } from "@/components/ui/button/button";
-import { Spinner } from "@/components/ui/spinner/spinner";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 export function SubmitSpinner() {
   const [pending, setPending] = useState(false);
@@ -133,7 +133,7 @@ export function RefreshingNote() {
 
 export default async function SpinnerPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/spinner/spinner.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/spinner/index.tsx"),
     "utf8",
   );
 
@@ -153,7 +153,7 @@ export default async function SpinnerPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/spinner/spinner.tsx</code>. It imports{" "}
+          <code>components/ui/spinner/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

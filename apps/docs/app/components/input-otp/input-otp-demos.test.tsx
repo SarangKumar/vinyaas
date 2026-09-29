@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { toast } from "@/registry/new-york/ui/toast/toast";
+import { toast } from "@/registry/new-york/ui/toast";
 
 import { VerificationCodeDemo } from "./input-otp-demos";
 

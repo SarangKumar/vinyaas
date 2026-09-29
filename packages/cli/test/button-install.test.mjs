@@ -173,7 +173,7 @@ describe("installable button registry", () => {
 
         const output = logs.join("\n");
         const button = await readFile(
-          join(cwd, "components/ui/button/button.tsx"),
+          join(cwd, "components/ui/button/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

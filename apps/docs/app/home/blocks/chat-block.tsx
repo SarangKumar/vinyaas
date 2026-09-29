@@ -1,9 +1,9 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
-import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
+import { Button } from "@/registry/new-york/ui/button";
+import { Spinner } from "@/registry/new-york/ui/spinner";
+import { Textarea } from "@/registry/new-york/ui/textarea";
 
 export function ChatBlock() {
   return (

@@ -3,18 +3,15 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Label } from "@/registry/new-york/ui/label/label";
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/registry/new-york/ui/radio-group/radio-group";
+import { Label } from "@/registry/new-york/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("radio-group");
 
-const usage = `import { Label } from "@/components/ui/label/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group/radio-group";
+const usage = `import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export function SpacingField() {
   return (
@@ -152,10 +149,7 @@ const examples: ComponentExample[] = [
 
 export default async function RadioGroupPage() {
   const source = await readFile(
-    path.join(
-      process.cwd(),
-      "registry/new-york/ui/radio-group/radio-group.tsx",
-    ),
+    path.join(process.cwd(), "registry/new-york/ui/radio-group/index.tsx"),
     "utf8",
   );
 
@@ -175,7 +169,7 @@ export default async function RadioGroupPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/radio-group/radio-group.tsx</code>. It imports{" "}
+          <code>components/ui/radio-group/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>. Label is a separate
           component.

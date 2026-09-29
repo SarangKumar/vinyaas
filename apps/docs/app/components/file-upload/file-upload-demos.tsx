@@ -7,7 +7,7 @@ import {
   FileUploadDropzone,
   FileUploadList,
   type FileUploadFile,
-} from "@/registry/new-york/ui/file-upload/file-upload";
+} from "@/registry/new-york/ui/file-upload";
 
 const initialFiles: FileUploadFile[] = [
   {

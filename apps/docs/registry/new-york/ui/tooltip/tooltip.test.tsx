@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { Tooltip } from "./tooltip";
+import { Tooltip } from ".";
 
 const tooltipDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -87,7 +87,7 @@ describe("Tooltip", () => {
   it("ships directional tooltip motion CSS beside the component", async () => {
     const css = await fs.readFile(path.join(tooltipDir, "tooltip.css"), "utf8");
     const source = await fs.readFile(
-      path.join(tooltipDir, "tooltip.tsx"),
+      path.join(tooltipDir, "index.tsx"),
       "utf8",
     );
 

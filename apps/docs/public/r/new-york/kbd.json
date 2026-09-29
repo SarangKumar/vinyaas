@@ -5,7 +5,7 @@
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
-      "path": "ui/kbd/kbd.tsx",
+      "path": "ui/kbd/index.tsx",
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type KbdProps = React.ComponentProps<\"kbd\">;\n\nexport function Kbd({ className, ref, ...props }: KbdProps) {\n  return (\n    <kbd\n      ref={ref}\n      className={cn(\n        \"border-border bg-muted text-foreground inline-flex h-5 min-w-5 items-center justify-center rounded-sm border px-1 font-mono text-xs leading-none\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }

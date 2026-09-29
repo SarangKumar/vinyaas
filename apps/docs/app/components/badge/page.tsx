@@ -3,14 +3,14 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Spinner } from "@/registry/new-york/ui/spinner";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("badge");
 
-const usage = `import { Badge } from "@/components/ui/badge/badge";
+const usage = `import { Badge } from "@/components/ui/badge";
 
 export function Plan() {
   return <Badge>Pro</Badge>;
@@ -51,7 +51,7 @@ const examples: ComponentExample[] = [
         </Badge>
       </a>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function DocsLink() {
   return (
@@ -76,8 +76,8 @@ export function DocsLink() {
         Processing
       </Badge>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Spinner } from "@/components/ui/spinner/spinner";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
 
 export function ProcessingStatus() {
   return (
@@ -95,7 +95,7 @@ export function ProcessingStatus() {
     description:
       "Badge supplies the shape and type size. className replaces the color with your own Tailwind classes.",
     preview: <Badge className="bg-accent text-accent-foreground">Beta</Badge>,
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function BetaFlag() {
   return (
@@ -114,7 +114,7 @@ export function BetaFlag() {
         Claim offer
       </Badge>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function Offer() {
   return (
@@ -136,7 +136,7 @@ export function Offer() {
         <BookmarkIcon />
       </Badge>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function Saved() {
   return (
@@ -163,7 +163,7 @@ export function Saved() {
         <Badge variant="link">Link</Badge>
       </>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function StatusLabels() {
   return (
@@ -183,7 +183,7 @@ export function StatusLabels() {
 
 export default async function BadgePage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/badge/badge.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/badge/index.tsx"),
     "utf8",
   );
 
@@ -207,7 +207,7 @@ export default async function BadgePage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/badge/badge.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/badge/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

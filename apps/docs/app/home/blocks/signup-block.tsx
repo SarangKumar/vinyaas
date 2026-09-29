@@ -1,10 +1,10 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Button } from "@/registry/new-york/ui/button";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
 
 export function SignupBlock() {
   return (

@@ -154,7 +154,7 @@ describe("installable native-select registry", () => {
         await writeFile(
           join(cwd, "components/ui/native-select/example.tsx"),
           [
-            'import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select/native-select";',
+            'import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";',
             "",
             "export function Region() {",
             "  return (",
@@ -167,7 +167,7 @@ describe("installable native-select registry", () => {
         );
 
         const sourceFile = await readFile(
-          join(cwd, "components/ui/native-select/native-select.tsx"),
+          join(cwd, "components/ui/native-select/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

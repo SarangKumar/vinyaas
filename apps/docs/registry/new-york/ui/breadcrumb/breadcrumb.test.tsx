@@ -9,7 +9,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "./breadcrumb";
+} from ".";
 
 describe("Breadcrumb", () => {
   it("exposes a breadcrumb landmark, links, the current page, and a hidden separator", () => {

@@ -3,21 +3,21 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/registry/new-york/ui/hover-card/hover-card";
+} from "@/registry/new-york/ui/hover-card";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("hover-card");
 
-const usage = `import { Button } from "@/components/ui/button/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card/hover-card";
+const usage = `import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 export function Person() {
   return (
@@ -33,9 +33,9 @@ export function Person() {
 }
 `;
 
-const profileCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
-import { Button } from "@/components/ui/button/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card/hover-card";
+const profileCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 export function ProfileCard() {
   return (
@@ -149,9 +149,9 @@ const examples: ComponentExample[] = [
         </HoverCardContent>
       </HoverCard>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card/hover-card";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 export function MessagePreview() {
   return (
@@ -191,9 +191,9 @@ export function MessagePreview() {
         </HoverCardContent>
       </HoverCard>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card/hover-card";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 export function ProjectPreview() {
   return (
@@ -215,7 +215,7 @@ export function ProjectPreview() {
 
 export default async function HoverCardPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/hover-card/hover-card.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/hover-card/index.tsx"),
     "utf8",
   );
 
@@ -234,7 +234,7 @@ export default async function HoverCardPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/hover-card/hover-card.tsx</code>. It imports{" "}
+          <code>components/ui/hover-card/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

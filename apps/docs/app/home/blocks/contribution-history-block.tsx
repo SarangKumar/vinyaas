@@ -1,14 +1,14 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card/card";
+} from "@/registry/new-york/ui/card";
 
 const months = [
   { label: "Dec", value: 42 },

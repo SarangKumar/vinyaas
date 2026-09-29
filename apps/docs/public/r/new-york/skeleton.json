@@ -5,7 +5,7 @@
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
-      "path": "ui/skeleton/skeleton.tsx",
+      "path": "ui/skeleton/index.tsx",
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type SkeletonProps = React.ComponentProps<\"div\">;\n\nexport function Skeleton({ className, ref, ...props }: SkeletonProps) {\n  return (\n    <div\n      ref={ref}\n      {...props}\n      aria-hidden=\"true\"\n      className={cn(\n        \"bg-muted animate-pulse rounded-md motion-reduce:animate-none\",\n        className,\n      )}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }

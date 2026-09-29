@@ -152,7 +152,7 @@ describe("installable textarea registry", () => {
         await writeFile(
           join(cwd, "components/ui/textarea/example.tsx"),
           [
-            'import { Textarea } from "@/components/ui/textarea/textarea";',
+            'import { Textarea } from "@/components/ui/textarea";',
             "",
             "export function MessageField() {",
             "  return (",
@@ -174,7 +174,7 @@ describe("installable textarea registry", () => {
         );
 
         const textarea = await readFile(
-          join(cwd, "components/ui/textarea/textarea.tsx"),
+          join(cwd, "components/ui/textarea/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

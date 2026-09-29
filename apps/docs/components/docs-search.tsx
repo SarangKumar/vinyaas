@@ -6,20 +6,20 @@ import { useRouter } from "next/navigation";
 import { componentHref, components } from "@/components/component-meta";
 import { BookIcon, ComponentIcon, SearchIcon } from "@/components/icons";
 import { focusRing } from "@/components/focus-ring";
-import { Kbd } from "@/registry/new-york/ui/kbd/kbd";
+import { Kbd } from "@/registry/new-york/ui/kbd";
 import {
   Command,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/registry/new-york/ui/command/command";
+} from "@/registry/new-york/ui/command";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
-} from "@/registry/new-york/ui/dialog/dialog";
+} from "@/registry/new-york/ui/dialog";
 
 type SearchPage = {
   title: string;

@@ -3,13 +3,13 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Skeleton } from "@/registry/new-york/ui/skeleton/skeleton";
+import { Skeleton } from "@/registry/new-york/ui/skeleton";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("skeleton");
 
-const usage = `import { Skeleton } from "@/components/ui/skeleton/skeleton";
+const usage = `import { Skeleton } from "@/components/ui/skeleton";
 
 export function LoadingTitle() {
   return <Skeleton className="h-4 w-64" />;
@@ -65,7 +65,7 @@ const examples: ComponentExample[] = [
 
 export default async function SkeletonPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/skeleton/skeleton.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/skeleton/index.tsx"),
     "utf8",
   );
 
@@ -90,7 +90,7 @@ export default async function SkeletonPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/skeleton/skeleton.tsx</code>. It imports{" "}
+          <code>components/ui/skeleton/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

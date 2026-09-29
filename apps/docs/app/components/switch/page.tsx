@@ -3,16 +3,16 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
+import { Label } from "@/registry/new-york/ui/label";
+import { Switch } from "@/registry/new-york/ui/switch";
 import { ControlledSwitch } from "./controlled-switch";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("switch");
 
-const usage = `import { Label } from "@/components/ui/label/label";
-import { Switch } from "@/components/ui/switch/switch";
+const usage = `import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export function Alerts() {
   return (
@@ -130,7 +130,7 @@ const examples: ComponentExample[] = [
 
 export default async function SwitchPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/switch/switch.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/switch/index.tsx"),
     "utf8",
   );
 
@@ -157,7 +157,7 @@ export default async function SwitchPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/switch/switch.tsx</code>. It imports{" "}
+          <code>components/ui/switch/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 
-import { Skeleton } from "@/registry/new-york/ui/skeleton/skeleton";
+import { Skeleton } from "@/registry/new-york/ui/skeleton";
 
 /**
  * Ultra-wide decorative rails (≥2200px), inspired by shadcn's demo shell.

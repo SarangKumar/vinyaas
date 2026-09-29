@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/registry/new-york/ui/button/button";
-import { toast } from "@/registry/new-york/ui/toast/toast";
+import { Button } from "@/registry/new-york/ui/button";
+import { toast } from "@/registry/new-york/ui/toast";
 
 export function DefaultToastDemo() {
   return (

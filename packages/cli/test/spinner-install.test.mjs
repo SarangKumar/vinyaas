@@ -152,7 +152,7 @@ describe("installable spinner registry", () => {
         await writeFile(
           join(cwd, "components/ui/spinner/example.tsx"),
           [
-            'import { Spinner } from "@/components/ui/spinner/spinner";',
+            'import { Spinner } from "@/components/ui/spinner";',
             "",
             "export function Loading() {",
             "  return <Spinner />;",
@@ -162,7 +162,7 @@ describe("installable spinner registry", () => {
         );
 
         const spinner = await readFile(
-          join(cwd, "components/ui/spinner/spinner.tsx"),
+          join(cwd, "components/ui/spinner/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

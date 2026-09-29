@@ -152,7 +152,7 @@ describe("installable table registry", () => {
         await writeFile(
           join(cwd, "components/ui/table/example.tsx"),
           [
-            'import { Table, TableCell } from "@/components/ui/table/table";',
+            'import { Table, TableCell } from "@/components/ui/table";',
             "",
             "export function Team() {",
             "  return (",
@@ -165,7 +165,7 @@ describe("installable table registry", () => {
         );
 
         const sourceFile = await readFile(
-          join(cwd, "components/ui/table/table.tsx"),
+          join(cwd, "components/ui/table/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

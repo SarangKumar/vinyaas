@@ -7,13 +7,13 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/new-york/ui/avatar/avatar";
+} from "@/registry/new-york/ui/avatar";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("avatar");
 
-const usage = `import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar/avatar";
+const usage = `import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Profile() {
   return (
@@ -117,7 +117,7 @@ const examples: ComponentExample[] = [
 
 export default async function AvatarPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/avatar/avatar.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/avatar/index.tsx"),
     "utf8",
   );
 
@@ -142,7 +142,7 @@ export default async function AvatarPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/avatar/avatar.tsx</code>. It imports{" "}
+          <code>components/ui/avatar/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { Card } from "@/registry/new-york/ui/card/card";
+import { Card } from "@/registry/new-york/ui/card";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -9,7 +9,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/registry/new-york/ui/breadcrumb/breadcrumb";
+} from "@/registry/new-york/ui/breadcrumb";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -26,7 +26,7 @@ const usage = `import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb/breadcrumb";
+} from "@/components/ui/breadcrumb";
 
 export function DocsTrail() {
   return (
@@ -114,7 +114,7 @@ const examples: ComponentExample[] = [
         <p className="text-sm">Public name, bio, and contact.</p>
       </Card>
     ),
-    code: `import { Card } from "@/components/ui/card/card";
+    code: `import { Card } from "@/components/ui/card";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -122,7 +122,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb/breadcrumb";
+} from "@/components/ui/breadcrumb";
 
 export function AccountTrail() {
   return (
@@ -182,7 +182,7 @@ export function AccountTrail() {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb/breadcrumb";
+} from "@/components/ui/breadcrumb";
 
 export function LongTrail() {
   return (
@@ -243,7 +243,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb/breadcrumb";
+} from "@/components/ui/breadcrumb";
 
 export function ChevronTrail() {
   return (
@@ -274,7 +274,7 @@ export function ChevronTrail() {
 
 export default async function BreadcrumbDocsPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/breadcrumb/breadcrumb.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/breadcrumb/index.tsx"),
     "utf8",
   );
 
@@ -293,7 +293,7 @@ export default async function BreadcrumbDocsPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/breadcrumb/breadcrumb.tsx</code>. It imports{" "}
+          <code>components/ui/breadcrumb/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

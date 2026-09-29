@@ -13,7 +13,7 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from "./dialog";
+} from ".";
 
 const dialogDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -68,10 +68,7 @@ describe("Dialog", () => {
 
   it("ships dialog motion CSS beside the component", async () => {
     const css = await fs.readFile(path.join(dialogDir, "dialog.css"), "utf8");
-    const source = await fs.readFile(
-      path.join(dialogDir, "dialog.tsx"),
-      "utf8",
-    );
+    const source = await fs.readFile(path.join(dialogDir, "index.tsx"), "utf8");
 
     expect(source).toContain('import "./dialog.css"');
     expect(source).not.toContain("dangerouslySetInnerHTML");

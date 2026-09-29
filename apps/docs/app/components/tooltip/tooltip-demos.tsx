@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Tooltip } from "@/registry/new-york/ui/tooltip/tooltip";
+import { Button } from "@/registry/new-york/ui/button";
+import { Tooltip } from "@/registry/new-york/ui/tooltip";
 
 export function BasicTooltip() {
   return (

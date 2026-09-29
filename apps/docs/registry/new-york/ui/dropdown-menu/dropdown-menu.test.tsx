@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import { Button } from "../button/button";
+import { Button } from "../button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "./dropdown-menu";
+} from ".";
 
 function Menu({ align = "end" }: { align?: "start" | "center" | "end" }) {
   return (

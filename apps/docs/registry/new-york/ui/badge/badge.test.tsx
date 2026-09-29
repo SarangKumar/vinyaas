@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Badge } from "./badge";
+import { Badge } from ".";
 
 describe("Badge", () => {
   it("renders an inline label and supports every variant", () => {

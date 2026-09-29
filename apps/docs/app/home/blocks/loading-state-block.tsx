@@ -3,15 +3,15 @@
 import { useState } from "react";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   Marker,
   MarkerContent,
   MarkerIcon,
-} from "@/registry/new-york/ui/marker/marker";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
-import { Skeleton } from "@/registry/new-york/ui/skeleton/skeleton";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
+} from "@/registry/new-york/ui/marker";
+import { Separator } from "@/registry/new-york/ui/separator";
+import { Skeleton } from "@/registry/new-york/ui/skeleton";
+import { Spinner } from "@/registry/new-york/ui/spinner";
 
 export function LoadingStateBlock() {
   const [loading, setLoading] = useState(true);

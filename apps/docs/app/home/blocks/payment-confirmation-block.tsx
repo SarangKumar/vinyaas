@@ -3,9 +3,9 @@
 import { useState } from "react";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Separator } from "@/registry/new-york/ui/separator";
 
 export function PaymentConfirmationBlock() {
   const [sent, setSent] = useState(false);

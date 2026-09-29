@@ -3,14 +3,14 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { RangeSlider, Slider } from "@/registry/new-york/ui/slider/slider";
+import { Label } from "@/registry/new-york/ui/label";
+import { RangeSlider, Slider } from "@/registry/new-york/ui/slider";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("slider");
 
-const usage = `import { Slider } from "@/components/ui/slider/slider";
+const usage = `import { Slider } from "@/components/ui/slider";
 
 export function Volume() {
   return <Slider aria-label="Volume" defaultValue={40} />;
@@ -70,8 +70,8 @@ const examples: ComponentExample[] = [
         <Slider id="volume" defaultValue={40} />
       </div>
     ),
-    code: `import { Label } from "@/components/ui/label/label";
-import { Slider } from "@/components/ui/slider/slider";
+    code: `import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
 export function Volume() {
   return (
@@ -93,8 +93,8 @@ export function Volume() {
         <Slider id="zoom" min={1} max={4} step={1} defaultValue={2} />
       </div>
     ),
-    code: `import { Label } from "@/components/ui/label/label";
-import { Slider } from "@/components/ui/slider/slider";
+    code: `import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
 export function Zoom() {
   return (
@@ -117,8 +117,8 @@ export function Zoom() {
         <RangeSlider aria-labelledby="price-label" defaultValue={[20, 80]} />
       </div>
     ),
-    code: `import { Label } from "@/components/ui/label/label";
-import { RangeSlider } from "@/components/ui/slider/slider";
+    code: `import { Label } from "@/components/ui/label";
+import { RangeSlider } from "@/components/ui/slider";
 
 export function PriceRange() {
   return (
@@ -134,7 +134,7 @@ export function PriceRange() {
 
 export default async function SliderPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/slider/slider.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/slider/index.tsx"),
     "utf8",
   );
 
@@ -154,7 +154,7 @@ export default async function SliderPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/slider/slider.tsx</code>. It imports{" "}
+          <code>components/ui/slider/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

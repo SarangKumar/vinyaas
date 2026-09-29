@@ -15,13 +15,13 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("dropdown-menu");
 
-const usage = `import { Button } from "@/components/ui/button/button";
+const usage = `import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 export function Actions() {
   return (
@@ -119,10 +119,7 @@ const examples: ComponentExample[] = [
 
 export default async function DropdownMenuPage() {
   const source = await readFile(
-    path.join(
-      process.cwd(),
-      "registry/new-york/ui/dropdown-menu/dropdown-menu.tsx",
-    ),
+    path.join(process.cwd(), "registry/new-york/ui/dropdown-menu/index.tsx"),
     "utf8",
   );
 
@@ -142,7 +139,7 @@ export default async function DropdownMenuPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/dropdown-menu/dropdown-menu.tsx</code>. It imports{" "}
+          <code>components/ui/dropdown-menu/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

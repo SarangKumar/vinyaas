@@ -152,7 +152,7 @@ describe("installable hover-card registry", () => {
         await writeFile(
           join(cwd, "components/ui/hover-card/example.tsx"),
           [
-            'import { HoverCard } from "@/components/ui/hover-card/hover-card";',
+            'import { HoverCard } from "@/components/ui/hover-card";',
             "",
             "export function Person() {",
             "  return (",
@@ -166,7 +166,7 @@ describe("installable hover-card registry", () => {
         );
 
         const source = await readFile(
-          join(cwd, "components/ui/hover-card/hover-card.tsx"),
+          join(cwd, "components/ui/hover-card/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

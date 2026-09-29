@@ -3,9 +3,9 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   Card,
   CardAction,
@@ -14,22 +14,22 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card/card";
-import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
+} from "@/registry/new-york/ui/card";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
 import {
   Marker,
   MarkerContent,
   MarkerIcon,
-} from "@/registry/new-york/ui/marker/marker";
+} from "@/registry/new-york/ui/marker";
 import {
   NativeSelect,
   NativeSelectOption,
-} from "@/registry/new-york/ui/native-select/native-select";
-import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
+} from "@/registry/new-york/ui/native-select";
+import { ScrollArea } from "@/registry/new-york/ui/scroll-area";
+import { Separator } from "@/registry/new-york/ui/separator";
+import { Switch } from "@/registry/new-york/ui/switch";
 import { ProfileCardDemo, ProjectCardDemo } from "./card-demos";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
@@ -42,7 +42,7 @@ const usage = `import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card/card";
+} from "@/components/ui/card";
 
 export function Note() {
   return (
@@ -74,11 +74,11 @@ const api: ApiRow[] = [
   },
 ];
 
-const profileCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
-import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu/dropdown-menu";
+const profileCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export function ProfileCard() {
   return (
@@ -154,10 +154,10 @@ const examples: ComponentExample[] = [
         </CardFooter>
       </Card>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
-import { Separator } from "@/components/ui/separator/separator";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export function SubscriptionCard() {
   return (
@@ -224,13 +224,13 @@ export function SubscriptionCard() {
         </CardFooter>
       </Card>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
-import { Checkbox } from "@/components/ui/checkbox/checkbox";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
-import { Switch } from "@/components/ui/switch/switch";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export function AccountCard() {
   return (
@@ -297,12 +297,12 @@ export function AccountCard() {
         </ScrollArea>
       </Card>
     ),
-    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
-import { Badge } from "@/components/ui/badge/badge";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card/card";
-import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker/marker";
-import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";
-import { Separator } from "@/components/ui/separator/separator";
+    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 export function ActivityCard() {
   return (
@@ -329,11 +329,11 @@ export function ActivityCard() {
     title: "Project",
     description: "Status, a progress bar, and project actions in a menu.",
     preview: <ProjectCardDemo />,
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu/dropdown-menu";
-import { Progress } from "@/components/ui/progress/progress";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
 
 export function ProjectCard() {
   return (
@@ -394,12 +394,12 @@ export function ProjectCard() {
         </CardFooter>
       </Card>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
-import { Checkbox } from "@/components/ui/checkbox/checkbox";
-import { Label } from "@/components/ui/label/label";
-import { Switch } from "@/components/ui/switch/switch";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export function SecurityCard() {
   return (
@@ -448,10 +448,10 @@ export function SecurityCard() {
         </CardFooter>
       </Card>
     ),
-    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
-import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
+    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function NotificationCard() {
   return (
@@ -505,9 +505,9 @@ export function NotificationCard() {
         </CardFooter>
       </Card>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card/card";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function CompactCard() {
   return (
@@ -531,7 +531,7 @@ export function CompactCard() {
 
 export default async function CardPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/card/card.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/card/index.tsx"),
     "utf8",
   );
 
@@ -550,7 +550,7 @@ export default async function CardPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/card/card.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/card/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

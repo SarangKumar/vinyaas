@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { FileUpload, FileUploadDropzone, FileUploadList } from "./file-upload";
+import { FileUpload, FileUploadDropzone, FileUploadList } from ".";
 
 function Upload(props: Partial<ComponentProps<typeof FileUpload>>) {
   return (

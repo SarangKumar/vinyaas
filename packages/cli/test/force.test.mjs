@@ -43,7 +43,7 @@ function item(name, extra = {}) {
     name,
     type: "registry:ui",
     dependencies: [],
-    files: [{ path: "ui/button/button.tsx", content: buttonContent }],
+    files: [{ path: "ui/button/index.tsx", content: buttonContent }],
     ...extra,
   };
 }
@@ -85,28 +85,28 @@ async function planFor(cwd, files) {
 describe("force file replacement", () => {
   it("fails when a destination exists and force is omitted", async () => {
     const cwd = await project({
-      "components/ui/button/button.tsx": "// local modification\n",
+      "components/ui/button/index.tsx": "// local modification\n",
     });
     const plan = await planFor(cwd, [
-      { path: "ui/button/button.tsx", content: buttonContent },
+      { path: "ui/button/index.tsx", content: buttonContent },
     ]);
 
     await assert.rejects(
       () => assertDestinationsAvailable(cwd, plan, false),
-      /File already exists:\ncomponents\/ui\/button\/button\.tsx/,
+      /File already exists:\ncomponents\/ui\/button\/index\.tsx/,
     );
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       "// local modification\n",
     );
   });
 
   it("replaces an existing file when force is set", async () => {
     const cwd = await project({
-      "components/ui/button/button.tsx": "// local modification\n",
+      "components/ui/button/index.tsx": "// local modification\n",
     });
     const plan = await planFor(cwd, [
-      { path: "ui/button/button.tsx", content: buttonContent },
+      { path: "ui/button/index.tsx", content: buttonContent },
     ]);
 
     await assertDestinationsAvailable(cwd, plan, true);
@@ -114,7 +114,7 @@ describe("force file replacement", () => {
 
     assert.equal(plan.entries[0].overwrite, true);
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
   });
@@ -122,7 +122,7 @@ describe("force file replacement", () => {
   it("creates a new file when force is set", async () => {
     const cwd = await project();
     const plan = await planFor(cwd, [
-      { path: "ui/button/button.tsx", content: buttonContent },
+      { path: "ui/button/index.tsx", content: buttonContent },
     ]);
 
     await assertDestinationsAvailable(cwd, plan, true);
@@ -130,7 +130,7 @@ describe("force file replacement", () => {
 
     assert.equal(plan.entries[0].overwrite, false);
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
   });
@@ -138,7 +138,7 @@ describe("force file replacement", () => {
   it("replaces every existing file in the graph when force is set", async () => {
     const cwd = await project({
       "components/ui/utils.ts": "// utils local\n",
-      "components/ui/button/button.tsx": "// button local\n",
+      "components/ui/button/index.tsx": "// button local\n",
     });
     const plan = await createInstallPlan({
       cwd,
@@ -151,7 +151,7 @@ describe("force file replacement", () => {
           ],
         }),
         item("button", {
-          files: [{ path: "ui/button/button.tsx", content: buttonContent }],
+          files: [{ path: "ui/button/index.tsx", content: buttonContent }],
         }),
       ],
     });
@@ -164,7 +164,7 @@ describe("force file replacement", () => {
       "export const cn = true;\n",
     );
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
   });
@@ -184,7 +184,7 @@ describe("force file replacement", () => {
           ],
         }),
         item("button", {
-          files: [{ path: "ui/button/button.tsx", content: buttonContent }],
+          files: [{ path: "ui/button/index.tsx", content: buttonContent }],
         }),
       ],
     });
@@ -197,7 +197,7 @@ describe("force file replacement", () => {
       "export const cn = true;\n",
     );
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
   });
@@ -234,7 +234,7 @@ describe("force file replacement", () => {
     }
 
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -298,7 +298,7 @@ describe("force file replacement", () => {
       existing,
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -360,7 +360,7 @@ describe("force file replacement", () => {
       /Invalid documentation URL:/,
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -393,7 +393,7 @@ describe("force file replacement", () => {
       /Registry dependency cycle detected:\nbutton -> utils -> button/,
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 });

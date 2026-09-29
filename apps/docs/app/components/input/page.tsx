@@ -3,13 +3,13 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Input } from "@/registry/new-york/ui/input/input";
+import { Input } from "@/registry/new-york/ui/input";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("input");
 
-const usage = `import { Input } from "@/components/ui/input/input";
+const usage = `import { Input } from "@/components/ui/input";
 
 export function EmailField() {
   return (
@@ -156,7 +156,7 @@ const examples: ComponentExample[] = [
 
 export default async function InputPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/input/input.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/input/index.tsx"),
     "utf8",
   );
 
@@ -175,7 +175,7 @@ export default async function InputPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/input/input.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/input/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

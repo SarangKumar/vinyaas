@@ -152,7 +152,7 @@ describe("installable tooltip registry", () => {
         await writeFile(
           join(cwd, "components/ui/tooltip/example.tsx"),
           [
-            'import { Tooltip } from "@/components/ui/tooltip/tooltip";',
+            'import { Tooltip } from "@/components/ui/tooltip";',
             "",
             "export function Hint() {",
             "  return (",
@@ -165,7 +165,7 @@ describe("installable tooltip registry", () => {
         );
 
         const sourceFile = await readFile(
-          join(cwd, "components/ui/tooltip/tooltip.tsx"),
+          join(cwd, "components/ui/tooltip/index.tsx"),
           "utf8",
         );
         const animationCss = await readFile(

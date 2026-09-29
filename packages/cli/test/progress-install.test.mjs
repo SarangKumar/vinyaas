@@ -152,7 +152,7 @@ describe("installable progress registry", () => {
         await writeFile(
           join(cwd, "components/ui/progress/example.tsx"),
           [
-            'import { Progress } from "@/components/ui/progress/progress";',
+            'import { Progress } from "@/components/ui/progress";',
             "",
             "export function UploadProgress() {",
             '  return <Progress aria-label="Upload" value={40} max={100} className="max-w-sm" />;',
@@ -162,7 +162,7 @@ describe("installable progress registry", () => {
         );
 
         const progress = await readFile(
-          join(cwd, "components/ui/progress/progress.tsx"),
+          join(cwd, "components/ui/progress/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

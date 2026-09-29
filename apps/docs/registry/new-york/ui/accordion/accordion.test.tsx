@@ -7,7 +7,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "./accordion";
+} from ".";
 
 function Items({ disabled = false }: { disabled?: boolean }) {
   return (

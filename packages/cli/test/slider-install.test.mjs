@@ -152,7 +152,7 @@ describe("installable slider registry", () => {
         await writeFile(
           join(cwd, "components/ui/slider/example.tsx"),
           [
-            'import { Slider } from "@/components/ui/slider/slider";',
+            'import { Slider } from "@/components/ui/slider";',
             "",
             "export function Volume() {",
             '  return <Slider aria-label="Volume" defaultValue={40} />;',
@@ -162,7 +162,7 @@ describe("installable slider registry", () => {
         );
 
         const slider = await readFile(
-          join(cwd, "components/ui/slider/slider.tsx"),
+          join(cwd, "components/ui/slider/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

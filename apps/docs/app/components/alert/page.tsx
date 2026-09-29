@@ -1,12 +1,12 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
-} from "@/registry/new-york/ui/alert/alert";
+} from "@/registry/new-york/ui/alert";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -31,7 +31,7 @@ function AlertCircleIcon() {
   );
 }
 
-const usage = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert/alert";
+const usage = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export function Notice() {
   return (
@@ -43,9 +43,9 @@ export function Notice() {
 }
 `;
 
-const successCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert/alert";
-import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
+const successCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export function DeploymentAlert() {
   return (
@@ -65,8 +65,8 @@ export function DeploymentAlert() {
 }
 `;
 
-const failedCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert/alert";
-import { Button } from "@/components/ui/button/button";
+const failedCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 function AlertCircleIcon() {
   return (
@@ -156,7 +156,7 @@ const examples: ComponentExample[] = [
 
 export default async function AlertPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/alert/alert.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/alert/index.tsx"),
     "utf8",
   );
 
@@ -176,7 +176,7 @@ export default async function AlertPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/alert/alert.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/alert/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

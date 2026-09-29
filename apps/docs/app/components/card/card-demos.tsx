@@ -1,8 +1,8 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   Card,
   CardAction,
@@ -11,15 +11,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card/card";
+} from "@/registry/new-york/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
-import { Progress } from "@/registry/new-york/ui/progress/progress";
+} from "@/registry/new-york/ui/dropdown-menu";
+import { Progress } from "@/registry/new-york/ui/progress";
 
 function MoreIcon() {
   return (

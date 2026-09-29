@@ -3,16 +3,16 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { Textarea } from "@/registry/new-york/ui/textarea";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("label");
 
-const usage = `import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+const usage = `import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function EmailField() {
   return (
@@ -78,7 +78,7 @@ const examples: ComponentExample[] = [
 
 export default async function LabelPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/label/label.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/label/index.tsx"),
     "utf8",
   );
 
@@ -105,7 +105,7 @@ export default async function LabelPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/label/label.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/label/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

@@ -3,15 +3,15 @@ import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Button } from "@/registry/new-york/ui/button";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("button");
 
-const usage = `import { Button } from "@/components/ui/button/button";
+const usage = `import { Button } from "@/components/ui/button";
 
 export function SaveButton() {
   return <Button>Save</Button>;
@@ -19,9 +19,9 @@ export function SaveButton() {
 `;
 
 const saveSource = {
-  tsx: `import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+  tsx: `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SaveName() {
   return (
@@ -35,9 +35,9 @@ export function SaveName() {
   );
 }
 `,
-  jsx: `import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+  jsx: `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SaveName() {
   return (
@@ -124,7 +124,7 @@ const examples: ComponentExample[] = [
         <Button variant="link">Learn more</Button>
       </>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
+    code: `import { Button } from "@/components/ui/button";
 
 export function Actions() {
   return (
@@ -156,7 +156,7 @@ export function Actions() {
         </Button>
       </>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
+    code: `import { Button } from "@/components/ui/button";
 
 export function Sizes() {
   return (
@@ -177,7 +177,7 @@ export function Sizes() {
 
 export default async function ButtonPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/button/button.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/button/index.tsx"),
     "utf8",
   );
 
@@ -196,7 +196,7 @@ export default async function ButtonPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/button/button.tsx</code>. It imports{" "}
+          <code>components/ui/button/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>class-variance-authority</code>, <code>clsx</code>, and{" "}
           <code>tailwind-merge</code>.

@@ -152,7 +152,7 @@ describe("installable label registry", () => {
         await writeFile(
           join(cwd, "components/ui/label/example.tsx"),
           [
-            'import { Label } from "@/components/ui/label/label";',
+            'import { Label } from "@/components/ui/label";',
             "",
             "export function EmailLabel() {",
             "  return (",
@@ -166,7 +166,7 @@ describe("installable label registry", () => {
         );
 
         const label = await readFile(
-          join(cwd, "components/ui/label/label.tsx"),
+          join(cwd, "components/ui/label/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

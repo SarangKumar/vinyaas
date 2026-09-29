@@ -154,7 +154,7 @@ describe("installable dropdown-menu registry", () => {
         await writeFile(
           join(cwd, "components/ui/dropdown-menu/example.tsx"),
           [
-            'import { DropdownMenu } from "@/components/ui/dropdown-menu/dropdown-menu";',
+            'import { DropdownMenu } from "@/components/ui/dropdown-menu";',
             "",
             "export function Actions() {",
             "  return <DropdownMenu><span>Open</span></DropdownMenu>;",
@@ -164,7 +164,7 @@ describe("installable dropdown-menu registry", () => {
         );
 
         const installed = await readFile(
-          join(cwd, "components/ui/dropdown-menu/dropdown-menu.tsx"),
+          join(cwd, "components/ui/dropdown-menu/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

@@ -2,7 +2,7 @@ import { createRef, useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { RadioGroup, RadioGroupItem } from "./radio-group";
+import { RadioGroup, RadioGroupItem } from ".";
 
 describe("RadioGroup", () => {
   it("renders a native radio group", () => {

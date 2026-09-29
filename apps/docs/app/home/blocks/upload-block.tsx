@@ -5,7 +5,7 @@ import {
   FileUpload,
   FileUploadDropzone,
   FileUploadList,
-} from "@/registry/new-york/ui/file-upload/file-upload";
+} from "@/registry/new-york/ui/file-upload";
 
 export function UploadBlock() {
   return (

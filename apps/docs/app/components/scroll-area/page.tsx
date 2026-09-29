@@ -1,9 +1,9 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
-import { ScrollArea } from "@/registry/new-york/ui/scroll-area/scroll-area";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Separator } from "@/registry/new-york/ui/separator";
+import { ScrollArea } from "@/registry/new-york/ui/scroll-area";
 import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
@@ -12,7 +12,7 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("scroll-area");
 
-const usage = `import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";
+const usage = `import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function Notes() {
   return (
@@ -56,8 +56,8 @@ const shortcuts = [
 
 const matrix = ["Web", "Docs", "CLI", "Registry", "Preview", "Release"];
 
-const shortcutCode = `import { Kbd } from "@/components/ui/kbd/kbd";
-import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";
+const shortcutCode = `import { Kbd } from "@/components/ui/kbd";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function ShortcutRow() {
   return (
@@ -117,10 +117,10 @@ const examples: ComponentExample[] = [
         </ul>
       </ScrollArea>
     ),
-    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
-import { Badge } from "@/components/ui/badge/badge";
-import { Separator } from "@/components/ui/separator/separator";
-import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";
+    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function ActivityFeed() {
   return (
@@ -195,7 +195,7 @@ export function ActivityFeed() {
         </div>
       </ScrollArea>
     ),
-    code: `import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";
+    code: `import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function DeploymentMatrix() {
   return (
@@ -223,10 +223,7 @@ export function DeploymentMatrix() {
 
 export default async function ScrollAreaPage() {
   const source = await readFile(
-    path.join(
-      process.cwd(),
-      "registry/new-york/ui/scroll-area/scroll-area.tsx",
-    ),
+    path.join(process.cwd(), "registry/new-york/ui/scroll-area/index.tsx"),
     "utf8",
   );
 
@@ -246,7 +243,7 @@ export default async function ScrollAreaPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/scroll-area/scroll-area.tsx</code>. It imports{" "}
+          <code>components/ui/scroll-area/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

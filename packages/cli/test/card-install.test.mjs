@@ -152,7 +152,7 @@ describe("installable card registry", () => {
         await writeFile(
           join(cwd, "components/ui/card/example.tsx"),
           [
-            'import { Card } from "@/components/ui/card/card";',
+            'import { Card } from "@/components/ui/card";',
             "",
             "export function Note() {",
             "  return <Card>Notes</Card>;",
@@ -162,7 +162,7 @@ describe("installable card registry", () => {
         );
 
         const card = await readFile(
-          join(cwd, "components/ui/card/card.tsx"),
+          join(cwd, "components/ui/card/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

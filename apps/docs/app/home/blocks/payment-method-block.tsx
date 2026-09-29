@@ -1,14 +1,14 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
+} from "@/registry/new-york/ui/dropdown-menu";
 
 export function PaymentMethodBlock() {
   return (

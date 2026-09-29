@@ -2,7 +2,7 @@ import { createRef, useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import { Textarea } from "./textarea";
+import { Textarea } from ".";
 
 describe("Textarea", () => {
   it("renders a native textarea that a label can name", () => {

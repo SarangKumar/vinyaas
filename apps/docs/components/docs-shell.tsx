@@ -18,7 +18,7 @@ import { focusRing } from "@/components/focus-ring";
 import { GitHubLink } from "@/components/github-link";
 import logo from "@/components/logo.png";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Toaster } from "@/registry/new-york/ui/toast/toast";
+import { Toaster } from "@/registry/new-york/ui/toast";
 
 const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-sidebar-foreground hover:text-foreground ${focusRing}`;
 

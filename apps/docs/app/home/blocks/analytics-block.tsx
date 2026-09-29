@@ -1,14 +1,14 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Label } from "@/registry/new-york/ui/label";
 import {
   NativeSelect,
   NativeSelectOption,
-} from "@/registry/new-york/ui/native-select/native-select";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
+} from "@/registry/new-york/ui/native-select";
+import { Separator } from "@/registry/new-york/ui/separator";
 
 const metrics = [
   { label: "Signups", value: "1,284", delta: "+12.4%" },

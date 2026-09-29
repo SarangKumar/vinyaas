@@ -4,7 +4,7 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { SearchIcon } from "@/components/icons";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   InputGroup,
   InputGroupAddon,
@@ -12,14 +12,14 @@ import {
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
-} from "@/registry/new-york/ui/input-group/input-group";
-import { Kbd } from "@/registry/new-york/ui/kbd/kbd";
+} from "@/registry/new-york/ui/input-group";
+import { Kbd } from "@/registry/new-york/ui/kbd";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("input-group");
 
-const usage = `import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group/input-group";
+const usage = `import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 
 export function SearchField() {
   return (
@@ -65,7 +65,7 @@ const examples: ComponentExample[] = [
         <InputGroupText>USD</InputGroupText>
       </InputGroup>
     ),
-    code: `import { InputGroup, InputGroupInput, InputGroupText } from "@/components/ui/input-group/input-group";
+    code: `import { InputGroup, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 
 export function Amount() {
   return (
@@ -142,10 +142,7 @@ export function Amount() {
 
 export default async function InputGroupPage() {
   const source = await readFile(
-    path.join(
-      process.cwd(),
-      "registry/new-york/ui/input-group/input-group.tsx",
-    ),
+    path.join(process.cwd(), "registry/new-york/ui/input-group/index.tsx"),
     "utf8",
   );
 
@@ -165,7 +162,7 @@ export default async function InputGroupPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/input-group/input-group.tsx</code>. It imports{" "}
+          <code>components/ui/input-group/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>

@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
-import { Input } from "@/registry/new-york/ui/input/input";
+} from "@/registry/new-york/ui/dropdown-menu";
+import { Input } from "@/registry/new-york/ui/input";
 import {
   Table,
   TableBody,
@@ -18,7 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/new-york/ui/table/table";
+} from "@/registry/new-york/ui/table";
 
 const users = [
   ["Aarav Sharma", "Admin", "Active"],

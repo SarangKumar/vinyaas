@@ -38,7 +38,7 @@ describe("ComponentDemo", () => {
   }
 
   it("renders the preview, the complete source, and copy", () => {
-    const source = `import { Button } from "@/components/ui/button/button";
+    const source = `import { Button } from "@/components/ui/button";
 
 export function SaveButton() {
   return <Button>Save</Button>;
