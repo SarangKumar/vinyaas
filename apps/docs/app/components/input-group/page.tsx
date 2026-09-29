@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { SearchIcon } from "@/components/icons";
 import { Button } from "@/registry/new-york/ui/button";
@@ -14,6 +17,7 @@ import {
   InputGroupTextarea,
 } from "@/registry/new-york/ui/input-group";
 import { Kbd } from "@/registry/new-york/ui/kbd";
+import { Label } from "@/registry/new-york/ui/label";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -27,6 +31,40 @@ export function SearchField() {
       <InputGroupAddon>Search</InputGroupAddon>
       <InputGroupInput aria-label="Search" placeholder="Search users" />
     </InputGroup>
+  );
+}
+`;
+
+const searchFormCode = `import { SearchIcon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+
+export function DocsSearch() {
+  return (
+    <form className="grid w-full max-w-md gap-3 text-left">
+      <Label htmlFor="docs-search">Search documentation</Label>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <InputGroup className="min-w-0 flex-1">
+          <InputGroupAddon>
+            <SearchIcon />
+          </InputGroupAddon>
+          <InputGroupInput
+            id="docs-search"
+            name="q"
+            placeholder="Buttons, forms, tables…"
+          />
+        </InputGroup>
+        <Button type="submit">Search</Button>
+      </div>
+      <p className="text-muted-foreground text-sm">
+        Tip: press ⌘K anywhere to open the command palette.
+      </p>
+    </form>
   );
 }
 `;
@@ -140,6 +178,33 @@ export function Amount() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A documentation search pairs a labeled InputGroup with a Search button and a short shortcut tip.",
+  preview: (
+    <form className="grid w-full max-w-md gap-3 text-left">
+      <Label htmlFor="practice-docs-search">Search documentation</Label>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <InputGroup className="min-w-0 flex-1">
+          <InputGroupAddon>
+            <SearchIcon />
+          </InputGroupAddon>
+          <InputGroupInput
+            id="practice-docs-search"
+            name="q"
+            placeholder="Buttons, forms, tables…"
+          />
+        </InputGroup>
+        <Button type="submit">Search</Button>
+      </div>
+      <p className="text-muted-foreground text-sm">
+        Tip: press ⌘K anywhere to open the command palette.
+      </p>
+    </form>
+  ),
+  code: searchFormCode,
+};
+
 export default async function InputGroupPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/input-group/index.tsx"),
@@ -169,6 +234,7 @@ export default async function InputGroupPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

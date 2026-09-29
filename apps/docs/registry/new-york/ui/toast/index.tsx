@@ -253,7 +253,8 @@ const typeClass: Record<ToastType, string> = {
   success: "border-foreground bg-foreground text-background",
   info: "border-border bg-muted text-foreground",
   warning: "border-foreground bg-background text-foreground",
-  error: "border-destructive bg-destructive text-destructive-foreground",
+  error:
+    "border-destructive/40 bg-destructive/10 text-destructive dark:bg-destructive/20",
   loading: "border-border bg-background text-foreground",
 };
 

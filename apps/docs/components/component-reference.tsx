@@ -22,9 +22,19 @@ export type ComponentExample = {
   language?: CodeLanguage;
 };
 
+/** Realistic multi-component composition shown immediately before API. */
+export type ComponentInPractice = {
+  description: string;
+  preview: ReactNode;
+  code: DemoCode;
+  language?: CodeLanguage;
+};
+
 /**
  * Shared layout for a component documentation page.
- * Optional sections stay out of the page when a component does not need them.
+ *
+ * Order: Preview → Installation → Usage → Examples → In practice → API →
+ * Accessibility → Source. Optional sections stay out when unused.
  */
 export function ComponentReference({
   title,
@@ -34,6 +44,7 @@ export function ComponentReference({
   manual,
   usage,
   examples,
+  inPractice,
   api,
   accessibility,
   source,
@@ -46,6 +57,7 @@ export function ComponentReference({
   manual?: ReactNode;
   usage: string;
   examples?: ComponentExample[];
+  inPractice?: ComponentInPractice;
   api?: ApiRow[];
   accessibility?: ReactNode;
   source: string;
@@ -116,6 +128,21 @@ export function ComponentReference({
               />
             </div>
           ))}
+        </section>
+      ) : null}
+      {inPractice ? (
+        <section className="flex flex-col gap-4">
+          <h2 id="in-practice" className={sectionHeading}>
+            In practice
+          </h2>
+          <p className="text-body text-sm leading-6">
+            {inPractice.description}
+          </p>
+          <ComponentDemo
+            preview={inPractice.preview}
+            code={inPractice.code}
+            language={inPractice.language}
+          />
         </section>
       ) : null}
       {api && api.length > 0 ? (

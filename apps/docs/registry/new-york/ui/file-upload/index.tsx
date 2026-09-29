@@ -268,7 +268,7 @@ export function FileUploadList({
             key={item.id}
             className="border-border flex w-full min-w-0 items-center gap-3 overflow-hidden rounded-md border px-3 py-2 text-sm"
           >
-            <FileStatusIcon status={status} />
+            <FileListIcon status={status} file={item.file} />
             <div className="grid min-w-0 flex-1 gap-0.5">
               <span className="truncate">{item.file.name}</span>
               {status === "uploading" ? (
@@ -331,10 +331,46 @@ function fileStatus(item: FileUploadFile) {
   return "uploading" as const;
 }
 
-function FileStatusIcon({
+function fileKind(
+  file: File,
+): "image" | "audio" | "video" | "document" | "file" {
+  const type = file.type.toLowerCase();
+  const name = file.name.toLowerCase();
+
+  if (
+    type.startsWith("image/") ||
+    /\.(png|jpe?g|gif|webp|svg|avif)$/.test(name)
+  ) {
+    return "image";
+  }
+
+  if (type.startsWith("audio/") || /\.(mp3|wav|ogg|m4a|flac)$/.test(name)) {
+    return "audio";
+  }
+
+  if (type.startsWith("video/") || /\.(mp4|webm|mov|m4v)$/.test(name)) {
+    return "video";
+  }
+
+  if (
+    type.includes("pdf") ||
+    type.includes("document") ||
+    type.includes("msword") ||
+    type.includes("text/") ||
+    /\.(pdf|docx?|rtf|txt|md)$/.test(name)
+  ) {
+    return "document";
+  }
+
+  return "file";
+}
+
+function FileListIcon({
   status,
+  file,
 }: {
   status: "error" | "uploading" | "uploaded" | "pending";
+  file: File;
 }) {
   if (status === "uploading") {
     return (
@@ -347,23 +383,6 @@ function FileStatusIcon({
         strokeWidth="2"
       >
         <path d="M12 3a9 9 0 1 0 9 9" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (status === "uploaded") {
-    return (
-      <svg
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        className="size-4 shrink-0"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="m5 12 5 5L20 7" />
       </svg>
     );
   }
@@ -385,11 +404,96 @@ function FileStatusIcon({
     );
   }
 
+  return <FileTypeIcon kind={fileKind(file)} />;
+}
+
+function FileTypeIcon({
+  kind,
+}: {
+  kind: "image" | "audio" | "video" | "document" | "file";
+}) {
+  const className = "text-muted-foreground size-4 shrink-0";
+
+  if (kind === "image") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className={className}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <circle cx="9" cy="10" r="1.5" />
+        <path d="m21 15-4.5-4.5L9 18" />
+      </svg>
+    );
+  }
+
+  if (kind === "audio") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className={className}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M9 18V5l12-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="18" cy="16" r="3" />
+      </svg>
+    );
+  }
+
+  if (kind === "video") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className={className}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="3" y="6" width="13" height="12" rx="2" />
+        <path d="m16 10 5-3v10l-5-3z" />
+      </svg>
+    );
+  }
+
+  if (kind === "document") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className={className}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+        <path d="M14 3v5h5" />
+        <path d="M9 13h6M9 17h4" />
+      </svg>
+    );
+  }
+
   return (
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
-      className="text-muted-foreground size-4 shrink-0"
+      className={className}
       fill="none"
       stroke="currentColor"
       strokeWidth="2"

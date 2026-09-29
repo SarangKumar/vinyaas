@@ -1,8 +1,12 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { Button } from "@/registry/new-york/ui/button";
 import { Label } from "@/registry/new-york/ui/label";
 import { RangeSlider, Slider } from "@/registry/new-york/ui/slider";
 import type { Metadata } from "next";
@@ -14,6 +18,42 @@ const usage = `import { Slider } from "@/components/ui/slider";
 
 export function Volume() {
   return <Slider aria-label="Volume" defaultValue={40} />;
+}
+`;
+
+const inPracticeSource = `import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+
+export function PlaybackSettings() {
+  return (
+    <form className="grid w-full max-w-md gap-6 text-left">
+      <div className="grid gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="volume">Volume</Label>
+          <span className="text-muted-foreground text-sm">40%</span>
+        </div>
+        <Slider id="volume" defaultValue={40} />
+      </div>
+      <div className="grid gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="brightness">Brightness</Label>
+          <span className="text-muted-foreground text-sm">70%</span>
+        </div>
+        <Slider id="brightness" defaultValue={70} />
+      </div>
+      <div className="grid gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="text-size">Text size</Label>
+          <span className="text-muted-foreground text-sm">16 px</span>
+        </div>
+        <Slider id="text-size" min={12} max={24} step={1} defaultValue={16} />
+      </div>
+      <Button type="submit" className="w-full sm:w-auto">
+        Apply
+      </Button>
+    </form>
+  );
 }
 `;
 
@@ -132,6 +172,46 @@ export function PriceRange() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Playback settings stack labelled sliders for volume, brightness, and text size. Apply saves the values.",
+  preview: (
+    <form className="grid w-full max-w-md gap-6 text-left">
+      <div className="grid gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="practice-volume">Volume</Label>
+          <span className="text-muted-foreground text-sm">40%</span>
+        </div>
+        <Slider id="practice-volume" defaultValue={40} />
+      </div>
+      <div className="grid gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="practice-brightness">Brightness</Label>
+          <span className="text-muted-foreground text-sm">70%</span>
+        </div>
+        <Slider id="practice-brightness" defaultValue={70} />
+      </div>
+      <div className="grid gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="practice-text-size">Text size</Label>
+          <span className="text-muted-foreground text-sm">16 px</span>
+        </div>
+        <Slider
+          id="practice-text-size"
+          min={12}
+          max={24}
+          step={1}
+          defaultValue={16}
+        />
+      </div>
+      <Button type="submit" className="w-full sm:w-auto">
+        Apply
+      </Button>
+    </form>
+  ),
+  code: inPracticeSource,
+};
+
 export default async function SliderPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/slider/index.tsx"),
@@ -161,6 +241,7 @@ export default async function SliderPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <p>

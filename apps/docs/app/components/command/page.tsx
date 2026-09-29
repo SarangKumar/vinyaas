@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
 import { Badge } from "@/registry/new-york/ui/badge";
@@ -30,6 +33,65 @@ export function PageSearch() {
         <CommandGroup heading="Components">
           <CommandItem value="Button">Button</CommandItem>
           <CommandItem value="Input">Input</CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
+`;
+
+const workspaceCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from "@/components/ui/command";
+
+export function WorkspaceSearch() {
+  return (
+    <Command className="w-full max-w-md">
+      <CommandInput
+        aria-label="Search workspace"
+        placeholder="Search projects, people, settings..."
+      />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup heading="Projects">
+          <CommandItem value="vinyaas-web">
+            vinyaas-web
+            <Badge variant="secondary">Production</Badge>
+            <CommandShortcut>↵</CommandShortcut>
+          </CommandItem>
+          <CommandItem value="vinyaas-docs">
+            vinyaas-docs
+            <Badge variant="outline">Preview</Badge>
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="People">
+          <CommandItem value="Ada Lovelace">
+            <Avatar className="size-6">
+              <AvatarFallback>AL</AvatarFallback>
+            </Avatar>
+            Ada Lovelace
+            <Badge>Admin</Badge>
+          </CommandItem>
+          <CommandItem value="Grace Hopper">
+            <Avatar className="size-6">
+              <AvatarFallback>GH</AvatarFallback>
+            </Avatar>
+            Grace Hopper
+            <Badge variant="secondary">Member</Badge>
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Settings">
+          <CommandItem value="Billing">Billing</CommandItem>
+          <CommandItem value="Members">Members</CommandItem>
+          <CommandItem value="Integrations">Integrations</CommandItem>
         </CommandGroup>
       </CommandList>
     </Command>
@@ -223,6 +285,55 @@ export function PeopleSearch() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A workspace search groups projects, people, and settings. Avatars and Badges keep results scannable while the query filters the list.",
+  preview: (
+    <Command className="w-full max-w-md">
+      <CommandInput
+        aria-label="Search workspace"
+        placeholder="Search projects, people, settings..."
+      />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup heading="Projects">
+          <CommandItem value="vinyaas-web">
+            vinyaas-web
+            <Badge variant="secondary">Production</Badge>
+            <CommandShortcut>↵</CommandShortcut>
+          </CommandItem>
+          <CommandItem value="vinyaas-docs">
+            vinyaas-docs
+            <Badge variant="outline">Preview</Badge>
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="People">
+          <CommandItem value="Ada Lovelace">
+            <Avatar className="size-6">
+              <AvatarFallback>AL</AvatarFallback>
+            </Avatar>
+            Ada Lovelace
+            <Badge>Admin</Badge>
+          </CommandItem>
+          <CommandItem value="Grace Hopper">
+            <Avatar className="size-6">
+              <AvatarFallback>GH</AvatarFallback>
+            </Avatar>
+            Grace Hopper
+            <Badge variant="secondary">Member</Badge>
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Settings">
+          <CommandItem value="Billing">Billing</CommandItem>
+          <CommandItem value="Members">Members</CommandItem>
+          <CommandItem value="Integrations">Integrations</CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  ),
+  code: { tsx: workspaceCode, jsx: workspaceCode },
+};
+
 export default async function CommandPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/command/index.tsx"),
@@ -251,6 +362,7 @@ export default async function CommandPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

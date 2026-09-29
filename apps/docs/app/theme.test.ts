@@ -37,7 +37,7 @@ describe("docs theme", () => {
     expect(css).toContain("--muted-foreground: oklch(0.552 0.016 285.938)");
     expect(css).toContain("--accent: oklch(0.967 0.001 286.375)");
     expect(css).toContain("--accent-foreground: oklch(0.21 0.006 285.885)");
-    expect(css).toContain("--destructive: oklch(0.577 0.245 27.325)");
+    expect(css).toContain("--destructive: oklch(0.52 0.17 27)");
     expect(css).toContain("--destructive-foreground: oklch(0.985 0 0)");
     expect(css).toContain("--card: oklch(1 0 0)");
     expect(css).toContain("--card-foreground: oklch(0.141 0.005 285.823)");

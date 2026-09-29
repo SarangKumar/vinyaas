@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import {
   Typography,
@@ -51,6 +54,36 @@ const api: ApiRow[] = [
     description: "The text or nested content for that element.",
   },
 ];
+
+const documentCode = `import {
+  Typography,
+  TypographyH2,
+  TypographyLead,
+  TypographyMuted,
+  TypographyP,
+} from "@/components/ui/typography";
+
+export function InstallingComponents() {
+  return (
+    <Typography className="typeset-docs max-w-md">
+      <TypographyH2>Installing components</TypographyH2>
+      <TypographyLead>
+        Copy source into the repository, then edit it like any other file.
+      </TypographyLead>
+      <TypographyP>
+        Run <code>vinyaas add button</code> after <code>vinyaas init</code>.
+        The CLI writes the file under <code>components/ui</code>.
+      </TypographyP>
+      <ol className="text-body list-decimal pl-5 text-base leading-7 [&>li]:mt-2">
+        <li>Initialize the project</li>
+        <li>Add the components you need</li>
+        <li>Commit the installed source</li>
+      </ol>
+      <TypographyMuted>Updated for v1.0.0</TypographyMuted>
+    </Typography>
+  );
+}
+`;
 
 const examples: ComponentExample[] = [
   {
@@ -155,45 +188,6 @@ const examples: ComponentExample[] = [
 </Typography>`,
   },
   {
-    id: "document",
-    title: "Long-form document",
-    description:
-      "Headings, lead, body, ordered list, inline code, and muted metadata.",
-    preview: (
-      <Typography className="typeset-docs max-w-md text-left">
-        <TypographyH2>Installing components</TypographyH2>
-        <TypographyLead>
-          Copy source into the repository, then edit it like any other file.
-        </TypographyLead>
-        <TypographyP>
-          Run <code>vinyaas add button</code> after <code>vinyaas init</code>.
-          The CLI writes the file under <code>components/ui</code>.
-        </TypographyP>
-        <ol className="text-body list-decimal pl-5 text-base leading-7 [&>li]:mt-2">
-          <li>Initialize the project</li>
-          <li>Add the components you need</li>
-          <li>Commit the installed source</li>
-        </ol>
-        <TypographyMuted>Updated for v1.0.0</TypographyMuted>
-      </Typography>
-    ),
-    code: `<Typography className="typeset-docs">
-  <TypographyH2>Installing components</TypographyH2>
-  <TypographyLead>
-    Copy source into the repository, then edit it like any other file.
-  </TypographyLead>
-  <TypographyP>
-    Run <code>vinyaas add button</code> after <code>vinyaas init</code>.
-  </TypographyP>
-  <ol className="list-decimal pl-5">
-    <li>Initialize the project</li>
-    <li>Add the components you need</li>
-    <li>Commit the installed source</li>
-  </ol>
-  <TypographyMuted>Updated for v1.0.0</TypographyMuted>
-</Typography>`,
-  },
-  {
     id: "customize",
     title: "Customize with CSS variables",
     description:
@@ -236,6 +230,30 @@ export function DocsCopy() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A long-form doc excerpt uses headings, lead, body, an ordered list, and muted metadata.",
+  preview: (
+    <Typography className="typeset-docs max-w-md text-left">
+      <TypographyH2>Installing components</TypographyH2>
+      <TypographyLead>
+        Copy source into the repository, then edit it like any other file.
+      </TypographyLead>
+      <TypographyP>
+        Run <code>vinyaas add button</code> after <code>vinyaas init</code>. The
+        CLI writes the file under <code>components/ui</code>.
+      </TypographyP>
+      <ol className="text-body list-decimal pl-5 text-base leading-7 [&>li]:mt-2">
+        <li>Initialize the project</li>
+        <li>Add the components you need</li>
+        <li>Commit the installed source</li>
+      </ol>
+      <TypographyMuted>Updated for v1.0.0</TypographyMuted>
+    </Typography>
+  ),
+  code: documentCode,
+};
+
 export default async function TypographyPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/typography/index.tsx"),
@@ -264,6 +282,7 @@ export default async function TypographyPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

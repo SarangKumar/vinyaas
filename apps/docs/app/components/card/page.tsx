@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
 import { Badge } from "@/registry/new-york/ui/badge";
@@ -325,48 +328,6 @@ export function ActivityCard() {
 `,
   },
   {
-    id: "project",
-    title: "Project",
-    description: "Status, a progress bar, and project actions in a menu.",
-    preview: <ProjectCardDemo />,
-    code: `import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Progress } from "@/components/ui/progress";
-
-export function ProjectCard() {
-  return (
-    <Card>
-      <CardHeader>
-        <div>
-          <CardTitle>Production Dashboard</CardTitle>
-          <CardDescription>Updated 2 hours ago.</CardDescription>
-        </div>
-        <CardAction>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant="ghost" size="icon-sm" aria-label="Project actions">⋮</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Open project</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </CardAction>
-      </CardHeader>
-      <CardContent>
-        <Badge variant="secondary">On track</Badge>
-        <Progress aria-label="Project progress" value={72} />
-      </CardContent>
-      <CardFooter>
-        <Button variant="outline">View project</Button>
-      </CardFooter>
-    </Card>
-  );
-}
-`,
-  },
-  {
     id: "security",
     title: "Security",
     description:
@@ -529,6 +490,74 @@ export function CompactCard() {
   },
 ];
 
+const projectCode = `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
+
+export function ProjectCard() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <div>
+          <CardTitle>Production Dashboard</CardTitle>
+          <CardDescription>
+            Updated 2 hours ago by Sarang Kumar.
+          </CardDescription>
+        </div>
+        <CardAction>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Project actions"
+              >
+                ⋮
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Open project</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive">Archive</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="grid gap-2">
+        <Badge variant="secondary">On track</Badge>
+        <Progress aria-label="Project progress" value={72} />
+      </CardContent>
+      <CardFooter>
+        <Button variant="outline">View project</Button>
+      </CardFooter>
+    </Card>
+  );
+}
+`;
+
+const inPractice: ComponentInPractice = {
+  description:
+    "A project summary card with status, progress, an actions menu, and a primary view action.",
+  preview: <ProjectCardDemo />,
+  code: projectCode,
+};
+
 export default async function CardPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/card/index.tsx"),
@@ -557,6 +586,7 @@ export default async function CardPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <p>
@@ -569,11 +599,33 @@ export default async function CardPage() {
     >
       <Card className="w-full max-w-sm text-left">
         <CardHeader>
-          <CardTitle>Sarang Kumar</CardTitle>
-          <CardDescription>Developer.</CardDescription>
+          <div className="flex min-w-0 items-start gap-3">
+            <Avatar>
+              <AvatarFallback>SK</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <CardTitle>Sarang Kumar</CardTitle>
+              <CardDescription>
+                Developer. Building accessible UI that you install as source.
+              </CardDescription>
+            </div>
+          </div>
+          <CardAction>
+            <Badge>Verified</Badge>
+          </CardAction>
         </CardHeader>
-        <CardFooter>
-          <Button>Follow</Button>
+        <CardContent className="grid gap-2">
+          <Label htmlFor="card-preview-location">Location</Label>
+          <Input id="card-preview-location" defaultValue="Bengaluru" />
+          <p className="text-muted-foreground text-xs">
+            Status · Available for collaboration
+          </p>
+        </CardContent>
+        <CardFooter className="flex-col gap-2 sm:flex-row">
+          <Button variant="outline" className="w-full sm:w-auto">
+            Message
+          </Button>
+          <Button className="w-full sm:w-auto">Follow</Button>
         </CardFooter>
       </Card>
     </ComponentReference>

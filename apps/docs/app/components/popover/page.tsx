@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Button } from "@/registry/new-york/ui/button";
 import {
@@ -154,14 +157,6 @@ export function Details() {
 `,
   },
   {
-    id: "profile-settings",
-    title: "Profile settings",
-    description:
-      "A settings panel combines a badge, fields, switches, and a save button. Long content scrolls inside the panel.",
-    preview: <ProfileSettings />,
-    code: profileSource,
-  },
-  {
     id: "alignment",
     title: "Alignment",
     description:
@@ -203,6 +198,13 @@ export function AlignedDetails() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A profile settings panel combines a plan Badge, fields, Switches, and a save button. Long content scrolls inside the panel.",
+  preview: <ProfileSettings />,
+  code: { tsx: profileSource, jsx: profileSource },
+};
+
 export default async function PopoverPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/popover/index.tsx"),
@@ -239,6 +241,7 @@ export default async function PopoverPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

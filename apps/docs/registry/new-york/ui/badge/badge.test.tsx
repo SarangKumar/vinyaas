@@ -19,10 +19,7 @@ describe("Badge", () => {
     expect(badge()).toHaveClass("bg-secondary", "text-secondary-foreground");
 
     rerender(<Badge variant="destructive">Pro</Badge>);
-    expect(badge()).toHaveClass(
-      "bg-destructive",
-      "text-destructive-foreground",
-    );
+    expect(badge()).toHaveClass("bg-destructive/10", "text-destructive");
 
     rerender(<Badge variant="outline">Pro</Badge>);
     expect(badge()).toHaveClass("border", "text-foreground");

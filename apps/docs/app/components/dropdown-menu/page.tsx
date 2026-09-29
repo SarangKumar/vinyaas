@@ -1,13 +1,17 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import {
   AccountMenu,
   CardActionsMenu,
   ProjectMenu,
   TableRowMenu,
+  TeamRowMenu,
   UserMenu,
 } from "./dropdown-menu-demos";
 import type { Metadata } from "next";
@@ -34,6 +38,56 @@ export function Actions() {
         <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+`;
+
+const teamRowCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+export function TeamRowMenu() {
+  return (
+    <div className="border-border flex w-full max-w-md items-center gap-3 rounded-lg border p-3">
+      <Avatar className="size-9">
+        <AvatarFallback>AS</AvatarFallback>
+      </Avatar>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">Aarav Sharma</p>
+        <p className="text-muted-foreground truncate text-xs">
+          aarav@vinyaas.dev
+        </p>
+      </div>
+      <Badge variant="secondary">Admin</Badge>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Team actions for Aarav Sharma"
+          >
+            ⋮
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>View profile</DropdownMenuItem>
+          <DropdownMenuItem>Change role</DropdownMenuItem>
+          <DropdownMenuItem>Resend invite</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive">
+            Remove from team
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }
 `;
@@ -79,6 +133,20 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
+    id: "project",
+    title: "Project actions",
+    description: "Open, Rename, Move, Share, and Archive for a project.",
+    preview: <ProjectMenu />,
+    code: usage,
+  },
+  {
+    id: "user",
+    title: "User actions",
+    description: "View profile, Message, Copy email, and Block.",
+    preview: <UserMenu />,
+    code: usage,
+  },
+  {
     id: "account",
     title: "Account menu",
     description:
@@ -101,21 +169,14 @@ const examples: ComponentExample[] = [
     preview: <TableRowMenu />,
     code: usage,
   },
-  {
-    id: "project",
-    title: "Project actions",
-    description: "Open, Rename, Move, Share, and Archive for a project.",
-    preview: <ProjectMenu />,
-    code: usage,
-  },
-  {
-    id: "user",
-    title: "User actions",
-    description: "View profile, Message, Copy email, and Block.",
-    preview: <UserMenu />,
-    code: usage,
-  },
 ];
+
+const inPractice: ComponentInPractice = {
+  description:
+    "A team member row pairs Avatar, a role Badge, and a menu for profile, role, invite, and removal.",
+  preview: <TeamRowMenu />,
+  code: { tsx: teamRowCode, jsx: teamRowCode },
+};
 
 export default async function DropdownMenuPage() {
   const source = await readFile(
@@ -146,6 +207,7 @@ export default async function DropdownMenuPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

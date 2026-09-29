@@ -1,13 +1,19 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Separator } from "@/registry/new-york/ui/separator";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -49,6 +55,12 @@ const api: ApiRow[] = [
     description: "Merged with cn on Avatar, AvatarImage, and AvatarFallback.",
   },
 ];
+
+const members = [
+  ["Sarang Kumar", "SK", "Owner", "sarang@example.com"],
+  ["Ada Lovelace", "AL", "Editor", "ada@example.com"],
+  ["Priya Shah", "PS", "Viewer", "priya@example.com"],
+] as const;
 
 const examples: ComponentExample[] = [
   {
@@ -115,6 +127,83 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const teamCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+
+const members = [
+  ["Sarang Kumar", "SK", "Owner", "sarang@example.com"],
+  ["Ada Lovelace", "AL", "Editor", "ada@example.com"],
+  ["Priya Shah", "PS", "Viewer", "priya@example.com"],
+];
+
+export function TeamHeader() {
+  return (
+    <div className="w-full max-w-md text-left">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-medium">Design system</h3>
+          <p className="text-muted-foreground text-sm">
+            3 people with access to this project.
+          </p>
+        </div>
+        <Button size="sm">Invite</Button>
+      </div>
+      <Separator className="my-4" />
+      <ul className="grid gap-3">
+        {members.map(([name, initials, role, email]) => (
+          <li key={email} className="flex items-center gap-3">
+            <Avatar>
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">{name}</p>
+              <p className="text-muted-foreground truncate text-xs">{email}</p>
+            </div>
+            <Badge variant="outline">{role}</Badge>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+`;
+
+const inPractice: ComponentInPractice = {
+  description:
+    "A team header pairs Avatar rows with role badges and an Invite action.",
+  preview: (
+    <div className="w-full max-w-md text-left">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-medium">Design system</h3>
+          <p className="text-muted-foreground text-sm">
+            3 people with access to this project.
+          </p>
+        </div>
+        <Button size="sm">Invite</Button>
+      </div>
+      <Separator className="my-4" />
+      <ul className="grid gap-3">
+        {members.map(([name, initials, role, email]) => (
+          <li key={email} className="flex items-center gap-3">
+            <Avatar>
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">{name}</p>
+              <p className="text-muted-foreground truncate text-xs">{email}</p>
+            </div>
+            <Badge variant="outline">{role}</Badge>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ),
+  code: teamCode,
+};
+
 export default async function AvatarPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/avatar/index.tsx"),
@@ -149,6 +238,7 @@ export default async function AvatarPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

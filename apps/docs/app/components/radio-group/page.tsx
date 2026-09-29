@@ -1,8 +1,12 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { Button } from "@/registry/new-york/ui/button";
 import { Label } from "@/registry/new-york/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group";
 import type { Metadata } from "next";
@@ -29,6 +33,66 @@ export function SpacingField() {
         <Label htmlFor="r3">Compact</Label>
       </div>
     </RadioGroup>
+  );
+}
+`;
+
+const inPracticeSource = `import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+export function CheckoutOptions() {
+  return (
+    <form className="grid w-full max-w-md gap-6 text-left">
+      <fieldset className="grid gap-3">
+        <legend className="text-foreground text-sm font-medium">Plan</legend>
+        <RadioGroup defaultValue="pro" name="plan">
+          <div className="flex items-start gap-2">
+            <RadioGroupItem value="starter" id="plan-starter" className="mt-0.5" />
+            <div className="grid gap-1">
+              <Label htmlFor="plan-starter">Starter</Label>
+              <p className="text-muted-foreground text-sm leading-6">
+                $12 / month · one workspace
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2">
+            <RadioGroupItem value="pro" id="plan-pro" className="mt-0.5" />
+            <div className="grid gap-1">
+              <Label htmlFor="plan-pro">Pro</Label>
+              <p className="text-muted-foreground text-sm leading-6">
+                $29 / month · unlimited members
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2">
+            <RadioGroupItem value="business" id="plan-business" className="mt-0.5" />
+            <div className="grid gap-1">
+              <Label htmlFor="plan-business">Business</Label>
+              <p className="text-muted-foreground text-sm leading-6">
+                $79 / month · SSO and audit log
+              </p>
+            </div>
+          </div>
+        </RadioGroup>
+      </fieldset>
+      <fieldset className="grid gap-3">
+        <legend className="text-foreground text-sm font-medium">Shipping</legend>
+        <RadioGroup defaultValue="standard" name="shipping">
+          <div className="flex items-center gap-2">
+            <RadioGroupItem value="standard" id="ship-standard" />
+            <Label htmlFor="ship-standard">Standard · 5–7 days</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <RadioGroupItem value="express" id="ship-express" />
+            <Label htmlFor="ship-express">Express · 2 days</Label>
+          </div>
+        </RadioGroup>
+      </fieldset>
+      <Button type="submit" className="w-full sm:w-auto">
+        Continue
+      </Button>
+    </form>
   );
 }
 `;
@@ -147,6 +211,78 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Plan and shipping are separate radio groups. Continue submits the selection.",
+  preview: (
+    <form className="grid w-full max-w-md gap-6 text-left">
+      <fieldset className="grid gap-3">
+        <legend className="text-foreground text-sm font-medium">Plan</legend>
+        <RadioGroup defaultValue="pro" name="practice-plan">
+          <div className="flex items-start gap-2">
+            <RadioGroupItem
+              value="starter"
+              id="practice-plan-starter"
+              className="mt-0.5"
+            />
+            <div className="grid gap-1">
+              <Label htmlFor="practice-plan-starter">Starter</Label>
+              <p className="text-muted-foreground text-sm leading-6">
+                $12 / month · one workspace
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2">
+            <RadioGroupItem
+              value="pro"
+              id="practice-plan-pro"
+              className="mt-0.5"
+            />
+            <div className="grid gap-1">
+              <Label htmlFor="practice-plan-pro">Pro</Label>
+              <p className="text-muted-foreground text-sm leading-6">
+                $29 / month · unlimited members
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2">
+            <RadioGroupItem
+              value="business"
+              id="practice-plan-business"
+              className="mt-0.5"
+            />
+            <div className="grid gap-1">
+              <Label htmlFor="practice-plan-business">Business</Label>
+              <p className="text-muted-foreground text-sm leading-6">
+                $79 / month · SSO and audit log
+              </p>
+            </div>
+          </div>
+        </RadioGroup>
+      </fieldset>
+      <fieldset className="grid gap-3">
+        <legend className="text-foreground text-sm font-medium">
+          Shipping
+        </legend>
+        <RadioGroup defaultValue="standard" name="practice-shipping">
+          <div className="flex items-center gap-2">
+            <RadioGroupItem value="standard" id="practice-ship-standard" />
+            <Label htmlFor="practice-ship-standard">Standard · 5–7 days</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <RadioGroupItem value="express" id="practice-ship-express" />
+            <Label htmlFor="practice-ship-express">Express · 2 days</Label>
+          </div>
+        </RadioGroup>
+      </fieldset>
+      <Button type="submit" className="w-full sm:w-auto">
+        Continue
+      </Button>
+    </form>
+  ),
+  code: inPracticeSource,
+};
+
 export default async function RadioGroupPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/radio-group/index.tsx"),
@@ -177,6 +313,7 @@ export default async function RadioGroupPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

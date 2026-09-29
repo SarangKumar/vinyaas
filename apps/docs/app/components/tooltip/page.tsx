@@ -1,12 +1,16 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import {
   BasicTooltip,
   KeyboardTooltip,
   PositionTooltips,
+  ToolbarTooltips,
 } from "./tooltip-demos";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
@@ -21,6 +25,46 @@ export function Hint() {
     <Tooltip content="Saved locally">
       <Button type="button">Hint</Button>
     </Tooltip>
+  );
+}
+`;
+
+const toolbarCode = `import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
+
+export function FormattingToolbar() {
+  return (
+    <div
+      role="toolbar"
+      aria-label="Formatting"
+      className="border-border bg-background flex flex-wrap items-center gap-1 rounded-lg border p-1"
+    >
+      <Tooltip content="Undo">
+        <Button type="button" variant="ghost" size="icon-sm" aria-label="Undo">
+          Undo
+        </Button>
+      </Tooltip>
+      <Tooltip content="Bold">
+        <Button type="button" variant="ghost" size="icon-sm" aria-label="Bold">
+          Bold
+        </Button>
+      </Tooltip>
+      <Tooltip content="Italic">
+        <Button type="button" variant="ghost" size="icon-sm" aria-label="Italic">
+          Italic
+        </Button>
+      </Tooltip>
+      <Tooltip content="Insert link">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Insert link"
+        >
+          Link
+        </Button>
+      </Tooltip>
+    </div>
   );
 }
 `;
@@ -103,6 +147,13 @@ export function Placements() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Icon-only toolbar controls keep visible labels in Tooltips. Each button still has an accessible name.",
+  preview: <ToolbarTooltips />,
+  code: { tsx: toolbarCode, jsx: toolbarCode },
+};
+
 export default async function TooltipPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/tooltip/index.tsx"),
@@ -137,6 +188,7 @@ export default async function TooltipPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

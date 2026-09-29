@@ -1,10 +1,19 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Button } from "@/registry/new-york/ui/button";
-import { Card } from "@/registry/new-york/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york/ui/card";
 import { Input } from "@/registry/new-york/ui/input";
 import { Label } from "@/registry/new-york/ui/label";
 import { Switch } from "@/registry/new-york/ui/switch";
@@ -164,6 +173,150 @@ function BellIcon() {
   );
 }
 
+function SettingsTabs() {
+  return (
+    <Card className="w-full max-w-md text-left">
+      <CardHeader>
+        <CardTitle>Settings</CardTitle>
+        <CardDescription>
+          Manage your profile, notifications, and security.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="account">
+          <TabsList>
+            <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="security">Security</TabsTrigger>
+          </TabsList>
+          <TabsContent value="account" className="flex flex-col gap-3 pt-1">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="tabs-display-name">Display name</Label>
+              <Input id="tabs-display-name" defaultValue="Sarang Kumar" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="tabs-email">Email</Label>
+              <Input
+                id="tabs-email"
+                type="email"
+                defaultValue="sarang@example.com"
+              />
+            </div>
+            <Button className="self-start">Save changes</Button>
+          </TabsContent>
+          <TabsContent
+            value="notifications"
+            className="flex flex-col gap-3 pt-1"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="tabs-email-alerts">Email digests</Label>
+              <Switch id="tabs-email-alerts" defaultChecked />
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="tabs-push">Push notifications</Label>
+              <Switch id="tabs-push" />
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="tabs-mentions">Mentions only</Label>
+              <Switch id="tabs-mentions" defaultChecked />
+            </div>
+            <Button className="self-start" variant="outline">
+              Update preferences
+            </Button>
+          </TabsContent>
+          <TabsContent value="security" className="flex flex-col gap-3 pt-1">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="tabs-password">New password</Label>
+              <Input id="tabs-password" type="password" />
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="tabs-2fa">Two-factor authentication</Label>
+              <Switch id="tabs-2fa" defaultChecked />
+            </div>
+            <Button className="self-start">Update security</Button>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+}
+
+const settingsCode = `import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+
+export function AccountSettings() {
+  return (
+    <Card className="w-full max-w-md">
+      <CardHeader>
+        <CardTitle>Settings</CardTitle>
+        <CardDescription>
+          Manage your profile, notifications, and security.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="account">
+          <TabsList>
+            <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="security">Security</TabsTrigger>
+          </TabsList>
+          <TabsContent value="account" className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="display-name">Display name</Label>
+              <Input id="display-name" defaultValue="Sarang Kumar" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" defaultValue="sarang@example.com" />
+            </div>
+            <Button className="self-start">Save changes</Button>
+          </TabsContent>
+          <TabsContent value="notifications" className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="email-alerts">Email digests</Label>
+              <Switch id="email-alerts" defaultChecked />
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="push">Push notifications</Label>
+              <Switch id="push" />
+            </div>
+            <Button className="self-start" variant="outline">
+              Update preferences
+            </Button>
+          </TabsContent>
+          <TabsContent value="security" className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="password">New password</Label>
+              <Input id="password" type="password" />
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="two-factor">Two-factor authentication</Label>
+              <Switch id="two-factor" defaultChecked />
+            </div>
+            <Button className="self-start">Update security</Button>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+}
+`;
+
 const examples: ComponentExample[] = [
   {
     id: "basic",
@@ -184,81 +337,6 @@ const examples: ComponentExample[] = [
       </Tabs>
     ),
     code: usage,
-  },
-  {
-    id: "settings",
-    title: "Settings",
-    description: "Each panel can hold labeled fields and actions.",
-    preview: (
-      <Tabs defaultValue="profile" className="w-full max-w-md text-left">
-        <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-        </TabsList>
-        <TabsContent value="profile" className="flex flex-col gap-3 pt-1">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="tabs-display-name">Display name</Label>
-            <Input id="tabs-display-name" defaultValue="Sarang Kumar" />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="tabs-email">Email</Label>
-            <Input
-              id="tabs-email"
-              type="email"
-              defaultValue="sarang@example.com"
-            />
-          </div>
-          <Button className="self-start">Save changes</Button>
-        </TabsContent>
-        <TabsContent value="security" className="flex flex-col gap-3 pt-1">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="tabs-password">New password</Label>
-            <Input id="tabs-password" type="password" />
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="tabs-2fa">Two-factor authentication</Label>
-            <Switch id="tabs-2fa" defaultChecked />
-          </div>
-          <Button className="self-start">Update security</Button>
-        </TabsContent>
-      </Tabs>
-    ),
-    code: `import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-
-export function SettingsTabs() {
-  return (
-    <Tabs defaultValue="profile">
-      <TabsList>
-        <TabsTrigger value="profile">Profile</TabsTrigger>
-        <TabsTrigger value="security">Security</TabsTrigger>
-      </TabsList>
-      <TabsContent value="profile" className="flex flex-col gap-3">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="display-name">Display name</Label>
-          <Input id="display-name" defaultValue="Sarang Kumar" />
-        </div>
-        <Button className="self-start">Save changes</Button>
-      </TabsContent>
-      <TabsContent value="security" className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-3">
-          <Label htmlFor="two-factor">Two-factor authentication</Label>
-          <Switch id="two-factor" defaultChecked />
-        </div>
-        <Button className="self-start">Update security</Button>
-      </TabsContent>
-    </Tabs>
-  );
-}
-`,
   },
   {
     id: "project",
@@ -508,6 +586,13 @@ export function CompactTabs() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Settings live in a Card. Three tabs hold profile fields, notification switches, and security controls.",
+  preview: <SettingsTabs />,
+  code: settingsCode,
+};
+
 export default async function TabsPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/tabs/index.tsx"),
@@ -518,9 +603,25 @@ export default async function TabsPage() {
     <ComponentReference
       title="Tabs"
       description="A set of panels that share one visible view at a time."
-      install="tabs"
+      overview={
+        <p>
+          Tabs keeps one panel visible at a time. Triggers live in TabsList;
+          each TabsContent matches a trigger value. Selection can be controlled
+          or uncontrolled.
+        </p>
+      }
+      install="vinyaas add tabs"
+      manual={
+        <p>
+          After <code>vinyaas init</code>, place the source at{" "}
+          <code>components/ui/tabs/index.tsx</code>. It imports <code>cn</code>{" "}
+          from <code>@/lib/utils</code>. The project also needs{" "}
+          <code>clsx</code> and <code>tailwind-merge</code>.
+        </p>
+      }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

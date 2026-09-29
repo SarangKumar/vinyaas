@@ -1,8 +1,12 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { Button } from "@/registry/new-york/ui/button";
 import { Checkbox } from "@/registry/new-york/ui/checkbox";
 import { Label } from "@/registry/new-york/ui/label";
 import type { Metadata } from "next";
@@ -19,6 +23,62 @@ export function TermsField() {
       <Checkbox id="terms" name="terms" value="accepted" />
       <Label htmlFor="terms">Accept terms and conditions</Label>
     </div>
+  );
+}
+`;
+
+const inPracticeSource = `import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+
+export function NotificationPreferences() {
+  return (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <p className="text-muted-foreground text-sm leading-6">
+        Choose which workspace email you want to receive.
+      </p>
+      <div className="grid gap-3">
+        <div className="flex items-start gap-2">
+          <Checkbox id="product-updates" name="product-updates" defaultChecked />
+          <div className="grid gap-1">
+            <Label htmlFor="product-updates">Product updates</Label>
+            <p className="text-muted-foreground text-sm leading-6">
+              Release notes and occasional announcements.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <Checkbox id="billing" name="billing" defaultChecked />
+          <div className="grid gap-1">
+            <Label htmlFor="billing">Billing</Label>
+            <p className="text-muted-foreground text-sm leading-6">
+              Invoices, receipts, and payment failures.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <Checkbox id="security" name="security" defaultChecked />
+          <div className="grid gap-1">
+            <Label htmlFor="security">Security alerts</Label>
+            <p className="text-muted-foreground text-sm leading-6">
+              Sign-ins, password changes, and 2FA events.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <Checkbox id="marketing" name="marketing" />
+          <div className="grid gap-1">
+            <Label htmlFor="marketing">Marketing</Label>
+            <p className="text-muted-foreground text-sm leading-6">
+              Tips, webinars, and partner offers.
+            </p>
+          </div>
+        </div>
+      </div>
+      <Button type="submit" className="w-full sm:w-auto">
+        Save preferences
+      </Button>
+    </form>
   );
 }
 `;
@@ -122,6 +182,64 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Independent notification channels use checkboxes. Save writes the selection.",
+  preview: (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <p className="text-muted-foreground text-sm leading-6">
+        Choose which workspace email you want to receive.
+      </p>
+      <div className="grid gap-3">
+        <div className="flex items-start gap-2">
+          <Checkbox
+            id="practice-product-updates"
+            name="product-updates"
+            defaultChecked
+          />
+          <div className="grid gap-1">
+            <Label htmlFor="practice-product-updates">Product updates</Label>
+            <p className="text-muted-foreground text-sm leading-6">
+              Release notes and occasional announcements.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <Checkbox id="practice-billing" name="billing" defaultChecked />
+          <div className="grid gap-1">
+            <Label htmlFor="practice-billing">Billing</Label>
+            <p className="text-muted-foreground text-sm leading-6">
+              Invoices, receipts, and payment failures.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <Checkbox id="practice-security" name="security" defaultChecked />
+          <div className="grid gap-1">
+            <Label htmlFor="practice-security">Security alerts</Label>
+            <p className="text-muted-foreground text-sm leading-6">
+              Sign-ins, password changes, and 2FA events.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <Checkbox id="practice-marketing" name="marketing" />
+          <div className="grid gap-1">
+            <Label htmlFor="practice-marketing">Marketing</Label>
+            <p className="text-muted-foreground text-sm leading-6">
+              Tips, webinars, and partner offers.
+            </p>
+          </div>
+        </div>
+      </div>
+      <Button type="submit" className="w-full sm:w-auto">
+        Save preferences
+      </Button>
+    </form>
+  ),
+  code: inPracticeSource,
+};
+
 export default async function CheckboxPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/checkbox/index.tsx"),
@@ -152,6 +270,7 @@ export default async function CheckboxPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

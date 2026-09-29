@@ -1,18 +1,18 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import {
   ActionToastDemo,
   DefaultToastDemo,
-  ErrorToastDemo,
-  InfoToastDemo,
-  LoadingToastDemo,
+  FormSaveToastDemo,
   MultipleToastDemo,
   PromiseToastDemo,
-  SuccessToastDemo,
-  WarningToastDemo,
+  TypesToastDemo,
 } from "./toast-demos";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
@@ -30,6 +30,106 @@ export function Notices() {
         Save
       </Button>
     </>
+  );
+}
+`;
+
+const formSaveCode = `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast, Toaster } from "@/components/ui/toast";
+
+export function SaveWorkspaceProfile() {
+  return (
+    <>
+      <Toaster />
+      <form
+        className="grid w-full max-w-sm gap-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          toast.add({
+            title: "Changes saved",
+            description: "Your workspace profile is up to date.",
+            type: "success",
+          });
+        }}
+      >
+        <div className="grid gap-2">
+          <Label htmlFor="display-name">Display name</Label>
+          <Input id="display-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="workspace">Workspace</Label>
+          <Input id="workspace" defaultValue="vinyaas" />
+        </div>
+        <Button type="submit">Save changes</Button>
+      </form>
+    </>
+  );
+}
+`;
+
+const typesCode = `import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
+
+export function ToastTypes() {
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => toast.add({ title: "Note saved" })}
+      >
+        Default
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() =>
+          toast.add({
+            title: "Changes saved",
+            description: "The profile is up to date.",
+            type: "success",
+          })
+        }
+      >
+        Success
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => toast.add({ title: "Draft stored", type: "info" })}
+      >
+        Info
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => toast.add({ title: "Unsaved changes", type: "warning" })}
+      >
+        Warning
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() =>
+          toast.add({
+            title: "Could not save",
+            description: "Check the connection and try again.",
+            type: "error",
+          })
+        }
+      >
+        Error
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => toast.add({ title: "Uploading", type: "loading" })}
+      >
+        Loading
+      </Button>
+    </div>
   );
 }
 `;
@@ -73,87 +173,12 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
-    id: "default",
-    title: "Default",
-    description: "toast.add creates a toast. Render Toaster once.",
-    preview: <DefaultToastDemo />,
-    code: `toast.add({ title: "Note saved" })`,
-  },
-  {
-    id: "success",
-    title: "Success",
+    id: "types",
+    title: "Types",
     description:
-      "A successful save uses the success status, an icon, and a description.",
-    preview: <SuccessToastDemo />,
-    code: `import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/toast";
-
-export function SaveProfile() {
-  return (
-    <Button
-      type="button"
-      onClick={() =>
-        toast.add({
-          title: "Changes saved",
-          description: "The profile is up to date.",
-          type: "success",
-        })
-      }
-    >
-      Save profile
-    </Button>
-  );
-}
-`,
-  },
-  {
-    id: "info",
-    title: "Info",
-    description: "Info uses the muted surface.",
-    preview: <InfoToastDemo />,
-    code: `toast.add({ title: "Draft stored", type: "info" })`,
-  },
-  {
-    id: "warning",
-    title: "Warning",
-    description: "Warning keeps the default surface and a stronger border.",
-    preview: <WarningToastDemo />,
-    code: `toast.add({ title: "Unsaved changes", type: "warning" })`,
-  },
-  {
-    id: "error",
-    title: "Error",
-    description: "An error toast is an alert with a destructive treatment.",
-    preview: <ErrorToastDemo />,
-    code: `import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/toast";
-
-export function SaveAndFail() {
-  return (
-    <Button
-      type="button"
-      variant="destructive"
-      onClick={() =>
-        toast.add({
-          title: "Could not save",
-          description: "Check the connection and try again.",
-          type: "error",
-        })
-      }
-    >
-      Save and fail
-    </Button>
-  );
-}
-`,
-  },
-  {
-    id: "loading",
-    title: "Loading",
-    description:
-      "A loading toast stays until update, dismiss, or a settled promise.",
-    preview: <LoadingToastDemo />,
-    code: `toast.add({ title: "Uploading", type: "loading" })`,
+      "Default, success, info, warning, error, and loading. Each button fires one type. Render Toaster once.",
+    preview: <TypesToastDemo />,
+    code: { tsx: typesCode, jsx: typesCode },
   },
   {
     id: "action",
@@ -206,6 +231,13 @@ toast.add({ title: "Second", type: "info" })`,
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A short workspace form submits and fires a success Toast. Render Toaster once near the root of the page.",
+  preview: <FormSaveToastDemo />,
+  code: { tsx: formSaveCode, jsx: formSaveCode },
+};
+
 export default async function ToastPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/toast/index.tsx"),
@@ -243,6 +275,7 @@ export default async function ToastPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

@@ -186,6 +186,9 @@ describe("Toast", () => {
       toast.add({ title: "Could not save", type: "error" });
     });
 
-    expect(screen.getByRole("alert")).toHaveTextContent("Could not save");
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent("Could not save");
+    expect(alert).toHaveClass("bg-destructive/10", "text-destructive");
+    expect(alert).not.toHaveClass("bg-destructive");
   });
 });

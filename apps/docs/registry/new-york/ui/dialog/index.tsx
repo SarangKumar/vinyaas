@@ -357,23 +357,19 @@ export function DialogDescription({
 }
 
 export function DialogClose({
-  className,
-  ...props
-}: React.ComponentProps<"button">) {
+  children,
+}: {
+  children: React.ReactElement<TriggerElementProps>;
+}) {
   const { setOpen } = useDialog();
 
-  return (
-    <button
-      type="button"
-      className={cn(className)}
-      {...props}
-      onClick={(event) => {
-        props.onClick?.(event);
+  return React.cloneElement(children, {
+    onClick: (event: React.MouseEvent<HTMLElement>) => {
+      children.props.onClick?.(event);
 
-        if (!event.defaultPrevented) {
-          setOpen(false);
-        }
-      }}
-    />
-  );
+      if (!event.defaultPrevented) {
+        setOpen(false);
+      }
+    },
+  });
 }

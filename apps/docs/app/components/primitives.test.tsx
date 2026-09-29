@@ -6,6 +6,7 @@ import { DocsStoreProvider } from "@/lib/store/provider";
 
 import AvatarPage from "./avatar/page";
 import BadgePage from "./badge/page";
+import ButtonPage from "./button/page";
 import CardPage from "./card/page";
 import SpinnerPage from "./spinner/page";
 import KbdPage from "./kbd/page";
@@ -16,6 +17,7 @@ import SeparatorPage from "./separator/page";
 import SkeletonPage from "./skeleton/page";
 import SwitchPage from "./switch/page";
 import TablePage from "./table/page";
+import TabsPage from "./tabs/page";
 import ToastPage from "./toast/page";
 import TooltipPage from "./tooltip/page";
 import AlertPage from "./alert/page";
@@ -27,6 +29,7 @@ import SliderPage from "./slider/page";
 import HoverCardPage from "./hover-card/page";
 import MarkerPage from "./marker/page";
 import DropdownMenuPage from "./dropdown-menu/page";
+import InputPage from "./input/page";
 import InputGroupPage from "./input-group/page";
 import InputOTPPage from "./input-otp/page";
 import FileUploadPage from "./file-upload/page";
@@ -38,6 +41,18 @@ function renderDocs(node: ReactNode) {
 }
 
 const pages = [
+  {
+    load: ButtonPage,
+    title: "Button",
+    command: "npx vinyaas add button",
+    api: "variant",
+  },
+  {
+    load: InputPage,
+    title: "Input",
+    command: "npx vinyaas add input",
+    api: "type",
+  },
   {
     load: AvatarPage,
     title: "Avatar",
@@ -79,6 +94,12 @@ const pages = [
     title: "Table",
     command: "npx vinyaas add table",
     api: "children",
+  },
+  {
+    load: TabsPage,
+    title: "Tabs",
+    command: "npx vinyaas add tabs",
+    api: "defaultValue",
   },
   {
     load: TooltipPage,
@@ -239,6 +260,79 @@ describe("composed examples", () => {
     );
   });
 
+  it("renders docs polish: Card preview, Dialog Buttons, Hover Card external, Tabs Card, consolidated variants", async () => {
+    const { unmount: unmountCard } = renderDocs(await CardPage());
+    expect(screen.getByLabelText("Location")).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("button", { name: "Message" }).length,
+    ).toBeGreaterThan(0);
+    unmountCard();
+
+    const { unmount: unmountDialog } = renderDocs(await DialogPage());
+    expect(
+      screen.getByRole("heading", { name: "In practice" }),
+    ).toBeInTheDocument();
+    expect(
+      [...document.querySelectorAll("code")].some((node) =>
+        node.textContent?.includes('<Button variant="outline">Cancel</Button>'),
+      ),
+    ).toBe(true);
+    unmountDialog();
+
+    const { unmount: unmountHover } = renderDocs(await HoverCardPage());
+    expect(
+      screen.getByRole("heading", { name: "External link" }),
+    ).toHaveAttribute("id", "external-link");
+    expect(
+      screen.getAllByRole("button", { name: /Vinyaas documentation/ }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      [...document.querySelectorAll("code")].some((node) =>
+        node.textContent?.includes("External website"),
+      ),
+    ).toBe(true);
+    unmountHover();
+
+    const { unmount: unmountTabs } = renderDocs(await TabsPage());
+    expect(screen.getByText("Settings")).toBeInTheDocument();
+    expect(
+      screen.getByRole("tab", { name: "Notifications" }),
+    ).toBeInTheDocument();
+    unmountTabs();
+
+    const { unmount: unmountToast } = renderDocs(await ToastPage());
+    expect(screen.getByRole("heading", { name: "Types" })).toHaveAttribute(
+      "id",
+      "types",
+    );
+    expect(screen.getByRole("button", { name: "Success" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Error" })).toBeInTheDocument();
+    unmountToast();
+
+    const { unmount: unmountAlert } = renderDocs(await AlertPage());
+    expect(screen.getByRole("heading", { name: "Variants" })).toHaveAttribute(
+      "id",
+      "variants",
+    );
+    expect(screen.getAllByText("Deployment complete").length).toBeGreaterThan(
+      0,
+    );
+    expect(screen.getAllByText("Payment failed").length).toBeGreaterThan(0);
+    unmountAlert();
+
+    const { unmount: unmountUpload } = renderDocs(await FileUploadPage());
+    expect(screen.getByText("portrait.png")).toBeInTheDocument();
+    expect(screen.getByText("standup-notes.mp3")).toBeInTheDocument();
+    expect(screen.getByText("product-walkthrough.mp4")).toBeInTheDocument();
+    unmountUpload();
+
+    renderDocs(await NativeSelectPage());
+    const selects = document.querySelectorAll("select");
+    expect([...selects].some((node) => node.className.includes("pr-10"))).toBe(
+      true,
+    );
+  });
+
   it("renders dropdown, breadcrumb separator, and kbd named-key examples", async () => {
     renderDocs(await DropdownMenuPage());
     expect(
@@ -303,7 +397,7 @@ describe("composed examples", () => {
 
 describe("new component pages", () => {
   it.each(pages)(
-    "documents $title with preview, install, and API",
+    "documents $title with progressive sections and In practice before API",
     async ({ load, title, command, api }) => {
       renderDocs(await load());
 
@@ -316,15 +410,50 @@ describe("new component pages", () => {
       expect(
         screen.getByRole("heading", { name: "Preview" }),
       ).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Installation" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Usage" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Examples" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "In practice" }),
+      ).toHaveAttribute("id", "in-practice");
       expect(screen.getByRole("heading", { name: "API" })).toBeInTheDocument();
       expect(
         screen.getByRole("heading", { name: "Accessibility" }),
       ).toBeInTheDocument();
       expect(
+        screen.getByRole("heading", { name: "Source" }),
+      ).toBeInTheDocument();
+
+      const headings = screen
+        .getAllByRole("heading", { level: 2 })
+        .map((node) => node.textContent);
+      expect(headings.indexOf("In practice")).toBeGreaterThan(
+        headings.indexOf("Examples"),
+      );
+      expect(headings.indexOf("API")).toBeGreaterThan(
+        headings.indexOf("In practice"),
+      );
+      expect(headings.indexOf("Accessibility")).toBeGreaterThan(
+        headings.indexOf("API"),
+      );
+      expect(headings.indexOf("Source")).toBeGreaterThan(
+        headings.indexOf("Accessibility"),
+      );
+
+      expect(
         [...document.querySelectorAll("code")].some(
           (node) => node.textContent === command,
         ),
       ).toBe(true);
+      expect(document.body.textContent).not.toMatch(
+        /components\/ui\/[a-z0-9-]+\/(?!index\.tsx)[a-z0-9-]+\.tsx/,
+      );
       const tables = document.querySelectorAll("table");
 
       expect(tables[tables.length - 1]).toHaveTextContent(api);

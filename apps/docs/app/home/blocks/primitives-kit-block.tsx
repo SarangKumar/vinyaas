@@ -88,8 +88,16 @@ export function PrimitivesKitBlock() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <DialogClose>Cancel</DialogClose>
-              <DialogClose>Archive</DialogClose>
+              <DialogClose>
+                <Button type="button" variant="outline">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <DialogClose>
+                <Button type="button" variant="destructive">
+                  Archive
+                </Button>
+              </DialogClose>
             </DialogFooter>
           </DialogContent>
         </Dialog>

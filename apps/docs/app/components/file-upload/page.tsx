@@ -1,9 +1,14 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Button } from "@/registry/new-york/ui/button";
+import { Label } from "@/registry/new-york/ui/label";
 import { FileStatusPreview } from "./file-upload-demos";
 import {
   FileUpload,
@@ -23,6 +28,40 @@ export function ResumeUpload() {
       <FileUploadDropzone>Drop a resume, or click to browse</FileUploadDropzone>
       <FileUploadList />
     </FileUpload>
+  );
+}
+`;
+
+const resumeCardCode = `import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadList,
+} from "@/components/ui/file-upload";
+
+export function ResumeUploadCard() {
+  return (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-1">
+        <Label>Resume</Label>
+        <p className="text-muted-foreground text-sm">
+          PDF or Word, up to 2 MB. Used for the open design role.
+        </p>
+      </div>
+      <FileUpload accept=".pdf,.doc,.docx" maxSize={2_000_000}>
+        <FileUploadDropzone>
+          Drop a resume, or click to browse
+        </FileUploadDropzone>
+        <FileUploadList />
+      </FileUpload>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Submit application</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 }
 `;
@@ -98,20 +137,6 @@ const examples: ComponentExample[] = [
     code: usage,
   },
   {
-    id: "resume",
-    title: "Resume",
-    description: "Click or drop a resume. The list shows progress and errors.",
-    preview: (
-      <FileUpload accept=".pdf" maxSize={2_000_000} className="max-w-sm">
-        <FileUploadDropzone>
-          Drop a resume, or click to browse
-        </FileUploadDropzone>
-        <FileUploadList />
-      </FileUpload>
-    ),
-    code: usage,
-  },
-  {
     id: "status",
     title: "File states",
     description:
@@ -120,6 +145,34 @@ const examples: ComponentExample[] = [
     code: usage,
   },
 ];
+
+const inPractice: ComponentInPractice = {
+  description:
+    "A job application asks for a resume, explains the file rules, and offers Submit and Cancel.",
+  preview: (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-1">
+        <Label>Resume</Label>
+        <p className="text-muted-foreground text-sm">
+          PDF or Word, up to 2 MB. Used for the open design role.
+        </p>
+      </div>
+      <FileUpload accept=".pdf,.doc,.docx" maxSize={2_000_000}>
+        <FileUploadDropzone>
+          Drop a resume, or click to browse
+        </FileUploadDropzone>
+        <FileUploadList />
+      </FileUpload>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Submit application</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
+  ),
+  code: resumeCardCode,
+};
 
 export default async function FileUploadPage() {
   const source = await readFile(
@@ -151,6 +204,7 @@ export default async function FileUploadPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

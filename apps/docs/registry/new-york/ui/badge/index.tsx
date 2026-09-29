@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 const badgeVariants = {
   default: "bg-primary text-primary-foreground",
   secondary: "bg-secondary text-secondary-foreground",
-  destructive: "bg-destructive text-destructive-foreground",
+  destructive: "bg-destructive/10 text-destructive dark:bg-destructive/20",
   outline: "border border-border text-foreground",
   ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
   link: "text-primary underline-offset-4 hover:underline",

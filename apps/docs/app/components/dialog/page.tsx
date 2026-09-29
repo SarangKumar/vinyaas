@@ -18,7 +18,10 @@ import { Label } from "@/registry/new-york/ui/label";
 import { Switch } from "@/registry/new-york/ui/switch";
 import { Textarea } from "@/registry/new-york/ui/textarea";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
@@ -48,6 +51,56 @@ export function EditDialog() {
         </DialogHeader>
       </DialogContent>
     </Dialog>
+  );
+}
+`;
+
+const deleteCode = `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+export function DeleteProjectDialog() {
+  return (
+    <div className="border-border flex w-full max-w-sm items-center justify-between gap-3 rounded-lg border p-3">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium">vinyaas-web</p>
+        <p className="text-muted-foreground text-xs">Production · us-east-1</p>
+      </div>
+      <Dialog>
+        <DialogTrigger>
+          <Button variant="destructive" size="sm">
+            Delete
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete project</DialogTitle>
+            <DialogDescription>
+              This removes the project and its deployments. This action cannot
+              be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <Badge variant="destructive">vinyaas-web</Badge>
+          <DialogFooter>
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <DialogClose>
+              <Button variant="destructive">Delete project</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
 `;
@@ -101,11 +154,11 @@ const examples: ComponentExample[] = [
             <Textarea id="profile-bio" defaultValue="Building accessible UI." />
           </div>
           <DialogFooter>
-            <DialogClose className="border-border inline-flex h-9 items-center rounded-md border px-4 text-sm">
-              Cancel
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <DialogClose className="bg-primary text-primary-foreground inline-flex h-9 items-center rounded-md px-4 text-sm">
-              Save
+            <DialogClose>
+              <Button>Save</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -142,69 +195,12 @@ export function EditProfileDialog() {
         <Label htmlFor="profile-bio">Bio</Label>
         <Textarea id="profile-bio" defaultValue="Building accessible UI." />
         <DialogFooter>
-          <DialogClose>Cancel</DialogClose>
-          <DialogClose>Save</DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-`,
-  },
-  {
-    id: "delete-project",
-    title: "Delete confirmation",
-    description: "A destructive action stays behind a confirmation.",
-    preview: (
-      <Dialog>
-        <DialogTrigger>
-          <Button variant="destructive">Delete project</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete project</DialogTitle>
-            <DialogDescription>
-              This removes the project and its deployments.
-            </DialogDescription>
-          </DialogHeader>
-          <Badge variant="destructive">vinyaas-web</Badge>
-          <DialogFooter>
-            <DialogClose>Cancel</DialogClose>
-            <DialogClose>Delete</DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    ),
-    code: `import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-export function DeleteProjectDialog() {
-  return (
-    <Dialog>
-      <DialogTrigger>
-        <Button variant="destructive">Delete project</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete project</DialogTitle>
-          <DialogDescription>
-            This removes the project and its deployments.
-          </DialogDescription>
-        </DialogHeader>
-        <Badge variant="destructive">vinyaas-web</Badge>
-        <DialogFooter>
-          <DialogClose>Cancel</DialogClose>
-          <DialogClose>Delete</DialogClose>
+          <DialogClose>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <DialogClose>
+            <Button>Save</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -260,8 +256,12 @@ export function DeleteProjectDialog() {
             ))}
           </ul>
           <DialogFooter>
-            <DialogClose>Cancel</DialogClose>
-            <DialogClose>Save changes</DialogClose>
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <DialogClose>
+              <Button>Save changes</Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -302,8 +302,12 @@ export function AccountDialog() {
         <Checkbox id="account-activity" defaultChecked />
         <Label htmlFor="account-activity">Email me about activity</Label>
         <DialogFooter>
-          <DialogClose>Cancel</DialogClose>
-          <DialogClose>Save changes</DialogClose>
+          <DialogClose>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <DialogClose>
+            <Button>Save changes</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -312,6 +316,45 @@ export function AccountDialog() {
 `,
   },
 ];
+
+const inPractice: ComponentInPractice = {
+  description:
+    "A project row keeps the destructive action behind a confirmation. Cancel stays available; the badge names what will be removed.",
+  preview: (
+    <div className="border-border flex w-full max-w-sm items-center justify-between gap-3 rounded-lg border p-3 text-left">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium">vinyaas-web</p>
+        <p className="text-muted-foreground text-xs">Production · us-east-1</p>
+      </div>
+      <Dialog>
+        <DialogTrigger>
+          <Button variant="destructive" size="sm">
+            Delete
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete project</DialogTitle>
+            <DialogDescription>
+              This removes the project and its deployments. This action cannot
+              be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <Badge variant="destructive">vinyaas-web</Badge>
+          <DialogFooter>
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <DialogClose>
+              <Button variant="destructive">Delete project</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  ),
+  code: { tsx: deleteCode, jsx: deleteCode },
+};
 
 export default async function DialogPage() {
   const source = await readFile(
@@ -349,6 +392,7 @@ export default async function DialogPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">
@@ -374,7 +418,9 @@ export default async function DialogPage() {
             <DialogDescription>Update your public profile.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose>Close</DialogClose>
+            <DialogClose>
+              <Button variant="outline">Close</Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>

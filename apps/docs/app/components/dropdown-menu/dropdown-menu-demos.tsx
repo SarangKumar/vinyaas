@@ -196,3 +196,41 @@ export function UserMenu() {
     </DropdownMenu>
   );
 }
+
+export function TeamRowMenu() {
+  return (
+    <div className="border-border flex w-full max-w-md items-center gap-3 rounded-lg border p-3 text-left">
+      <Avatar className="size-9">
+        <AvatarFallback>AS</AvatarFallback>
+      </Avatar>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">Aarav Sharma</p>
+        <p className="text-muted-foreground truncate text-xs">
+          aarav@vinyaas.dev
+        </p>
+      </div>
+      <Badge variant="secondary">Admin</Badge>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Team actions for Aarav Sharma"
+          >
+            <MoreIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>View profile</DropdownMenuItem>
+          <DropdownMenuItem>Change role</DropdownMenuItem>
+          <DropdownMenuItem>Resend invite</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive">
+            Remove from team
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}

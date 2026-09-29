@@ -7,8 +7,18 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/registry/new-york/ui/alert";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york/ui/card";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
@@ -43,29 +53,8 @@ export function Notice() {
 }
 `;
 
-const successCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+const variantsCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-
-export function DeploymentAlert() {
-  return (
-    <Alert className="max-w-md">
-      <div className="flex items-start justify-between gap-3">
-        <AlertTitle>Deployment complete</AlertTitle>
-        <Badge variant="secondary">Production</Badge>
-      </div>
-      <AlertDescription>
-        Production is now running the latest build.
-      </AlertDescription>
-      <Button variant="outline" className="mt-2 w-fit">
-        View deployment
-      </Button>
-    </Alert>
-  );
-}
-`;
-
-const failedCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
 function AlertCircleIcon() {
@@ -78,19 +67,78 @@ function AlertCircleIcon() {
   );
 }
 
-export function PaymentAlert() {
+export function AlertVariants() {
   return (
-    <Alert variant="destructive" className="max-w-md">
-      <AlertCircleIcon />
-      <AlertTitle>Payment failed</AlertTitle>
-      <AlertDescription>
-        Your payment could not be processed. Please check your payment method
-        and try again.
-      </AlertDescription>
-      <Button variant="outline" className="mt-2 w-fit">
-        Try again
-      </Button>
-    </Alert>
+    <div className="flex w-full flex-col gap-4 sm:flex-row">
+      <Alert className="max-w-md">
+        <div className="flex items-start justify-between gap-3">
+          <AlertTitle>Deployment complete</AlertTitle>
+          <Badge variant="secondary">Production</Badge>
+        </div>
+        <AlertDescription>
+          Production is now running the latest build.
+        </AlertDescription>
+        <Button variant="outline" className="mt-2 w-fit">
+          View deployment
+        </Button>
+      </Alert>
+      <Alert variant="destructive" className="max-w-md">
+        <AlertCircleIcon />
+        <AlertTitle>Payment failed</AlertTitle>
+        <AlertDescription>
+          Your payment could not be processed. Please check your payment method
+          and try again.
+        </AlertDescription>
+        <Button variant="outline" className="mt-2 w-fit">
+          Try again
+        </Button>
+      </Alert>
+    </div>
+  );
+}
+`;
+
+const billingCardCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+function AlertCircleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 8v4" strokeLinecap="round" />
+      <path d="M12 16h.01" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function BillingFailureCard() {
+  return (
+    <Card className="w-full max-w-md text-left">
+      <CardHeader>
+        <CardTitle>Billing</CardTitle>
+        <CardDescription>Visa ending in 4242 · Renews Apr 1</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Alert variant="destructive">
+          <AlertCircleIcon />
+          <AlertTitle>Payment failed</AlertTitle>
+          <AlertDescription>
+            We could not charge your card for the Pro plan. Update the payment
+            method, then retry.
+          </AlertDescription>
+          <Button variant="outline" className="mt-2 w-fit">
+            Retry payment
+          </Button>
+        </Alert>
+      </CardContent>
+    </Card>
   );
 }
 `;
@@ -112,47 +160,67 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
-    id: "deployment",
-    title: "Deployment",
+    id: "variants",
+    title: "Variants",
     description:
-      "A status badge and an action sit with the notice. The alert does not own the icon or the button.",
+      "Default carries a status badge and action. Destructive keeps the muted surface and uses danger text, icon, and border.",
     preview: (
-      <Alert className="max-w-md text-left">
-        <div className="flex items-start justify-between gap-3">
-          <AlertTitle>Deployment complete</AlertTitle>
-          <Badge variant="secondary">Production</Badge>
-        </div>
-        <AlertDescription>
-          Production is now running the latest build.
-        </AlertDescription>
-        <Button variant="outline" className="mt-2 w-fit">
-          View deployment
-        </Button>
-      </Alert>
+      <div className="flex w-full flex-col gap-4 sm:flex-row">
+        <Alert className="max-w-md text-left">
+          <div className="flex items-start justify-between gap-3">
+            <AlertTitle>Deployment complete</AlertTitle>
+            <Badge variant="secondary">Production</Badge>
+          </div>
+          <AlertDescription>
+            Production is now running the latest build.
+          </AlertDescription>
+          <Button variant="outline" className="mt-2 w-fit">
+            View deployment
+          </Button>
+        </Alert>
+        <Alert variant="destructive" className="max-w-md text-left">
+          <AlertCircleIcon />
+          <AlertTitle>Payment failed</AlertTitle>
+          <AlertDescription>
+            Your payment could not be processed. Please check your payment
+            method and try again.
+          </AlertDescription>
+          <Button variant="outline" className="mt-2 w-fit">
+            Try again
+          </Button>
+        </Alert>
+      </div>
     ),
-    code: successCode,
-  },
-  {
-    id: "payment-failed",
-    title: "Payment failed",
-    description:
-      "The first svg is the icon. Destructive alerts keep the muted surface and use danger text, icon, and border. The action picks up that color.",
-    preview: (
-      <Alert variant="destructive" className="max-w-md text-left">
-        <AlertCircleIcon />
-        <AlertTitle>Payment failed</AlertTitle>
-        <AlertDescription>
-          Your payment could not be processed. Please check your payment method
-          and try again.
-        </AlertDescription>
-        <Button variant="outline" className="mt-2 w-fit">
-          Try again
-        </Button>
-      </Alert>
-    ),
-    code: failedCode,
+    code: { tsx: variantsCode, jsx: variantsCode },
   },
 ];
+
+const inPractice: ComponentInPractice = {
+  description:
+    "A billing Card carries a destructive Alert when a charge fails. The retry action stays inside the notice.",
+  preview: (
+    <Card className="w-full max-w-md text-left">
+      <CardHeader>
+        <CardTitle>Billing</CardTitle>
+        <CardDescription>Visa ending in 4242 · Renews Apr 1</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Alert variant="destructive">
+          <AlertCircleIcon />
+          <AlertTitle>Payment failed</AlertTitle>
+          <AlertDescription>
+            We could not charge your card for the Pro plan. Update the payment
+            method, then retry.
+          </AlertDescription>
+          <Button variant="outline" className="mt-2 w-fit">
+            Retry payment
+          </Button>
+        </Alert>
+      </CardContent>
+    </Card>
+  ),
+  code: { tsx: billingCardCode, jsx: billingCardCode },
+};
 
 export default async function AlertPage() {
   const source = await readFile(
@@ -183,6 +251,7 @@ export default async function AlertPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <p>

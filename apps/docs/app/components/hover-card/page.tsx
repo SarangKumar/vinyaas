@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
 import { Badge } from "@/registry/new-york/ui/badge";
@@ -23,7 +26,9 @@ export function Person() {
   return (
     <HoverCard>
       <HoverCardTrigger>
-        <Button variant="link">Ada Lovelace</Button>
+        <Button variant="link" className="underline underline-offset-4">
+          Ada Lovelace
+        </Button>
       </HoverCardTrigger>
       <HoverCardContent>
         <p>Wrote the first algorithm.</p>
@@ -34,6 +39,7 @@ export function Person() {
 `;
 
 const profileCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
@@ -41,7 +47,9 @@ export function ProfileCard() {
   return (
     <HoverCard>
       <HoverCardTrigger>
-        <Button variant="link">Ada Lovelace</Button>
+        <Button variant="link" className="underline underline-offset-4">
+          Ada Lovelace
+        </Button>
       </HoverCardTrigger>
       <HoverCardContent>
         <div className="flex gap-3">
@@ -50,11 +58,98 @@ export function ProfileCard() {
           </Avatar>
           <div>
             <p className="font-medium">Ada Lovelace</p>
-            <p>Wrote the first algorithm.</p>
+            <p className="text-muted-foreground text-sm">Mathematician · London</p>
+            <Badge variant="secondary">Available</Badge>
           </div>
         </div>
       </HoverCardContent>
     </HoverCard>
+  );
+}
+`;
+
+const externalLinkCode = `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+
+export function ExternalLinkPreview() {
+  return (
+    <HoverCard>
+      <HoverCardTrigger>
+        <Button variant="link" className="underline underline-offset-4">
+          Vinyaas documentation ↗
+        </Button>
+      </HoverCardTrigger>
+      <HoverCardContent>
+        <div className="grid gap-2">
+          <Badge variant="secondary">External website</Badge>
+          <p className="font-medium">docs.vinyaas.dev</p>
+          <p className="text-muted-foreground text-sm">
+            Install guides, API reference, and component examples for the
+            Vinyaas design system.
+          </p>
+        </div>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+`;
+
+const contributorProjectCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+export function ContributorActivity() {
+  return (
+    <p className="text-sm leading-6">
+      <HoverCard>
+        <HoverCardTrigger>
+          <Button variant="link" className="h-auto p-0">
+            Ada Lovelace
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <div className="flex items-start gap-3">
+            <Avatar>
+              <AvatarFallback>AL</AvatarFallback>
+            </Avatar>
+            <div className="grid gap-1">
+              <p className="font-medium">Ada Lovelace</p>
+              <p className="text-muted-foreground text-sm">
+                Mathematician · London
+              </p>
+              <Badge variant="secondary">Available</Badge>
+            </div>
+          </div>
+        </HoverCardContent>
+      </HoverCard>{" "}
+      opened a pull request in{" "}
+      <HoverCard>
+        <HoverCardTrigger>
+          <Button variant="link" className="h-auto p-0">
+            vinyaas
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <div className="grid gap-2">
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-medium">vinyaas</p>
+              <Badge>Active</Badge>
+            </div>
+            <p className="text-muted-foreground text-sm">
+              TypeScript · 128 stars
+            </p>
+            <p className="text-sm">Updated today</p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+      .
+    </p>
   );
 }
 `;
@@ -100,11 +195,13 @@ const examples: ComponentExample[] = [
     id: "profile",
     title: "Profile",
     description:
-      "Hover or focus the name to read a short profile. The card stays open while the pointer is over it.",
+      "Hover or focus the underlined name to read a short profile. The card stays open while the pointer is over it.",
     preview: (
       <HoverCard openDelay={0}>
         <HoverCardTrigger>
-          <Button variant="link">Ada Lovelace</Button>
+          <Button variant="link" className="underline underline-offset-4">
+            Ada Lovelace
+          </Button>
         </HoverCardTrigger>
         <HoverCardContent>
           <div className="flex items-start gap-3">
@@ -126,6 +223,34 @@ const examples: ComponentExample[] = [
     code: { tsx: profileCode, jsx: profileCode },
   },
   {
+    id: "external-link",
+    title: "External link",
+    description:
+      "An underlined link-style trigger previews an external site before the user leaves the page.",
+    preview: (
+      <HoverCard openDelay={0}>
+        <HoverCardTrigger>
+          <Button variant="link" className="underline underline-offset-4">
+            Vinyaas documentation ↗
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <div className="grid gap-2 text-left">
+            <Badge variant="secondary" className="w-fit">
+              External website
+            </Badge>
+            <p className="font-medium">docs.vinyaas.dev</p>
+            <p className="text-muted-foreground text-sm">
+              Install guides, API reference, and component examples for the
+              Vinyaas design system.
+            </p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+    ),
+    code: { tsx: externalLinkCode, jsx: externalLinkCode },
+  },
+  {
     id: "message",
     title: "Message preview",
     description:
@@ -133,7 +258,9 @@ const examples: ComponentExample[] = [
     preview: (
       <HoverCard openDelay={0}>
         <HoverCardTrigger>
-          <Button variant="link">Note from Ada</Button>
+          <Button variant="link" className="underline underline-offset-4">
+            Note from Ada
+          </Button>
         </HoverCardTrigger>
         <HoverCardContent>
           <div className="grid gap-2">
@@ -157,7 +284,9 @@ export function MessagePreview() {
   return (
     <HoverCard>
       <HoverCardTrigger>
-        <Button variant="link">Note from Ada</Button>
+        <Button variant="link" className="underline underline-offset-4">
+          Note from Ada
+        </Button>
       </HoverCardTrigger>
       <HoverCardContent>
         <p className="font-medium">Ada Lovelace</p>
@@ -175,7 +304,9 @@ export function MessagePreview() {
     preview: (
       <HoverCard openDelay={0}>
         <HoverCardTrigger>
-          <Button variant="link">vinyaas</Button>
+          <Button variant="link" className="underline underline-offset-4">
+            vinyaas
+          </Button>
         </HoverCardTrigger>
         <HoverCardContent>
           <div className="grid gap-2">
@@ -199,7 +330,9 @@ export function ProjectPreview() {
   return (
     <HoverCard>
       <HoverCardTrigger>
-        <Button variant="link">vinyaas</Button>
+        <Button variant="link" className="underline underline-offset-4">
+          vinyaas
+        </Button>
       </HoverCardTrigger>
       <HoverCardContent>
         <p className="font-medium">vinyaas</p>
@@ -212,6 +345,58 @@ export function ProjectPreview() {
 `,
   },
 ];
+
+const inPractice: ComponentInPractice = {
+  description:
+    "An activity line links a contributor and a project. Each name opens its own HoverCard with Avatar, Badge, and status.",
+  preview: (
+    <p className="text-sm leading-6">
+      <HoverCard openDelay={0}>
+        <HoverCardTrigger>
+          <Button variant="link" className="h-auto p-0">
+            Ada Lovelace
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <div className="flex items-start gap-3">
+            <Avatar>
+              <AvatarFallback>AL</AvatarFallback>
+            </Avatar>
+            <div className="grid gap-1">
+              <p className="font-medium">Ada Lovelace</p>
+              <p className="text-muted-foreground text-sm">
+                Mathematician · London
+              </p>
+              <Badge variant="secondary">Available</Badge>
+            </div>
+          </div>
+        </HoverCardContent>
+      </HoverCard>{" "}
+      opened a pull request in{" "}
+      <HoverCard openDelay={0}>
+        <HoverCardTrigger>
+          <Button variant="link" className="h-auto p-0">
+            vinyaas
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <div className="grid gap-2">
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-medium">vinyaas</p>
+              <Badge>Active</Badge>
+            </div>
+            <p className="text-muted-foreground text-sm">
+              TypeScript · 128 stars
+            </p>
+            <p className="text-sm">Updated today</p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+      .
+    </p>
+  ),
+  code: { tsx: contributorProjectCode, jsx: contributorProjectCode },
+};
 
 export default async function HoverCardPage() {
   const source = await readFile(
@@ -241,6 +426,7 @@ export default async function HoverCardPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <p>
@@ -255,7 +441,9 @@ export default async function HoverCardPage() {
     >
       <HoverCard openDelay={0}>
         <HoverCardTrigger>
-          <Button variant="link">Ada Lovelace</Button>
+          <Button variant="link" className="underline underline-offset-4">
+            Ada Lovelace
+          </Button>
         </HoverCardTrigger>
         <HoverCardContent>
           <p>Wrote the first algorithm.</p>

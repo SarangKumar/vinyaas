@@ -132,5 +132,8 @@ describe("File Upload", () => {
     expect(
       screen.getByRole("button", { name: "Retry upload" }),
     ).toHaveAttribute("title", "Retry upload");
+    // Pending/uploaded rows use file-type icons (muted), not a single shared glyph.
+    const list = screen.getByText("portrait.png").closest("li");
+    expect(list?.querySelector("svg")).toHaveClass("text-muted-foreground");
   });
 });

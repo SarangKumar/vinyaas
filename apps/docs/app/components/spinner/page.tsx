@@ -1,11 +1,14 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { RefreshIcon } from "@/components/icons";
 import { Spinner } from "@/registry/new-york/ui/spinner";
-import { SubmitSpinner, FormSubmitSpinner } from "./spinner-demos";
+import { FormSubmitSpinner, SubmitSpinner } from "./spinner-demos";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -32,6 +35,56 @@ export function SaveAction() {
       {pending ? <Spinner label="" /> : null}
       {pending ? "Saving changes" : "Save changes"}
     </Button>
+  );
+}
+`;
+
+const formSubmitCode = `import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+
+export function SaveProfile() {
+  const [pending, setPending] = useState(false);
+
+  return (
+    <form
+      className="grid max-w-sm gap-4"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setPending(true);
+        window.setTimeout(() => setPending(false), 1200);
+      }}
+    >
+      <div className="grid gap-2">
+        <Label htmlFor="display-name">Display name</Label>
+        <Input
+          id="display-name"
+          defaultValue="Ada Lovelace"
+          disabled={pending}
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          defaultValue="ada@analytical.engine"
+          disabled={pending}
+        />
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit" className="gap-2" disabled={pending}>
+          {pending ? <Spinner label="" /> : null}
+          {pending ? "Saving" : "Save changes"}
+        </Button>
+        <Button type="button" variant="outline" disabled={pending}>
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 }
 `;
@@ -83,36 +136,6 @@ export function RefreshingData() {
 `,
   },
   {
-    id: "form-submit",
-    title: "Form submit",
-    description: "The submit button shows a spinner while the form is pending.",
-    preview: <FormSubmitSpinner />,
-    code: `import { useState } from "react";
-
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-
-export function SubmitSpinner() {
-  const [pending, setPending] = useState(false);
-
-  return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        setPending(true);
-        window.setTimeout(() => setPending(false), 1200);
-      }}
-    >
-      <Button type="submit" className="gap-2" disabled={pending}>
-        {pending ? <Spinner label="" /> : null}
-        {pending ? "Saving" : "Save"}
-      </Button>
-    </form>
-  );
-}
-`,
-  },
-  {
     id: "custom-icon",
     title: "Customization",
     description:
@@ -136,6 +159,13 @@ export function RefreshingNote() {
 `,
   },
 ];
+
+const inPractice: ComponentInPractice = {
+  description:
+    "Saving a short profile form disables the fields and shows a Spinner inside Save changes.",
+  preview: <FormSubmitSpinner />,
+  code: formSubmitCode,
+};
 
 export default async function SpinnerPage() {
   const source = await readFile(
@@ -166,6 +196,7 @@ export default async function SpinnerPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

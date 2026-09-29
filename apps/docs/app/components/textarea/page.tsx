@@ -1,8 +1,13 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { Button } from "@/registry/new-york/ui/button";
+import { Label } from "@/registry/new-york/ui/label";
 import { Textarea } from "@/registry/new-york/ui/textarea";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
@@ -17,6 +22,34 @@ export function MessageField() {
       Message
       <Textarea id="message" name="message" rows={4} placeholder="Write a message" />
     </label>
+  );
+}
+`;
+
+const inPracticeSource = `import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+
+export function FeedbackForm() {
+  return (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-2">
+        <Label htmlFor="feedback">Message</Label>
+        <Textarea
+          id="feedback"
+          name="feedback"
+          rows={4}
+          placeholder="What should we improve next?"
+          defaultValue="The homepage showcase makes it clear which components to reach for."
+        />
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Send feedback</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 }
 `;
@@ -156,6 +189,32 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A feedback note with a labelled textarea and Submit and Cancel actions.",
+  preview: (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-2">
+        <Label htmlFor="practice-feedback">Message</Label>
+        <Textarea
+          id="practice-feedback"
+          name="feedback"
+          rows={4}
+          placeholder="What should we improve next?"
+          defaultValue="The homepage showcase makes it clear which components to reach for."
+        />
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Send feedback</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
+  ),
+  code: inPracticeSource,
+};
+
 export default async function TextareaPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/textarea/index.tsx"),
@@ -184,6 +243,7 @@ export default async function TextareaPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

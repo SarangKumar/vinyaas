@@ -79,6 +79,15 @@ describe("ComponentReference", () => {
             code: `<Button variant="destructive">Delete</Button>`,
           },
         ]}
+        inPractice={{
+          description: "Save and cancel on a short form.",
+          preview: (
+            <form>
+              <button type="submit">Save</button>
+            </form>
+          ),
+          code: `<form><Button type="submit">Save</Button></form>`,
+        }}
         api={[
           {
             prop: "variant",
@@ -109,6 +118,12 @@ describe("ComponentReference", () => {
     expect(
       screen.getByRole("heading", { name: "Destructive" }),
     ).toHaveAttribute("id", "destructive");
+    expect(
+      screen.getByRole("heading", { name: "In practice" }),
+    ).toHaveAttribute("id", "in-practice");
+    expect(
+      screen.getByText("Save and cancel on a short form."),
+    ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "API" })).toHaveAttribute(
       "id",
       "api",
@@ -120,5 +135,56 @@ describe("ComponentReference", () => {
       screen.getByRole("columnheader", { name: "Prop" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Visual style.")).toBeInTheDocument();
+  });
+
+  it("places In practice immediately before API", () => {
+    renderDocs(
+      <ComponentReference
+        title="Input"
+        description="A text field."
+        install="vinyaas add input"
+        usage="<Input />"
+        examples={[
+          {
+            id: "basic",
+            title: "Basic",
+            description: "Bare field.",
+            preview: <input aria-label="Name" />,
+            code: `<Input aria-label="Name" />`,
+          },
+        ]}
+        inPractice={{
+          description: "Sign-in email field with actions.",
+          preview: <form aria-label="Sign in" />,
+          code: `<form />`,
+        }}
+        api={[
+          {
+            prop: "type",
+            type: "string",
+            description: "Native type.",
+          },
+        ]}
+        accessibility={<p>Associate a label.</p>}
+        source="export function Input() {}"
+      >
+        <input aria-label="Preview" />
+      </ComponentReference>,
+    );
+
+    const headings = screen
+      .getAllByRole("heading", { level: 2 })
+      .map((node) => node.textContent);
+    const examplesIndex = headings.indexOf("Examples");
+    const inPracticeIndex = headings.indexOf("In practice");
+    const apiIndex = headings.indexOf("API");
+    const accessibilityIndex = headings.indexOf("Accessibility");
+    const sourceIndex = headings.indexOf("Source");
+
+    expect(examplesIndex).toBeGreaterThan(-1);
+    expect(inPracticeIndex).toBeGreaterThan(examplesIndex);
+    expect(apiIndex).toBeGreaterThan(inPracticeIndex);
+    expect(accessibilityIndex).toBeGreaterThan(apiIndex);
+    expect(sourceIndex).toBeGreaterThan(accessibilityIndex);
   });
 });

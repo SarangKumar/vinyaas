@@ -11,7 +11,7 @@ import {
 
 const initialFiles: FileUploadFile[] = [
   {
-    id: "uploading",
+    id: "doc",
     file: new File(
       ["report"],
       "a-very-long-file-name-that-should-not-resize-the-upload-component.pdf",
@@ -20,18 +20,25 @@ const initialFiles: FileUploadFile[] = [
     progress: 40,
   },
   {
-    id: "done",
+    id: "image",
     file: new File(["portrait"], "portrait.png", { type: "image/png" }),
     progress: 100,
   },
   {
-    id: "failed",
-    file: new File(["notes"], "notes.txt", { type: "text/plain" }),
-    error: "Upload failed",
+    id: "audio",
+    file: new File(["clip"], "standup-notes.mp3", { type: "audio/mpeg" }),
   },
   {
-    id: "pending",
-    file: new File(["draft"], "draft.txt", { type: "text/plain" }),
+    id: "video",
+    file: new File(["reel"], "product-walkthrough.mp4", { type: "video/mp4" }),
+    progress: 100,
+  },
+  {
+    id: "failed",
+    file: new File(["bundle"], "package.zip", {
+      type: "application/zip",
+    }),
+    error: "Upload failed",
   },
 ];
 

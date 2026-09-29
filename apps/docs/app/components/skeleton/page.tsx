@@ -1,8 +1,12 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { Card, CardContent, CardHeader } from "@/registry/new-york/ui/card";
 import { Skeleton } from "@/registry/new-york/ui/skeleton";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
@@ -13,6 +17,40 @@ const usage = `import { Skeleton } from "@/components/ui/skeleton";
 
 export function LoadingTitle() {
   return <Skeleton className="h-4 w-64" />;
+}
+`;
+
+const profileSkeletonCode = `import {
+  Card,
+  CardContent,
+  CardHeader,
+} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export function ProfileLoading() {
+  return (
+    <Card className="w-full max-w-md" aria-busy="true" aria-label="Loading profile">
+      <CardHeader className="flex flex-row items-center gap-3">
+        <Skeleton className="size-12 shrink-0 rounded-full" />
+        <div className="grid flex-1 gap-2">
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-3 w-1/3" />
+        </div>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        <Skeleton className="h-28 w-full" />
+        <div className="grid gap-2">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-5/6" />
+          <Skeleton className="h-3 w-2/3" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-24" />
+          <Skeleton className="h-9 w-20" />
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 `;
 
@@ -39,29 +77,40 @@ const examples: ComponentExample[] = [
     preview: <Skeleton className="h-24 w-full max-w-sm" />,
     code: `<Skeleton className="h-24 w-full max-w-sm" />`,
   },
-  {
-    id: "card",
-    title: "Card",
-    description:
-      "Compose several placeholders for a person and two lines. Each shape stays decorative.",
-    preview: (
-      <div className="flex w-full max-w-sm items-center gap-3">
-        <Skeleton className="size-10 rounded-full" />
-        <div className="grid flex-1 gap-2">
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-4 w-1/2" />
-        </div>
-      </div>
-    ),
-    code: `<div className="flex items-center gap-3">
-  <Skeleton className="size-10 rounded-full" />
-  <div className="grid flex-1 gap-2">
-    <Skeleton className="h-4 w-3/4" />
-    <Skeleton className="h-4 w-1/2" />
-  </div>
-</div>`,
-  },
 ];
+
+const inPractice: ComponentInPractice = {
+  description:
+    "A profile card keeps its layout while content loads. Avatar, title, media, copy, and actions all use Skeleton shapes.",
+  preview: (
+    <Card
+      className="w-full max-w-md"
+      aria-busy="true"
+      aria-label="Loading profile"
+    >
+      <CardHeader className="flex flex-row items-center gap-3">
+        <Skeleton className="size-12 shrink-0 rounded-full" />
+        <div className="grid flex-1 gap-2">
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-3 w-1/3" />
+        </div>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        <Skeleton className="h-28 w-full" />
+        <div className="grid gap-2">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-5/6" />
+          <Skeleton className="h-3 w-2/3" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-24" />
+          <Skeleton className="h-9 w-20" />
+        </div>
+      </CardContent>
+    </Card>
+  ),
+  code: profileSkeletonCode,
+};
 
 export default async function SkeletonPage() {
   const source = await readFile(
@@ -97,6 +146,7 @@ export default async function SkeletonPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>
@@ -116,13 +166,7 @@ export default async function SkeletonPage() {
       }
       source={source}
     >
-      <div className="flex w-full max-w-sm items-center gap-3">
-        <Skeleton className="size-10 rounded-full" />
-        <div className="grid flex-1 gap-2">
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-4 w-1/2" />
-        </div>
-      </div>
+      <Skeleton className="h-4 w-64" />
     </ComponentReference>
   );
 }

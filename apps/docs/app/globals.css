@@ -30,7 +30,8 @@
   --accent: oklch(0.967 0.001 286.375);
   --accent-foreground: oklch(0.21 0.006 285.885);
 
-  --destructive: oklch(0.577 0.245 27.325);
+  /* Softened chroma so soft fills (Button/Badge/Toast) stay readable, not neon rose. */
+  --destructive: oklch(0.52 0.17 27);
   --destructive-foreground: oklch(0.985 0 0);
 
   --card: oklch(1 0 0);
@@ -65,7 +66,7 @@
   --accent: oklch(0.274 0.006 286.033);
   --accent-foreground: oklch(0.985 0 0);
 
-  --destructive: oklch(0.704 0.191 22.216);
+  --destructive: oklch(0.68 0.14 25);
   --destructive-foreground: oklch(0.985 0 0);
 
   --card: oklch(0.21 0.006 285.885);

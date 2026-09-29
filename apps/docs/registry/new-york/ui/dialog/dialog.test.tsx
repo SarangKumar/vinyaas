@@ -34,7 +34,9 @@ function Example({
       <DialogContent>
         <DialogTitle>Edit profile</DialogTitle>
         <DialogDescription>Update your public profile.</DialogDescription>
-        <DialogClose>Close</DialogClose>
+        <DialogClose>
+          <button type="button">Close</button>
+        </DialogClose>
       </DialogContent>
     </Dialog>
   );

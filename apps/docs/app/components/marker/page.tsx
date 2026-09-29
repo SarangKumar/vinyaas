@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import {
   Marker,
@@ -22,6 +25,50 @@ export function Note() {
       <MarkerIcon><span /></MarkerIcon>
       <MarkerContent>Explored 4 files</MarkerContent>
     </Marker>
+  );
+}
+`;
+
+const activityFeedCode = `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
+import { Spinner } from "@/components/ui/spinner";
+
+export function ActivityFeed() {
+  return (
+    <div className="flex w-full max-w-md flex-col gap-3 text-left">
+      <Marker variant="separator">
+        <MarkerContent>Yesterday</MarkerContent>
+      </Marker>
+      <div className="grid gap-1">
+        <Marker variant="border">
+          <MarkerContent>Merged accessibility fixes for Dialog</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground pl-1 text-xs">4:18 PM</p>
+      </div>
+      <div className="grid gap-1">
+        <Marker variant="border">
+          <MarkerContent>Published registry artifacts for Toast</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground pl-1 text-xs">11:02 AM</p>
+      </div>
+      <Marker variant="separator">
+        <MarkerContent>Today</MarkerContent>
+      </Marker>
+      <div className="grid gap-1">
+        <Marker role="status">
+          <MarkerIcon>
+            <Spinner label="" />
+          </MarkerIcon>
+          <MarkerContent>Compacting conversation</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground pl-1 text-xs">Just now</p>
+      </div>
+      <div className="grid gap-1">
+        <Marker variant="border">
+          <MarkerContent>Updated installation docs for multi-add</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground pl-1 text-xs">9:41 AM</p>
+      </div>
+    </div>
   );
 }
 `;
@@ -109,9 +156,6 @@ export function Notes() {
         <p className="text-muted-foreground text-sm">
           Published registry artifacts for Toast.
         </p>
-        <p className="text-muted-foreground text-sm">
-          Updated installation docs for multi-add.
-        </p>
       </div>
     ),
     code: `import { Marker, MarkerContent } from "@/components/ui/marker";
@@ -162,6 +206,49 @@ export function PullRequest() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "An activity feed groups day separators, bordered notes with timestamps, and a live status row.",
+  preview: (
+    <div className="flex w-full max-w-md flex-col gap-3 text-left">
+      <Marker variant="separator">
+        <MarkerContent>Yesterday</MarkerContent>
+      </Marker>
+      <div className="grid gap-1">
+        <Marker variant="border">
+          <MarkerContent>Merged accessibility fixes for Dialog</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground pl-1 text-xs">4:18 PM</p>
+      </div>
+      <div className="grid gap-1">
+        <Marker variant="border">
+          <MarkerContent>Published registry artifacts for Toast</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground pl-1 text-xs">11:02 AM</p>
+      </div>
+      <Marker variant="separator">
+        <MarkerContent>Today</MarkerContent>
+      </Marker>
+      <div className="grid gap-1">
+        <Marker role="status">
+          <MarkerIcon>
+            <Spinner label="" />
+          </MarkerIcon>
+          <MarkerContent>Compacting conversation</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground pl-1 text-xs">Just now</p>
+      </div>
+      <div className="grid gap-1">
+        <Marker variant="border">
+          <MarkerContent>Updated installation docs for multi-add</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground pl-1 text-xs">9:41 AM</p>
+      </div>
+    </div>
+  ),
+  code: activityFeedCode,
+};
+
 export default async function MarkerPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/marker/index.tsx"),
@@ -191,6 +278,7 @@ export default async function MarkerPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

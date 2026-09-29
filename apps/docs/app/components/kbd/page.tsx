@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { Kbd } from "@/registry/new-york/ui/kbd";
 import type { Metadata } from "next";
@@ -16,6 +19,57 @@ export function CommandShortcut() {
     <span>
       Press <Kbd>⌘</Kbd> <Kbd>K</Kbd>
     </span>
+  );
+}
+`;
+
+const shortcutLegendCode = `import { Kbd } from "@/components/ui/kbd";
+
+export function ShortcutLegend() {
+  return (
+    <div className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-1">
+        <p className="text-sm font-medium">Keyboard shortcuts</p>
+        <p className="text-muted-foreground text-sm">
+          Chord labels for common editor actions. Keys stay presentational.
+        </p>
+      </div>
+      <ul className="grid gap-3 text-sm">
+        <li className="flex items-center justify-between gap-4">
+          <span>Open command palette</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>⌘</Kbd>
+            <Kbd>K</Kbd>
+          </span>
+        </li>
+        <li className="flex items-center justify-between gap-4">
+          <span>Save the current file</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>⌘</Kbd>
+            <Kbd>S</Kbd>
+          </span>
+        </li>
+        <li className="flex items-center justify-between gap-4">
+          <span>Close the active panel</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>Esc</Kbd>
+          </span>
+        </li>
+        <li className="flex items-center justify-between gap-4">
+          <span>Move between results</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>↑</Kbd>
+            <Kbd>↓</Kbd>
+          </span>
+        </li>
+        <li className="flex items-center justify-between gap-4">
+          <span>Confirm the selection</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>Enter</Kbd>
+          </span>
+        </li>
+      </ul>
+    </div>
   );
 }
 `;
@@ -117,6 +171,57 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A help panel lists editor actions beside their Kbd chords so people can learn the shortcuts at a glance.",
+  preview: (
+    <div className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-1">
+        <p className="text-sm font-medium">Keyboard shortcuts</p>
+        <p className="text-muted-foreground text-sm">
+          Chord labels for common editor actions. Keys stay presentational.
+        </p>
+      </div>
+      <ul className="grid gap-3 text-sm">
+        <li className="flex items-center justify-between gap-4">
+          <span>Open command palette</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>⌘</Kbd>
+            <Kbd>K</Kbd>
+          </span>
+        </li>
+        <li className="flex items-center justify-between gap-4">
+          <span>Save the current file</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>⌘</Kbd>
+            <Kbd>S</Kbd>
+          </span>
+        </li>
+        <li className="flex items-center justify-between gap-4">
+          <span>Close the active panel</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>Esc</Kbd>
+          </span>
+        </li>
+        <li className="flex items-center justify-between gap-4">
+          <span>Move between results</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>↑</Kbd>
+            <Kbd>↓</Kbd>
+          </span>
+        </li>
+        <li className="flex items-center justify-between gap-4">
+          <span>Confirm the selection</span>
+          <span className="inline-flex items-center gap-1">
+            <Kbd>Enter</Kbd>
+          </span>
+        </li>
+      </ul>
+    </div>
+  ),
+  code: shortcutLegendCode,
+};
+
 export default async function KbdPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/kbd/index.tsx"),
@@ -145,6 +250,7 @@ export default async function KbdPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>
