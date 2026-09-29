@@ -162,7 +162,10 @@ export function AttachmentAction({
       data-slot="attachment-action"
       variant={variant}
       size={size}
-      className={cn("text-muted-foreground hover:text-foreground", className)}
+      className={cn(
+        "text-muted-foreground hover:text-foreground [&_svg:not([class*='size-'])]:size-3",
+        className,
+      )}
       {...props}
     />
   );

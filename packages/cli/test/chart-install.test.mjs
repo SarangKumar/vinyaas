@@ -68,29 +68,29 @@ function run(command, args, cwd, env = {}) {
   });
 }
 
-describe("installable tabs registry", () => {
+describe("installable chart registry", () => {
   it(
-    "installs tabs into an initialized project and the result typechecks",
-    { timeout: 120_000 },
+    "installs card into an initialized project and the result typechecks",
+    { timeout: 180_000 },
     async () => {
       const { server, requested, baseUrl } = await serveRegistry();
-      const cwd = await mkdtemp(join(tmpdir(), "vinyaas-tabs-install-"));
+      const cwd = await mkdtemp(join(tmpdir(), "vinyaas-chart-install-"));
 
       try {
         const items = await resolveRegistryItems({
           style: "new-york",
-          name: "tabs",
+          name: "chart",
           baseUrl,
         });
 
         assert.deepEqual(
           items.map((item) => item.name),
-          ["tabs"],
+          ["chart"],
         );
         assert.equal(items[0].registryDependencies, undefined);
         assert.deepEqual(items[0].dependencies, [
-          "class-variance-authority",
           "clsx",
+          "recharts",
           "tailwind-merge",
         ]);
 
@@ -98,7 +98,7 @@ describe("installable tabs registry", () => {
           join(cwd, "package.json"),
           `${JSON.stringify(
             {
-              name: "vinyaas-tabs-consumer",
+              name: "vinyaas-chart-consumer",
               private: true,
               dependencies: {
                 next: "16.3.6",
@@ -147,46 +147,59 @@ describe("installable tabs registry", () => {
           REGISTRY_BASE_URL: baseUrl,
         });
         const requestedBeforeAdd = requested.length;
-        await run(process.execPath, [cli, "add", "tabs"], cwd, {
+        await run(process.execPath, [cli, "add", "chart"], cwd, {
           REGISTRY_BASE_URL: baseUrl,
         });
         assert.deepEqual(requested.slice(requestedBeforeAdd), [
-          "r/new-york/tabs.json",
+          "r/new-york/chart.json",
         ]);
         await writeFile(
-          join(cwd, "components/ui/tabs/example.tsx"),
+          join(cwd, "components/ui/chart/example.tsx"),
           [
-            'import { TabsTrigger } from "@/components/ui/tabs";',
+            'import { ChartContainer } from "@/components/ui/chart";',
+            'import { Line, LineChart } from "recharts";',
+            "",
+            'const config = { revenue: { label: "Revenue", color: "var(--color-chart-1)" } };',
+            'const data = [{ month: "Jan", revenue: 12400 }];',
             "",
             "export function Example() {",
-            '  return <TabsTrigger value="notes">Notes</TabsTrigger>;',
+            "  return (",
+            '    <ChartContainer config={config} className="h-32 w-full">',
+            "      <LineChart data={data}>",
+            '        <Line dataKey="revenue" stroke="var(--color-revenue)" dot={false} />',
+            "      </LineChart>",
+            "    </ChartContainer>",
+            "  );",
             "}",
             "",
           ].join("\n"),
         );
 
-        const card = await readFile(
-          join(cwd, "components/ui/tabs/index.tsx"),
+        const source = await readFile(
+          join(cwd, "components/ui/chart/index.tsx"),
           "utf8",
         );
+        const globalsCss = await readFile(join(cwd, "app/globals.css"), "utf8");
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");
         const config = await readFile(join(cwd, "components.json"), "utf8");
         const packageJson = JSON.parse(
           await readFile(join(cwd, "package.json"), "utf8"),
         );
 
-        assert.match(card, /from "@\/lib\/utils"/);
-        assert.match(card, /TabsTrigger/);
+        assert.match(source, /from "@\/lib\/utils"/);
+        assert.match(source, /ChartContainer/);
+        assert.match(source, /recharts/);
         assert.match(utils, /export function cn/);
         assert.match(config, /"style": "new-york"/);
+        assert.doesNotMatch(globalsCss, /--chart-1/);
         assert.deepEqual(
           Object.keys(packageJson.dependencies).sort(),
           [
-            "class-variance-authority",
             "clsx",
             "next",
             "react",
             "react-dom",
+            "recharts",
             "tailwind-merge",
             "tailwindcss",
           ].sort(),

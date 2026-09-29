@@ -16,11 +16,11 @@ export function AspectRatio({
   return (
     <div
       data-slot="aspect-ratio"
-      className={cn("relative w-full", className)}
+      className={cn("relative w-full overflow-hidden", className)}
       style={{ aspectRatio: String(ratio), ...style }}
       {...props}
     >
-      <div className="absolute inset-0 size-full [&>img]:size-full [&>img]:object-cover">
+      <div className="absolute inset-0 size-full [&>img]:size-full [&>img]:object-cover [&>video]:size-full [&>video]:object-cover">
         {children}
       </div>
     </div>

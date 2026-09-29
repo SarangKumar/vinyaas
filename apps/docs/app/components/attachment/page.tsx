@@ -39,6 +39,24 @@ function FileCodeIcon() {
   );
 }
 
+function FileIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 2v6h6" />
+      <path d="M16 13H8" />
+      <path d="M16 17H8" />
+      <path d="M10 9H8" />
+    </svg>
+  );
+}
+
 function XIcon() {
   return (
     <svg
@@ -75,55 +93,57 @@ const images = [
   },
 ] as const;
 
-function AttachmentDemo() {
+const usage = `import {
+  Attachment,
+  AttachmentAction,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentMedia,
+  AttachmentTitle,
+} from "@/components/ui/attachment";
+
+function FileCodeIcon() {
   return (
-    <div className="mx-auto flex w-full max-w-sm flex-col gap-3 text-left">
-      <AttachmentGroup>
-        {images.map((image) => (
-          <Attachment key={image.name} orientation="vertical">
-            <AttachmentMedia variant="image">
-              <img src={image.src} alt={image.alt} />
-            </AttachmentMedia>
-            <AttachmentContent>
-              <AttachmentTitle>{image.name}</AttachmentTitle>
-              <AttachmentDescription>{image.meta}</AttachmentDescription>
-            </AttachmentContent>
-          </Attachment>
-        ))}
-      </AttachmentGroup>
-      <Attachment state="uploading" className="w-full">
-        <AttachmentMedia>
-          <Spinner label="" />
-        </AttachmentMedia>
-        <AttachmentContent>
-          <AttachmentTitle>sales-dashboard.pdf</AttachmentTitle>
-          <AttachmentDescription>Uploading · 64%</AttachmentDescription>
-        </AttachmentContent>
-        <AttachmentActions>
-          <AttachmentAction aria-label="Cancel upload">
-            <XIcon />
-          </AttachmentAction>
-        </AttachmentActions>
-      </Attachment>
-      <Attachment className="w-full">
-        <AttachmentMedia>
-          <FileCodeIcon />
-        </AttachmentMedia>
-        <AttachmentContent>
-          <AttachmentTitle>message-renderer.tsx</AttachmentTitle>
-          <AttachmentDescription>TypeScript · 12 KB</AttachmentDescription>
-        </AttachmentContent>
-        <AttachmentActions>
-          <AttachmentAction aria-label="Remove message-renderer.tsx">
-            <XIcon />
-          </AttachmentAction>
-        </AttachmentActions>
-      </Attachment>
-    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 2v6h6" />
+      <path d="m10 13-2 2 2 2" />
+      <path d="m14 17 2-2-2-2" />
+    </svg>
   );
 }
 
-const demoCode = `import { Spinner } from "@/components/ui/spinner";
+function XIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
+
+export function FileAttachment() {
+  return (
+    <Attachment className="w-full max-w-sm">
+      <AttachmentMedia>
+        <FileCodeIcon />
+      </AttachmentMedia>
+      <AttachmentContent>
+        <AttachmentTitle>message-renderer.tsx</AttachmentTitle>
+        <AttachmentDescription>TypeScript · 12 KB</AttachmentDescription>
+      </AttachmentContent>
+      <AttachmentActions>
+        <AttachmentAction aria-label="Remove message-renderer.tsx">
+          <XIcon />
+        </AttachmentAction>
+      </AttachmentActions>
+    </Attachment>
+  );
+}
+`;
+
+const composerCode = `import { Spinner } from "@/components/ui/spinner";
 import {
   Attachment,
   AttachmentAction,
@@ -176,7 +196,7 @@ const images = [
   },
 ];
 
-export function AttachmentDemo() {
+export function AttachmentComposer() {
   return (
     <div className="mx-auto flex w-full max-w-sm flex-col gap-3">
       <AttachmentGroup>
@@ -225,7 +245,53 @@ export function AttachmentDemo() {
 }
 `;
 
-const usage = demoCode;
+function AttachmentComposer() {
+  return (
+    <div className="mx-auto flex w-full max-w-sm flex-col gap-3">
+      <AttachmentGroup>
+        {images.map((image) => (
+          <Attachment key={image.name} orientation="vertical">
+            <AttachmentMedia variant="image">
+              <img src={image.src} alt={image.alt} />
+            </AttachmentMedia>
+            <AttachmentContent>
+              <AttachmentTitle>{image.name}</AttachmentTitle>
+              <AttachmentDescription>{image.meta}</AttachmentDescription>
+            </AttachmentContent>
+          </Attachment>
+        ))}
+      </AttachmentGroup>
+      <Attachment state="uploading" className="w-full">
+        <AttachmentMedia>
+          <Spinner label="" />
+        </AttachmentMedia>
+        <AttachmentContent>
+          <AttachmentTitle>sales-dashboard.pdf</AttachmentTitle>
+          <AttachmentDescription>Uploading · 64%</AttachmentDescription>
+        </AttachmentContent>
+        <AttachmentActions>
+          <AttachmentAction aria-label="Cancel upload">
+            <XIcon />
+          </AttachmentAction>
+        </AttachmentActions>
+      </Attachment>
+      <Attachment className="w-full">
+        <AttachmentMedia>
+          <FileCodeIcon />
+        </AttachmentMedia>
+        <AttachmentContent>
+          <AttachmentTitle>message-renderer.tsx</AttachmentTitle>
+          <AttachmentDescription>TypeScript · 12 KB</AttachmentDescription>
+        </AttachmentContent>
+        <AttachmentActions>
+          <AttachmentAction aria-label="Remove message-renderer.tsx">
+            <XIcon />
+          </AttachmentAction>
+        </AttachmentActions>
+      </Attachment>
+    </div>
+  );
+}
 
 const api: ApiRow[] = [
   {
@@ -259,6 +325,55 @@ const api: ApiRow[] = [
   },
 ];
 
+const imagesExampleCode = `import {
+  Attachment,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentGroup,
+  AttachmentMedia,
+  AttachmentTitle,
+} from "@/components/ui/attachment";
+
+const images = [
+  {
+    name: "dashboard.svg",
+    meta: "SVG · 2.1 KB",
+    src: "/attachments/dashboard.svg",
+    alt: "Dashboard preview",
+  },
+  {
+    name: "profile.svg",
+    meta: "SVG · 1.8 KB",
+    src: "/attachments/profile.svg",
+    alt: "Profile preview",
+  },
+  {
+    name: "settings.svg",
+    meta: "SVG · 1.9 KB",
+    src: "/attachments/settings.svg",
+    alt: "Settings preview",
+  },
+];
+
+export function ImageAttachments() {
+  return (
+    <AttachmentGroup className="w-full max-w-sm">
+      {images.map((image) => (
+        <Attachment key={image.name} orientation="vertical">
+          <AttachmentMedia variant="image">
+            <img src={image.src} alt={image.alt} />
+          </AttachmentMedia>
+          <AttachmentContent>
+            <AttachmentTitle>{image.name}</AttachmentTitle>
+            <AttachmentDescription>{image.meta}</AttachmentDescription>
+          </AttachmentContent>
+        </Attachment>
+      ))}
+    </AttachmentGroup>
+  );
+}
+`;
+
 const examples: ComponentExample[] = [
   {
     id: "images",
@@ -280,42 +395,7 @@ const examples: ComponentExample[] = [
         ))}
       </AttachmentGroup>
     ),
-    code: `import {
-  Attachment,
-  AttachmentContent,
-  AttachmentDescription,
-  AttachmentGroup,
-  AttachmentMedia,
-  AttachmentTitle,
-} from "@/components/ui/attachment";
-
-const images = [
-  {
-    name: "dashboard.svg",
-    meta: "SVG · 2.1 KB",
-    src: "/attachments/dashboard.svg",
-    alt: "Dashboard preview",
-  },
-];
-
-export function ImageAttachments() {
-  return (
-    <AttachmentGroup>
-      {images.map((image) => (
-        <Attachment key={image.name} orientation="vertical">
-          <AttachmentMedia variant="image">
-            <img src={image.src} alt={image.alt} />
-          </AttachmentMedia>
-          <AttachmentContent>
-            <AttachmentTitle>{image.name}</AttachmentTitle>
-            <AttachmentDescription>{image.meta}</AttachmentDescription>
-          </AttachmentContent>
-        </Attachment>
-      ))}
-    </AttachmentGroup>
-  );
-}
-`,
+    code: imagesExampleCode,
   },
   {
     id: "uploading",
@@ -360,7 +440,7 @@ function XIcon() {
 
 export function UploadingAttachment() {
   return (
-    <Attachment state="uploading" className="w-full">
+    <Attachment state="uploading" className="w-full max-w-sm">
       <AttachmentMedia>
         <Spinner label="" />
       </AttachmentMedia>
@@ -370,6 +450,80 @@ export function UploadingAttachment() {
       </AttachmentContent>
       <AttachmentActions>
         <AttachmentAction aria-label="Cancel upload">
+          <XIcon />
+        </AttachmentAction>
+      </AttachmentActions>
+    </Attachment>
+  );
+}
+`,
+  },
+  {
+    id: "error",
+    title: "Error",
+    description:
+      "Failed uploads keep the reason in the description, not color alone.",
+    preview: (
+      <Attachment state="error" className="w-full max-w-sm">
+        <AttachmentMedia>
+          <FileIcon />
+        </AttachmentMedia>
+        <AttachmentContent>
+          <AttachmentTitle>quarterly-report.pdf</AttachmentTitle>
+          <AttachmentDescription>
+            Upload failed. Try again.
+          </AttachmentDescription>
+        </AttachmentContent>
+        <AttachmentActions>
+          <AttachmentAction aria-label="Remove quarterly-report.pdf">
+            <XIcon />
+          </AttachmentAction>
+        </AttachmentActions>
+      </Attachment>
+    ),
+    code: `import {
+  Attachment,
+  AttachmentAction,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentMedia,
+  AttachmentTitle,
+} from "@/components/ui/attachment";
+
+function FileIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 2v6h6" />
+      <path d="M16 13H8" />
+      <path d="M16 17H8" />
+      <path d="M10 9H8" />
+    </svg>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
+
+export function FailedAttachment() {
+  return (
+    <Attachment state="error" className="w-full max-w-sm">
+      <AttachmentMedia>
+        <FileIcon />
+      </AttachmentMedia>
+      <AttachmentContent>
+        <AttachmentTitle>quarterly-report.pdf</AttachmentTitle>
+        <AttachmentDescription>Upload failed. Try again.</AttachmentDescription>
+      </AttachmentContent>
+      <AttachmentActions>
+        <AttachmentAction aria-label="Remove quarterly-report.pdf">
           <XIcon />
         </AttachmentAction>
       </AttachmentActions>
@@ -398,63 +552,15 @@ export function UploadingAttachment() {
         </AttachmentActions>
       </Attachment>
     ),
-    code: `import {
-  Attachment,
-  AttachmentAction,
-  AttachmentActions,
-  AttachmentContent,
-  AttachmentDescription,
-  AttachmentMedia,
-  AttachmentTitle,
-} from "@/components/ui/attachment";
-
-function FileCodeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
-      <path d="M14 2v6h6" />
-      <path d="m10 13-2 2 2 2" />
-      <path d="m14 17 2-2-2-2" />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
-  );
-}
-
-export function FileAttachment() {
-  return (
-    <Attachment className="w-full">
-      <AttachmentMedia>
-        <FileCodeIcon />
-      </AttachmentMedia>
-      <AttachmentContent>
-        <AttachmentTitle>message-renderer.tsx</AttachmentTitle>
-        <AttachmentDescription>TypeScript · 12 KB</AttachmentDescription>
-      </AttachmentContent>
-      <AttachmentActions>
-        <AttachmentAction aria-label="Remove message-renderer.tsx">
-          <XIcon />
-        </AttachmentAction>
-      </AttachmentActions>
-    </Attachment>
-  );
-}
-`,
+    code: usage,
   },
 ];
 
 const inPractice: ComponentInPractice = {
   description:
     "A chat composer stacks image previews, an uploading file, and a finished attachment.",
-  preview: <AttachmentDemo />,
-  code: { tsx: demoCode, jsx: demoCode },
+  preview: <AttachmentComposer />,
+  code: { tsx: composerCode, jsx: composerCode },
 };
 
 export default async function AttachmentPage() {
@@ -472,6 +578,7 @@ export default async function AttachmentPage() {
           Attachment shows a file or image with optional actions and upload
           state. Use AttachmentMedia for an icon or image, AttachmentContent for
           the name and metadata, and AttachmentActions for remove or cancel.
+          Long names truncate; keep remove and cancel controls named.
         </p>
       }
       install="vinyaas add attachment"
@@ -507,7 +614,20 @@ export default async function AttachmentPage() {
       }
       source={source}
     >
-      <AttachmentDemo />
+      <Attachment className="w-full max-w-sm">
+        <AttachmentMedia>
+          <FileCodeIcon />
+        </AttachmentMedia>
+        <AttachmentContent>
+          <AttachmentTitle>message-renderer.tsx</AttachmentTitle>
+          <AttachmentDescription>TypeScript · 12 KB</AttachmentDescription>
+        </AttachmentContent>
+        <AttachmentActions>
+          <AttachmentAction aria-label="Remove message-renderer.tsx">
+            <XIcon />
+          </AttachmentAction>
+        </AttachmentActions>
+      </Attachment>
     </ComponentReference>
   );
 }

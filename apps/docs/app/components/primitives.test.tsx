@@ -19,6 +19,8 @@ import SkeletonPage from "./skeleton/page";
 import SwitchPage from "./switch/page";
 import TablePage from "./table/page";
 import TabsPage from "./tabs/page";
+import DrawerPage from "./drawer/page";
+import ChartPage from "./chart/page";
 import ToastPage from "./toast/page";
 import TooltipPage from "./tooltip/page";
 import AlertPage from "./alert/page";
@@ -103,6 +105,18 @@ const pages = [
     title: "Tabs",
     command: "npx vinyaas add tabs",
     api: "defaultValue",
+  },
+  {
+    load: DrawerPage,
+    title: "Drawer",
+    command: "npx vinyaas add drawer",
+    api: "side",
+  },
+  {
+    load: ChartPage,
+    title: "Chart",
+    command: "npx vinyaas add chart",
+    api: "config",
   },
   {
     load: TooltipPage,

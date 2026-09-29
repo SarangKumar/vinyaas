@@ -51,11 +51,17 @@ describe("Changelog", () => {
       `v${currentVersion} continues the catalog`,
     );
     expect(document.body.textContent).toContain("Tabs");
+    expect(document.body.textContent).toContain("Drawer");
+    expect(document.body.textContent).toContain("Chart");
     expect(document.body.textContent).toContain("Aspect Ratio");
     expect(document.body.textContent).toContain("Attachment");
+    expect(document.body.textContent).toContain("Tailwind support");
+    expect(document.body.textContent).toContain("@theme");
     expect(v11.map((component) => component.slug)).toEqual([
       "aspect-ratio",
       "attachment",
+      "chart",
+      "drawer",
       "tabs",
     ]);
     expect(document.body.textContent).toContain(

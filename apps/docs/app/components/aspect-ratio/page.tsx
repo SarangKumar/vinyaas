@@ -7,6 +7,17 @@ import type {
 } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { AspectRatio } from "@/registry/new-york/ui/aspect-ratio";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york/ui/card";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -16,12 +27,10 @@ const usage = `import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 export function Hero() {
   return (
-    <AspectRatio ratio={16 / 9}>
-      <img
-        src="/hero.png"
-        alt="Product screenshot"
-        className="rounded-md object-cover"
-      />
+    <AspectRatio ratio={16 / 9} className="bg-muted max-w-md overflow-hidden rounded-md">
+      <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
+        16:9
+      </div>
     </AspectRatio>
   );
 }
@@ -59,8 +68,10 @@ const examples: ComponentExample[] = [
 
 export function Landscape() {
   return (
-    <AspectRatio ratio={16 / 9} className="bg-muted overflow-hidden rounded-md">
-      <img src="/landscape.png" alt="Landscape" className="object-cover" />
+    <AspectRatio ratio={16 / 9} className="bg-muted max-w-md overflow-hidden rounded-md">
+      <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
+        16:9
+      </div>
     </AspectRatio>
   );
 }
@@ -84,8 +95,10 @@ export function Landscape() {
 
 export function Square() {
   return (
-    <AspectRatio ratio={1} className="bg-muted overflow-hidden rounded-md">
-      <img src="/square.png" alt="Square crop" className="object-cover" />
+    <AspectRatio ratio={1} className="bg-muted max-w-40 overflow-hidden rounded-md">
+      <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
+        1:1
+      </div>
     </AspectRatio>
   );
 }
@@ -109,8 +122,41 @@ export function Square() {
 
 export function Portrait() {
   return (
-    <AspectRatio ratio={9 / 16} className="bg-muted overflow-hidden rounded-md">
-      <img src="/portrait.png" alt="Portrait" className="object-cover" />
+    <AspectRatio ratio={9 / 16} className="bg-muted max-w-40 overflow-hidden rounded-md">
+      <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
+        9:16
+      </div>
+    </AspectRatio>
+  );
+}
+`,
+  },
+  {
+    id: "responsive",
+    title: "Responsive width",
+    description:
+      "Cap the frame with max-width utilities. The ratio stays fixed as the viewport shrinks.",
+    preview: (
+      <AspectRatio
+        ratio={16 / 9}
+        className="bg-muted w-full max-w-sm overflow-hidden rounded-md sm:max-w-lg"
+      >
+        <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
+          16:9
+        </div>
+      </AspectRatio>
+    ),
+    code: `import { AspectRatio } from "@/components/ui/aspect-ratio";
+
+export function ResponsiveCover() {
+  return (
+    <AspectRatio
+      ratio={16 / 9}
+      className="bg-muted w-full max-w-sm overflow-hidden rounded-md sm:max-w-lg"
+    >
+      <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
+        16:9
+      </div>
     </AspectRatio>
   );
 }
@@ -118,42 +164,95 @@ export function Portrait() {
   },
 ];
 
-const inPractice: ComponentInPractice = {
-  description:
-    "A product card uses a 16:9 AspectRatio for the cover image above the title.",
-  preview: (
-    <div className="border-border bg-card w-full max-w-sm overflow-hidden rounded-md border text-left">
-      <AspectRatio ratio={16 / 9} className="bg-muted">
-        <div className="text-muted-foreground flex size-full items-center justify-center text-sm">
-          Cover image
-        </div>
-      </AspectRatio>
-      <div className="grid gap-1 p-4">
-        <p className="text-sm font-medium">Design system kit</p>
-        <p className="text-muted-foreground text-sm">
-          Source-installed primitives for product UI.
-        </p>
-      </div>
-    </div>
-  ),
-  code: `import { AspectRatio } from "@/components/ui/aspect-ratio";
+const inPracticeCode = `import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export function ProductCover() {
   return (
-    <div className="border-border bg-card overflow-hidden rounded-md border">
-      <AspectRatio ratio={16 / 9}>
-        <img src="/cover.png" alt="Design system kit" className="object-cover" />
+    <Card className="w-full max-w-sm gap-0 overflow-hidden p-0 text-left">
+      <AspectRatio ratio={16 / 9} className="bg-muted rounded-none">
+        <img
+          src="/og.png"
+          alt="Vinyaas Open Graph preview"
+          className="size-full object-cover"
+        />
       </AspectRatio>
-      <div className="grid gap-1 p-4">
-        <p className="text-sm font-medium">Design system kit</p>
+      <CardHeader className="px-4 pt-4">
+        <div>
+          <CardTitle>Vinyaas</CardTitle>
+          <CardDescription>
+            Composable React components you install as source.
+          </CardDescription>
+        </div>
+        <CardAction>
+          <Badge variant="outline">v1.1.0</Badge>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="px-4">
         <p className="text-muted-foreground text-sm">
-          Source-installed primitives for product UI.
+          A production catalog for forms, overlays, charts, and product UI —
+          with docs, CLI install, and theme tokens that travel with your app.
         </p>
-      </div>
-    </div>
+      </CardContent>
+      <CardFooter className="gap-2 px-4 pb-4">
+        <Button variant="outline" size="sm">
+          Documentation
+        </Button>
+        <Button size="sm">Get started</Button>
+      </CardFooter>
+    </Card>
   );
 }
-`,
+`;
+
+const inPractice: ComponentInPractice = {
+  description:
+    "A marketing card uses AspectRatio for a 16:9 Open Graph cover above title, description, and equally sized actions.",
+  preview: (
+    <Card className="w-full max-w-sm gap-0 overflow-hidden p-0 text-left">
+      <AspectRatio ratio={16 / 9} className="bg-muted rounded-none">
+        <img
+          src="/og.png"
+          alt="Vinyaas Open Graph preview"
+          className="size-full object-cover"
+        />
+      </AspectRatio>
+      <CardHeader className="px-4 pt-4">
+        <div>
+          <CardTitle>Vinyaas</CardTitle>
+          <CardDescription>
+            Composable React components you install as source.
+          </CardDescription>
+        </div>
+        <CardAction>
+          <Badge variant="outline">v1.1.0</Badge>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="px-4">
+        <p className="text-muted-foreground text-sm">
+          A production catalog for forms, overlays, charts, and product UI —
+          with docs, CLI install, and theme tokens that travel with your app.
+        </p>
+      </CardContent>
+      <CardFooter className="gap-2 px-4 pb-4">
+        <Button variant="outline" size="sm">
+          Documentation
+        </Button>
+        <Button size="sm">Get started</Button>
+      </CardFooter>
+    </Card>
+  ),
+  code: { tsx: inPracticeCode, jsx: inPracticeCode },
 };
 
 export default async function AspectRatioPage() {
@@ -170,8 +269,9 @@ export default async function AspectRatioPage() {
         <p>
           AspectRatio keeps children inside a fixed width-to-height frame. Pass{" "}
           <code>ratio</code> as a number such as <code>16 / 9</code> or{" "}
-          <code>1</code>. Images should use <code>object-cover</code> to fill
-          the frame.
+          <code>1</code>. Combine with Tailwind width utilities like{" "}
+          <code>max-w-md</code> or <code>sm:max-w-lg</code>. In your app, images
+          and video typically fill the frame with <code>object-cover</code>.
         </p>
       }
       install="vinyaas add aspect-ratio"

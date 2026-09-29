@@ -184,6 +184,30 @@ export default function ChangelogPage() {
             <li key={component.slug}>{component.name}</li>
           ))}
         </ul>
+        <h3
+          id="v1.1.0-tailwind"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Tailwind support
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Consumer theme tokens stay in <code>globals.css</code> with Tailwind
+            v4 <code>@theme</code> mappings. Components use semantic utilities
+            such as <code>bg-card</code>, <code>border-border</code>, and{" "}
+            <code>text-muted-foreground</code>.
+          </li>
+          <li>
+            Docs and registry examples lean on responsive width, sizing, and
+            overflow utilities so installs fit natural Tailwind layouts without
+            extra CSS files for most components.
+          </li>
+          <li>
+            Minimal chart tokens (<code>--chart-1</code> through{" "}
+            <code>--chart-5</code>) support themed charts without restoring a
+            large legacy theme file.
+          </li>
+        </ul>
         <p className="text-foreground text-base leading-7">
           Installed components use the{" "}
           <code>components/ui/&lt;name&gt;/index.tsx</code> layout. Supporting

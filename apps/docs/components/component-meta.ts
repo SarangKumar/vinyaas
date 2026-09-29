@@ -89,6 +89,13 @@ export const components: readonly ComponentMeta[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Chart",
+    slug: "chart",
+    description: "Themed charts for dashboards and product analytics.",
+    category: "display",
+    introducedIn: "1.1.0",
+  },
+  {
     name: "Checkbox",
     slug: "checkbox",
     description: "A native checkbox control for selecting one or more options.",
@@ -108,6 +115,13 @@ export const components: readonly ComponentMeta[] = [
     description: "A modal panel for a focused task.",
     category: "overlay",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Drawer",
+    slug: "drawer",
+    description: "A panel that slides in from the edge of the screen.",
+    category: "overlay",
+    introducedIn: "1.1.0",
   },
   {
     name: "Dropdown Menu",

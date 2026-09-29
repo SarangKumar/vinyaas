@@ -136,7 +136,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "tabs",
     type: "registry:ui",
-    dependencies: ["clsx", "tailwind-merge"],
+    dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
     files: [
       {
         path: "ui/tabs/index.tsx",
@@ -285,6 +285,32 @@ export const registry: readonly RegistryItem[] = [
       },
       {
         path: "ui/dialog/dialog.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "drawer",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/drawer/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/drawer/drawer.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "chart",
+    type: "registry:ui",
+    dependencies: ["clsx", "recharts", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/chart/index.tsx",
         type: "registry:ui",
       },
     ],

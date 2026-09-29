@@ -122,4 +122,31 @@ describe("Attachment", () => {
     expect(screen.getByText("one.pdf")).toBeInTheDocument();
     expect(screen.getByText("two.pdf")).toBeInTheDocument();
   });
+
+  it("truncates long titles and keeps remove actions named", () => {
+    render(
+      <Attachment className="w-40">
+        <AttachmentContent>
+          <AttachmentTitle>
+            very-long-filename-that-should-truncate.tsx
+          </AttachmentTitle>
+          <AttachmentDescription>TypeScript · 12 KB</AttachmentDescription>
+        </AttachmentContent>
+        <AttachmentActions>
+          <AttachmentAction aria-label="Remove very-long-filename-that-should-truncate.tsx">
+            Remove
+          </AttachmentAction>
+        </AttachmentActions>
+      </Attachment>,
+    );
+
+    expect(
+      screen.getByText("very-long-filename-that-should-truncate.tsx"),
+    ).toHaveClass("truncate");
+    expect(
+      screen.getByRole("button", {
+        name: "Remove very-long-filename-that-should-truncate.tsx",
+      }),
+    ).toBeInTheDocument();
+  });
 });

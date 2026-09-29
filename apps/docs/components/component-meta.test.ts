@@ -24,9 +24,11 @@ describe("component metadata", () => {
       "Breadcrumb",
       "Button",
       "Card",
+      "Chart",
       "Checkbox",
       "Command",
       "Dialog",
+      "Drawer",
       "Dropdown Menu",
       "File Upload",
       "Hover Card",
@@ -70,7 +72,7 @@ describe("component metadata", () => {
       newComponents()
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["aspect-ratio", "attachment", "tabs"]);
+    ).toEqual(["aspect-ratio", "attachment", "chart", "drawer", "tabs"]);
     expect(newComponents().map((component) => component.slug)).not.toContain(
       "button",
     );
@@ -82,6 +84,6 @@ describe("component metadata", () => {
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 4);
+    ).toBe(components.length - 6);
   });
 });

@@ -570,6 +570,12 @@ describe("registry build output", () => {
       ["ui/dialog/index.tsx", "ui/dialog/dialog.css"],
       'role="dialog"',
     ],
+    [
+      "drawer",
+      ["ui/drawer/index.tsx", "ui/drawer/drawer.css"],
+      'role="dialog"',
+    ],
+    ["chart", ["ui/chart/index.tsx"], "ChartContainer"],
     ["accordion", ["ui/accordion/index.tsx"], "aria-expanded"],
     ["breadcrumb", ["ui/breadcrumb/index.tsx"], "breadcrumb"],
     ["scroll-area", ["ui/scroll-area/index.tsx"], "data-scroll-area"],
@@ -627,7 +633,7 @@ describe("registry build output", () => {
       );
       expect(generated.name).toBe(name);
       expect(generated.type).toBe("registry:ui");
-      expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+      expect(generated.dependencies).toEqual([...(item.dependencies ?? [])]);
       expect(item.registryDependencies).toBeUndefined();
       expect(generated.files.map((file) => file.path)).toEqual(filePaths);
       expect(componentFile?.content).toBe(sources[filePaths[0]!]!);
@@ -664,7 +670,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).rejects.toThrow();
     expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(37);
+    expect(newYork).toHaveLength(39);
   });
 
   it("matches the json schema item types", () => {

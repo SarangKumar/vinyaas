@@ -13,7 +13,12 @@ describe("AspectRatio", () => {
 
     const root = container.querySelector('[data-slot="aspect-ratio"]');
 
-    expect(root).toHaveClass("relative", "w-full", "max-w-sm");
+    expect(root).toHaveClass(
+      "relative",
+      "w-full",
+      "overflow-hidden",
+      "max-w-sm",
+    );
     expect(root).toHaveStyle({ aspectRatio: String(16 / 9) });
     expect(screen.getByRole("img", { name: "Hero" })).toBeInTheDocument();
   });

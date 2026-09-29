@@ -2,7 +2,7 @@
   "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
   "name": "tabs",
   "type": "registry:ui",
-  "dependencies": ["clsx", "tailwind-merge"],
+  "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
   "files": [
     {
       "path": "ui/tabs/index.tsx",
