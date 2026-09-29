@@ -45,6 +45,7 @@ describe("component metadata", () => {
       "Spinner",
       "Switch",
       "Table",
+      "Tabs",
       "Textarea",
       "Toast",
       "Tooltip",
@@ -52,8 +53,8 @@ describe("component metadata", () => {
     ]);
   });
 
-  it("treats v1.0.0 introductions as new and keeps earlier components out", () => {
-    expect(currentVersion).toBe("1.0.0");
+  it("treats v1.1.0 introductions as new and keeps earlier components out", () => {
+    expect(currentVersion).toBe("1.1.0");
 
     const slugs = new Set(components.map((component) => component.slug));
 
@@ -64,39 +65,7 @@ describe("component metadata", () => {
     }
 
     expect(newComponents().map((component) => component.slug)).toEqual([
-      "accordion",
-      "alert",
-      "avatar",
-      "badge",
-      "breadcrumb",
-      "card",
-      "checkbox",
-      "command",
-      "dialog",
-      "dropdown-menu",
-      "file-upload",
-      "hover-card",
-      "input",
-      "input-group",
-      "input-otp",
-      "kbd",
-      "label",
-      "marker",
-      "native-select",
-      "popover",
-      "progress",
-      "radio-group",
-      "scroll-area",
-      "separator",
-      "skeleton",
-      "slider",
-      "spinner",
-      "switch",
-      "table",
-      "textarea",
-      "toast",
-      "tooltip",
-      "typography",
+      "tabs",
     ]);
     expect(newComponents().map((component) => component.slug)).not.toContain(
       "button",
@@ -106,5 +75,9 @@ describe("component metadata", () => {
         .filter((component) => component.introducedIn === "0.1")
         .map((component) => component.slug),
     ).toEqual(["button"]);
+    expect(
+      components.filter((component) => component.introducedIn === "1.0.0")
+        .length,
+    ).toBe(components.length - 2);
   });
 });

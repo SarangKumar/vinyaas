@@ -52,7 +52,10 @@ describe("components catalog", () => {
     expect(all).toContain("Button");
     expect(all).toHaveLength(components.length);
     expect(document.body.textContent).toContain(
-      `The v1.0.0 catalog has ${components.length} independently installable`,
+      `The catalog has ${components.length} independently installable`,
+    );
+    expect(document.body.textContent).toContain(
+      "Components marked new were introduced in v1.1.0",
     );
     expect(
       screen.queryByText(

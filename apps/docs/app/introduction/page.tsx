@@ -62,6 +62,9 @@ export default function IntroductionPage() {
     (component) => component.introducedIn === "0.1",
   ).length;
   const v10Count = components.filter(
+    (component) => component.introducedIn === "1.0.0",
+  ).length;
+  const currentCount = components.filter(
     (component) => component.introducedIn === currentVersion,
   ).length;
 
@@ -122,10 +125,12 @@ export default function IntroductionPage() {
         </h2>
         <p className={body}>
           The current catalog has {components.length} components. v0.1 ships{" "}
-          {v01Count} component (Button). v{currentVersion} is the major
-          production-focused release and adds the other {v10Count}. Components
-          are composable, theme-aware in light and dark, and documented with
-          production-oriented examples.
+          {v01Count} component (Button). v1.0.0 is the major production-focused
+          release and adds {v10Count} more. v{currentVersion} adds{" "}
+          {currentCount} component
+          {currentCount === 1 ? "" : "s"}. Components are composable,
+          theme-aware in light and dark, and documented with production-oriented
+          examples.
         </p>
         <p className={body}>
           Docs pages include API reference, installation, usage and composition

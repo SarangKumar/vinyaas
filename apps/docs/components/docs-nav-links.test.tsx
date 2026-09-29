@@ -55,11 +55,16 @@ describe("DocsNavLinks", () => {
       "@[22rem]:grid-cols-2",
       "@[40rem]:grid-cols-3",
     );
+    expect(within(nav).getByRole("link", { name: "Input" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
     expect(
-      within(nav).getByRole("link", { name: "Input, new" }),
-    ).toHaveAttribute("aria-current", "page");
+      within(nav).getByRole("link", { name: "Tabs, new" }),
+    ).toHaveAttribute("href", "/components/tabs");
     expect(
       within(nav).getByRole("link", { name: "Button" }),
     ).not.toHaveAttribute("aria-current");
+    expect(within(nav).queryByRole("link", { name: "Input, new" })).toBeNull();
   });
 });

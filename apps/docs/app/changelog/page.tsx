@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = pageMetadata({
   title: "Changelog",
   description:
-    "Release notes for Vinyaas v0.1 and v1.0.0, including the components shipped in each version.",
+    "Release notes for Vinyaas v0.1, v1.0.0, and v1.1.0, including the components shipped in each version.",
 });
 
 const heading =
@@ -19,6 +19,9 @@ export default function ChangelogPage() {
   );
   const v10 = components.filter(
     (component) => component.introducedIn === "1.0.0",
+  );
+  const v11 = components.filter(
+    (component) => component.introducedIn === "1.1.0",
   );
 
   return (
@@ -69,9 +72,9 @@ export default function ChangelogPage() {
         </h3>
         <ul className="text-body list-disc pl-5 text-base leading-7">
           <li>
-            {components.length} components in total. Button remains the v0.1
-            foundation; the other {v10.length} are introduced in{" "}
-            {currentVersion}.
+            {v01.length + v10.length} components shipped through v1.0.0. Button
+            remains the v0.1 foundation; the other {v10.length} were introduced
+            in v1.0.0. The full catalog now has {components.length} items.
           </li>
           <li>
             Each catalog entry is an independently installable registry item.
@@ -160,6 +163,32 @@ export default function ChangelogPage() {
             <code>vinyaas init</code>.
           </li>
         </ul>
+      </section>
+      <section className="flex flex-col gap-4">
+        <h2 id="v1.1.0" className={heading}>
+          v1.1.0
+        </h2>
+        <p className="text-body text-base leading-7">
+          v{currentVersion} continues the catalog with focused foundation work
+          and new components. It adds {v11.length} component
+          {v11.length === 1 ? "" : "s"}.
+        </p>
+        <h3
+          id="v1.1.0-catalog"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Component catalog
+        </h3>
+        <ul className="text-body list-disc pl-5 text-base leading-7">
+          {v11.map((component) => (
+            <li key={component.slug}>{component.name}</li>
+          ))}
+        </ul>
+        <p className="text-body text-base leading-7">
+          Installed components use the{" "}
+          <code>components/ui/&lt;name&gt;/index.tsx</code> layout. Supporting
+          CSS files stay beside the entry file when a component needs them.
+        </p>
       </section>
     </DocsArticle>
   );

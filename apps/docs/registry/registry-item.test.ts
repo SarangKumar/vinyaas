@@ -545,6 +545,7 @@ describe("registry build output", () => {
     ["command", ["ui/command/index.tsx"], "CommandInput"],
     ["dropdown-menu", ["ui/dropdown-menu/index.tsx"], "DropdownMenuContent"],
     ["typography", ["ui/typography/index.tsx"], "TypographyH1"],
+    ["tabs", ["ui/tabs/index.tsx"], 'role="tablist"'],
   ])(
     "keeps the new-york %s artifact aligned with the source item",
     async (name, filePaths, sourceMarker) => {
@@ -626,7 +627,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).rejects.toThrow();
     expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(34);
+    expect(newYork).toHaveLength(35);
   });
 
   it("matches the json schema item types", () => {

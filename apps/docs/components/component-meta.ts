@@ -8,9 +8,9 @@ export type ComponentCategory =
   | "utility";
 
 /** The docs version whose additions count as New Components. */
-export const currentVersion = "1.0.0";
+export const currentVersion = "1.1.0";
 
-export type ReleaseVersion = "0.1" | "1.0.0";
+export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0";
 
 export type ComponentMeta = {
   name: string;
@@ -234,6 +234,13 @@ export const components: readonly ComponentMeta[] = [
     description: "A semantic table for rows and columns.",
     category: "display",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Tabs",
+    slug: "tabs",
+    description: "A set of panels that share one visible view at a time.",
+    category: "navigation",
+    introducedIn: "1.1.0",
   },
   {
     name: "Textarea",
