@@ -277,7 +277,7 @@ function NumberedSource({
       <div
         data-line-numbers
         aria-hidden="true"
-        className="text-muted-foreground border-border bg-muted/40 sticky left-0 shrink-0 self-stretch border-r py-0 pr-2 pl-3 text-right tabular-nums select-none"
+        className="text-muted-foreground border-border bg-muted sticky left-0 shrink-0 self-stretch border-r py-0 pr-2 pl-3 text-right tabular-nums select-none"
       >
         {lines.map((_, index) => (
           <div key={index} className="h-6 leading-6">

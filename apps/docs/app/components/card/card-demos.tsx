@@ -37,12 +37,13 @@ export function ProfileCardDemo() {
       <CardHeader>
         <div className="flex min-w-0 items-start gap-3">
           <Avatar>
-            <AvatarFallback>SK</AvatarFallback>
+            <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <CardTitle>Sarang Kumar</CardTitle>
+            <CardTitle>John Doe</CardTitle>
             <CardDescription>
-              Developer. Building accessible UI that you install as source.
+              Product designer. Building accessible UI that you install as
+              source.
             </CardDescription>
           </div>
         </div>
@@ -60,7 +61,7 @@ export function ProfileCardDemo() {
           </DropdownMenu>
         </CardAction>
       </CardHeader>
-      <Badge>Verified</Badge>
+      <Badge variant="outline">Verified</Badge>
       <CardFooter className="gap-2">
         <Button variant="outline">Message</Button>
         <Button>Follow</Button>
@@ -75,9 +76,7 @@ export function ProjectCardDemo() {
       <CardHeader>
         <div>
           <CardTitle>Production Dashboard</CardTitle>
-          <CardDescription>
-            Updated 2 hours ago by Sarang Kumar.
-          </CardDescription>
+          <CardDescription>Updated 2 hours ago by John Doe.</CardDescription>
         </div>
         <CardAction>
           <DropdownMenu>
@@ -99,7 +98,7 @@ export function ProjectCardDemo() {
         </CardAction>
       </CardHeader>
       <CardContent className="grid gap-2">
-        <Badge variant="secondary">On track</Badge>
+        <Badge variant="outline">On track</Badge>
         <Progress aria-label="Project progress" value={72} />
       </CardContent>
       <CardFooter>

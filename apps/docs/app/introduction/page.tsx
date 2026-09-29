@@ -19,7 +19,7 @@ export const metadata: Metadata = pageMetadata({
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
-const body = "text-body text-base leading-7";
+const body = "text-foreground text-base leading-7";
 const actionLink = `inline-flex h-9 cursor-pointer items-center rounded-md px-4 text-sm font-medium ${focusRing}`;
 
 const usageExample = {

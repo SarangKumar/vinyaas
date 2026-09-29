@@ -167,6 +167,17 @@ const examples: ComponentExample[] = [
             Pair it with a label so assistive technology can name the region.
           </p>
           <p>Keep the surrounding page from growing when content is long.</p>
+          <p>
+            Nested lists and long copy stay inside the frame while the rest of
+            the layout stays put.
+          </p>
+          <ul className="list-disc space-y-1 pl-5">
+            <li>Registry publish for Button and Dialog</li>
+            <li>Accessibility pass on focus rings</li>
+            <li>Docs refresh for ScrollArea and Toast</li>
+            <li>Smoke tests for horizontal overflow</li>
+            <li>Changelog entry for v2.4.1</li>
+          </ul>
         </div>
       </ScrollArea>
     ),
@@ -181,6 +192,19 @@ export function Notes() {
       <div className="grid gap-3 p-3 text-sm">
         <p>ScrollArea uses the browser's own scrolling.</p>
         <p>Keyboard, wheel, and touch scrolling stay native.</p>
+        <p>Pair it with a label so assistive technology can name the region.</p>
+        <p>Keep the surrounding page from growing when content is long.</p>
+        <p>
+          Nested lists and long copy stay inside the frame while the rest of
+          the layout stays put.
+        </p>
+        <ul className="list-disc space-y-1 pl-5">
+          <li>Registry publish for Button and Dialog</li>
+          <li>Accessibility pass on focus rings</li>
+          <li>Docs refresh for ScrollArea and Toast</li>
+          <li>Smoke tests for horizontal overflow</li>
+          <li>Changelog entry for v2.4.1</li>
+        </ul>
       </div>
     </ScrollArea>
   );
@@ -357,6 +381,17 @@ export default async function ScrollAreaPage() {
           <p>ScrollArea uses the browser&apos;s own scrolling.</p>
           <p>Set a height with className so overflow can appear.</p>
           <p>Keyboard, wheel, and touch scrolling stay native.</p>
+          <p>
+            Pair it with a label so assistive technology can name the region.
+          </p>
+          <p>Keep the surrounding page from growing when content is long.</p>
+          <ul className="list-disc space-y-1 pl-5">
+            <li>Registry publish for Button and Dialog</li>
+            <li>Accessibility pass on focus rings</li>
+            <li>Docs refresh for ScrollArea and Toast</li>
+            <li>Smoke tests for horizontal overflow</li>
+            <li>Changelog entry for v2.4.1</li>
+          </ul>
         </div>
       </ScrollArea>
     </ComponentReference>

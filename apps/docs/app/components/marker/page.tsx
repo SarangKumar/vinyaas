@@ -6,6 +6,14 @@ import type {
   ComponentInPractice,
 } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { Button } from "@/registry/new-york/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york/ui/card";
 import {
   Marker,
   MarkerContent,
@@ -16,6 +24,20 @@ import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("marker");
+
+function CheckIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 const usage = `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
 
@@ -29,46 +51,46 @@ export function Note() {
 }
 `;
 
-const activityFeedCode = `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
-import { Spinner } from "@/components/ui/spinner";
+const deployStatusCode = `import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
 
-export function ActivityFeed() {
+function CheckIcon() {
   return (
-    <div className="flex w-full max-w-md flex-col gap-3 text-left">
-      <Marker variant="separator">
-        <MarkerContent>Yesterday</MarkerContent>
-      </Marker>
-      <div className="grid gap-1">
-        <Marker variant="border">
-          <MarkerContent>Merged accessibility fixes for Dialog</MarkerContent>
-        </Marker>
-        <p className="text-muted-foreground pl-1 text-xs">4:18 PM</p>
-      </div>
-      <div className="grid gap-1">
-        <Marker variant="border">
-          <MarkerContent>Published registry artifacts for Toast</MarkerContent>
-        </Marker>
-        <p className="text-muted-foreground pl-1 text-xs">11:02 AM</p>
-      </div>
-      <Marker variant="separator">
-        <MarkerContent>Today</MarkerContent>
-      </Marker>
-      <div className="grid gap-1">
-        <Marker role="status">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function DeployStatus() {
+  return (
+    <Card className="w-full max-w-sm text-left">
+      <CardHeader>
+        <CardTitle>vinyaas-web</CardTitle>
+        <CardDescription>Production · us-east-1</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <p className="text-muted-foreground text-sm">
+          Last deploy finished 12 minutes ago. Traffic is healthy.
+        </p>
+        <Marker>
           <MarkerIcon>
-            <Spinner label="" />
+            <CheckIcon />
           </MarkerIcon>
-          <MarkerContent>Compacting conversation</MarkerContent>
+          <MarkerContent>Live on v1.1.0</MarkerContent>
         </Marker>
-        <p className="text-muted-foreground pl-1 text-xs">Just now</p>
-      </div>
-      <div className="grid gap-1">
-        <Marker variant="border">
-          <MarkerContent>Updated installation docs for multi-add</MarkerContent>
-        </Marker>
-        <p className="text-muted-foreground pl-1 text-xs">9:41 AM</p>
-      </div>
-    </div>
+        <Button variant="outline" className="self-start">
+          View logs
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 `;
@@ -91,25 +113,58 @@ const api: ApiRow[] = [
 const examples: ComponentExample[] = [
   {
     id: "status",
-    title: "Status",
+    title: "Live status",
     description:
-      'A running note uses role="status" so the text can be announced.',
+      'Pair Marker with Spinner and role="status" for a running update assistive tech can announce.',
     preview: (
       <Marker role="status" className="max-w-sm">
         <MarkerIcon>
           <Spinner label="" />
         </MarkerIcon>
-        <MarkerContent>Compacting conversation</MarkerContent>
+        <MarkerContent>Indexing workspace…</MarkerContent>
       </Marker>
     ),
     code: `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
 import { Spinner } from "@/components/ui/spinner";
 
-export function Running() {
+export function Indexing() {
   return (
     <Marker role="status">
       <MarkerIcon><Spinner label="" /></MarkerIcon>
-      <MarkerContent>Compacting conversation</MarkerContent>
+      <MarkerContent>Indexing workspace…</MarkerContent>
+    </Marker>
+  );
+}
+`,
+  },
+  {
+    id: "with-icon",
+    title: "With icon",
+    description:
+      "MarkerIcon holds a decorative glyph. The message stays ordinary text beside it.",
+    preview: (
+      <Marker className="max-w-sm">
+        <MarkerIcon>
+          <CheckIcon />
+        </MarkerIcon>
+        <MarkerContent>Checks passed on main</MarkerContent>
+      </Marker>
+    ),
+    code: `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function Passed() {
+  return (
+    <Marker>
+      <MarkerIcon><CheckIcon /></MarkerIcon>
+      <MarkerContent>Checks passed on main</MarkerContent>
     </Marker>
   );
 }
@@ -117,34 +172,46 @@ export function Running() {
   },
   {
     id: "border",
-    title: "Border",
-    description: "The row keeps the inline marker and adds a bottom border.",
+    title: "Bordered rows",
+    description:
+      "Use border when stacking a short activity list. Each row keeps the inline marker look.",
     preview: (
-      <div className="grid w-full max-w-sm gap-2 text-left">
+      <div className="grid w-full max-w-sm gap-0 text-left">
         <Marker variant="border">
-          <MarkerContent>Switched to release-candidate</MarkerContent>
+          <MarkerContent>Opened pull request #248</MarkerContent>
         </Marker>
         <Marker variant="border">
-          <MarkerContent>Reviewed 8 related files</MarkerContent>
+          <MarkerContent>Requested review from design</MarkerContent>
+        </Marker>
+        <Marker variant="border">
+          <MarkerContent>Updated CI for docs</MarkerContent>
         </Marker>
       </div>
     ),
     code: `import { Marker, MarkerContent } from "@/components/ui/marker";
 
-export function Notes() {
+export function Activity() {
   return (
-    <Marker variant="border">
-      <MarkerContent>Reviewed 8 related files</MarkerContent>
-    </Marker>
+    <>
+      <Marker variant="border">
+        <MarkerContent>Opened pull request #248</MarkerContent>
+      </Marker>
+      <Marker variant="border">
+        <MarkerContent>Requested review from design</MarkerContent>
+      </Marker>
+      <Marker variant="border">
+        <MarkerContent>Updated CI for docs</MarkerContent>
+      </Marker>
+    </>
   );
 }
 `,
   },
   {
     id: "separator",
-    title: "Separator",
+    title: "Day separator",
     description:
-      "A labeled divider splits a feed into days. Content stays ordinary text above and below.",
+      "A labeled divider splits ordinary copy into days without making every line a Marker.",
     preview: (
       <div className="flex w-full max-w-sm flex-col gap-3 text-left">
         <p className="text-muted-foreground text-sm">
@@ -177,76 +244,34 @@ export function ActivityDay() {
 }
 `,
   },
-  {
-    id: "link",
-    title: "Link",
-    description:
-      "The marker stays presentational. The link is a real anchor, so it keeps its own role.",
-    preview: (
-      <Marker>
-        <MarkerContent>
-          <a href="/components/marker" className="underline">
-            View the pull request
-          </a>
-        </MarkerContent>
-      </Marker>
-    ),
-    code: `import { Marker, MarkerContent } from "@/components/ui/marker";
-
-export function PullRequest() {
-  return (
-    <Marker>
-      <MarkerContent>
-        <a href="/pulls">View the pull request</a>
-      </MarkerContent>
-    </Marker>
-  );
-}
-`,
-  },
 ];
 
 const inPractice: ComponentInPractice = {
   description:
-    "An activity feed groups day separators, bordered notes with timestamps, and a live status row.",
+    "A project card carries one status Marker. The rest of the surface is Card, copy, and a button.",
   preview: (
-    <div className="flex w-full max-w-md flex-col gap-3 text-left">
-      <Marker variant="separator">
-        <MarkerContent>Yesterday</MarkerContent>
-      </Marker>
-      <div className="grid gap-1">
-        <Marker variant="border">
-          <MarkerContent>Merged accessibility fixes for Dialog</MarkerContent>
-        </Marker>
-        <p className="text-muted-foreground pl-1 text-xs">4:18 PM</p>
-      </div>
-      <div className="grid gap-1">
-        <Marker variant="border">
-          <MarkerContent>Published registry artifacts for Toast</MarkerContent>
-        </Marker>
-        <p className="text-muted-foreground pl-1 text-xs">11:02 AM</p>
-      </div>
-      <Marker variant="separator">
-        <MarkerContent>Today</MarkerContent>
-      </Marker>
-      <div className="grid gap-1">
-        <Marker role="status">
+    <Card className="w-full max-w-sm text-left">
+      <CardHeader>
+        <CardTitle>vinyaas-web</CardTitle>
+        <CardDescription>Production · us-east-1</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <p className="text-muted-foreground text-sm">
+          Last deploy finished 12 minutes ago. Traffic is healthy.
+        </p>
+        <Marker>
           <MarkerIcon>
-            <Spinner label="" />
+            <CheckIcon />
           </MarkerIcon>
-          <MarkerContent>Compacting conversation</MarkerContent>
+          <MarkerContent>Live on v1.1.0</MarkerContent>
         </Marker>
-        <p className="text-muted-foreground pl-1 text-xs">Just now</p>
-      </div>
-      <div className="grid gap-1">
-        <Marker variant="border">
-          <MarkerContent>Updated installation docs for multi-add</MarkerContent>
-        </Marker>
-        <p className="text-muted-foreground pl-1 text-xs">9:41 AM</p>
-      </div>
-    </div>
+        <Button variant="outline" className="self-start">
+          View logs
+        </Button>
+      </CardContent>
+    </Card>
   ),
-  code: activityFeedCode,
+  code: deployStatusCode,
 };
 
 export default async function MarkerPage() {

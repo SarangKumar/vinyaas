@@ -51,7 +51,13 @@ describe("Changelog", () => {
       `v${currentVersion} continues the catalog`,
     );
     expect(document.body.textContent).toContain("Tabs");
-    expect(v11.map((component) => component.slug)).toEqual(["tabs"]);
+    expect(document.body.textContent).toContain("Aspect Ratio");
+    expect(document.body.textContent).toContain("Attachment");
+    expect(v11.map((component) => component.slug)).toEqual([
+      "aspect-ratio",
+      "attachment",
+      "tabs",
+    ]);
     expect(document.body.textContent).toContain(
       `It ships ${v01.length} component`,
     );

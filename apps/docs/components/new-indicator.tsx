@@ -3,7 +3,7 @@ export function NewIndicator() {
     <>
       <span
         aria-hidden="true"
-        className="bg-new ml-2 inline-block size-1.5 shrink-0 rounded-full"
+        className="bg-primary ml-1.5 inline-block size-2 shrink-0 rounded-full"
       />
       <span className="sr-only">, new</span>
     </>

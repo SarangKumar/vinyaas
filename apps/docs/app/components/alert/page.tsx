@@ -1,7 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { Badge } from "@/registry/new-york/ui/badge";
-import { Button } from "@/registry/new-york/ui/button";
 import {
   Alert,
   AlertDescription,
@@ -25,6 +23,21 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("alert");
 
+function CheckIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="m9 12 2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function AlertCircleIcon() {
   return (
     <svg
@@ -41,21 +54,73 @@ function AlertCircleIcon() {
   );
 }
 
+function InfoIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" strokeLinecap="round" />
+      <path d="M12 8h.01" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 const usage = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+function InfoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" strokeLinecap="round" />
+      <path d="M12 8h.01" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export function Notice() {
   return (
     <Alert>
-      <AlertTitle>Deployment complete</AlertTitle>
-      <AlertDescription>Production is now running the latest build.</AlertDescription>
+      <InfoIcon />
+      <AlertTitle>Heads up!</AlertTitle>
+      <AlertDescription>
+        You can add components and dependencies to your app using the CLI.
+      </AlertDescription>
     </Alert>
   );
 }
 `;
 
-const variantsCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+const basicCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <path d="m9 12 2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function AccountUpdated() {
+  return (
+    <Alert>
+      <CheckIcon />
+      <AlertTitle>Account updated successfully</AlertTitle>
+      <AlertDescription>
+        Your profile information has been saved. Changes will be reflected
+        immediately.
+      </AlertDescription>
+    </Alert>
+  );
+}
+`;
+
+const destructiveCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 function AlertCircleIcon() {
   return (
@@ -67,39 +132,21 @@ function AlertCircleIcon() {
   );
 }
 
-export function AlertVariants() {
+export function PaymentFailed() {
   return (
-    <div className="flex w-full flex-col gap-4 sm:flex-row">
-      <Alert className="max-w-md">
-        <div className="flex items-start justify-between gap-3">
-          <AlertTitle>Deployment complete</AlertTitle>
-          <Badge variant="secondary">Production</Badge>
-        </div>
-        <AlertDescription>
-          Production is now running the latest build.
-        </AlertDescription>
-        <Button variant="outline" className="mt-2 w-fit">
-          View deployment
-        </Button>
-      </Alert>
-      <Alert variant="destructive" className="max-w-md">
-        <AlertCircleIcon />
-        <AlertTitle>Payment failed</AlertTitle>
-        <AlertDescription>
-          Your payment could not be processed. Please check your payment method
-          and try again.
-        </AlertDescription>
-        <Button variant="outline" className="mt-2 w-fit">
-          Try again
-        </Button>
-      </Alert>
-    </div>
+    <Alert variant="destructive">
+      <AlertCircleIcon />
+      <AlertTitle>Payment failed</AlertTitle>
+      <AlertDescription>
+        Your payment could not be processed. Please check your payment method
+        and try again.
+      </AlertDescription>
+    </Alert>
   );
 }
 `;
 
 const billingCardCode = `import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -131,11 +178,8 @@ export function BillingFailureCard() {
           <AlertTitle>Payment failed</AlertTitle>
           <AlertDescription>
             We could not charge your card for the Pro plan. Update the payment
-            method, then retry.
+            method, then try again from billing settings.
           </AlertDescription>
-          <Button variant="outline" className="mt-2 w-fit">
-            Retry payment
-          </Button>
         </Alert>
       </CardContent>
     </Card>
@@ -149,7 +193,7 @@ const api: ApiRow[] = [
     type: '"default" | "destructive"',
     defaultValue: '"default"',
     description:
-      "default is a neutral notice on a muted surface. destructive keeps that surface and uses danger text, icon, and border.",
+      "default is a neutral notice on a card surface. destructive keeps that surface and uses danger text, icon, and border.",
   },
   {
     prop: "className",
@@ -160,44 +204,43 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
-    id: "variants",
-    title: "Variants",
-    description:
-      "Default carries a status badge and action. Destructive keeps the muted surface and uses danger text, icon, and border.",
+    id: "basic",
+    title: "Basic",
+    description: "An icon, title, and description for a successful update.",
     preview: (
-      <div className="flex w-full flex-col gap-4 sm:flex-row">
-        <Alert className="max-w-md text-left">
-          <div className="flex items-start justify-between gap-3">
-            <AlertTitle>Deployment complete</AlertTitle>
-            <Badge variant="secondary">Production</Badge>
-          </div>
-          <AlertDescription>
-            Production is now running the latest build.
-          </AlertDescription>
-          <Button variant="outline" className="mt-2 w-fit">
-            View deployment
-          </Button>
-        </Alert>
-        <Alert variant="destructive" className="max-w-md text-left">
-          <AlertCircleIcon />
-          <AlertTitle>Payment failed</AlertTitle>
-          <AlertDescription>
-            Your payment could not be processed. Please check your payment
-            method and try again.
-          </AlertDescription>
-          <Button variant="outline" className="mt-2 w-fit">
-            Try again
-          </Button>
-        </Alert>
-      </div>
+      <Alert className="max-w-md text-left">
+        <CheckIcon />
+        <AlertTitle>Account updated successfully</AlertTitle>
+        <AlertDescription>
+          Your profile information has been saved. Changes will be reflected
+          immediately.
+        </AlertDescription>
+      </Alert>
     ),
-    code: { tsx: variantsCode, jsx: variantsCode },
+    code: { tsx: basicCode, jsx: basicCode },
+  },
+  {
+    id: "destructive",
+    title: "Destructive",
+    description:
+      'Use variant="destructive" for failures. Keep the reason in the description.',
+    preview: (
+      <Alert variant="destructive" className="max-w-md text-left">
+        <AlertCircleIcon />
+        <AlertTitle>Payment failed</AlertTitle>
+        <AlertDescription>
+          Your payment could not be processed. Please check your payment method
+          and try again.
+        </AlertDescription>
+      </Alert>
+    ),
+    code: { tsx: destructiveCode, jsx: destructiveCode },
   },
 ];
 
 const inPractice: ComponentInPractice = {
   description:
-    "A billing Card carries a destructive Alert when a charge fails. The retry action stays inside the notice.",
+    "A billing Card carries a destructive Alert when a charge fails. The alert stays text-only.",
   preview: (
     <Card className="w-full max-w-md text-left">
       <CardHeader>
@@ -210,11 +253,8 @@ const inPractice: ComponentInPractice = {
           <AlertTitle>Payment failed</AlertTitle>
           <AlertDescription>
             We could not charge your card for the Pro plan. Update the payment
-            method, then retry.
+            method, then try again from billing settings.
           </AlertDescription>
-          <Button variant="outline" className="mt-2 w-fit">
-            Retry payment
-          </Button>
         </Alert>
       </CardContent>
     </Card>
@@ -234,10 +274,9 @@ export default async function AlertPage() {
       description="A notice for a status that should be announced."
       overview={
         <p>
-          Alert is a container with <code>role=&quot;alert&quot;</code>. The
-          title and description are paragraphs. Place an svg first when the
-          notice needs an icon. Compose a badge or a button inside when it needs
-          a status or an action.
+          Alert is a container with <code>role=&quot;alert&quot;</code>. Place
+          an svg first when the notice needs an icon. AlertTitle carries the
+          headline; AlertDescription holds supporting copy.
         </p>
       }
       install="vinyaas add alert"
@@ -256,17 +295,18 @@ export default async function AlertPage() {
       accessibility={
         <p>
           The root is an alert, so assistive technology can announce it. The
-          title and description do not get extra roles. The icon is hidden from
-          assistive technology. Destructive alerts keep the failure in the text
-          and use danger color for the text, icon, and border.
+          title and description do not get extra roles. The icon is decorative.
+          Destructive alerts keep the failure in the text and use danger color
+          for the text, icon, and border.
         </p>
       }
       source={source}
     >
       <Alert className="max-w-md text-left">
-        <AlertTitle>Deployment complete</AlertTitle>
+        <InfoIcon />
+        <AlertTitle>Heads up!</AlertTitle>
         <AlertDescription>
-          Production is now running the latest build.
+          You can add components and dependencies to your app using the CLI.
         </AlertDescription>
       </Alert>
     </ComponentReference>

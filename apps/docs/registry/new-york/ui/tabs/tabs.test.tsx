@@ -144,4 +144,26 @@ describe("Tabs", () => {
     expect(root).toHaveClass("flex-row");
     expect(list).toHaveClass("bg-muted");
   });
+
+  it("supports the line list variant", () => {
+    const { container } = render(
+      <Tabs defaultValue="overview">
+        <TabsList variant="line">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        </TabsList>
+      </Tabs>,
+    );
+
+    const list = screen.getByRole("tablist");
+    const overview = screen.getByRole("tab", { name: "Overview" });
+
+    expect(list).toHaveAttribute("data-variant", "line");
+    expect(list).toHaveClass("bg-transparent");
+    expect(list).not.toHaveClass("bg-muted");
+    expect(overview).toHaveAttribute("data-state", "active");
+    expect(
+      container.querySelector('[data-orientation="horizontal"]'),
+    ).toHaveClass("group/tabs");
+  });
 });

@@ -43,10 +43,10 @@ describe("components catalog", () => {
 
     expect(names(lists[0]!)).toEqual(added);
     expect(names(lists[1]!)).toEqual(all);
-    expect(lists[0]!.querySelectorAll(".bg-new").length).toBe(added.length);
-    expect(lists[1]!.querySelectorAll(".bg-new").length).toBe(added.length);
+    expect(lists[0]!.querySelectorAll(".bg-primary").length).toBe(added.length);
+    expect(lists[1]!.querySelectorAll(".bg-primary").length).toBe(added.length);
     expect(
-      lists[1]!.querySelector('a[href="/components/button"] .bg-new'),
+      lists[1]!.querySelector('a[href="/components/button"] .bg-primary'),
     ).toBeNull();
     expect(added).not.toContain("Button");
     expect(all).toContain("Button");

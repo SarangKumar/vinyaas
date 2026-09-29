@@ -90,7 +90,7 @@ export function TypographyP({
   return (
     <p
       ref={ref}
-      className={cn("text-body text-base leading-7", className)}
+      className={cn("text-foreground text-base leading-7", className)}
       {...props}
     />
   );
@@ -104,7 +104,7 @@ export function TypographyLead({
   return (
     <p
       ref={ref}
-      className={cn("text-body text-lg leading-8", className)}
+      className={cn("text-foreground text-lg leading-8", className)}
       {...props}
     />
   );
@@ -161,7 +161,7 @@ export function TypographyBlockquote({
     <blockquote
       ref={ref}
       className={cn(
-        "border-border text-body border-l-2 pl-4 leading-7 italic",
+        "border-border text-foreground border-l-2 pl-4 leading-7 italic",
         className,
       )}
       {...props}
@@ -178,7 +178,7 @@ export function TypographyList({
     <ul
       ref={ref}
       className={cn(
-        "text-body list-disc pl-5 text-base leading-7 [&>li]:mt-2",
+        "text-foreground list-disc pl-5 text-base leading-7 [&>li]:mt-2",
         className,
       )}
       {...props}

@@ -146,7 +146,9 @@ export function FormSaveToastDemo() {
         <Label htmlFor="toast-workspace">Workspace</Label>
         <Input id="toast-workspace" defaultValue="vinyaas" />
       </div>
-      <Button type="submit">Save changes</Button>
+      <Button type="submit" className="mt-1">
+        Save changes
+      </Button>
     </form>
   );
 }

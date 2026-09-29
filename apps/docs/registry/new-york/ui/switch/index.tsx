@@ -36,7 +36,7 @@ export function Switch({
       data-state={isChecked ? "checked" : "unchecked"}
       disabled={disabled}
       className={cn(
-        "border-input bg-muted focus-visible:ring-ring focus-visible:ring-offset-background data-[state=checked]:border-foreground data-[state=checked]:bg-foreground inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none",
+        "border-input bg-muted focus-visible:ring-ring focus-visible:ring-offset-background data-[state=checked]:bg-primary inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none",
         className,
       )}
       onClick={(event) => {

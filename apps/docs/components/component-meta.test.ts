@@ -17,6 +17,8 @@ describe("component metadata", () => {
     expect(names).toEqual([
       "Accordion",
       "Alert",
+      "Aspect Ratio",
+      "Attachment",
       "Avatar",
       "Badge",
       "Breadcrumb",
@@ -64,9 +66,11 @@ describe("component metadata", () => {
       expect(componentIsNew(component)).toBe(true);
     }
 
-    expect(newComponents().map((component) => component.slug)).toEqual([
-      "tabs",
-    ]);
+    expect(
+      newComponents()
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual(["aspect-ratio", "attachment", "tabs"]);
     expect(newComponents().map((component) => component.slug)).not.toContain(
       "button",
     );
@@ -78,6 +82,6 @@ describe("component metadata", () => {
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 2);
+    ).toBe(components.length - 4);
   });
 });

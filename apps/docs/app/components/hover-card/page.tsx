@@ -19,83 +19,7 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("hover-card");
 
-const usage = `import { Button } from "@/components/ui/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-
-export function Person() {
-  return (
-    <HoverCard>
-      <HoverCardTrigger>
-        <Button variant="link" className="underline underline-offset-4">
-          Ada Lovelace
-        </Button>
-      </HoverCardTrigger>
-      <HoverCardContent>
-        <p>Wrote the first algorithm.</p>
-      </HoverCardContent>
-    </HoverCard>
-  );
-}
-`;
-
 const profileCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-
-export function ProfileCard() {
-  return (
-    <HoverCard>
-      <HoverCardTrigger>
-        <Button variant="link" className="underline underline-offset-4">
-          Ada Lovelace
-        </Button>
-      </HoverCardTrigger>
-      <HoverCardContent>
-        <div className="flex gap-3">
-          <Avatar>
-            <AvatarFallback>AL</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-medium">Ada Lovelace</p>
-            <p className="text-muted-foreground text-sm">Mathematician · London</p>
-            <Badge variant="secondary">Available</Badge>
-          </div>
-        </div>
-      </HoverCardContent>
-    </HoverCard>
-  );
-}
-`;
-
-const externalLinkCode = `import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-
-export function ExternalLinkPreview() {
-  return (
-    <HoverCard>
-      <HoverCardTrigger>
-        <Button variant="link" className="underline underline-offset-4">
-          Vinyaas documentation ↗
-        </Button>
-      </HoverCardTrigger>
-      <HoverCardContent>
-        <div className="grid gap-2">
-          <Badge variant="secondary">External website</Badge>
-          <p className="font-medium">docs.vinyaas.dev</p>
-          <p className="text-muted-foreground text-sm">
-            Install guides, API reference, and component examples for the
-            Vinyaas design system.
-          </p>
-        </div>
-      </HoverCardContent>
-    </HoverCard>
-  );
-}
-`;
-
-const contributorProjectCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -104,55 +28,135 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-export function ContributorActivity() {
+export function ProfileCard() {
   return (
-    <p className="text-sm leading-6">
-      <HoverCard>
-        <HoverCardTrigger>
-          <Button variant="link" className="h-auto p-0">
-            Ada Lovelace
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <div className="flex items-start gap-3">
-            <Avatar>
-              <AvatarFallback>AL</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <p className="font-medium">Ada Lovelace</p>
-              <p className="text-muted-foreground text-sm">
-                Mathematician · London
-              </p>
-              <Badge variant="secondary">Available</Badge>
+    <HoverCard>
+      <HoverCardTrigger>
+        <Button variant="link" className="underline underline-offset-4">
+          @johndoe
+        </Button>
+      </HoverCardTrigger>
+      <HoverCardContent>
+        <div className="flex items-start gap-3 text-left">
+          <Avatar>
+            <AvatarFallback>JD</AvatarFallback>
+          </Avatar>
+          <div className="grid gap-1">
+            <p className="font-medium">John Doe</p>
+            <p className="text-muted-foreground text-sm">@johndoe</p>
+            <p className="text-sm">
+              Product designer building accessible UI for design systems.
+            </p>
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <Badge variant="outline">Maintainer</Badge>
+              <span className="text-muted-foreground text-xs">San Francisco</span>
             </div>
           </div>
-        </HoverCardContent>
-      </HoverCard>{" "}
-      opened a pull request in{" "}
+        </div>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+`;
+
+const alignmentCode = `import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+export function Alignments() {
+  return (
+    <div className="grid w-full max-w-md grid-cols-2 gap-3 sm:grid-cols-4">
       <HoverCard>
         <HoverCardTrigger>
-          <Button variant="link" className="h-auto p-0">
-            vinyaas
+          <Button type="button" variant="outline" className="w-full">
+            Top
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent side="top">Opens above the trigger.</HoverCardContent>
+      </HoverCard>
+      <HoverCard>
+        <HoverCardTrigger>
+          <Button type="button" variant="outline" className="w-full">
+            Bottom
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent side="bottom">
+          Opens below the trigger.
+        </HoverCardContent>
+      </HoverCard>
+      <HoverCard>
+        <HoverCardTrigger>
+          <Button type="button" variant="outline" className="w-full">
+            Left
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent side="left">Opens to the left.</HoverCardContent>
+      </HoverCard>
+      <HoverCard>
+        <HoverCardTrigger>
+          <Button type="button" variant="outline" className="w-full">
+            Right
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent side="right">Opens to the right.</HoverCardContent>
+      </HoverCard>
+    </div>
+  );
+}
+`;
+
+const assignedCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+export function AssignedTo() {
+  return (
+    <p className="text-sm leading-6">
+      Assigned to{" "}
+      <HoverCard>
+        <HoverCardTrigger>
+          <Button
+            variant="link"
+            className="h-auto p-0 underline underline-offset-4"
+          >
+            @johndoe
           </Button>
         </HoverCardTrigger>
         <HoverCardContent>
-          <div className="grid gap-2">
-            <div className="flex items-center justify-between gap-3">
-              <p className="font-medium">vinyaas</p>
-              <Badge>Active</Badge>
+          <div className="flex items-start gap-3 text-left">
+            <Avatar>
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <div className="grid gap-1">
+              <p className="font-medium">John Doe</p>
+              <p className="text-muted-foreground text-sm">@johndoe</p>
+              <p className="text-sm">
+                Product designer building accessible UI for design systems.
+              </p>
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <Badge variant="outline">Design lead</Badge>
+                <span className="text-muted-foreground text-xs">
+                  San Francisco
+                </span>
+              </div>
             </div>
-            <p className="text-muted-foreground text-sm">
-              TypeScript · 128 stars
-            </p>
-            <p className="text-sm">Updated today</p>
           </div>
         </HoverCardContent>
       </HoverCard>
-      .
     </p>
   );
 }
 `;
+
+const usage = profileCode;
 
 const api: ApiRow[] = [
   {
@@ -190,212 +194,114 @@ const api: ApiRow[] = [
   },
 ];
 
+function ProfileHoverPreview({
+  trigger,
+  badge = "Maintainer",
+}: {
+  trigger: string;
+  badge?: string;
+}) {
+  return (
+    <HoverCard openDelay={0}>
+      <HoverCardTrigger>
+        <Button
+          variant="link"
+          className="h-auto p-0 underline underline-offset-4"
+        >
+          {trigger}
+        </Button>
+      </HoverCardTrigger>
+      <HoverCardContent>
+        <div className="flex items-start gap-3 text-left">
+          <Avatar>
+            <AvatarFallback>JD</AvatarFallback>
+          </Avatar>
+          <div className="grid gap-1">
+            <p className="font-medium">John Doe</p>
+            <p className="text-muted-foreground text-sm">@johndoe</p>
+            <p className="text-sm">
+              Product designer building accessible UI for design systems.
+            </p>
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <Badge variant="outline">{badge}</Badge>
+              <span className="text-muted-foreground text-xs">
+                San Francisco
+              </span>
+            </div>
+          </div>
+        </div>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
+
 const examples: ComponentExample[] = [
   {
     id: "profile",
     title: "Profile",
     description:
-      "Hover or focus the underlined name to read a short profile. The card stays open while the pointer is over it.",
-    preview: (
-      <HoverCard openDelay={0}>
-        <HoverCardTrigger>
-          <Button variant="link" className="underline underline-offset-4">
-            Ada Lovelace
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <div className="flex items-start gap-3">
-            <Avatar>
-              <AvatarFallback>AL</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <p className="font-medium">Ada Lovelace</p>
-              <p className="text-muted-foreground text-sm">
-                Mathematician · London
-              </p>
-              <p>Wrote the first algorithm for the Analytical Engine.</p>
-              <Badge variant="secondary">Available</Badge>
-            </div>
-          </div>
-        </HoverCardContent>
-      </HoverCard>
-    ),
+      "Hover or focus an @username to read a short profile. The card stays open while the pointer is over it.",
+    preview: <ProfileHoverPreview trigger="@johndoe" />,
     code: { tsx: profileCode, jsx: profileCode },
   },
   {
-    id: "external-link",
-    title: "External link",
+    id: "alignment",
+    title: "Alignment",
     description:
-      "An underlined link-style trigger previews an external site before the user leaves the page.",
+      "side places the card above, below, or beside the trigger. The grid wraps on small screens so the triggers stay usable.",
     preview: (
-      <HoverCard openDelay={0}>
-        <HoverCardTrigger>
-          <Button variant="link" className="underline underline-offset-4">
-            Vinyaas documentation ↗
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <div className="grid gap-2 text-left">
-            <Badge variant="secondary" className="w-fit">
-              External website
-            </Badge>
-            <p className="font-medium">docs.vinyaas.dev</p>
-            <p className="text-muted-foreground text-sm">
-              Install guides, API reference, and component examples for the
-              Vinyaas design system.
-            </p>
-          </div>
-        </HoverCardContent>
-      </HoverCard>
+      <div className="grid w-full max-w-md grid-cols-2 gap-3 sm:grid-cols-4">
+        <HoverCard openDelay={0}>
+          <HoverCardTrigger>
+            <Button type="button" variant="outline" className="w-full">
+              Top
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent side="top">
+            Opens above the trigger.
+          </HoverCardContent>
+        </HoverCard>
+        <HoverCard openDelay={0}>
+          <HoverCardTrigger>
+            <Button type="button" variant="outline" className="w-full">
+              Bottom
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent side="bottom">
+            Opens below the trigger.
+          </HoverCardContent>
+        </HoverCard>
+        <HoverCard openDelay={0}>
+          <HoverCardTrigger>
+            <Button type="button" variant="outline" className="w-full">
+              Left
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent side="left">Opens to the left.</HoverCardContent>
+        </HoverCard>
+        <HoverCard openDelay={0}>
+          <HoverCardTrigger>
+            <Button type="button" variant="outline" className="w-full">
+              Right
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent side="right">Opens to the right.</HoverCardContent>
+        </HoverCard>
+      </div>
     ),
-    code: { tsx: externalLinkCode, jsx: externalLinkCode },
-  },
-  {
-    id: "message",
-    title: "Message preview",
-    description:
-      "A message reference shows the sender, time, and a short preview.",
-    preview: (
-      <HoverCard openDelay={0}>
-        <HoverCardTrigger>
-          <Button variant="link" className="underline underline-offset-4">
-            Note from Ada
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <div className="grid gap-2">
-            <div className="flex items-center justify-between gap-3">
-              <p className="font-medium">Ada Lovelace</p>
-              <Badge variant="outline">2m</Badge>
-            </div>
-            <p className="text-muted-foreground text-sm">
-              The notes for the engine are ready to review.
-            </p>
-            <Badge variant="secondary">Unread</Badge>
-          </div>
-        </HoverCardContent>
-      </HoverCard>
-    ),
-    code: `import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-
-export function MessagePreview() {
-  return (
-    <HoverCard>
-      <HoverCardTrigger>
-        <Button variant="link" className="underline underline-offset-4">
-          Note from Ada
-        </Button>
-      </HoverCardTrigger>
-      <HoverCardContent>
-        <p className="font-medium">Ada Lovelace</p>
-        <p>The notes for the engine are ready to review.</p>
-      </HoverCardContent>
-    </HoverCard>
-  );
-}
-`,
-  },
-  {
-    id: "project",
-    title: "Project preview",
-    description: "A project name opens its language, stars, and status.",
-    preview: (
-      <HoverCard openDelay={0}>
-        <HoverCardTrigger>
-          <Button variant="link" className="underline underline-offset-4">
-            vinyaas
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <div className="grid gap-2">
-            <div className="flex items-center justify-between gap-3">
-              <p className="font-medium">vinyaas</p>
-              <Badge>Active</Badge>
-            </div>
-            <p className="text-muted-foreground text-sm">
-              TypeScript · 128 stars
-            </p>
-            <p className="text-sm">Updated today</p>
-          </div>
-        </HoverCardContent>
-      </HoverCard>
-    ),
-    code: `import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-
-export function ProjectPreview() {
-  return (
-    <HoverCard>
-      <HoverCardTrigger>
-        <Button variant="link" className="underline underline-offset-4">
-          vinyaas
-        </Button>
-      </HoverCardTrigger>
-      <HoverCardContent>
-        <p className="font-medium">vinyaas</p>
-        <p>TypeScript · 128 stars</p>
-        <Badge>Active</Badge>
-      </HoverCardContent>
-    </HoverCard>
-  );
-}
-`,
+    code: { tsx: alignmentCode, jsx: alignmentCode },
   },
 ];
 
 const inPractice: ComponentInPractice = {
   description:
-    "An activity line links a contributor and a project. Each name opens its own HoverCard with Avatar, Badge, and status.",
+    "An assignment line links @johndoe. Hover or focus the mention to open a profile with Avatar, role, and bio.",
   preview: (
     <p className="text-sm leading-6">
-      <HoverCard openDelay={0}>
-        <HoverCardTrigger>
-          <Button variant="link" className="h-auto p-0">
-            Ada Lovelace
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <div className="flex items-start gap-3">
-            <Avatar>
-              <AvatarFallback>AL</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <p className="font-medium">Ada Lovelace</p>
-              <p className="text-muted-foreground text-sm">
-                Mathematician · London
-              </p>
-              <Badge variant="secondary">Available</Badge>
-            </div>
-          </div>
-        </HoverCardContent>
-      </HoverCard>{" "}
-      opened a pull request in{" "}
-      <HoverCard openDelay={0}>
-        <HoverCardTrigger>
-          <Button variant="link" className="h-auto p-0">
-            vinyaas
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <div className="grid gap-2">
-            <div className="flex items-center justify-between gap-3">
-              <p className="font-medium">vinyaas</p>
-              <Badge>Active</Badge>
-            </div>
-            <p className="text-muted-foreground text-sm">
-              TypeScript · 128 stars
-            </p>
-            <p className="text-sm">Updated today</p>
-          </div>
-        </HoverCardContent>
-      </HoverCard>
-      .
+      Assigned to <ProfileHoverPreview trigger="@johndoe" badge="Design lead" />
     </p>
   ),
-  code: { tsx: contributorProjectCode, jsx: contributorProjectCode },
+  code: { tsx: assignedCode, jsx: assignedCode },
 };
 
 export default async function HoverCardPage() {
@@ -439,16 +345,7 @@ export default async function HoverCardPage() {
       }
       source={source}
     >
-      <HoverCard openDelay={0}>
-        <HoverCardTrigger>
-          <Button variant="link" className="underline underline-offset-4">
-            Ada Lovelace
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <p>Wrote the first algorithm.</p>
-        </HoverCardContent>
-      </HoverCard>
+      <ProfileHoverPreview trigger="@johndoe" />
     </ComponentReference>
   );
 }

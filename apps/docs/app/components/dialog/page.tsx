@@ -33,22 +33,30 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export function EditDialog() {
+export function ConfirmDialog() {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button>Edit profile</Button>
+        <Button variant="outline">Open</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>Update your public profile.</DialogDescription>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </DialogDescription>
         </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline">Cancel</Button>
+          <Button>Continue</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
@@ -190,10 +198,14 @@ export function EditProfileDialog() {
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>Update your public profile.</DialogDescription>
         </DialogHeader>
-        <Label htmlFor="profile-name">Display name</Label>
-        <Input id="profile-name" defaultValue="Sarang Kumar" />
-        <Label htmlFor="profile-bio">Bio</Label>
-        <Textarea id="profile-bio" defaultValue="Building accessible UI." />
+        <div className="grid gap-2">
+          <Label htmlFor="profile-name">Display name</Label>
+          <Input id="profile-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="profile-bio">Bio</Label>
+          <Textarea id="profile-bio" defaultValue="Building accessible UI." />
+        </div>
         <DialogFooter>
           <DialogClose>
             <Button variant="outline">Cancel</Button>
@@ -293,14 +305,32 @@ export function AccountDialog() {
           <DialogTitle>Account settings</DialogTitle>
           <DialogDescription>Name, email, and notification preferences.</DialogDescription>
         </DialogHeader>
-        <Label htmlFor="account-name">Display name</Label>
-        <Input id="account-name" defaultValue="Sarang Kumar" />
-        <Label htmlFor="account-email">Email</Label>
-        <Input id="account-email" defaultValue="sarang@example.com" />
-        <Label htmlFor="account-updates">Product updates</Label>
-        <Switch id="account-updates" defaultChecked />
-        <Checkbox id="account-activity" defaultChecked />
-        <Label htmlFor="account-activity">Email me about activity</Label>
+        <div className="grid gap-2">
+          <Label htmlFor="account-name">Display name</Label>
+          <Input id="account-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="account-email">Email</Label>
+          <Input id="account-email" defaultValue="sarang@example.com" />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="account-updates">Product updates</Label>
+          <Switch id="account-updates" defaultChecked />
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox id="account-activity" defaultChecked />
+          <Label htmlFor="account-activity">Email me about activity</Label>
+        </div>
+        <ul className="text-muted-foreground grid gap-2 text-sm">
+          <li>Invoices</li>
+          <li>Receipts</li>
+          <li>API keys</li>
+          <li>Members</li>
+          <li>Audit log</li>
+          <li>Webhooks</li>
+          <li>Domains</li>
+          <li>Backups</li>
+        </ul>
         <DialogFooter>
           <DialogClose>
             <Button variant="outline">Cancel</Button>
@@ -410,16 +440,22 @@ export default async function DialogPage() {
     >
       <Dialog>
         <DialogTrigger>
-          <Button>Edit profile</Button>
+          <Button variant="outline">Open</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>Update your public profile.</DialogDescription>
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose>
-              <Button variant="outline">Close</Button>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <DialogClose>
+              <Button>Continue</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

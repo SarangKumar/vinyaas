@@ -3,9 +3,9 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 const alertVariants = {
-  default: "border-border bg-muted text-foreground",
+  default: "border-border bg-card text-card-foreground",
   destructive:
-    "border-destructive bg-muted text-destructive [&_svg]:text-destructive [&_button]:border-destructive [&_button]:text-destructive [&_button]:hover:bg-destructive/10",
+    "border-destructive/50 bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 [&>svg]:text-current",
 } as const;
 
 export type AlertVariant = keyof typeof alertVariants;
@@ -20,9 +20,10 @@ export function Alert({
   return (
     <div
       role="alert"
+      data-slot="alert"
       data-variant={variant}
       className={cn(
-        "relative grid w-full grid-cols-[0_minmax(0,1fr)] items-start gap-y-1 rounded-md border px-4 py-3 text-sm has-[>svg]:grid-cols-[1rem_minmax(0,1fr)] has-[>svg]:gap-x-3 [&>*:not(svg)]:col-start-2 [&>svg]:col-start-1 [&>svg]:row-span-2 [&>svg]:row-start-1 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
+        "relative grid w-full grid-cols-[0_minmax(0,1fr)] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_minmax(0,1fr)] has-[>svg]:gap-x-3 [&>*:not(svg)]:col-start-2 [&>svg]:col-start-1 [&>svg]:row-span-2 [&>svg]:row-start-1 [&>svg]:mt-0.5 [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:translate-y-0 [&>svg]:text-current",
         alertVariants[variant],
         className,
       )}
@@ -34,10 +35,14 @@ export function Alert({
 export function AlertTitle({
   className,
   ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <p
-      className={cn("text-sm leading-none font-medium", className)}
+    <div
+      data-slot="alert-title"
+      className={cn(
+        "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",
+        className,
+      )}
       {...props}
     />
   );
@@ -46,8 +51,15 @@ export function AlertTitle({
 export function AlertDescription({
   className,
   ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <p className={cn("text-sm leading-6 opacity-90", className)} {...props} />
+    <div
+      data-slot="alert-description"
+      className={cn(
+        "text-muted-foreground col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed",
+        className,
+      )}
+      {...props}
+    />
   );
 }

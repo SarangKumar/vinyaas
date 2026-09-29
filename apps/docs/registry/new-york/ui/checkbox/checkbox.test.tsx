@@ -19,6 +19,11 @@ describe("Checkbox", () => {
     expect(checkbox).toHaveAttribute("type", "checkbox");
     expect(checkbox).not.toBeChecked();
     expect(checkbox).not.toHaveAttribute("role");
+    expect(checkbox).toHaveClass(
+      "checked:border-primary",
+      "checked:bg-primary",
+      "accent-primary",
+    );
   });
 
   it("checks and unchecks", () => {

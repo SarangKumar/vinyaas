@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
@@ -85,7 +86,7 @@ export function Tabs({
       <div
         data-orientation={orientation}
         className={cn(
-          "flex gap-2",
+          "group/tabs flex gap-2",
           orientation === "vertical" ? "flex-row" : "flex-col",
           className,
         )}
@@ -97,9 +98,30 @@ export function Tabs({
   );
 }
 
-export type TabsListProps = React.ComponentProps<"div">;
+const tabsListVariants = cva(
+  "group/tabs-list text-muted-foreground inline-flex w-fit max-w-full items-center justify-center rounded-lg p-[3px] data-[variant=line]:rounded-none",
+  {
+    variants: {
+      variant: {
+        default: "bg-muted",
+        line: "gap-1 bg-transparent",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
 
-export function TabsList({ className, onKeyDown, ...props }: TabsListProps) {
+export type TabsListProps = React.ComponentProps<"div"> &
+  VariantProps<typeof tabsListVariants>;
+
+export function TabsList({
+  className,
+  variant = "default",
+  onKeyDown,
+  ...props
+}: TabsListProps) {
   const { orientation, disabled } = useTabs();
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -119,12 +141,13 @@ export function TabsList({ className, onKeyDown, ...props }: TabsListProps) {
       ref={listRef}
       role="tablist"
       aria-orientation={orientation}
+      data-variant={variant ?? "default"}
       {...(disabled ? { "aria-disabled": true } : {})}
       className={cn(
-        "bg-muted text-muted-foreground inline-flex max-w-full items-center justify-center rounded-lg p-1",
+        tabsListVariants({ variant }),
         orientation === "vertical"
-          ? "h-auto w-fit min-w-28 shrink-0 flex-col"
-          : "h-9 w-fit flex-row overflow-x-auto",
+          ? "h-auto min-w-28 shrink-0 flex-col"
+          : "h-9 flex-row overflow-x-auto",
         className,
       )}
       onKeyDown={(event) => {
@@ -202,8 +225,11 @@ export function TabsTrigger({
       tabIndex={selected ? 0 : -1}
       disabled={isDisabled}
       className={cn(
-        "ring-offset-background focus-visible:ring-ring inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md px-3 py-1 text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+        "focus-visible:ring-ring relative inline-flex h-[calc(100%-1px)] shrink-0 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow,opacity] focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+        "text-foreground/60 hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground",
         "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+        "group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent group-data-[variant=line]/tabs-list:data-[state=active]:shadow-none",
+        "after:bg-foreground after:absolute after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100",
         tabs.orientation === "vertical" && "w-full justify-start",
         className,
       )}

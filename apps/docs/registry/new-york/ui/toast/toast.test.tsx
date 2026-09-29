@@ -188,7 +188,8 @@ describe("Toast", () => {
 
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent("Could not save");
-    expect(alert).toHaveClass("bg-destructive/10", "text-destructive");
+    expect(alert).toHaveClass("bg-muted", "text-foreground");
+    expect(alert.querySelector("svg")).toHaveClass("text-destructive");
     expect(alert).not.toHaveClass("bg-destructive");
   });
 });

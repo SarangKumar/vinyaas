@@ -37,7 +37,7 @@ export default function ComponentsPage() {
       title="Components"
       description={`${components.length} accessible primitives you install into your project as source.`}
     >
-      <p className="text-body text-base leading-7">
+      <p className="text-muted-foreground text-sm leading-6">
         The catalog has {components.length} independently installable registry
         items. Button is the v0.1 foundation. v1.0.0 added the bulk of the
         catalog. Components marked new were introduced in v{currentVersion}. The
@@ -48,7 +48,7 @@ export default function ComponentsPage() {
         <h2 id="new" className={heading}>
           New Components
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-muted-foreground text-sm leading-6">
           Components introduced in the current release.
         </p>
         <NameGrid items={added} />

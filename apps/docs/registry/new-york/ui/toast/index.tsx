@@ -174,6 +174,7 @@ function ToastIcon({ type }: { type: ToastType }) {
       aria-hidden="true"
       className={cn(
         "mt-0.5 size-4 shrink-0",
+        type === "error" && "text-destructive",
         type === "loading" && "animate-spin motion-reduce:animate-none",
       )}
       fill="none"
@@ -253,8 +254,7 @@ const typeClass: Record<ToastType, string> = {
   success: "border-foreground bg-foreground text-background",
   info: "border-border bg-muted text-foreground",
   warning: "border-foreground bg-background text-foreground",
-  error:
-    "border-destructive/40 bg-destructive/10 text-destructive dark:bg-destructive/20",
+  error: "border-destructive/40 bg-muted text-foreground dark:bg-muted",
   loading: "border-border bg-background text-foreground",
 };
 

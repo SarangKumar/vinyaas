@@ -288,6 +288,42 @@ describe("registry build output", () => {
     expect(generated).not.toHaveProperty("docs");
   });
 
+  it("keeps the new-york attachment artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/attachment.json");
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/attachment/index.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
+    ]);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      dependencies: string[];
+      registryDependencies?: string[];
+      files: { path: string; content: string }[];
+    };
+    const item = newYork.find((entry) => entry.name === "attachment");
+
+    expect(item).toBeDefined();
+    const files = await readRegistryItemFiles(item!, async (relativePath) => {
+      expect(relativePath).toBe("ui/attachment/index.tsx");
+      return source;
+    });
+    const payload = serializeRegistryItem(item!, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.dependencies).toEqual([
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge",
+    ]);
+    expect(generated.registryDependencies).toEqual(["button"]);
+    expect(generated.files[0]?.content).toContain('from "../button"');
+    expect(generated.files[0]?.content).toContain("AttachmentMedia");
+  });
+
   it("keeps the new-york input artifact aligned with the source item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/input.json");
     const sourcePath = path.join(
@@ -528,6 +564,7 @@ describe("registry build output", () => {
     ["spinner", ["ui/spinner/index.tsx"], "aria-hidden"],
     ["card", ["ui/card/index.tsx"], "CardAction"],
     ["alert", ["ui/alert/index.tsx"], 'role="alert"'],
+    ["aspect-ratio", ["ui/aspect-ratio/index.tsx"], "aspectRatio"],
     [
       "dialog",
       ["ui/dialog/index.tsx", "ui/dialog/dialog.css"],
@@ -627,7 +664,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).rejects.toThrow();
     expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(35);
+    expect(newYork).toHaveLength(37);
   });
 
   it("matches the json schema item types", () => {

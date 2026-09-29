@@ -35,10 +35,13 @@ export function DocsFrame({ children }: { children: ReactNode }) {
       data-docs-frame="docs"
       className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)_13rem]"
     >
-      <aside className="border-border hidden min-h-0 overflow-y-auto overscroll-y-contain border-r lg:block">
+      <aside
+        data-docs-sidebar
+        className="border-border relative z-0 hidden min-h-0 overflow-y-auto overscroll-y-contain border-r lg:block"
+      >
         <DocsNavLinks className="flex flex-col gap-6 px-4 py-6" />
       </aside>
-      <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
+      <div className="relative z-0 flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
         <main
           id="docs-content"
           className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain"
@@ -46,7 +49,7 @@ export function DocsFrame({ children }: { children: ReactNode }) {
           {children}
         </main>
       </div>
-      <aside className="hidden min-h-0 overflow-y-auto overscroll-y-contain xl:block">
+      <aside className="relative z-0 hidden min-h-0 overflow-y-auto overscroll-y-contain xl:block">
         <TableOfContents />
       </aside>
     </div>

@@ -63,8 +63,24 @@ describe("DocsNavLinks", () => {
       within(nav).getByRole("link", { name: "Tabs, new" }),
     ).toHaveAttribute("href", "/components/tabs");
     expect(
+      within(nav)
+        .getByRole("link", { name: "Tabs, new" })
+        .querySelector(".bg-primary"),
+    ).toBeTruthy();
+    expect(
+      within(nav).getByRole("link", { name: "Attachment, new" }),
+    ).toHaveAttribute("href", "/components/attachment");
+    expect(
+      within(nav).getByRole("link", { name: "Aspect Ratio, new" }),
+    ).toHaveAttribute("href", "/components/aspect-ratio");
+    expect(
       within(nav).getByRole("link", { name: "Button" }),
     ).not.toHaveAttribute("aria-current");
     expect(within(nav).queryByRole("link", { name: "Input, new" })).toBeNull();
+    expect(
+      within(nav)
+        .getByRole("link", { name: "Button" })
+        .querySelector(".bg-primary"),
+    ).toBeNull();
   });
 });

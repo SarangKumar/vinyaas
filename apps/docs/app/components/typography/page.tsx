@@ -74,7 +74,7 @@ export function InstallingComponents() {
         Run <code>vinyaas add button</code> after <code>vinyaas init</code>.
         The CLI writes the file under <code>components/ui</code>.
       </TypographyP>
-      <ol className="text-body list-decimal pl-5 text-base leading-7 [&>li]:mt-2">
+      <ol className="text-foreground list-decimal pl-5 text-base leading-7 [&>li]:mt-2">
         <li>Initialize the project</li>
         <li>Add the components you need</li>
         <li>Commit the installed source</li>
@@ -243,7 +243,7 @@ const inPractice: ComponentInPractice = {
         Run <code>vinyaas add button</code> after <code>vinyaas init</code>. The
         CLI writes the file under <code>components/ui</code>.
       </TypographyP>
-      <ol className="text-body list-decimal pl-5 text-base leading-7 [&>li]:mt-2">
+      <ol className="text-foreground list-decimal pl-5 text-base leading-7 [&>li]:mt-2">
         <li>Initialize the project</li>
         <li>Add the components you need</li>
         <li>Commit the installed source</li>

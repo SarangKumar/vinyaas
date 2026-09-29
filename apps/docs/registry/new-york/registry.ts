@@ -252,6 +252,29 @@ export const registry: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "aspect-ratio",
+    type: "registry:ui",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/aspect-ratio/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "attachment",
+    type: "registry:ui",
+    dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/attachment/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "dialog",
     type: "registry:ui",
     dependencies: ["clsx", "tailwind-merge"],

@@ -38,7 +38,7 @@ describe("HoverCard", () => {
     const dialog = screen.getByRole("dialog");
 
     expect(dialog).toHaveTextContent("Wrote the first algorithm.");
-    expect(dialog).toHaveClass("bg-muted", "border", "rounded-md");
+    expect(dialog).toHaveClass("bg-popover", "border", "rounded-md");
     expect(trigger).toHaveAttribute("aria-expanded", "true");
     expect(trigger).toHaveAttribute("aria-controls", dialog.id);
 

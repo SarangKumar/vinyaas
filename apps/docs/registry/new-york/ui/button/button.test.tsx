@@ -29,7 +29,7 @@ describe("Button", () => {
     const { rerender } = render(<Button variant="outline">Save</Button>);
     const button = () => screen.getByRole("button", { name: "Save" });
 
-    expect(button()).toHaveClass("border", "bg-background");
+    expect(button()).toHaveClass("border-border", "bg-background");
 
     rerender(<Button variant="ghost">Save</Button>);
     expect(button()).toHaveClass("hover:bg-accent");

@@ -32,6 +32,99 @@ export function ResumeUpload() {
 }
 `;
 
+const avatarUploadCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { FileUpload, FileUploadDropzone, FileUploadList } from "@/components/ui/file-upload";
+
+export function PortraitUpload() {
+  return (
+    <div className="flex w-full max-w-sm items-center gap-4 text-left">
+      <Avatar>
+        <AvatarFallback>SK</AvatarFallback>
+      </Avatar>
+      <FileUpload accept="image/*" className="flex-1">
+        <FileUploadDropzone>Upload a portrait</FileUploadDropzone>
+        <FileUploadList />
+      </FileUpload>
+    </div>
+  );
+}
+`;
+
+const documentUploadCode = `import { FileUpload, FileUploadDropzone, FileUploadList } from "@/components/ui/file-upload";
+
+export function DocumentUpload() {
+  return (
+    <FileUpload accept=".pdf,.doc,.docx" maxSize={5_000_000} className="max-w-sm">
+      <FileUploadDropzone>Drop a document</FileUploadDropzone>
+      <FileUploadList />
+    </FileUpload>
+  );
+}
+`;
+
+const imagesUploadCode = `import { FileUpload, FileUploadDropzone, FileUploadList } from "@/components/ui/file-upload";
+
+export function ImageUpload() {
+  return (
+    <FileUpload accept="image/*" multiple className="max-w-sm">
+      <FileUploadDropzone>Drop images</FileUploadDropzone>
+      <FileUploadList />
+    </FileUpload>
+  );
+}
+`;
+
+const fileStatusCode = `import { useState } from "react";
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadList,
+  type FileUploadFile,
+} from "@/components/ui/file-upload";
+
+const initialFiles: FileUploadFile[] = [
+  {
+    id: "doc",
+    file: new File(
+      ["report"],
+      "a-very-long-file-name-that-should-not-resize-the-upload-component.pdf",
+      { type: "application/pdf" },
+    ),
+    progress: 40,
+  },
+  {
+    id: "image",
+    file: new File(["portrait"], "portrait.png", { type: "image/png" }),
+    progress: 100,
+  },
+  {
+    id: "audio",
+    file: new File(["clip"], "standup-notes.mp3", { type: "audio/mpeg" }),
+  },
+  {
+    id: "video",
+    file: new File(["reel"], "product-walkthrough.mp4", { type: "video/mp4" }),
+    progress: 100,
+  },
+  {
+    id: "failed",
+    file: new File(["bundle"], "package.zip", { type: "application/zip" }),
+    error: "Upload failed",
+  },
+];
+
+export function FileStatusPreview() {
+  const [files, setFiles] = useState(initialFiles);
+
+  return (
+    <FileUpload files={files} onFilesChange={setFiles} className="max-w-sm">
+      <FileUploadDropzone>Drop files here, or browse</FileUploadDropzone>
+      <FileUploadList />
+    </FileUpload>
+  );
+}
+`;
+
 const resumeCardCode = `import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -106,7 +199,7 @@ const examples: ComponentExample[] = [
         </FileUpload>
       </div>
     ),
-    code: usage,
+    code: { tsx: avatarUploadCode, jsx: avatarUploadCode },
   },
   {
     id: "document",
@@ -122,7 +215,7 @@ const examples: ComponentExample[] = [
         <FileUploadList />
       </FileUpload>
     ),
-    code: usage,
+    code: { tsx: documentUploadCode, jsx: documentUploadCode },
   },
   {
     id: "images",
@@ -134,7 +227,7 @@ const examples: ComponentExample[] = [
         <FileUploadList />
       </FileUpload>
     ),
-    code: usage,
+    code: { tsx: imagesUploadCode, jsx: imagesUploadCode },
   },
   {
     id: "status",
@@ -142,7 +235,7 @@ const examples: ComponentExample[] = [
     description:
       "A long name truncates. Uploading, uploaded, failed, and pending rows share the dropzone width.",
     preview: <FileStatusPreview />,
-    code: usage,
+    code: { tsx: fileStatusCode, jsx: fileStatusCode },
   },
 ];
 

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "name": "aspect-ratio",
+  "type": "registry:ui",
+  "dependencies": ["clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "ui/aspect-ratio/index.tsx",
+      "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type AspectRatioProps = React.ComponentProps<\"div\"> & {\n  ratio: number;\n};\n\nexport function AspectRatio({\n  ratio,\n  className,\n  style,\n  children,\n  ...props\n}: AspectRatioProps) {\n  return (\n    <div\n      data-slot=\"aspect-ratio\"\n      className={cn(\"relative w-full\", className)}\n      style={{ aspectRatio: String(ratio), ...style }}\n      {...props}\n    >\n      <div className=\"absolute inset-0 size-full [&>img]:size-full [&>img]:object-cover\">\n        {children}\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

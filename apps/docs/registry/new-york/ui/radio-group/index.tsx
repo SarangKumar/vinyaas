@@ -97,7 +97,12 @@ export function RadioGroupItem({
         };
 
   return (
-    <span className="relative inline-flex size-4 shrink-0">
+    <span
+      className={cn(
+        "relative inline-flex size-4 shrink-0 items-center justify-center",
+        className,
+      )}
+    >
       <input
         {...props}
         {...checkedProps}
@@ -107,10 +112,7 @@ export function RadioGroupItem({
         value={value}
         disabled={disabled || group?.disabled}
         required={required ?? group?.required}
-        className={cn(
-          "peer border-input bg-background focus-visible:ring-ring focus-visible:ring-offset-background checked:border-foreground checked:bg-background size-4 cursor-pointer appearance-none rounded-full border focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
-          className,
-        )}
+        className="peer absolute inset-0 z-20 size-4 cursor-pointer opacity-0 disabled:cursor-not-allowed"
         onChange={(event) => {
           onChange?.(event);
 
@@ -121,7 +123,12 @@ export function RadioGroupItem({
       />
       <span
         aria-hidden="true"
-        className="bg-foreground ring-background pointer-events-none absolute top-1/2 left-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 ring-2 peer-checked:opacity-100"
+        className="border-input bg-background peer-checked:border-primary peer-focus-visible:ring-ring peer-focus-visible:ring-offset-background pointer-events-none absolute inset-0 rounded-full border peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-disabled:opacity-50"
+      />
+      <span
+        aria-hidden="true"
+        data-slot="radio-indicator"
+        className="bg-primary pointer-events-none absolute top-1/2 left-1/2 z-10 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 peer-checked:opacity-100"
       />
     </span>
   );

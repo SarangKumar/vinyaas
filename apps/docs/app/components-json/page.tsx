@@ -41,7 +41,7 @@ export default function ComponentsJsonPage() {
         <h2 id="what-it-is" className={sectionHeading}>
           What it is
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           <code>components.json</code> lives in the consumer project, not in the
           Vinyaas registry. It records the style name, whether the project uses
           TypeScript, which Tailwind stylesheet to expect, and the path aliases
@@ -52,7 +52,7 @@ export default function ComponentsJsonPage() {
         <h2 id="why" className={sectionHeading}>
           Why it exists
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           Installed components import <code>cn</code> from{" "}
           <code>@/lib/utils</code> and sit under <code>components/ui</code>. The
           CLI reads <code>components.json</code> so those paths match the
@@ -63,7 +63,7 @@ export default function ComponentsJsonPage() {
         <h2 id="fields" className={sectionHeading}>
           Fields
         </h2>
-        <ul className="text-body list-disc space-y-2 pl-5 text-base leading-7">
+        <ul className="text-foreground list-disc space-y-2 pl-5 text-base leading-7">
           <li>
             <code>$schema</code> — optional JSON Schema URL for editor
             validation.
@@ -89,7 +89,7 @@ export default function ComponentsJsonPage() {
         <h2 id="example" className={sectionHeading}>
           Example
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           A realistic Next.js app config:
         </p>
         <CodeBlock
@@ -105,7 +105,7 @@ export default function ComponentsJsonPage() {
         <h2 id="registry" className={sectionHeading}>
           Registry vs components.json
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           The registry publishes one JSON item per component. That item is the
           source of truth for the component file and its npm dependencies.{" "}
           <code>components.json</code> is local project configuration. It does
@@ -116,7 +116,7 @@ export default function ComponentsJsonPage() {
         <h2 id="init" className={sectionHeading}>
           How init uses it
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           <code>vinyaas init</code> creates <code>components.json</code> when
           the file is missing. A later init does not overwrite an existing file.{" "}
           <code>vinyaas add</code> reads the aliases and style from that file.

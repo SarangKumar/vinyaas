@@ -4,11 +4,22 @@ import { cn } from "@/lib/utils";
 
 export type NativeSelectProps = React.ComponentProps<"select">;
 
-/** Chevron inset ~0.75rem from the trailing edge (~5px left of a flush arrow). */
-const selectChevron =
-  "appearance-none bg-[length:1rem_1rem] bg-[position:right_0.75rem_center] bg-no-repeat " +
-  "bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2371717a%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E')] " +
-  "dark:bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23a1a1aa%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E')]";
+function SelectChevron() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
 
 export function NativeSelect({
   className,
@@ -19,18 +30,35 @@ export function NativeSelect({
 }: NativeSelectProps) {
   const listed = Boolean(multiple) || (size !== undefined && Number(size) > 1);
 
+  if (listed) {
+    return (
+      <select
+        ref={ref}
+        multiple={multiple}
+        size={size}
+        className={cn(
+          "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background h-auto w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          className,
+        )}
+        {...props}
+      />
+    );
+  }
+
   return (
-    <select
-      ref={ref}
-      multiple={multiple}
-      size={size}
-      className={cn(
-        "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background w-full rounded-md border text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
-        listed ? "h-auto px-3 py-1" : cn("h-9 py-0 pr-10 pl-3", selectChevron),
-        className,
-      )}
-      {...props}
-    />
+    <div className="relative w-full min-w-0">
+      <select
+        ref={ref}
+        multiple={multiple}
+        size={size}
+        className={cn(
+          "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background h-9 w-full appearance-none rounded-md border py-0 pr-10 pl-3 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          className,
+        )}
+        {...props}
+      />
+      <SelectChevron />
+    </div>
   );
 }
 

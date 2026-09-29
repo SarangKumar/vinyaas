@@ -85,19 +85,29 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 export function ProfileCard() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm text-left">
       <CardHeader>
         <div className="flex min-w-0 items-start gap-3">
-          <Avatar><AvatarFallback>SK</AvatarFallback></Avatar>
+          <Avatar>
+            <AvatarFallback>JD</AvatarFallback>
+          </Avatar>
           <div className="min-w-0">
-            <CardTitle>Sarang Kumar</CardTitle>
-            <CardDescription>Developer. Building accessible UI that you install as source.</CardDescription>
+            <CardTitle>John Doe</CardTitle>
+            <CardDescription>
+              Product designer. Building accessible UI that you install as source.
+            </CardDescription>
           </div>
         </div>
         <CardAction>
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button variant="ghost" size="icon-sm" aria-label="More actions">⋮</Button>
+              <Button variant="ghost" size="icon-sm" aria-label="More actions">
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
+                  <circle cx="5" cy="12" r="1.5" />
+                  <circle cx="12" cy="12" r="1.5" />
+                  <circle cx="19" cy="12" r="1.5" />
+                </svg>
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>View profile</DropdownMenuItem>
@@ -106,8 +116,8 @@ export function ProfileCard() {
           </DropdownMenu>
         </CardAction>
       </CardHeader>
-      <Badge>Verified</Badge>
-      <CardFooter>
+      <Badge variant="outline">Verified</Badge>
+      <CardFooter className="gap-2">
         <Button variant="outline">Message</Button>
         <Button>Follow</Button>
       </CardFooter>
@@ -159,21 +169,32 @@ const examples: ComponentExample[] = [
     ),
     code: `import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { Separator } from "@/components/ui/separator";
 
 export function SubscriptionCard() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm text-left">
       <CardHeader>
         <div>
           <CardTitle>Pro Plan</CardTitle>
           <CardDescription>$24 / month. Renews on October 12.</CardDescription>
         </div>
-        <CardAction><Badge>Active</Badge></CardAction>
+        <CardAction>
+          <Badge>Active</Badge>
+        </CardAction>
       </CardHeader>
       <Separator />
-      <CardFooter>
+      <CardContent>
+        <Label htmlFor="card-billing">Billing period</Label>
+        <NativeSelect id="card-billing" defaultValue="monthly">
+          <NativeSelectOption value="monthly">Monthly</NativeSelectOption>
+          <NativeSelectOption value="yearly">Yearly</NativeSelectOption>
+        </NativeSelect>
+      </CardContent>
+      <CardFooter className="gap-2">
         <Button>Manage subscription</Button>
         <Button variant="destructive">Cancel plan</Button>
       </CardFooter>
@@ -198,7 +219,7 @@ export function SubscriptionCard() {
         <CardContent className="grid gap-3">
           <div className="grid gap-2">
             <Label htmlFor="card-name">Display name</Label>
-            <Input id="card-name" defaultValue="Sarang Kumar" />
+            <Input id="card-name" defaultValue="John Doe" />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="card-email">Email</Label>
@@ -237,18 +258,35 @@ import { Switch } from "@/components/ui/switch";
 
 export function AccountCard() {
   return (
-    <Card>
+    <Card className="w-full max-w-sm text-left">
       <CardHeader>
         <CardTitle>Account</CardTitle>
         <CardDescription>Update the name and email on your profile.</CardDescription>
       </CardHeader>
-      <CardContent>
-        <Label htmlFor="card-name">Display name</Label>
-        <Input id="card-name" defaultValue="Sarang Kumar" />
-        <Switch id="card-2fa" defaultChecked />
-        <Checkbox id="card-trusted" defaultChecked />
+      <CardContent className="grid gap-3">
+        <div className="grid gap-2">
+          <Label htmlFor="card-name">Display name</Label>
+          <Input id="card-name" defaultValue="John Doe" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="card-email">Email</Label>
+          <Input id="card-email" type="email" defaultValue="sarang@example.com" />
+          <p className="text-muted-foreground text-xs">
+            We send receipts to this address.
+          </p>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="card-2fa">Two-factor authentication</Label>
+          <Switch id="card-2fa" defaultChecked />
+        </div>
+        <Badge variant="secondary">Enabled</Badge>
+        <div className="flex items-center gap-2">
+          <Checkbox id="card-trusted" defaultChecked />
+          <Label htmlFor="card-trusted">Remember trusted devices</Label>
+        </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="gap-2">
+        <Button variant="outline">Cancel</Button>
         <Button>Save changes</Button>
       </CardFooter>
     </Card>
@@ -273,8 +311,8 @@ export function AccountCard() {
         >
           <ul>
             {[
-              ["SK", "Sarang Kumar", "Opened a pull request", "2m"],
-              ["AL", "Ada Lovelace", "Published the notes", "8m"],
+              ["JD", "John Doe", "Opened a pull request", "2m"],
+              ["JS", "Jane Smith", "Published the notes", "8m"],
               ["VW", "vinyaas-web", "Deployment succeeded", "14m"],
             ].map(([initials, name, action, time]) => (
               <li key={action} className="grid gap-2 p-3">
@@ -307,20 +345,45 @@ import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
+const activity = [
+  ["JD", "John Doe", "Opened a pull request", "2m"],
+  ["JS", "Jane Smith", "Published the notes", "8m"],
+  ["VW", "vinyaas-web", "Deployment succeeded", "14m"],
+] as const;
+
 export function ActivityCard() {
   return (
-    <Card>
+    <Card className="w-full max-w-sm text-left">
       <CardHeader>
         <CardTitle>Activity</CardTitle>
         <CardDescription>Updates from the last day.</CardDescription>
       </CardHeader>
-      <ScrollArea className="h-40 rounded-md border" aria-label="Recent activity">
-        <Marker>
-          <MarkerIcon><span /></MarkerIcon>
-          <MarkerContent>Opened a pull request</MarkerContent>
-        </Marker>
-        <Separator />
-        <Badge variant="outline">2m</Badge>
+      <ScrollArea
+        className="border-border h-40 rounded-md border"
+        aria-label="Recent activity"
+      >
+        <ul>
+          {activity.map(([initials, name, action, time]) => (
+            <li key={action} className="grid gap-2 p-3">
+              <div className="flex items-start gap-3">
+                <Avatar>
+                  <AvatarFallback>{initials}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium">{name}</p>
+                  <Marker>
+                    <MarkerIcon>
+                      <span className="bg-foreground size-1.5 rounded-full" />
+                    </MarkerIcon>
+                    <MarkerContent>{action}</MarkerContent>
+                  </Marker>
+                </div>
+                <Badge variant="outline">{time}</Badge>
+              </div>
+              <Separator />
+            </li>
+          ))}
+        </ul>
       </ScrollArea>
     </Card>
   );
@@ -364,16 +427,22 @@ import { Switch } from "@/components/ui/switch";
 
 export function SecurityCard() {
   return (
-    <Card>
+    <Card className="w-full max-w-sm text-left">
       <CardHeader>
         <CardTitle>Security</CardTitle>
-        <CardAction><Badge variant="secondary">Protected</Badge></CardAction>
+        <CardAction>
+          <Badge variant="secondary">Protected</Badge>
+        </CardAction>
       </CardHeader>
-      <CardContent>
-        <Label htmlFor="card-session">Sign out other sessions</Label>
-        <Switch id="card-session" defaultChecked />
-        <Checkbox id="card-alerts" defaultChecked />
-        <Label htmlFor="card-alerts">Email me about new sign-ins</Label>
+      <CardContent className="grid gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="card-session">Sign out other sessions</Label>
+          <Switch id="card-session" defaultChecked />
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox id="card-alerts" defaultChecked />
+          <Label htmlFor="card-alerts">Email me about new sign-ins</Label>
+        </div>
       </CardContent>
       <CardFooter>
         <Button>Update security</Button>
@@ -393,10 +462,10 @@ export function SecurityCard() {
         <CardHeader>
           <div className="flex items-center gap-3">
             <Avatar>
-              <AvatarFallback>AL</AvatarFallback>
+              <AvatarFallback>JD</AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle>Ada Lovelace</CardTitle>
+              <CardTitle>John Doe</CardTitle>
               <CardDescription>Commented 2 minutes ago</CardDescription>
             </div>
           </div>
@@ -416,11 +485,20 @@ import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } 
 
 export function NotificationCard() {
   return (
-    <Card>
+    <Card className="w-full max-w-sm text-left">
       <CardHeader>
-        <CardTitle>Ada Lovelace</CardTitle>
-        <CardDescription>Commented 2 minutes ago</CardDescription>
-        <CardAction><Badge>New</Badge></CardAction>
+        <div className="flex items-center gap-3">
+          <Avatar>
+            <AvatarFallback>JD</AvatarFallback>
+          </Avatar>
+          <div>
+            <CardTitle>John Doe</CardTitle>
+            <CardDescription>Commented 2 minutes ago</CardDescription>
+          </div>
+        </div>
+        <CardAction>
+          <Badge>New</Badge>
+        </CardAction>
       </CardHeader>
       <CardFooter>
         <Button variant="outline">Reply</Button>
@@ -434,7 +512,7 @@ export function NotificationCard() {
     id: "compact",
     title: "Compact",
     description:
-      'size="sm" tightens the card. The action stays a small badge and an icon button.',
+      'size="sm" tightens the card. Footer actions stay the same small button size.',
     preview: (
       <Card size="sm" className="w-full max-w-sm text-left">
         <CardHeader>
@@ -448,21 +526,11 @@ export function NotificationCard() {
             <Badge>v1.0.0</Badge>
           </CardAction>
         </CardHeader>
-        <CardFooter>
-          <Button variant="ghost" size="icon-sm" aria-label="Open catalog">
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              className="size-4 fill-current"
-            >
-              <circle cx="5" cy="12" r="1.5" />
-              <circle cx="12" cy="12" r="1.5" />
-              <circle cx="19" cy="12" r="1.5" />
-            </svg>
-          </Button>
+        <CardFooter className="gap-2">
           <Button size="sm" variant="outline">
-            View project
+            Open
           </Button>
+          <Button size="sm">View project</Button>
         </CardFooter>
       </Card>
     ),
@@ -472,16 +540,21 @@ import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } 
 
 export function CompactCard() {
   return (
-    <Card size="sm">
+    <Card size="sm" className="w-full max-w-sm text-left">
       <CardHeader>
         <div>
           <CardTitle>Catalog</CardTitle>
           <CardDescription>The v1.0.0 registry is the production catalog.</CardDescription>
         </div>
-        <CardAction><Badge>v1.0.0</Badge></CardAction>
+        <CardAction>
+          <Badge>v1.0.0</Badge>
+        </CardAction>
       </CardHeader>
-      <CardFooter>
-        <Button size="sm" variant="outline">View project</Button>
+      <CardFooter className="gap-2">
+        <Button size="sm" variant="outline">
+          Open
+        </Button>
+        <Button size="sm">View project</Button>
       </CardFooter>
     </Card>
   );
@@ -512,12 +585,12 @@ import { Progress } from "@/components/ui/progress";
 
 export function ProjectCard() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm text-left">
       <CardHeader>
         <div>
           <CardTitle>Production Dashboard</CardTitle>
           <CardDescription>
-            Updated 2 hours ago by Sarang Kumar.
+            Updated 2 hours ago by John Doe.
           </CardDescription>
         </div>
         <CardAction>
@@ -528,7 +601,11 @@ export function ProjectCard() {
                 size="icon-sm"
                 aria-label="Project actions"
               >
-                ⋮
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
+                  <circle cx="5" cy="12" r="1.5" />
+                  <circle cx="12" cy="12" r="1.5" />
+                  <circle cx="19" cy="12" r="1.5" />
+                </svg>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -601,17 +678,17 @@ export default async function CardPage() {
         <CardHeader>
           <div className="flex min-w-0 items-start gap-3">
             <Avatar>
-              <AvatarFallback>SK</AvatarFallback>
+              <AvatarFallback>JD</AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <CardTitle>Sarang Kumar</CardTitle>
+              <CardTitle>John Doe</CardTitle>
               <CardDescription>
                 Developer. Building accessible UI that you install as source.
               </CardDescription>
             </div>
           </div>
           <CardAction>
-            <Badge>Verified</Badge>
+            <Badge variant="outline">Verified</Badge>
           </CardAction>
         </CardHeader>
         <CardContent className="grid gap-2">
@@ -621,11 +698,9 @@ export default async function CardPage() {
             Status · Available for collaboration
           </p>
         </CardContent>
-        <CardFooter className="flex-col gap-2 sm:flex-row">
-          <Button variant="outline" className="w-full sm:w-auto">
-            Message
-          </Button>
-          <Button className="w-full sm:w-auto">Follow</Button>
+        <CardFooter className="gap-2">
+          <Button variant="outline">Message</Button>
+          <Button>Follow</Button>
         </CardFooter>
       </Card>
     </ComponentReference>

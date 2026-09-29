@@ -70,7 +70,7 @@ export function ComponentReference({
           <h2 id="overview" className={sectionHeading}>
             Overview
           </h2>
-          <div className="text-body flex flex-col gap-3 text-sm leading-6">
+          <div className="text-foreground flex flex-col gap-3 text-sm leading-6">
             {overview}
           </div>
         </section>
@@ -94,7 +94,7 @@ export function ComponentReference({
           />
         </div>
         {manual ? (
-          <div className="text-body flex flex-col gap-3 text-sm leading-6">
+          <div className="text-foreground flex flex-col gap-3 text-sm leading-6">
             <h3 id="manual" className={subsectionHeading}>
               Manual
             </h3>
@@ -118,7 +118,7 @@ export function ComponentReference({
               <h3 id={example.id} className={subsectionHeading}>
                 {example.title}
               </h3>
-              <p className="text-body text-sm leading-6">
+              <p className="text-muted-foreground text-sm leading-6">
                 {example.description}
               </p>
               <ComponentDemo
@@ -135,7 +135,7 @@ export function ComponentReference({
           <h2 id="in-practice" className={sectionHeading}>
             In practice
           </h2>
-          <p className="text-body text-sm leading-6">
+          <p className="text-muted-foreground text-sm leading-6">
             {inPractice.description}
           </p>
           <ComponentDemo
@@ -150,14 +150,14 @@ export function ComponentReference({
           <h2 id="api" className={sectionHeading}>
             API
           </h2>
-          <p className="text-body text-sm leading-6">
+          <p className="text-foreground text-sm leading-6">
             Other attributes for the underlying element are passed through.
           </p>
           <ApiTable rows={api} />
         </section>
       ) : null}
       {accessibility ? (
-        <section className="text-body flex flex-col gap-4 text-sm leading-6">
+        <section className="text-foreground flex flex-col gap-4 text-sm leading-6">
           <h2 id="accessibility" className={sectionHeading}>
             Accessibility
           </h2>

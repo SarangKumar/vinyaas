@@ -4,6 +4,7 @@
  */
 
 :root {
+  /* New-component marker follows primary so dots match the theme accent. */
   --new: var(--primary);
   --sidebar-foreground: var(--muted-foreground);
 
@@ -21,31 +22,31 @@
   --playground-pad-xl: 3rem;
 
   /*
-   * Soft syntax colors — slightly brighter for readability, still muted.
-   * Keywords stay quiet so code reads evenly.
+   * Syntax colors for CodeBlock — brighter than body copy so tokens
+   * separate clearly inside muted card surfaces.
    */
-  --syntax-plain: oklch(0.36 0.02 286);
-  --syntax-keyword: oklch(0.44 0.09 300);
-  --syntax-fn: oklch(0.42 0.09 250);
-  --syntax-string: oklch(0.42 0.09 165);
-  --syntax-param: oklch(0.44 0.07 55);
-  --syntax-number: oklch(0.44 0.08 35);
-  --syntax-comment: oklch(0.52 0.014 286);
-  --syntax-punct: oklch(0.48 0.014 286);
+  --syntax-plain: oklch(0.28 0.02 286);
+  --syntax-keyword: oklch(0.42 0.18 303);
+  --syntax-fn: oklch(0.4 0.16 255);
+  --syntax-string: oklch(0.4 0.14 160);
+  --syntax-param: oklch(0.45 0.14 55);
+  --syntax-number: oklch(0.45 0.15 35);
+  --syntax-comment: oklch(0.55 0.02 286);
+  --syntax-punct: oklch(0.42 0.02 286);
 }
 
 .dark {
   --new: var(--primary);
   --sidebar-foreground: var(--muted-foreground);
 
-  --syntax-plain: oklch(0.86 0.018 286);
-  --syntax-keyword: oklch(0.86 0.07 300);
-  --syntax-fn: oklch(0.88 0.07 250);
-  --syntax-string: oklch(0.88 0.075 165);
-  --syntax-param: oklch(0.88 0.055 55);
-  --syntax-number: oklch(0.88 0.06 35);
-  --syntax-comment: oklch(0.72 0.014 286);
-  --syntax-punct: oklch(0.72 0.014 286);
+  --syntax-plain: oklch(0.92 0.02 286);
+  --syntax-keyword: oklch(0.84 0.14 303);
+  --syntax-fn: oklch(0.82 0.12 250);
+  --syntax-string: oklch(0.84 0.13 160);
+  --syntax-param: oklch(0.86 0.1 55);
+  --syntax-number: oklch(0.86 0.11 35);
+  --syntax-comment: oklch(0.68 0.02 286);
+  --syntax-punct: oklch(0.78 0.02 286);
 }
 
 @theme inline {

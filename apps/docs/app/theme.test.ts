@@ -25,33 +25,36 @@ describe("docs theme", () => {
     expect(css).toContain(":root");
     expect(css).toContain(".dark");
 
-    expect(css).toContain("--radius: 0.5rem");
+    expect(css).toContain("--radius: 0.75rem");
     expect(css).toContain("--radius-lg: var(--radius)");
     expect(css).toContain("--background: oklch(1 0 0)");
     expect(css).toContain("--foreground: oklch(0.141 0.005 285.823)");
-    expect(css).toContain("--primary: oklch(0.21 0.006 285.885)");
-    expect(css).toContain("--primary-foreground: oklch(0.985 0 0)");
+    expect(css).toContain("--primary: oklch(0.623 0.214 259.815)");
+    expect(css).toContain("--primary-foreground: oklch(0.97 0.014 254.604)");
     expect(css).toContain("--secondary: oklch(0.967 0.001 286.375)");
     expect(css).toContain("--secondary-foreground: oklch(0.21 0.006 285.885)");
     expect(css).toContain("--muted: oklch(0.967 0.001 286.375)");
     expect(css).toContain("--muted-foreground: oklch(0.552 0.016 285.938)");
     expect(css).toContain("--accent: oklch(0.967 0.001 286.375)");
     expect(css).toContain("--accent-foreground: oklch(0.21 0.006 285.885)");
-    expect(css).toContain("--destructive: oklch(0.52 0.17 27)");
-    expect(css).toContain("--destructive-foreground: oklch(0.985 0 0)");
+    expect(css).toContain("--destructive: oklch(0.577 0.245 27.325)");
+    expect(css).not.toContain("--destructive-foreground");
     expect(css).toContain("--card: oklch(1 0 0)");
     expect(css).toContain("--card-foreground: oklch(0.141 0.005 285.823)");
     expect(css).toContain("--popover: oklch(1 0 0)");
     expect(css).toContain("--popover-foreground: oklch(0.141 0.005 285.823)");
     expect(css).toContain("--border: oklch(0.92 0.004 286.32)");
     expect(css).toContain("--input: oklch(0.92 0.004 286.32)");
-    expect(css).toContain("--ring: oklch(0.705 0.015 286.067)");
-    expect(css).toContain("--body: var(--foreground)");
+    expect(css).toContain("--ring: oklch(0.623 0.214 259.815)");
+    expect(css).not.toContain("--body:");
+    expect(css).not.toContain("color-mix(");
 
     expect(css).toContain("--background: oklch(0.141 0.005 285.823)");
     expect(css).toContain("--card: oklch(0.21 0.006 285.885)");
-    expect(css).toContain("--primary: oklch(0.92 0.004 286.32)");
-    expect(css).toContain("--ring: oklch(0.552 0.016 285.938)");
+    expect(css).toContain("--primary: oklch(0.546 0.245 262.881)");
+    expect(css).toContain("--primary-foreground: oklch(0.985 0 0)");
+    expect(css).toContain("--destructive: oklch(0.704 0.191 22.216)");
+    expect(css).toContain("--ring: oklch(0.488 0.243 264.376)");
     expect(css).toContain("--border: oklch(1 0 0 / 10%)");
 
     expect(css).toContain("--color-background: var(--background)");
@@ -66,7 +69,8 @@ describe("docs theme", () => {
     expect(css).toContain("--color-border: var(--border)");
     expect(css).toContain("--color-input: var(--input)");
     expect(css).toContain("--color-ring: var(--ring)");
-    expect(css).toContain("--color-body: var(--body)");
+    expect(css).not.toContain("--color-body");
+    expect(css).not.toContain("--color-destructive-foreground");
     expect(css).toContain(
       "--font-mono: var(--font-geist-mono), ui-monospace, monospace",
     );

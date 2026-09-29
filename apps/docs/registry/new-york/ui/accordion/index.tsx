@@ -226,7 +226,7 @@ export function AccordionTrigger({
       aria-expanded={item.open}
       aria-controls={item.contentId}
       className={cn(
-        "flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm font-medium underline-offset-4 hover:underline focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}

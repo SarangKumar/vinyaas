@@ -77,7 +77,7 @@ describe("CodeBlock", () => {
       "tsx",
     );
     expect(document.querySelector("[data-line-numbers]")).toHaveClass(
-      "bg-muted/40",
+      "bg-muted",
     );
     expect(
       document.querySelector("[data-line-numbers]")?.closest("pre")

@@ -159,9 +159,12 @@ const examples: ComponentExample[] = [
         </NativeSelectOptGroup>
       </NativeSelect>
     ),
-    code: `<NativeSelect aria-label="Region" defaultValue="in">
+    code: `<NativeSelect aria-label="Region" defaultValue="in" className="max-w-sm">
   <NativeSelectOptGroup label="Asia">
     <NativeSelectOption value="in">India</NativeSelectOption>
+  </NativeSelectOptGroup>
+  <NativeSelectOptGroup label="Americas">
+    <NativeSelectOption value="us">United States</NativeSelectOption>
   </NativeSelectOptGroup>
 </NativeSelect>`,
   },

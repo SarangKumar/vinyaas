@@ -13,6 +13,7 @@ import KbdPage from "./kbd/page";
 import ProgressPage from "./progress/page";
 import NativeSelectPage from "./native-select/page";
 import PopoverPage from "./popover/page";
+import RadioGroupPage from "./radio-group/page";
 import SeparatorPage from "./separator/page";
 import SkeletonPage from "./skeleton/page";
 import SwitchPage from "./switch/page";
@@ -21,6 +22,8 @@ import TabsPage from "./tabs/page";
 import ToastPage from "./toast/page";
 import TooltipPage from "./tooltip/page";
 import AlertPage from "./alert/page";
+import AspectRatioPage from "./aspect-ratio/page";
+import AttachmentPage from "./attachment/page";
 import DialogPage from "./dialog/page";
 import AccordionPage from "./accordion/page";
 import BreadcrumbDocsPage from "./breadcrumb/page";
@@ -150,6 +153,18 @@ const pages = [
     api: "variant",
   },
   {
+    load: AspectRatioPage,
+    title: "Aspect Ratio",
+    command: "npx vinyaas add aspect-ratio",
+    api: "ratio",
+  },
+  {
+    load: AttachmentPage,
+    title: "Attachment",
+    command: "npx vinyaas add attachment",
+    api: "state",
+  },
+  {
     load: DialogPage,
     title: "Dialog",
     command: "npx vinyaas add dialog",
@@ -242,7 +257,7 @@ describe("composed examples", () => {
     expect(screen.getAllByText("Ghost").length).toBeGreaterThan(0);
 
     renderDocs(await CardPage());
-    expect(screen.getAllByText("Sarang Kumar").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("John Doe").length).toBeGreaterThan(0);
     expect(
       screen.getAllByRole("button", { name: "Follow" }).length,
     ).toBeGreaterThan(0);
@@ -277,18 +292,45 @@ describe("composed examples", () => {
         node.textContent?.includes('<Button variant="outline">Cancel</Button>'),
       ),
     ).toBe(true);
+    expect(
+      [...document.querySelectorAll("code")].some((node) =>
+        node.textContent?.includes("bg-background"),
+      ),
+    ).toBe(true);
     unmountDialog();
 
     const { unmount: unmountHover } = renderDocs(await HoverCardPage());
+    expect(screen.getByRole("heading", { name: "Profile" })).toHaveAttribute(
+      "id",
+      "profile",
+    );
+    expect(screen.getByRole("heading", { name: "Alignment" })).toHaveAttribute(
+      "id",
+      "alignment",
+    );
     expect(
-      screen.getByRole("heading", { name: "External link" }),
-    ).toHaveAttribute("id", "external-link");
+      screen.getAllByRole("button", { name: "@johndoe" }).length,
+    ).toBeGreaterThan(0);
     expect(
-      screen.getAllByRole("button", { name: /Vinyaas documentation/ }).length,
+      screen.getAllByRole("button", { name: "Top" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: "Bottom" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: "Left" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: "Right" }).length,
     ).toBeGreaterThan(0);
     expect(
       [...document.querySelectorAll("code")].some((node) =>
-        node.textContent?.includes("External website"),
+        node.textContent?.includes("John Doe"),
+      ),
+    ).toBe(true);
+    expect(
+      [...document.querySelectorAll("code")].some((node) =>
+        node.textContent?.includes('Badge variant="outline"'),
       ),
     ).toBe(true);
     unmountHover();
@@ -307,16 +349,21 @@ describe("composed examples", () => {
     );
     expect(screen.getByRole("button", { name: "Success" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Error" })).toBeInTheDocument();
+    expect(
+      [...document.querySelectorAll("form")].some((node) =>
+        node.className.includes("gap-4"),
+      ),
+    ).toBe(true);
     unmountToast();
 
     const { unmount: unmountAlert } = renderDocs(await AlertPage());
-    expect(screen.getByRole("heading", { name: "Variants" })).toHaveAttribute(
+    expect(screen.getByRole("heading", { name: "Basic" })).toHaveAttribute(
       "id",
-      "variants",
+      "basic",
     );
-    expect(screen.getAllByText("Deployment complete").length).toBeGreaterThan(
-      0,
-    );
+    expect(
+      screen.getAllByText("Account updated successfully").length,
+    ).toBeGreaterThan(0);
     expect(screen.getAllByText("Payment failed").length).toBeGreaterThan(0);
     unmountAlert();
 
@@ -331,6 +378,42 @@ describe("composed examples", () => {
     expect([...selects].some((node) => node.className.includes("pr-10"))).toBe(
       true,
     );
+    expect(
+      [...document.querySelectorAll("svg")].some((node) =>
+        node.className.baseVal
+          ? node.className.baseVal.includes("right-3")
+          : String(node.getAttribute("class") ?? "").includes("right-3"),
+      ),
+    ).toBe(true);
+  });
+
+  it("renders scroll, radio, and marker polish examples", async () => {
+    const { unmount: unmountScroll } = renderDocs(await ScrollAreaPage());
+    const scrolls = screen.getAllByLabelText("Release notes");
+    expect(scrolls.length).toBeGreaterThan(0);
+    expect(scrolls[0]?.className).toMatch(/h-40/);
+    expect(scrolls[0]?.textContent).toMatch(/Changelog entry for v2\.4\.1/);
+    unmountScroll();
+
+    const { unmount: unmountRadio } = renderDocs(await RadioGroupPage());
+    expect(
+      [...document.querySelectorAll("form")].some(
+        (node) =>
+          node.className.includes("gap-4") && node.className.includes("p-5"),
+      ),
+    ).toBe(true);
+    expect(screen.getByText("Starter")).toBeInTheDocument();
+    expect(screen.getByText("Express · 2 days")).toBeInTheDocument();
+    unmountRadio();
+
+    renderDocs(await MarkerPage());
+    expect(screen.getAllByText("Live on v1.1.0").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Checks passed on main").length).toBeGreaterThan(
+      0,
+    );
+    expect(
+      screen.getByRole("button", { name: "View logs" }),
+    ).toBeInTheDocument();
   });
 
   it("renders dropdown, breadcrumb separator, and kbd named-key examples", async () => {
@@ -350,10 +433,26 @@ describe("composed examples", () => {
     expect(
       screen.getByRole("heading", { name: "User actions" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Sarang Kumar")).toBeInTheDocument();
+    expect(screen.getAllByText("Aarav Sharma").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", { name: "Actions for Aarav Sharma" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Team actions for Aarav Sharma" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("button", { name: "My Account" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      [...document.querySelectorAll("code")].some((node) =>
+        node.textContent?.includes("DropdownMenuSubTrigger"),
+      ),
+    ).toBe(true);
+    expect(
+      [...document.querySelectorAll("code")].some((node) =>
+        node.textContent?.includes('variant="destructive"'),
+      ),
+    ).toBe(true);
 
     renderDocs(await BreadcrumbDocsPage());
     expect(
@@ -381,10 +480,9 @@ describe("composed examples", () => {
     ).toHaveAttribute("id", "in-a-button");
 
     renderDocs(await MarkerPage());
-    expect(screen.getByRole("heading", { name: "Separator" })).toHaveAttribute(
-      "id",
-      "separator",
-    );
+    expect(
+      screen.getByRole("heading", { name: "Day separator" }),
+    ).toHaveAttribute("id", "separator");
     expect(screen.getAllByText("Today").length).toBeGreaterThan(0);
     expect(
       screen.getByText("Merged accessibility fixes for Dialog."),

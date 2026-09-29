@@ -30,11 +30,11 @@ export default function ChangelogPage() {
         <h2 id="v0.1" className={heading}>
           v0.1
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           v0.1 is the foundation. It ships {v01.length} component:{" "}
           {v01.map((component) => component.name).join(", ")}.
         </p>
-        <ul className="text-body list-disc pl-5 text-base leading-7">
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
           <li>
             A pnpm workspace with a docs app and the <code>@vinyaas/cli</code>{" "}
             package.
@@ -56,7 +56,7 @@ export default function ChangelogPage() {
         <h2 id="v1.0.0" className={heading}>
           v1.0.0
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           v1.0.0 is the major production-focused catalog release. It adds{" "}
           {v10.length} components. Together with v0.1, the catalog has{" "}
           {components.length} independently installable registry items. It
@@ -70,7 +70,7 @@ export default function ChangelogPage() {
         >
           Component catalog
         </h3>
-        <ul className="text-body list-disc pl-5 text-base leading-7">
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
           <li>
             {v01.length + v10.length} components shipped through v1.0.0. Button
             remains the v0.1 foundation; the other {v10.length} were introduced
@@ -90,7 +90,7 @@ export default function ChangelogPage() {
         >
           Documentation
         </h3>
-        <ul className="text-body list-disc pl-5 text-base leading-7">
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
           <li>
             Component pages cover API reference, installation, usage examples,
             composition, accessibility notes, and registry source.
@@ -115,7 +115,7 @@ export default function ChangelogPage() {
         >
           CLI
         </h3>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           The CLI installs one or many components in a single call. Shared
           packages install once:
         </p>
@@ -128,12 +128,12 @@ export default function ChangelogPage() {
         >
           Released
         </h3>
-        <ul className="text-body list-disc pl-5 text-base leading-7">
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
           {v10.map((component) => (
             <li key={component.slug}>{component.name}</li>
           ))}
         </ul>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           A plain HTML select is used where a menu is enough. A custom popup
           Select is not part of the catalog. Native Select remains a component.
         </p>
@@ -143,7 +143,7 @@ export default function ChangelogPage() {
         >
           Planned
         </h3>
-        <ul className="text-body list-disc pl-5 text-base leading-7">
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
           <li>
             Publishing this registry and CLI is separate from the work in the
             working tree.
@@ -155,7 +155,7 @@ export default function ChangelogPage() {
         >
           Not in this version
         </h3>
-        <ul className="text-body list-disc pl-5 text-base leading-7">
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
           <li>A custom popup Select.</li>
           <li>Swipe-to-dismiss toasts.</li>
           <li>
@@ -168,7 +168,7 @@ export default function ChangelogPage() {
         <h2 id="v1.1.0" className={heading}>
           v1.1.0
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           v{currentVersion} continues the catalog with focused foundation work
           and new components. It adds {v11.length} component
           {v11.length === 1 ? "" : "s"}.
@@ -179,12 +179,12 @@ export default function ChangelogPage() {
         >
           Component catalog
         </h3>
-        <ul className="text-body list-disc pl-5 text-base leading-7">
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
           {v11.map((component) => (
             <li key={component.slug}>{component.name}</li>
           ))}
         </ul>
-        <p className="text-body text-base leading-7">
+        <p className="text-foreground text-base leading-7">
           Installed components use the{" "}
           <code>components/ui/&lt;name&gt;/index.tsx</code> layout. Supporting
           CSS files stay beside the entry file when a component needs them.

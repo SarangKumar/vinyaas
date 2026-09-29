@@ -43,11 +43,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export function CheckoutOptions() {
   return (
-    <form className="grid w-full max-w-md gap-6 text-left">
-      <fieldset className="grid gap-3">
+    <form className="border-border bg-card grid w-full max-w-md gap-4 rounded-md border p-5 text-left">
+      <fieldset className="grid gap-4">
         <legend className="text-foreground text-sm font-medium">Plan</legend>
-        <RadioGroup defaultValue="pro" name="plan">
-          <div className="flex items-start gap-2">
+        <RadioGroup defaultValue="pro" name="plan" className="grid gap-3">
+          <div className="flex items-start gap-3">
             <RadioGroupItem value="starter" id="plan-starter" className="mt-0.5" />
             <div className="grid gap-1">
               <Label htmlFor="plan-starter">Starter</Label>
@@ -56,7 +56,7 @@ export function CheckoutOptions() {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-3">
             <RadioGroupItem value="pro" id="plan-pro" className="mt-0.5" />
             <div className="grid gap-1">
               <Label htmlFor="plan-pro">Pro</Label>
@@ -65,7 +65,7 @@ export function CheckoutOptions() {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-3">
             <RadioGroupItem value="business" id="plan-business" className="mt-0.5" />
             <div className="grid gap-1">
               <Label htmlFor="plan-business">Business</Label>
@@ -76,20 +76,20 @@ export function CheckoutOptions() {
           </div>
         </RadioGroup>
       </fieldset>
-      <fieldset className="grid gap-3">
+      <fieldset className="grid gap-4">
         <legend className="text-foreground text-sm font-medium">Shipping</legend>
-        <RadioGroup defaultValue="standard" name="shipping">
-          <div className="flex items-center gap-2">
+        <RadioGroup defaultValue="standard" name="shipping" className="grid gap-3">
+          <div className="flex items-center gap-3">
             <RadioGroupItem value="standard" id="ship-standard" />
             <Label htmlFor="ship-standard">Standard · 5–7 days</Label>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <RadioGroupItem value="express" id="ship-express" />
             <Label htmlFor="ship-express">Express · 2 days</Label>
           </div>
         </RadioGroup>
       </fieldset>
-      <Button type="submit" className="w-full sm:w-auto">
+      <Button type="submit" className="mt-1 w-full sm:w-auto">
         Continue
       </Button>
     </form>
@@ -159,16 +159,28 @@ const examples: ComponentExample[] = [
         </div>
       </RadioGroup>
     ),
-    code: `<RadioGroup defaultValue="comfortable" name="spacing">
-  <div className="flex items-center gap-2">
-    <RadioGroupItem value="default" id="r1" />
-    <Label htmlFor="r1">Default</Label>
-  </div>
-  <div className="flex items-center gap-2">
-    <RadioGroupItem value="comfortable" id="r2" />
-    <Label htmlFor="r2">Comfortable</Label>
-  </div>
-</RadioGroup>`,
+    code: `import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+export function SpacingField() {
+  return (
+    <RadioGroup defaultValue="comfortable" name="spacing">
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="default" id="r1" />
+        <Label htmlFor="r1">Default</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="comfortable" id="r2" />
+        <Label htmlFor="r2">Comfortable</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="compact" id="r3" />
+        <Label htmlFor="r3">Compact</Label>
+      </div>
+    </RadioGroup>
+  );
+}
+`,
   },
   {
     id: "disabled-item",
@@ -215,11 +227,15 @@ const inPractice: ComponentInPractice = {
   description:
     "Plan and shipping are separate radio groups. Continue submits the selection.",
   preview: (
-    <form className="grid w-full max-w-md gap-6 text-left">
-      <fieldset className="grid gap-3">
+    <form className="border-border bg-card grid w-full max-w-md gap-4 rounded-md border p-5 text-left">
+      <fieldset className="grid gap-4">
         <legend className="text-foreground text-sm font-medium">Plan</legend>
-        <RadioGroup defaultValue="pro" name="practice-plan">
-          <div className="flex items-start gap-2">
+        <RadioGroup
+          defaultValue="pro"
+          name="practice-plan"
+          className="grid gap-3"
+        >
+          <div className="flex items-start gap-3">
             <RadioGroupItem
               value="starter"
               id="practice-plan-starter"
@@ -232,7 +248,7 @@ const inPractice: ComponentInPractice = {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-3">
             <RadioGroupItem
               value="pro"
               id="practice-plan-pro"
@@ -245,7 +261,7 @@ const inPractice: ComponentInPractice = {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-3">
             <RadioGroupItem
               value="business"
               id="practice-plan-business"
@@ -260,22 +276,26 @@ const inPractice: ComponentInPractice = {
           </div>
         </RadioGroup>
       </fieldset>
-      <fieldset className="grid gap-3">
+      <fieldset className="grid gap-4">
         <legend className="text-foreground text-sm font-medium">
           Shipping
         </legend>
-        <RadioGroup defaultValue="standard" name="practice-shipping">
-          <div className="flex items-center gap-2">
+        <RadioGroup
+          defaultValue="standard"
+          name="practice-shipping"
+          className="grid gap-3"
+        >
+          <div className="flex items-center gap-3">
             <RadioGroupItem value="standard" id="practice-ship-standard" />
             <Label htmlFor="practice-ship-standard">Standard · 5–7 days</Label>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <RadioGroupItem value="express" id="practice-ship-express" />
             <Label htmlFor="practice-ship-express">Express · 2 days</Label>
           </div>
         </RadioGroup>
       </fieldset>
-      <Button type="submit" className="w-full sm:w-auto">
+      <Button type="submit" className="mt-1 w-full sm:w-auto">
         Continue
       </Button>
     </form>

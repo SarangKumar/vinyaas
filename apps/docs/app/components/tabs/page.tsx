@@ -76,6 +76,12 @@ const api: ApiRow[] = [
     description: "Sets aria-orientation and the list layout direction.",
   },
   {
+    prop: "variant",
+    type: '"default" | "line"',
+    defaultValue: '"default"',
+    description: "On TabsList, line draws an underline under the active tab.",
+  },
+  {
     prop: "disabled",
     type: "boolean",
     description: "Disables the whole set, or one TabsTrigger.",
@@ -261,7 +267,7 @@ import {
 
 export function AccountSettings() {
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md text-left">
       <CardHeader>
         <CardTitle>Settings</CardTitle>
         <CardDescription>
@@ -275,7 +281,7 @@ export function AccountSettings() {
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="security">Security</TabsTrigger>
           </TabsList>
-          <TabsContent value="account" className="flex flex-col gap-3">
+          <TabsContent value="account" className="flex flex-col gap-3 pt-1">
             <div className="flex flex-col gap-2">
               <Label htmlFor="display-name">Display name</Label>
               <Input id="display-name" defaultValue="Sarang Kumar" />
@@ -286,7 +292,7 @@ export function AccountSettings() {
             </div>
             <Button className="self-start">Save changes</Button>
           </TabsContent>
-          <TabsContent value="notifications" className="flex flex-col gap-3">
+          <TabsContent value="notifications" className="flex flex-col gap-3 pt-1">
             <div className="flex items-center justify-between gap-3">
               <Label htmlFor="email-alerts">Email digests</Label>
               <Switch id="email-alerts" defaultChecked />
@@ -295,11 +301,15 @@ export function AccountSettings() {
               <Label htmlFor="push">Push notifications</Label>
               <Switch id="push" />
             </div>
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="mentions">Mentions only</Label>
+              <Switch id="mentions" defaultChecked />
+            </div>
             <Button className="self-start" variant="outline">
               Update preferences
             </Button>
           </TabsContent>
-          <TabsContent value="security" className="flex flex-col gap-3">
+          <TabsContent value="security" className="flex flex-col gap-3 pt-1">
             <div className="flex flex-col gap-2">
               <Label htmlFor="password">New password</Label>
               <Input id="password" type="password" />
@@ -337,6 +347,35 @@ const examples: ComponentExample[] = [
       </Tabs>
     ),
     code: usage,
+  },
+  {
+    id: "line",
+    title: "Line",
+    description:
+      'Use variant="line" on TabsList for an underline under the active tab.',
+    preview: (
+      <Tabs defaultValue="overview" className="w-full max-w-md text-left">
+        <TabsList variant="line">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="reports">Reports</TabsTrigger>
+        </TabsList>
+      </Tabs>
+    ),
+    code: `import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+export function TabsLine() {
+  return (
+    <Tabs defaultValue="overview">
+      <TabsList variant="line">
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        <TabsTrigger value="reports">Reports</TabsTrigger>
+      </TabsList>
+    </Tabs>
+  );
+}
+`,
   },
   {
     id: "project",
@@ -401,7 +440,7 @@ import {
 
 export function ProjectTabs() {
   return (
-    <Tabs defaultValue="overview">
+    <Tabs defaultValue="overview" className="w-full max-w-lg text-left">
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="activity">Activity</TabsTrigger>
@@ -409,17 +448,41 @@ export function ProjectTabs() {
       </TabsList>
       <TabsContent value="overview">
         <Card className="gap-3 p-4">
-          <p className="text-sm font-medium">Design system</p>
-          <p className="text-muted-foreground text-sm">
-            Source-installed primitives for product UI.
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex flex-col gap-1">
+              <p className="text-foreground text-sm font-medium">Design system</p>
+              <p className="text-muted-foreground text-sm">
+                Source-installed primitives for product UI.
+              </p>
+            </div>
+            <Button size="sm" variant="outline">
+              Open
+            </Button>
+          </div>
+          <p className="text-muted-foreground text-xs">
+            Last deployed 2 hours ago · 12 open issues
           </p>
-          <Button size="sm" variant="outline">
-            Open
-          </Button>
         </Card>
       </TabsContent>
-      <TabsContent value="activity">Recent commits and releases.</TabsContent>
-      <TabsContent value="members">Owners and editors.</TabsContent>
+      <TabsContent value="activity">
+        <ul className="text-muted-foreground flex flex-col gap-2 text-sm">
+          <li>Merged accessibility fixes for Dialog.</li>
+          <li>Published registry artifacts for Toast.</li>
+          <li>Updated installation docs for multi-add.</li>
+        </ul>
+      </TabsContent>
+      <TabsContent value="members">
+        <ul className="text-sm">
+          <li className="border-border flex items-center justify-between border-b py-2">
+            <span>Sarang Kumar</span>
+            <span className="text-muted-foreground">Owner</span>
+          </li>
+          <li className="flex items-center justify-between py-2">
+            <span>Alex Rivera</span>
+            <span className="text-muted-foreground">Editor</span>
+          </li>
+        </ul>
+      </TabsContent>
     </Tabs>
   );
 }
@@ -458,7 +521,7 @@ export function ProjectTabs() {
 
 export function DisabledTab() {
   return (
-    <Tabs defaultValue="general">
+    <Tabs defaultValue="general" className="w-full max-w-md text-left">
       <TabsList>
         <TabsTrigger value="general">General</TabsTrigger>
         <TabsTrigger value="team">Team</TabsTrigger>
@@ -466,8 +529,15 @@ export function DisabledTab() {
           Billing
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="general">Workspace name and default locale.</TabsContent>
-      <TabsContent value="team">Invite people and manage roles.</TabsContent>
+      <TabsContent value="general" className="text-muted-foreground text-sm">
+        Workspace name and default locale.
+      </TabsContent>
+      <TabsContent value="team" className="text-muted-foreground text-sm">
+        Invite people and manage roles.
+      </TabsContent>
+      <TabsContent value="billing" className="text-muted-foreground text-sm">
+        Billing is unavailable for this plan.
+      </TabsContent>
     </Tabs>
   );
 }
@@ -511,17 +581,71 @@ export function DisabledTab() {
   TabsTrigger,
 } from "@/components/ui/tabs";
 
+function UserIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-3.5 shrink-0">
+      <path
+        d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-3.5 shrink-0">
+      <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" strokeWidth="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-3.5 shrink-0">
+      <path
+        d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function IconTabs() {
   return (
-    <Tabs defaultValue="account">
+    <Tabs defaultValue="account" className="w-full max-w-md text-left">
       <TabsList>
-        <TabsTrigger value="account">Account</TabsTrigger>
-        <TabsTrigger value="security">Security</TabsTrigger>
-        <TabsTrigger value="alerts">Alerts</TabsTrigger>
+        <TabsTrigger value="account">
+          <UserIcon />
+          Account
+        </TabsTrigger>
+        <TabsTrigger value="security">
+          <LockIcon />
+          Security
+        </TabsTrigger>
+        <TabsTrigger value="alerts">
+          <BellIcon />
+          Alerts
+        </TabsTrigger>
       </TabsList>
-      <TabsContent value="account">Profile details and avatar.</TabsContent>
-      <TabsContent value="security">Password and session settings.</TabsContent>
-      <TabsContent value="alerts">Email and push preferences.</TabsContent>
+      <TabsContent value="account" className="text-muted-foreground text-sm">
+        Profile details and avatar.
+      </TabsContent>
+      <TabsContent value="security" className="text-muted-foreground text-sm">
+        Password and session settings.
+      </TabsContent>
+      <TabsContent value="alerts" className="text-muted-foreground text-sm">
+        Email and push preferences.
+      </TabsContent>
     </Tabs>
   );
 }
@@ -564,7 +688,7 @@ export function IconTabs() {
 
 export function CompactTabs() {
   return (
-    <Tabs defaultValue="all">
+    <Tabs defaultValue="all" className="w-full max-w-sm text-left">
       <TabsList className="h-8">
         <TabsTrigger value="all" className="px-2.5 text-xs">
           All
@@ -576,9 +700,15 @@ export function CompactTabs() {
           Closed
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="all">24 issues across the workspace.</TabsContent>
-      <TabsContent value="open">11 issues still need a response.</TabsContent>
-      <TabsContent value="closed">13 issues were closed this week.</TabsContent>
+      <TabsContent value="all" className="text-muted-foreground text-xs">
+        24 issues across the workspace.
+      </TabsContent>
+      <TabsContent value="open" className="text-muted-foreground text-xs">
+        11 issues still need a response.
+      </TabsContent>
+      <TabsContent value="closed" className="text-muted-foreground text-xs">
+        13 issues were closed this week.
+      </TabsContent>
     </Tabs>
   );
 }

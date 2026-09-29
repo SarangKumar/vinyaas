@@ -40,6 +40,20 @@ export const components: readonly ComponentMeta[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Aspect Ratio",
+    slug: "aspect-ratio",
+    description: "Displays content within a desired ratio.",
+    category: "layout",
+    introducedIn: "1.1.0",
+  },
+  {
+    name: "Attachment",
+    slug: "attachment",
+    description: "A file or image chip with media, metadata, and actions.",
+    category: "display",
+    introducedIn: "1.1.0",
+  },
+  {
     name: "Avatar",
     slug: "avatar",
     description: "An image with a fallback for a person or entity.",

@@ -131,28 +131,292 @@ const api: ApiRow[] = [
   },
 ];
 
+const accountCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+export function AccountMenu() {
+  return (
+    <div className="flex items-center gap-3">
+      <Avatar className="size-8">
+        <AvatarFallback>SK</AvatarFallback>
+      </Avatar>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button type="button" variant="outline" size="sm">
+            My Account
+          </Button>
+        </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="min-w-56">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            Profile
+            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Billing
+            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Settings
+            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Team</DropdownMenuLabel>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem>Email</DropdownMenuItem>
+              <DropdownMenuItem>Message</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>More…</DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          <DropdownMenuItem>
+            New Team
+            <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>GitHub</DropdownMenuItem>
+        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuItem disabled>API</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem variant="destructive">
+          Log out
+          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+    </div>
+  );
+}
+`;
+
+const projectMenuCode = `import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+export function ProjectMenu() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button type="button" variant="outline" size="sm">
+          Project
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        <DropdownMenuItem>Open</DropdownMenuItem>
+        <DropdownMenuItem>Rename</DropdownMenuItem>
+        <DropdownMenuItem>Move</DropdownMenuItem>
+        <DropdownMenuItem>
+          Share
+          <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>Archive</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+`;
+
+const userMenuCode = `import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+export function UserMenu() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button type="button" variant="outline" size="sm">
+          Ada Lovelace
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        <DropdownMenuItem>View profile</DropdownMenuItem>
+        <DropdownMenuItem>Message</DropdownMenuItem>
+        <DropdownMenuItem>Copy email</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem variant="destructive">Block</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+`;
+
+const cardActionsMenuCode = `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+export function CardActionsMenu() {
+  return (
+    <Card className="w-full max-w-sm text-left">
+      <CardHeader>
+        <CardTitle>Release notes</CardTitle>
+        <CardDescription>Draft for the next publish.</CardDescription>
+        <CardAction>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Card actions"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
+                  <circle cx="5" cy="12" r="1.5" />
+                  <circle cx="12" cy="12" r="1.5" />
+                  <circle cx="19" cy="12" r="1.5" />
+                </svg>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>Duplicate</DropdownMenuItem>
+              <DropdownMenuItem>Archive</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <Badge variant="secondary">Draft</Badge>
+      </CardContent>
+    </Card>
+  );
+}
+`;
+
+const tableRowMenuCode = `import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+export function TableRowMenu() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Role</TableHead>
+          <TableHead className="w-12">
+            <span className="sr-only">Actions</span>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell>Aarav Sharma</TableCell>
+          <TableCell>Admin</TableCell>
+          <TableCell>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="Actions for Aarav Sharma"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4 fill-current">
+                    <circle cx="5" cy="12" r="1.5" />
+                    <circle cx="12" cy="12" r="1.5" />
+                    <circle cx="19" cy="12" r="1.5" />
+                  </svg>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>View</DropdownMenuItem>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Copy ID</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  );
+}
+`;
+
 const examples: ComponentExample[] = [
+  {
+    id: "account",
+    title: "Account menu",
+    description:
+      "Labels, groups, shortcuts, a nested invite submenu, a disabled item, and a destructive log out.",
+    preview: <AccountMenu />,
+    code: { tsx: accountCode, jsx: accountCode },
+  },
   {
     id: "project",
     title: "Project actions",
     description: "Open, Rename, Move, Share, and Archive for a project.",
     preview: <ProjectMenu />,
-    code: usage,
+    code: { tsx: projectMenuCode, jsx: projectMenuCode },
   },
   {
     id: "user",
     title: "User actions",
     description: "View profile, Message, Copy email, and Block.",
     preview: <UserMenu />,
-    code: usage,
-  },
-  {
-    id: "account",
-    title: "Account menu",
-    description:
-      "Avatar, name, and email sit beside a menu for profile, settings, theme, and sign out.",
-    preview: <AccountMenu />,
-    code: usage,
+    code: { tsx: userMenuCode, jsx: userMenuCode },
   },
   {
     id: "card-actions",
@@ -160,14 +424,14 @@ const examples: ComponentExample[] = [
     description:
       "A three-dot CardAction opens Edit, Duplicate, Archive, and Delete.",
     preview: <CardActionsMenu />,
-    code: usage,
+    code: { tsx: cardActionsMenuCode, jsx: cardActionsMenuCode },
   },
   {
     id: "table-row",
     title: "Table row actions",
     description: "A row menu for View, Edit, Copy ID, and Delete.",
     preview: <TableRowMenu />,
-    code: usage,
+    code: { tsx: tableRowMenuCode, jsx: tableRowMenuCode },
   },
 ];
 
@@ -227,7 +491,7 @@ export default async function DropdownMenuPage() {
       }
       source={source}
     >
-      <ProjectMenu />
+      <AccountMenu />
     </ComponentReference>
   );
 }

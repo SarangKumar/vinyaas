@@ -127,9 +127,13 @@ describe("DocsShell", () => {
     expect(end.className).toContain("lg:gap-4");
     expect(document.querySelector("header")).toHaveClass(
       "h-12",
-      "sticky",
-      "top-0",
+      "relative",
       "z-30",
+    );
+    expect(document.querySelector("header")).not.toHaveClass("sticky");
+    expect(document.querySelector("[data-docs-sidebar]")).toHaveClass(
+      "relative",
+      "z-0",
     );
     expect(
       within(end).getAllByRole("button", { name: "Search documentation" })

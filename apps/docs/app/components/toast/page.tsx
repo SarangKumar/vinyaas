@@ -62,7 +62,9 @@ export function SaveWorkspaceProfile() {
           <Label htmlFor="workspace">Workspace</Label>
           <Input id="workspace" defaultValue="vinyaas" />
         </div>
-        <Button type="submit">Save changes</Button>
+        <Button type="submit" className="mt-1">
+          Save changes
+        </Button>
       </form>
     </>
   );

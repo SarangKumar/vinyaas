@@ -268,7 +268,7 @@ export function DialogContent({
         data-dialog-content=""
         data-state={exiting ? "closed" : "open"}
         className={cn(
-          "border-border bg-background text-foreground relative z-10 flex max-h-[min(32rem,calc(100dvh-2rem))] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-md border p-4 shadow-lg",
+          "border-border bg-background text-foreground relative z-10 flex max-h-[min(32rem,calc(100dvh-2rem))] w-full max-w-[calc(100%-2rem)] flex-col gap-4 overflow-y-auto rounded-lg border p-6 shadow-lg sm:max-w-lg",
           exiting ? "vinyaas-dialog-out" : "vinyaas-dialog-in",
           className,
         )}
@@ -311,7 +311,12 @@ export function DialogHeader({
   className,
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
-  return <header className={cn("flex flex-col gap-1", className)} {...props} />;
+  return (
+    <header
+      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
+      {...props}
+    />
+  );
 }
 
 export function DialogFooter({
@@ -320,7 +325,10 @@ export function DialogFooter({
 }: React.HTMLAttributes<HTMLElement>) {
   return (
     <footer
-      className={cn("flex flex-wrap justify-end gap-2", className)}
+      className={cn(
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        className,
+      )}
       {...props}
     />
   );
@@ -335,7 +343,7 @@ export function DialogTitle({
   return (
     <p
       id={titleId}
-      className={cn("text-sm leading-none font-semibold", className)}
+      className={cn("text-lg leading-none font-semibold", className)}
       {...props}
     />
   );
@@ -350,7 +358,7 @@ export function DialogDescription({
   return (
     <p
       id={descriptionId}
-      className={cn("text-muted-foreground text-sm leading-6", className)}
+      className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
   );
