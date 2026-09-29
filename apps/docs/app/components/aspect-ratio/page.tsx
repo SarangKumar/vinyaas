@@ -187,7 +187,7 @@ export function ProductCover() {
           className="size-full object-cover"
         />
       </AspectRatio>
-      <CardHeader className="px-4 pt-4">
+      <CardHeader className="gap-1 px-4 pt-5">
         <div>
           <CardTitle>Vinyaas</CardTitle>
           <CardDescription>
@@ -204,7 +204,7 @@ export function ProductCover() {
           with docs, CLI install, and theme tokens that travel with your app.
         </p>
       </CardContent>
-      <CardFooter className="gap-2 px-4 pb-4">
+      <CardFooter className="gap-2 px-4 pt-4 pb-5">
         <Button variant="outline" size="sm">
           Documentation
         </Button>
@@ -227,7 +227,7 @@ const inPractice: ComponentInPractice = {
           className="size-full object-cover"
         />
       </AspectRatio>
-      <CardHeader className="px-4 pt-4">
+      <CardHeader className="gap-1 px-4 pt-5">
         <div>
           <CardTitle>Vinyaas</CardTitle>
           <CardDescription>
@@ -244,7 +244,7 @@ const inPractice: ComponentInPractice = {
           with docs, CLI install, and theme tokens that travel with your app.
         </p>
       </CardContent>
-      <CardFooter className="gap-2 px-4 pb-4">
+      <CardFooter className="gap-2 px-4 pt-4 pb-5">
         <Button variant="outline" size="sm">
           Documentation
         </Button>

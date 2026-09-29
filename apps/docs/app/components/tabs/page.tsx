@@ -28,7 +28,17 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("tabs");
 
-const usage = `import {
+const usage = `import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
   Tabs,
   TabsContent,
   TabsList,
@@ -37,18 +47,42 @@ const usage = `import {
 
 export function AccountTabs() {
   return (
-    <Tabs defaultValue="account">
-      <TabsList>
-        <TabsTrigger value="account">Account</TabsTrigger>
-        <TabsTrigger value="password">Password</TabsTrigger>
-      </TabsList>
-      <TabsContent value="account">
-        Manage your public profile.
-      </TabsContent>
-      <TabsContent value="password">
-        Change your password.
-      </TabsContent>
-    </Tabs>
+    <Card className="w-full max-w-md text-left">
+      <CardHeader>
+        <CardTitle>Account</CardTitle>
+        <CardDescription>Manage your public profile.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="profile">
+          <TabsList>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="email">Email</TabsTrigger>
+          </TabsList>
+          <TabsContent value="profile" className="flex flex-col gap-3 pt-3">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="tabs-usage-name">Display name</Label>
+              <Input id="tabs-usage-name" defaultValue="Sarang Kumar" />
+            </div>
+            <Button size="sm" className="self-start">
+              Save profile
+            </Button>
+          </TabsContent>
+          <TabsContent value="email" className="flex flex-col gap-3 pt-3">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="tabs-usage-email">Email</Label>
+              <Input
+                id="tabs-usage-email"
+                type="email"
+                defaultValue="sarang@example.com"
+              />
+            </div>
+            <Button size="sm" className="self-start" variant="outline">
+              Update email
+            </Button>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
   );
 }
 `;
@@ -208,7 +242,9 @@ function SettingsTabs() {
                 defaultValue="sarang@example.com"
               />
             </div>
-            <Button className="self-start">Save changes</Button>
+            <Button size="sm" className="self-start">
+              Save changes
+            </Button>
           </TabsContent>
           <TabsContent
             value="notifications"
@@ -226,7 +262,7 @@ function SettingsTabs() {
               <Label htmlFor="tabs-mentions">Mentions only</Label>
               <Switch id="tabs-mentions" defaultChecked />
             </div>
-            <Button className="self-start" variant="outline">
+            <Button size="sm" className="self-start" variant="outline">
               Update preferences
             </Button>
           </TabsContent>
@@ -239,7 +275,9 @@ function SettingsTabs() {
               <Label htmlFor="tabs-2fa">Two-factor authentication</Label>
               <Switch id="tabs-2fa" defaultChecked />
             </div>
-            <Button className="self-start">Update security</Button>
+            <Button size="sm" className="self-start">
+              Update security
+            </Button>
           </TabsContent>
         </Tabs>
       </CardContent>
@@ -283,42 +321,53 @@ export function AccountSettings() {
           </TabsList>
           <TabsContent value="account" className="flex flex-col gap-3 pt-1">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="display-name">Display name</Label>
-              <Input id="display-name" defaultValue="Sarang Kumar" />
+              <Label htmlFor="tabs-display-name">Display name</Label>
+              <Input id="tabs-display-name" defaultValue="Sarang Kumar" />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" defaultValue="sarang@example.com" />
+              <Label htmlFor="tabs-email">Email</Label>
+              <Input
+                id="tabs-email"
+                type="email"
+                defaultValue="sarang@example.com"
+              />
             </div>
-            <Button className="self-start">Save changes</Button>
+            <Button size="sm" className="self-start">
+              Save changes
+            </Button>
           </TabsContent>
-          <TabsContent value="notifications" className="flex flex-col gap-3 pt-1">
+          <TabsContent
+            value="notifications"
+            className="flex flex-col gap-3 pt-1"
+          >
             <div className="flex items-center justify-between gap-3">
-              <Label htmlFor="email-alerts">Email digests</Label>
-              <Switch id="email-alerts" defaultChecked />
+              <Label htmlFor="tabs-email-alerts">Email digests</Label>
+              <Switch id="tabs-email-alerts" defaultChecked />
             </div>
             <div className="flex items-center justify-between gap-3">
-              <Label htmlFor="push">Push notifications</Label>
-              <Switch id="push" />
+              <Label htmlFor="tabs-push">Push notifications</Label>
+              <Switch id="tabs-push" />
             </div>
             <div className="flex items-center justify-between gap-3">
-              <Label htmlFor="mentions">Mentions only</Label>
-              <Switch id="mentions" defaultChecked />
+              <Label htmlFor="tabs-mentions">Mentions only</Label>
+              <Switch id="tabs-mentions" defaultChecked />
             </div>
-            <Button className="self-start" variant="outline">
+            <Button size="sm" className="self-start" variant="outline">
               Update preferences
             </Button>
           </TabsContent>
           <TabsContent value="security" className="flex flex-col gap-3 pt-1">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="password">New password</Label>
-              <Input id="password" type="password" />
+              <Label htmlFor="tabs-password">New password</Label>
+              <Input id="tabs-password" type="password" />
             </div>
             <div className="flex items-center justify-between gap-3">
-              <Label htmlFor="two-factor">Two-factor authentication</Label>
-              <Switch id="two-factor" defaultChecked />
+              <Label htmlFor="tabs-2fa">Two-factor authentication</Label>
+              <Switch id="tabs-2fa" defaultChecked />
             </div>
-            <Button className="self-start">Update security</Button>
+            <Button size="sm" className="self-start">
+              Update security
+            </Button>
           </TabsContent>
         </Tabs>
       </CardContent>
@@ -331,20 +380,45 @@ const examples: ComponentExample[] = [
   {
     id: "basic",
     title: "Basic",
-    description: "One panel is visible. Activating another replaces it.",
+    description:
+      "A Card holds profile and email panels. Activating a tab replaces the panel.",
     preview: (
-      <Tabs defaultValue="account" className="w-full max-w-md text-left">
-        <TabsList>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="password">Password</TabsTrigger>
-        </TabsList>
-        <TabsContent value="account" className="text-muted-foreground text-sm">
-          Manage your public profile and email address.
-        </TabsContent>
-        <TabsContent value="password" className="text-muted-foreground text-sm">
-          Update your password and recovery options.
-        </TabsContent>
-      </Tabs>
+      <Card className="w-full max-w-md text-left">
+        <CardHeader>
+          <CardTitle>Account</CardTitle>
+          <CardDescription>Manage your public profile.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="profile">
+            <TabsList>
+              <TabsTrigger value="profile">Profile</TabsTrigger>
+              <TabsTrigger value="email">Email</TabsTrigger>
+            </TabsList>
+            <TabsContent value="profile" className="flex flex-col gap-3 pt-3">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="tabs-usage-name">Display name</Label>
+                <Input id="tabs-usage-name" defaultValue="Sarang Kumar" />
+              </div>
+              <Button size="sm" className="self-start">
+                Save profile
+              </Button>
+            </TabsContent>
+            <TabsContent value="email" className="flex flex-col gap-3 pt-3">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="tabs-usage-email">Email</Label>
+                <Input
+                  id="tabs-usage-email"
+                  type="email"
+                  defaultValue="sarang@example.com"
+                />
+              </div>
+              <Button size="sm" className="self-start" variant="outline">
+                Update email
+              </Button>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     ),
     code: usage,
   },
@@ -354,25 +428,71 @@ const examples: ComponentExample[] = [
     description:
       'Use variant="line" on TabsList for an underline under the active tab.',
     preview: (
-      <Tabs defaultValue="overview" className="w-full max-w-md text-left">
-        <TabsList variant="line">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <Card className="w-full max-w-md text-left">
+        <CardHeader>
+          <CardTitle>Workspace</CardTitle>
+          <CardDescription>Switch between product views.</CardDescription>
+        </CardHeader>
+        <CardContent className="gap-4">
+          <Tabs defaultValue="overview">
+            <TabsList variant="line">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="reports">Reports</TabsTrigger>
+            </TabsList>
+            <TabsContent value="overview" className="pt-3 text-sm">
+              Ship velocity is up 12% versus last sprint.
+            </TabsContent>
+            <TabsContent value="analytics" className="pt-3 text-sm">
+              Active users peaked on Thursday at 1,180 sessions.
+            </TabsContent>
+            <TabsContent value="reports" className="pt-3 text-sm">
+              Three reports are ready to export for stakeholders.
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     ),
-    code: `import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+    code: `import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 export function TabsLine() {
   return (
-    <Tabs defaultValue="overview">
-      <TabsList variant="line">
-        <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        <TabsTrigger value="reports">Reports</TabsTrigger>
-      </TabsList>
-    </Tabs>
+    <Card className="w-full max-w-md text-left">
+      <CardHeader>
+        <CardTitle>Workspace</CardTitle>
+        <CardDescription>Switch between product views.</CardDescription>
+      </CardHeader>
+      <CardContent className="gap-4">
+        <Tabs defaultValue="overview">
+          <TabsList variant="line">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+          </TabsList>
+          <TabsContent value="overview" className="pt-3 text-sm">
+            Ship velocity is up 12% versus last sprint.
+          </TabsContent>
+          <TabsContent value="analytics" className="pt-3 text-sm">
+            Active users peaked on Thursday at 1,180 sessions.
+          </TabsContent>
+          <TabsContent value="reports" className="pt-3 text-sm">
+            Three reports are ready to export for stakeholders.
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
   );
 }
 `,
@@ -769,18 +889,42 @@ export default async function TabsPage() {
       }
       source={source}
     >
-      <Tabs defaultValue="account" className="w-full max-w-md text-left">
-        <TabsList>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="password">Password</TabsTrigger>
-        </TabsList>
-        <TabsContent value="account" className="text-muted-foreground text-sm">
-          Manage your public profile and email address.
-        </TabsContent>
-        <TabsContent value="password" className="text-muted-foreground text-sm">
-          Update your password and recovery options.
-        </TabsContent>
-      </Tabs>
+      <Card className="w-full max-w-md text-left">
+        <CardHeader>
+          <CardTitle>Account</CardTitle>
+          <CardDescription>Manage your public profile.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="profile">
+            <TabsList>
+              <TabsTrigger value="profile">Profile</TabsTrigger>
+              <TabsTrigger value="email">Email</TabsTrigger>
+            </TabsList>
+            <TabsContent value="profile" className="flex flex-col gap-3 pt-3">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="tabs-usage-name">Display name</Label>
+                <Input id="tabs-usage-name" defaultValue="Sarang Kumar" />
+              </div>
+              <Button size="sm" className="self-start">
+                Save profile
+              </Button>
+            </TabsContent>
+            <TabsContent value="email" className="flex flex-col gap-3 pt-3">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="tabs-usage-email">Email</Label>
+                <Input
+                  id="tabs-usage-email"
+                  type="email"
+                  defaultValue="sarang@example.com"
+                />
+              </div>
+              <Button size="sm" className="self-start" variant="outline">
+                Update email
+              </Button>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </ComponentReference>
   );
 }

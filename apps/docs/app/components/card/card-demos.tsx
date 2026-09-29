@@ -63,8 +63,10 @@ export function ProfileCardDemo() {
       </CardHeader>
       <Badge variant="outline">Verified</Badge>
       <CardFooter className="gap-2">
-        <Button variant="outline">Message</Button>
-        <Button>Follow</Button>
+        <Button variant="outline" size="sm">
+          Message
+        </Button>
+        <Button size="sm">Follow</Button>
       </CardFooter>
     </Card>
   );

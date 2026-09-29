@@ -12,6 +12,12 @@ import {
 } from "@/registry/new-york/ui/dropdown-menu";
 import { Separator } from "@/registry/new-york/ui/separator";
 
+const stats = [
+  { label: "Projects", value: "24" },
+  { label: "Followers", value: "1.2k" },
+  { label: "Following", value: "186" },
+];
+
 export function ProfileBlock() {
   return (
     <PlayBlock title="Profile" description="Public workspace identity.">
@@ -24,10 +30,10 @@ export function ProfileBlock() {
             <p className="truncate text-sm font-medium">Ada Lovelace</p>
             <Badge variant="secondary">Verified</Badge>
           </div>
-          <p className="text-muted-foreground mt-1 text-sm">
+          <p className="text-muted-foreground mt-1 text-xs">
             Senior Product Designer
           </p>
-          <p className="text-muted-foreground text-sm">San Francisco · UTC−7</p>
+          <p className="text-muted-foreground text-xs">San Francisco · UTC−7</p>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger>
@@ -45,6 +51,18 @@ export function ProfileBlock() {
             <DropdownMenuItem>Share</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      </div>
+      <div className="border-border bg-muted/30 grid grid-cols-3 gap-2 rounded-xl border p-3">
+        {stats.map((stat) => (
+          <div key={stat.label} className="min-w-0 text-center">
+            <p className="text-foreground text-sm font-semibold tracking-tight">
+              {stat.value}
+            </p>
+            <p className="text-muted-foreground mt-0.5 text-[0.6875rem]">
+              {stat.label}
+            </p>
+          </div>
+        ))}
       </div>
       <Separator />
       <p className="text-muted-foreground text-xs">Last active 4 minutes ago</p>

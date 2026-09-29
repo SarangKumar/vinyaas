@@ -118,8 +118,10 @@ export function ProfileCard() {
       </CardHeader>
       <Badge variant="outline">Verified</Badge>
       <CardFooter className="gap-2">
-        <Button variant="outline">Message</Button>
-        <Button>Follow</Button>
+        <Button variant="outline" size="sm">
+          Message
+        </Button>
+        <Button size="sm">Follow</Button>
       </CardFooter>
     </Card>
   );
@@ -162,8 +164,10 @@ const examples: ComponentExample[] = [
           </NativeSelect>
         </CardContent>
         <CardFooter className="gap-2">
-          <Button>Manage subscription</Button>
-          <Button variant="destructive">Cancel plan</Button>
+          <Button size="sm">Manage subscription</Button>
+          <Button size="sm" variant="destructive">
+            Cancel plan
+          </Button>
         </CardFooter>
       </Card>
     ),
@@ -195,8 +199,8 @@ export function SubscriptionCard() {
         </NativeSelect>
       </CardContent>
       <CardFooter className="gap-2">
-        <Button>Manage subscription</Button>
-        <Button variant="destructive">Cancel plan</Button>
+        <Button size="sm">Manage subscription</Button>
+        <Button size="sm" variant="destructive">Cancel plan</Button>
       </CardFooter>
     </Card>
   );
@@ -243,8 +247,10 @@ export function SubscriptionCard() {
           </div>
         </CardContent>
         <CardFooter className="gap-2">
-          <Button variant="outline">Cancel</Button>
-          <Button>Save changes</Button>
+          <Button size="sm" variant="outline">
+            Cancel
+          </Button>
+          <Button size="sm">Save changes</Button>
         </CardFooter>
       </Card>
     ),
@@ -286,8 +292,8 @@ export function AccountCard() {
         </div>
       </CardContent>
       <CardFooter className="gap-2">
-        <Button variant="outline">Cancel</Button>
-        <Button>Save changes</Button>
+        <Button size="sm" variant="outline">Cancel</Button>
+        <Button size="sm">Save changes</Button>
       </CardFooter>
     </Card>
   );
@@ -699,8 +705,10 @@ export default async function CardPage() {
           </p>
         </CardContent>
         <CardFooter className="gap-2">
-          <Button variant="outline">Message</Button>
-          <Button>Follow</Button>
+          <Button variant="outline" size="sm">
+            Message
+          </Button>
+          <Button size="sm">Follow</Button>
         </CardFooter>
       </Card>
     </ComponentReference>

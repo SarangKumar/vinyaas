@@ -123,16 +123,16 @@ const config = {
 export function ActiveUsersChart() {
   return (
     <ChartContainer config={config} className="h-48 w-full max-w-lg">
-      <BarChart data={data} accessibilityLayer>
+      <BarChart data={data} barCategoryGap="14%" accessibilityLayer>
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
         <XAxis dataKey="week" tickLine={false} axisLine={false} />
         <YAxis hide />
-        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <Bar
           dataKey="users"
           fill="var(--color-users)"
-          radius={[6, 6, 0, 0]}
-          maxBarSize={36}
+          radius={6}
+          maxBarSize={48}
           isAnimationActive
           animationDuration={900}
           activeBar={false}
@@ -285,13 +285,13 @@ export function QualityRadar() {
   return (
     <ChartContainer config={config} className="mx-auto h-56 w-full max-w-sm">
       <RadarChart data={data} accessibilityLayer>
-        <PolarGrid />
-        <PolarAngleAxis dataKey="metric" />
+        <PolarGrid className="stroke-border/40" />
+        <PolarAngleAxis dataKey="metric" className="text-xs" />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Radar
           dataKey="score"
           fill="var(--color-score)"
-          fillOpacity={0.25}
+          fillOpacity={0.2}
           stroke="var(--color-score)"
           strokeWidth={2}
           isAnimationActive
@@ -305,40 +305,65 @@ export function QualityRadar() {
 
 const radialCode = `import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { PolarGrid, RadialBar, RadialBarChart } from "recharts";
+import { PolarAngleAxis, PolarGrid, RadialBar, RadialBarChart } from "recharts";
 
-const data = [{ name: "Complete", value: 72, fill: "var(--color-complete)" }];
+const data = [
+  { name: "docs", value: 92, fill: "var(--color-docs)" },
+  { name: "cli", value: 86, fill: "var(--color-cli)" },
+  { name: "theme", value: 78, fill: "var(--color-theme)" },
+  { name: "a11y", value: 88, fill: "var(--color-a11y)" },
+  { name: "mobile", value: 74, fill: "var(--color-mobile)" },
+];
 
 const config = {
-  complete: { label: "Complete", color: "var(--color-chart-1)" },
+  docs: { label: "Docs", color: "var(--color-chart-1)" },
+  cli: { label: "CLI", color: "var(--color-chart-2)" },
+  theme: { label: "Theme", color: "var(--color-chart-3)" },
+  a11y: { label: "A11y", color: "var(--color-chart-4)" },
+  mobile: { label: "Mobile", color: "var(--color-chart-5)" },
 } satisfies ChartConfig;
 
-export function CompletionRadial() {
+export function QualityRadial() {
   return (
     <ChartContainer
       config={config}
-      className="mx-auto aspect-square h-48 max-w-[12rem]"
+      className="mx-auto aspect-square h-64 max-w-[18rem]"
     >
       <RadialBarChart
         data={data}
         startAngle={90}
         endAngle={-270}
-        innerRadius="68%"
-        outerRadius="100%"
+        innerRadius="18%"
+        outerRadius="92%"
         accessibilityLayer
       >
-        <PolarGrid gridType="circle" radialLines={false} />
-        <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+        <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+        <PolarGrid
+          gridType="circle"
+          radialLines={false}
+          stroke="none"
+          className="first:fill-muted last:fill-background"
+          polarRadius={[86, 18]}
+        />
+        <ChartTooltip
+          content={<ChartTooltipContent nameKey="name" hideLabel />}
+        />
         <RadialBar
           dataKey="value"
-          background={{ fill: "var(--color-muted)" }}
-          cornerRadius={8}
+          background
+          cornerRadius={6}
           isAnimationActive
           animationDuration={900}
+        />
+        <ChartLegend
+          content={<ChartLegendContent nameKey="name" />}
+          className="-translate-y-1 flex-wrap gap-2"
         />
       </RadialBarChart>
     </ChartContainer>
@@ -385,16 +410,16 @@ export function RevenueCard() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={config} className="h-44 w-full">
-          <BarChart data={data} accessibilityLayer>
+          <BarChart data={data} barCategoryGap="18%" accessibilityLayer>
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis dataKey="month" tickLine={false} axisLine={false} />
             <YAxis hide />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Bar
               dataKey="revenue"
               fill="var(--color-revenue)"
-              radius={[6, 6, 0, 0]}
-              maxBarSize={40}
+              radius={6}
+              maxBarSize={52}
               isAnimationActive
               animationDuration={900}
               activeBar={false}
@@ -451,7 +476,8 @@ const examples: ComponentExample[] = [
   {
     id: "radial",
     title: "Radial chart",
-    description: "A completion ring for progress snapshots.",
+    description:
+      "Concentric quality scores across docs, CLI, theme, a11y, and mobile.",
     preview: <RadialPreview />,
     code: radialCode,
   },
@@ -480,7 +506,7 @@ export default async function ChartPage() {
             Chart wraps <code>recharts</code> with Vinyaas theme tokens. Pass a{" "}
             <code>config</code> object to <code>ChartContainer</code>, then use{" "}
             <code>var(--color-&lt;key&gt;)</code> for strokes and fills. Chart
-            tokens are primary-adjacent neutrals — similar to{" "}
+            tokens are primary-adjacent greys — similar to{" "}
             <code>--primary</code>, not derived from it with{" "}
             <code>color-mix</code>. Map <code>--chart-1</code> through{" "}
             <code>--chart-5</code> in <code>@theme</code> as{" "}

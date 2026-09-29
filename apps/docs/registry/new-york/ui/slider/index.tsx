@@ -14,7 +14,7 @@ export type SliderProps = Omit<
 };
 
 const thumbClass =
-  "[&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-moz-range-thumb]:bg-foreground [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0";
+  "[&::-webkit-slider-thumb]:border-secondary [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-moz-range-thumb]:border-secondary [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-solid";
 
 function percent(value: number, min: number, max: number) {
   const span = max - min;
@@ -27,7 +27,7 @@ function percent(value: number, min: number, max: number) {
 }
 
 function fill(start: number, end: number) {
-  return `linear-gradient(to right, var(--muted) ${start}%, var(--foreground) ${start}%, var(--foreground) ${end}%, var(--muted) ${end}%)`;
+  return `linear-gradient(to right, var(--muted) ${start}%, var(--primary) ${start}%, var(--primary) ${end}%, var(--muted) ${end}%)`;
 }
 
 export function Slider({

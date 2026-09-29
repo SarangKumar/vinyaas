@@ -18,7 +18,7 @@ describe("Slider", () => {
     expect(slider).toHaveClass("h-2", "rounded-full");
     expect(slider).toHaveStyle({
       background:
-        "linear-gradient(to right, var(--muted) 0%, var(--foreground) 0%, var(--foreground) 40%, var(--muted) 40%)",
+        "linear-gradient(to right, var(--muted) 0%, var(--primary) 0%, var(--primary) 40%, var(--muted) 40%)",
     });
   });
 

@@ -3,10 +3,9 @@ import type { CSSProperties, ReactNode } from "react";
 import { Skeleton } from "@/registry/new-york/ui/skeleton";
 
 /**
- * Ultra-wide decorative rails (≥2200px), inspired by shadcn's demo shell.
+ * Ultra-wide decorative rails (≥2200px).
  *
- * Positioned absolute outside the centered 1900px main band:
- *   fade ← [2-col left rail] | main (≤1900px) | [2-col right rail] → fade
+ * fade ← [2 skeleton cols] | main masonry (5 cols) | [2 skeleton cols] → fade
  */
 export function PlaygroundSideRails() {
   return (

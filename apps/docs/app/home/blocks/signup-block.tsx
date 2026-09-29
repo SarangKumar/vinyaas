@@ -5,6 +5,7 @@ import { Button } from "@/registry/new-york/ui/button";
 import { Checkbox } from "@/registry/new-york/ui/checkbox";
 import { Input } from "@/registry/new-york/ui/input";
 import { Label } from "@/registry/new-york/ui/label";
+import { Separator } from "@/registry/new-york/ui/separator";
 
 export function SignupBlock() {
   return (
@@ -13,6 +14,17 @@ export function SignupBlock() {
       description="Open a workspace for your team."
     >
       <form className="grid gap-3" onSubmit={(event) => event.preventDefault()}>
+        <Button type="button" variant="outline" className="w-full">
+          Continue with Google
+        </Button>
+        <Button type="button" variant="outline" className="w-full">
+          Continue with GitHub
+        </Button>
+        <div className="flex items-center gap-3">
+          <Separator className="flex-1" />
+          <span className="text-muted-foreground text-xs">or email</span>
+          <Separator className="flex-1" />
+        </div>
         <div className="grid gap-1.5">
           <Label htmlFor="play-name">Name</Label>
           <Input id="play-name" defaultValue="Ada Lovelace" />
@@ -37,9 +49,8 @@ export function SignupBlock() {
           <Checkbox id="play-terms" />
           <Label htmlFor="play-terms">I agree to the workspace terms</Label>
         </div>
-        <Button type="submit">Create account</Button>
-        <Button type="button" variant="outline">
-          Continue with GitHub
+        <Button type="submit" className="w-full">
+          Create account
         </Button>
       </form>
     </PlayBlock>

@@ -82,8 +82,32 @@ const engagement = [
   { metric: "Mobile", score: 74 },
 ];
 
-const completion = [
-  { name: "Complete", value: 72, fill: "var(--color-complete)" },
+const radialScores = [
+  {
+    name: "docs",
+    value: 92,
+    fill: "var(--color-docs)",
+  },
+  {
+    name: "cli",
+    value: 86,
+    fill: "var(--color-cli)",
+  },
+  {
+    name: "theme",
+    value: 78,
+    fill: "var(--color-theme)",
+  },
+  {
+    name: "a11y",
+    value: 88,
+    fill: "var(--color-a11y)",
+  },
+  {
+    name: "mobile",
+    value: 74,
+    fill: "var(--color-mobile)",
+  },
 ];
 
 const revenueConfig = {
@@ -126,9 +150,25 @@ const radarConfig = {
 } satisfies ChartConfig;
 
 const radialConfig = {
-  complete: {
-    label: "Complete",
+  docs: {
+    label: "Docs",
     color: "var(--color-chart-1)",
+  },
+  cli: {
+    label: "CLI",
+    color: "var(--color-chart-2)",
+  },
+  theme: {
+    label: "Theme",
+    color: "var(--color-chart-3)",
+  },
+  a11y: {
+    label: "A11y",
+    color: "var(--color-chart-4)",
+  },
+  mobile: {
+    label: "Mobile",
+    color: "var(--color-chart-5)",
   },
 } satisfies ChartConfig;
 
@@ -174,16 +214,20 @@ export function RevenueLinePreview() {
 export function UsersBarPreview() {
   return (
     <ChartContainer config={usersConfig} className="h-48 w-full max-w-lg">
-      <BarChart data={weeklyActiveUsers} accessibilityLayer>
+      <BarChart
+        data={weeklyActiveUsers}
+        barCategoryGap="14%"
+        accessibilityLayer
+      >
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
         <XAxis dataKey="week" tickLine={false} axisLine={false} />
         <YAxis hide />
-        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <Bar
           dataKey="users"
           fill="var(--color-users)"
-          radius={[6, 6, 0, 0]}
-          maxBarSize={36}
+          radius={6}
+          maxBarSize={48}
           isAnimationActive
           animationDuration={900}
           animationEasing="ease-out"
@@ -252,13 +296,13 @@ export function RadarPreview() {
       className="mx-auto h-56 w-full max-w-sm"
     >
       <RadarChart data={engagement} accessibilityLayer>
-        <PolarGrid />
-        <PolarAngleAxis dataKey="metric" />
+        <PolarGrid className="stroke-border/40" />
+        <PolarAngleAxis dataKey="metric" className="text-xs" />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Radar
           dataKey="score"
           fill="var(--color-score)"
-          fillOpacity={0.25}
+          fillOpacity={0.2}
           stroke="var(--color-score)"
           strokeWidth={2}
           isAnimationActive
@@ -273,24 +317,37 @@ export function RadialPreview() {
   return (
     <ChartContainer
       config={radialConfig}
-      className="mx-auto aspect-square h-48 max-w-[12rem]"
+      className="mx-auto aspect-square h-64 max-w-[18rem]"
     >
       <RadialBarChart
-        data={completion}
+        data={radialScores}
         startAngle={90}
         endAngle={-270}
-        innerRadius="68%"
-        outerRadius="100%"
+        innerRadius="18%"
+        outerRadius="92%"
         accessibilityLayer
       >
-        <PolarGrid gridType="circle" radialLines={false} />
-        <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+        <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+        <PolarGrid
+          gridType="circle"
+          radialLines={false}
+          stroke="none"
+          className="first:fill-muted last:fill-background"
+          polarRadius={[86, 18]}
+        />
+        <ChartTooltip
+          content={<ChartTooltipContent nameKey="name" hideLabel />}
+        />
         <RadialBar
           dataKey="value"
-          background={{ fill: "var(--color-muted)" }}
-          cornerRadius={8}
+          background
+          cornerRadius={6}
           isAnimationActive
           animationDuration={900}
+        />
+        <ChartLegend
+          content={<ChartLegendContent nameKey="name" />}
+          className="-translate-y-1 flex-wrap gap-2"
         />
       </RadialBarChart>
     </ChartContainer>
@@ -309,16 +366,20 @@ export function DashboardPreview() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={revenueConfig} className="h-44 w-full">
-          <BarChart data={dashboardData} accessibilityLayer>
+          <BarChart
+            data={dashboardData}
+            barCategoryGap="18%"
+            accessibilityLayer
+          >
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis dataKey="month" tickLine={false} axisLine={false} />
             <YAxis hide />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Bar
               dataKey="revenue"
               fill="var(--color-revenue)"
-              radius={[6, 6, 0, 0]}
-              maxBarSize={40}
+              radius={6}
+              maxBarSize={52}
               isAnimationActive
               animationDuration={900}
               activeBar={false}

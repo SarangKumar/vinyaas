@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import * as RechartsPrimitive from "recharts";
+import { Legend as RechartsLegend, Tooltip as RechartsTooltip } from "recharts";
 
 import { cn } from "@/lib/utils";
 
@@ -47,9 +47,7 @@ function chartVariableStyle(config: ChartConfig) {
 
 export type ChartContainerProps = React.ComponentProps<"div"> & {
   config: ChartConfig;
-  children: React.ComponentProps<
-    typeof RechartsPrimitive.ResponsiveContainer
-  >["children"];
+  children: React.ReactElement;
 };
 
 export function ChartContainer({
@@ -70,20 +68,20 @@ export function ChartContainer({
         data-chart={chartId}
         style={{ ...chartVariableStyle(config), ...style }}
         className={cn(
-          "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-reference-line_line]:stroke-border [&_.recharts-legend-item-text]:text-foreground flex aspect-video justify-center text-xs [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none",
+          "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line]:stroke-border/40 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid-angle-line]:stroke-border/35 [&_.recharts-polar-grid-concentric-circle]:stroke-border/35 [&_.recharts-polar-grid-concentric-polygon]:stroke-border/35 [&_.recharts-reference-line_line]:stroke-border [&_.recharts-legend-item-text]:text-foreground flex aspect-video w-full justify-center text-xs [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none [&_.recharts-wrapper]:!size-full",
           className,
         )}
         {...props}
       >
-        <RechartsPrimitive.ResponsiveContainer>
-          {children}
-        </RechartsPrimitive.ResponsiveContainer>
+        {React.cloneElement(children, {
+          responsive: true,
+        } as Partial<typeof children.props>)}
       </div>
     </ChartContext.Provider>
   );
 }
 
-export const ChartTooltip = RechartsPrimitive.Tooltip;
+export const ChartTooltip = RechartsTooltip;
 
 function getPayloadConfig(config: ChartConfig, payload: unknown, key: string) {
   if (typeof payload !== "object" || payload === null) {
@@ -128,6 +126,75 @@ export type ChartTooltipContentProps = React.ComponentProps<"div"> & {
   ) => React.ReactNode;
 };
 
+const RECHARTS_CONTENT_PROP_KEYS = new Set([
+  "accessibilityLayer",
+  "active",
+  "activeIndex",
+  "align",
+  "allowEscapeViewBox",
+  "animationDuration",
+  "animationEasing",
+  "axisId",
+  "chartHeight",
+  "chartWidth",
+  "content",
+  "contentStyle",
+  "coordinate",
+  "cursor",
+  "defaultIndex",
+  "filterNull",
+  "formatter",
+  "height",
+  "hideIcon",
+  "hideIndicator",
+  "hideLabel",
+  "iconSize",
+  "iconType",
+  "includeHidden",
+  "inactiveColor",
+  "indicator",
+  "isAnimationActive",
+  "itemSorter",
+  "itemStyle",
+  "label",
+  "labelFormatter",
+  "labelKey",
+  "labelStyle",
+  "layout",
+  "margin",
+  "nameKey",
+  "offset",
+  "payload",
+  "payloadUniqBy",
+  "portal",
+  "position",
+  "reverseDirection",
+  "separator",
+  "shared",
+  "trigger",
+  "useTranslate3d",
+  "verticalAlign",
+  "viewBox",
+  "width",
+  "wrapperStyle",
+]);
+
+function omitRechartsContentProps<T extends Record<string, unknown>>(
+  props: T,
+): Omit<T, never> {
+  const next: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(props)) {
+    if (RECHARTS_CONTENT_PROP_KEYS.has(key)) {
+      continue;
+    }
+
+    next[key] = value;
+  }
+
+  return next as Omit<T, never>;
+}
+
 export function ChartTooltipContent({
   active,
   payload,
@@ -143,6 +210,9 @@ export function ChartTooltipContent({
   ...props
 }: ChartTooltipContentProps) {
   const { config } = useChart();
+  const domProps = omitRechartsContentProps(
+    props as Record<string, unknown>,
+  ) as React.ComponentProps<"div">;
 
   if (!active || !payload?.length) {
     return null;
@@ -172,7 +242,7 @@ export function ChartTooltipContent({
         "border-border/50 bg-background grid min-w-32 items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl",
         className,
       )}
-      {...props}
+      {...domProps}
     >
       {!nestLabel && resolvedLabel !== null ? (
         <div className="font-medium">{resolvedLabel}</div>
@@ -251,13 +321,14 @@ export function ChartTooltipContent({
   );
 }
 
-export const ChartLegend = RechartsPrimitive.Legend;
+export const ChartLegend = RechartsLegend;
 
 export type ChartLegendContentProps = React.ComponentProps<"div"> & {
   payload?: Array<{
     value?: string;
     dataKey?: string | number;
     color?: string;
+    payload?: Record<string, unknown>;
   }>;
   verticalAlign?: "top" | "bottom";
   hideIcon?: boolean;
@@ -273,6 +344,9 @@ export function ChartLegendContent({
   ...props
 }: ChartLegendContentProps) {
   const { config } = useChart();
+  const domProps = omitRechartsContentProps(
+    props as Record<string, unknown>,
+  ) as React.ComponentProps<"div">;
 
   if (!payload?.length) {
     return null;
@@ -285,11 +359,15 @@ export function ChartLegendContent({
         verticalAlign === "top" ? "pb-3" : "pt-3",
         className,
       )}
-      {...props}
+      {...domProps}
     >
       {payload.map((item) => {
-        const key = String(nameKey ? item.dataKey : item.value);
-        const itemConfig = config[key];
+        const key = String(
+          nameKey
+            ? (item.payload?.[nameKey] ?? item.dataKey ?? item.value)
+            : (item.value ?? item.dataKey),
+        );
+        const itemConfig = getPayloadConfig(config, item, key);
 
         return (
           <div

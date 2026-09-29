@@ -41,7 +41,10 @@ export function AnalyticsBlock() {
       </div>
       <div className="grid min-w-0 grid-cols-3 gap-2">
         {metrics.map((metric) => (
-          <div key={metric.label} className="min-w-0">
+          <div
+            key={metric.label}
+            className="border-border bg-muted/30 min-w-0 rounded-xl border p-2.5"
+          >
             <p className="text-muted-foreground text-xs">{metric.label}</p>
             <p className="text-foreground mt-1 text-lg font-semibold tracking-tight">
               {metric.value}
