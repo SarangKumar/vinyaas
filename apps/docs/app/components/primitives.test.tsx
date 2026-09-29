@@ -277,6 +277,28 @@ describe("composed examples", () => {
     expect(screen.getAllByText("Esc").length).toBeGreaterThan(0);
     expect(document.body.textContent).toMatch(/visual only/i);
   });
+  it("renders spinner action preview and marker separator feed", async () => {
+    renderDocs(await SpinnerPage());
+    expect(
+      screen.getAllByRole("button", { name: "Save changes" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("heading", { name: "In a button" }),
+    ).toHaveAttribute("id", "in-a-button");
+
+    renderDocs(await MarkerPage());
+    expect(screen.getByRole("heading", { name: "Separator" })).toHaveAttribute(
+      "id",
+      "separator",
+    );
+    expect(screen.getAllByText("Today").length).toBeGreaterThan(0);
+    expect(
+      screen.getByText("Merged accessibility fixes for Dialog."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Published registry artifacts for Toast."),
+    ).toBeInTheDocument();
+  });
 });
 
 describe("new component pages", () => {

@@ -20,7 +20,7 @@ export function ComponentDemo({
 }) {
   return (
     <div className="border-border overflow-hidden rounded-md border">
-      <div className="bg-background flex min-h-48 items-center justify-center px-6 py-10">
+      <div className="bg-background flex min-h-48 items-center justify-center px-6 py-10 text-sm">
         <div className="flex w-full min-w-0 flex-wrap items-center justify-center gap-3">
           {preview}
         </div>

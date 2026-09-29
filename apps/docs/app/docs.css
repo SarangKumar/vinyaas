@@ -21,31 +21,31 @@
   --playground-pad-xl: 3rem;
 
   /*
-   * Soft syntax colors — muted chroma, no bold keyword punches.
+   * Soft syntax colors — slightly brighter for readability, still muted.
    * Keywords stay quiet so code reads evenly.
    */
-  --syntax-plain: oklch(0.42 0.02 286);
-  --syntax-keyword: oklch(0.5 0.07 300);
-  --syntax-fn: oklch(0.48 0.07 250);
-  --syntax-string: oklch(0.48 0.07 165);
-  --syntax-param: oklch(0.5 0.055 55);
-  --syntax-number: oklch(0.5 0.065 35);
-  --syntax-comment: oklch(0.58 0.012 286);
-  --syntax-punct: oklch(0.55 0.012 286);
+  --syntax-plain: oklch(0.36 0.02 286);
+  --syntax-keyword: oklch(0.44 0.09 300);
+  --syntax-fn: oklch(0.42 0.09 250);
+  --syntax-string: oklch(0.42 0.09 165);
+  --syntax-param: oklch(0.44 0.07 55);
+  --syntax-number: oklch(0.44 0.08 35);
+  --syntax-comment: oklch(0.52 0.014 286);
+  --syntax-punct: oklch(0.48 0.014 286);
 }
 
 .dark {
   --new: var(--primary);
   --sidebar-foreground: var(--muted-foreground);
 
-  --syntax-plain: oklch(0.78 0.015 286);
-  --syntax-keyword: oklch(0.78 0.055 300);
-  --syntax-fn: oklch(0.8 0.055 250);
-  --syntax-string: oklch(0.8 0.06 165);
-  --syntax-param: oklch(0.8 0.045 55);
-  --syntax-number: oklch(0.8 0.05 35);
-  --syntax-comment: oklch(0.66 0.012 286);
-  --syntax-punct: oklch(0.64 0.012 286);
+  --syntax-plain: oklch(0.86 0.018 286);
+  --syntax-keyword: oklch(0.86 0.07 300);
+  --syntax-fn: oklch(0.88 0.07 250);
+  --syntax-string: oklch(0.88 0.075 165);
+  --syntax-param: oklch(0.88 0.055 55);
+  --syntax-number: oklch(0.88 0.06 35);
+  --syntax-comment: oklch(0.72 0.014 286);
+  --syntax-punct: oklch(0.72 0.014 286);
 }
 
 @theme inline {

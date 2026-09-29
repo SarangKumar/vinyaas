@@ -53,6 +53,9 @@ export function SaveButton() {
     );
 
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    expect(document.querySelector(".bg-background.min-h-48")).toHaveClass(
+      "text-sm",
+    );
     expect(document.querySelector("code")?.textContent).toContain(
       "export function SaveButton",
     );

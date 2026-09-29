@@ -34,7 +34,7 @@ describe("homepage", () => {
     expect(credit).toHaveAttribute("href", "https://github.com/SarangKumar");
     expect(credit).toHaveClass("underline", "underline-offset-4");
     expect(screen.getByText(/Made by/)).toBeInTheDocument();
-    expect(screen.getByText("v1.0.0")).toBeInTheDocument();
+    expect(screen.getByText("v1.1.0")).toBeInTheDocument();
     expect(document.querySelector("[data-playground-blur]")).toBeTruthy();
     expect(document.querySelector("[data-playground-blur]")).toHaveClass(
       "bg-gradient-to-t",
@@ -121,6 +121,9 @@ describe("homepage", () => {
       "p-6",
       "bg-card",
     );
+    expect(
+      document.querySelector("[data-play-block] > div:last-child"),
+    ).toHaveClass("text-sm");
 
     expect(
       screen.getByRole("heading", { name: "Analytics" }),

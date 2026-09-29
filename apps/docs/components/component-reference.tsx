@@ -58,7 +58,7 @@ export function ComponentReference({
           <h2 id="overview" className={sectionHeading}>
             Overview
           </h2>
-          <div className="text-body flex flex-col gap-3 text-base leading-7">
+          <div className="text-body flex flex-col gap-3 text-sm leading-6">
             {overview}
           </div>
         </section>
@@ -82,7 +82,7 @@ export function ComponentReference({
           />
         </div>
         {manual ? (
-          <div className="text-body flex flex-col gap-3 text-base leading-7">
+          <div className="text-body flex flex-col gap-3 text-sm leading-6">
             <h3 id="manual" className={subsectionHeading}>
               Manual
             </h3>
@@ -130,7 +130,7 @@ export function ComponentReference({
         </section>
       ) : null}
       {accessibility ? (
-        <section className="text-body flex flex-col gap-4 text-base leading-7">
+        <section className="text-body flex flex-col gap-4 text-sm leading-6">
           <h2 id="accessibility" className={sectionHeading}>
             Accessibility
           </h2>

@@ -97,19 +97,38 @@ export function Notes() {
     id: "separator",
     title: "Separator",
     description:
-      "A date sits between two divider lines. The text stays ordinary content.",
+      "A labeled divider splits a feed into days. Content stays ordinary text above and below.",
     preview: (
-      <Marker variant="separator" className="w-full max-w-sm">
-        <MarkerContent>Today</MarkerContent>
-      </Marker>
+      <div className="flex w-full max-w-sm flex-col gap-3 text-left">
+        <p className="text-muted-foreground text-sm">
+          Merged accessibility fixes for Dialog.
+        </p>
+        <Marker variant="separator">
+          <MarkerContent>Today</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground text-sm">
+          Published registry artifacts for Toast.
+        </p>
+        <p className="text-muted-foreground text-sm">
+          Updated installation docs for multi-add.
+        </p>
+      </div>
     ),
     code: `import { Marker, MarkerContent } from "@/components/ui/marker";
 
-export function Day() {
+export function ActivityDay() {
   return (
-    <Marker variant="separator">
-      <MarkerContent>Today</MarkerContent>
-    </Marker>
+    <div className="flex flex-col gap-3">
+      <p className="text-muted-foreground text-sm">
+        Merged accessibility fixes for Dialog.
+      </p>
+      <Marker variant="separator">
+        <MarkerContent>Today</MarkerContent>
+      </Marker>
+      <p className="text-muted-foreground text-sm">
+        Published registry artifacts for Toast.
+      </p>
+    </div>
   );
 }
 `,

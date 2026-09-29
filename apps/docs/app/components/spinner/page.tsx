@@ -4,22 +4,34 @@ import type { ApiRow } from "@/components/api-table";
 import type { ComponentExample } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { RefreshIcon } from "@/components/icons";
-import { Button } from "@/registry/new-york/ui/button";
 import { Spinner } from "@/registry/new-york/ui/spinner";
-import { SubmitSpinner } from "./spinner-demos";
+import { SubmitSpinner, FormSubmitSpinner } from "./spinner-demos";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("spinner");
 
-const usage = `import { Spinner } from "@/components/ui/spinner";
+const usage = `import { useState } from "react";
 
-export function RefreshingData() {
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+
+export function SaveAction() {
+  const [pending, setPending] = useState(false);
+
   return (
-    <span className="inline-flex items-center gap-2 text-sm">
-      <Spinner label="Refreshing data" />
-      Refreshing data...
-    </span>
+    <Button
+      type="button"
+      className="gap-2"
+      disabled={pending}
+      onClick={() => {
+        setPending(true);
+        window.setTimeout(() => setPending(false), 1200);
+      }}
+    >
+      {pending ? <Spinner label="" /> : null}
+      {pending ? "Saving changes" : "Save changes"}
+    </Button>
   );
 }
 `;
@@ -41,6 +53,14 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
+    id: "in-a-button",
+    title: "In a button",
+    description:
+      "A pending action keeps its label and shows the spinner while work runs.",
+    preview: <SubmitSpinner />,
+    code: usage,
+  },
+  {
     id: "standalone",
     title: "Refreshing",
     description: "Pair the spinner with the work that is in progress.",
@@ -50,28 +70,14 @@ const examples: ComponentExample[] = [
         Refreshing data...
       </span>
     ),
-    code: usage,
-  },
-  {
-    id: "in-a-button",
-    title: "In a button",
-    description:
-      "A pending button keeps its label and shows the spinner beside it.",
-    preview: (
-      <Button type="button" className="gap-2" disabled>
-        <Spinner label="" />
-        Saving
-      </Button>
-    ),
-    code: `import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+    code: `import { Spinner } from "@/components/ui/spinner";
 
-export function SavingButton() {
+export function RefreshingData() {
   return (
-    <Button type="button" className="gap-2" disabled>
-      <Spinner label="" />
-      Saving
-    </Button>
+    <span className="inline-flex items-center gap-2 text-sm">
+      <Spinner label="Refreshing data" />
+      Refreshing data...
+    </span>
   );
 }
 `,
@@ -80,7 +86,7 @@ export function SavingButton() {
     id: "form-submit",
     title: "Form submit",
     description: "The submit button shows a spinner while the form is pending.",
-    preview: <SubmitSpinner />,
+    preview: <FormSubmitSpinner />,
     code: `import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -175,14 +181,7 @@ export default async function SpinnerPage() {
       }
       source={source}
     >
-      <span className="inline-flex items-center gap-2 text-sm">
-        <Spinner label="Refreshing data" />
-        Refreshing data...
-      </span>
-      <Button type="button" className="gap-2" disabled>
-        <Spinner label="" />
-        Saving
-      </Button>
+      <SubmitSpinner />
     </ComponentReference>
   );
 }

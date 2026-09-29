@@ -19,7 +19,7 @@ export function DocsArticle({
           {title}
         </h1>
         {description ? (
-          <p className="text-body text-base leading-7">{description}</p>
+          <p className="text-body text-sm leading-6">{description}</p>
         ) : null}
       </header>
       {children}

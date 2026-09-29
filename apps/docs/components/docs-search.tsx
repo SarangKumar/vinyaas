@@ -44,7 +44,7 @@ const pages: SearchPage[] = [
   {
     title: "Changelog",
     href: "/changelog",
-    description: "What shipped in v0.1 and v1.0.0.",
+    description: "What shipped in v0.1, v1.0.0, and v1.1.0.",
     group: "Getting Started",
   },
   {

@@ -39,7 +39,9 @@ export function PlayBlock({
           ) : null}
         </header>
       ) : null}
-      <div className="flex max-w-full min-w-0 flex-col gap-5">{children}</div>
+      <div className="flex max-w-full min-w-0 flex-col gap-5 text-sm">
+        {children}
+      </div>
     </section>
   );
 }
