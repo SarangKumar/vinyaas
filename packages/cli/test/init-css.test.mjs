@@ -94,4 +94,33 @@ describe("ensureConsumerCss", () => {
     assert.match(next, /--background:/);
     assert.match(next, /--color-primary:\s*var\(--primary\)/);
   });
+
+  it("strips create-next-app prefers-color-scheme :root overrides", () => {
+    const existing = `@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+}
+`;
+    const { next, changed } = ensureConsumerCss(existing);
+
+    assert.equal(changed, true);
+    assertManagedOrder(next);
+    assert.doesNotMatch(next, /prefers-color-scheme/);
+    assert.match(next, /\.dark\s*\{/);
+    assert.match(next, /body\s*\{/);
+    assert.match(next, /--background:\s*#ffffff/);
+  });
 });

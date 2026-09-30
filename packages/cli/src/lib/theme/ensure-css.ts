@@ -55,7 +55,10 @@ export function ensureConsumerCss(source: string | null): {
     "",
     formatBlock("@theme inline", theme),
   ].join("\n");
-  const remainder = extracted.remainder.trim();
+  // create-next-app leaves a prefers-color-scheme :root override that fights
+  // class-based `.dark` theming (e.g. drawer `bg-background` goes dark while
+  // `bg-card` stays light). Strip that conflict; keep other user CSS.
+  const remainder = stripConflictingColorSchemeRoot(extracted.remainder).trim();
   const next = `${managed}${remainder ? `\n\n${remainder}` : ""}\n`;
 
   return {
@@ -63,6 +66,17 @@ export function ensureConsumerCss(source: string | null): {
     created: false,
     changed: next !== (source.endsWith("\n") ? source : `${source}\n`),
   };
+}
+
+/**
+ * Removes `@media (prefers-color-scheme: dark) { :root { … } }` leftovers.
+ * Nested rules inside other media queries are left alone.
+ */
+function stripConflictingColorSchemeRoot(css: string): string {
+  return css.replace(
+    /@media\s*\(\s*prefers-color-scheme\s*:\s*dark\s*\)\s*\{\s*:root\s*\{[^}]*\}\s*\}/g,
+    "",
+  );
 }
 
 function mergeDeclarations(
