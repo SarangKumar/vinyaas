@@ -77,7 +77,9 @@ Validates `components.json`, aliases, Tailwind v4, theme tokens, utility depende
 
 ```bash
 vinyaas add button
-vinyaas add card dialog
+vinyaas add button card
+vinyaas add button --yes
+vinyaas add button --dry-run
 vinyaas add button --force
 vinyaas add --category forms
 vinyaas add --category forms --yes
@@ -86,7 +88,18 @@ vinyaas add button card --dry-run
 
 Copies registry source into your project. Files stay editable. Registry and npm dependencies resolve automatically. Already-installed components are skipped unless you pass `--force`.
 
-Use component names for a precise install. Use `--category` to discover and install a whole group (prompts for confirmation unless `--yes`).
+Use component names for a precise install. Use `--category` to discover and install a whole group. Multi-component and category installs prompt for confirmation unless you pass `--yes`. Dry-run resolves the plan without writing files.
+
+Successful installs record components in `.vinyaas/manifest.json`.
+
+### Installation status
+
+```bash
+vinyaas status
+vinyaas status --json
+```
+
+Shows components Vinyaas installed in this project. Vinyaas tracks installed components locally to support future update/remove workflows.
 
 ### Component discovery
 

@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = pageMetadata({
   title: "CLI",
   description:
-    "Use the Vinyaas CLI (v1.2.0) to initialize projects, run doctor, add components as source, and discover the catalog by category.",
+    "Use the Vinyaas CLI (v1.2.0) to initialize projects, run doctor, add components as source, check install status, and discover the catalog by category.",
   path: "/cli",
 });
 
@@ -126,7 +126,9 @@ No issues found.`}
           <code>--force</code> to overwrite existing files.
         </p>
         <CodeBlock language="bash" code="vinyaas add button" />
-        <CodeBlock language="bash" code="vinyaas add button card dialog" />
+        <CodeBlock language="bash" code="vinyaas add button card" />
+        <CodeBlock language="bash" code="vinyaas add button --yes" />
+        <CodeBlock language="bash" code="vinyaas add button --dry-run" />
         <CodeBlock language="bash" code="vinyaas add button --force" />
         <CodeBlock language="bash" code="vinyaas add --category forms" />
         <CodeBlock language="bash" code="vinyaas add --category forms --yes" />
@@ -134,9 +136,24 @@ No issues found.`}
           Pass component names for a precise install. Use{" "}
           <code>--category</code> to install every component in a registry group
           (forms, layout, navigation, feedback, data-display, typography,
-          charts, utilities). Category installs prompt for confirmation unless
-          you pass <code>--yes</code>.
+          charts, utilities). Multi-component and category installs prompt for
+          confirmation unless you pass <code>--yes</code>. Dry-run prints the
+          plan without writing files.
         </p>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="status" className={sectionHeading}>
+          Status
+        </h2>
+        <p className={body}>
+          <code>vinyaas status</code> lists components recorded in{" "}
+          <code>.vinyaas/manifest.json</code> after successful installs. Vinyaas
+          tracks installed components locally to support future update/remove
+          workflows.
+        </p>
+        <CodeBlock language="bash" code="vinyaas status" />
+        <CodeBlock language="bash" code="vinyaas status --json" />
       </section>
 
       <section className="flex flex-col gap-4">
@@ -164,11 +181,12 @@ No issues found.`}
         </h2>
         <p className={body}>
           Discovery and doctor commands accept <code>--json</code> for
-          machine-readable stdout.
+          machine-readable stdout. Status also supports <code>--json</code>.
         </p>
         <CodeBlock language="bash" code="vinyaas list --json" />
         <CodeBlock language="bash" code="vinyaas info button --json" />
         <CodeBlock language="bash" code="vinyaas doctor --json" />
+        <CodeBlock language="bash" code="vinyaas status --json" />
       </section>
 
       <section className="flex flex-col gap-4">

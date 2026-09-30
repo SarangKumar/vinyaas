@@ -27,6 +27,7 @@ describe("CLI docs", () => {
     expect(
       screen.getByRole("heading", { name: "Components" }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Status" })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Discovery" }),
     ).toBeInTheDocument();
@@ -44,6 +45,11 @@ describe("CLI docs", () => {
     expect(body).toContain("theme tokens");
     expect(body).toContain("forms");
     expect(body).toContain("vinyaas add button");
+    expect(body).toContain("vinyaas add button card");
+    expect(body).toContain("vinyaas add button --yes");
+    expect(body).toContain("vinyaas add button --dry-run");
+    expect(body).toContain("vinyaas status");
+    expect(body).toContain(".vinyaas/manifest.json");
     expect(body).toContain("vinyaas list");
     expect(body).toContain("vinyaas list --category forms");
     expect(body).toContain("vinyaas search button");

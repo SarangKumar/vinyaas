@@ -115,6 +115,7 @@ async function add(cwd, names, { fetch, force = false, runPackageManager }) {
       name: names[0],
       names,
       force,
+      yes: true,
       env: { REGISTRY_BASE_URL: "http://localhost:3000" },
       fetch,
       runPackageManager:

@@ -179,6 +179,29 @@ export function formatCategoryInstallPrompt(
   ].join("\n");
 }
 
+export function formatAddInstallPrompt(input: AddSummaryInput): string {
+  const installedRequested = requestedInstalled(input);
+  const dependencies = dependencyNames(input.dependencyInstall);
+  const fileCount = input.plan.entries.length;
+
+  return [
+    "Add components",
+    "",
+    "Components:",
+    ...(installedRequested.length > 0
+      ? installedRequested.map((name) => ` ✓ ${name}`)
+      : [" none"]),
+    "",
+    "Files:",
+    ` ${fileCount} ${fileCount === 1 ? "file" : "files"}`,
+    "",
+    "Dependencies:",
+    ...(dependencies.length > 0
+      ? dependencies.map((name) => ` ${name}`)
+      : [" none"]),
+  ].join("\n");
+}
+
 function requestedInstalled(input: AddSummaryInput): string[] {
   return input.requested.filter(
     (component) =>

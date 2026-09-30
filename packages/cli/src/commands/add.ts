@@ -9,6 +9,7 @@ import {
 } from "../../../../config/components.ts";
 
 import {
+  formatAddInstallPrompt,
   formatAddSummary,
   formatCategoryInstallPrompt,
   formatDryRunSummary,
@@ -31,6 +32,10 @@ import {
   writeInstallPlan,
   type InstallPlan,
 } from "../lib/install-plan.ts";
+import {
+  MANIFEST_RELATIVE_PATH,
+  updateManifestFromPlan,
+} from "../lib/manifest/store.ts";
 import { findPackageManager } from "../lib/package-manager/detect.ts";
 import { installDependencies } from "../lib/package-manager/install.ts";
 import type { RunPackageManager } from "../lib/package-manager/types.ts";
@@ -81,13 +86,16 @@ export function registerAddCommand(program: Command): void {
         "",
         "Examples:",
         "  $ vinyaas add button",
-        "  $ vinyaas add button card dialog",
+        "  $ vinyaas add button card",
+        "  $ vinyaas add button --yes",
+        "  $ vinyaas add button --dry-run",
         "  $ vinyaas add --category forms",
         "  $ vinyaas add --category forms --yes",
         "  $ vinyaas add button --force",
         "  $ vinyaas add button card --dry-run",
         "",
         "Pass component names for a precise install. Use --category to install a group.",
+        "Multi-component and category installs confirm unless --yes is set.",
         "Already-installed components are skipped unless --force is set.",
       ].join("\n"),
     )
@@ -139,6 +147,7 @@ interface AddMutations {
   restoreFiles?: typeof restoreFiles;
   writeComponents?: (cwd: string, plan: InstallPlan) => Promise<void>;
   writeCss?: (cwd: string, update: CssUpdate) => Promise<void>;
+  writeManifest?: (cwd: string, plan: InstallPlan) => Promise<void>;
 }
 
 interface ResolvedAdd {
@@ -265,15 +274,26 @@ export async function runAdd({
     return resolved.plan;
   }
 
-  if (selection.categoryInstall && !yes) {
+  const needsConfirmation =
+    !yes &&
+    (selection.categoryInstall !== undefined || selection.names.length > 1);
+
+  if (needsConfirmation) {
     console.log(
-      formatCategoryInstallPrompt({
-        plan: resolved.plan,
-        dependencyInstall: resolved.dependencyInstall,
-        requested: resolved.requested,
-        registryDependencies: resolved.registryDependencies,
-        category: selection.categoryInstall,
-      }),
+      selection.categoryInstall
+        ? formatCategoryInstallPrompt({
+            plan: resolved.plan,
+            dependencyInstall: resolved.dependencyInstall,
+            requested: resolved.requested,
+            registryDependencies: resolved.registryDependencies,
+            category: selection.categoryInstall,
+          })
+        : formatAddInstallPrompt({
+            plan: resolved.plan,
+            dependencyInstall: resolved.dependencyInstall,
+            requested: resolved.requested,
+            registryDependencies: resolved.registryDependencies,
+          }),
     );
     const accepted = await confirm("Continue? (y/N)");
 
@@ -297,6 +317,7 @@ export async function runAdd({
     ...(detected ? ["package.json", detected.lockfile] : []),
     ...resolved.plan.entries.map((entry) => entry.destinationPath),
     ...(resolved.cssUpdate.changed ? [resolved.cssUpdate.relativePath] : []),
+    MANIFEST_RELATIVE_PATH,
   ]);
 
   try {
@@ -313,6 +334,10 @@ export async function runAdd({
 
     await (mutations?.writeComponents ?? writeInstallPlan)(cwd, resolved.plan);
     await (mutations?.writeCss ?? writeCssUpdate)(cwd, resolved.cssUpdate);
+    await (mutations?.writeManifest ?? updateManifestFromPlan)(
+      cwd,
+      resolved.plan,
+    );
   } catch (error) {
     await rollbackMutation(cwd, snapshot, error, mutations?.restoreFiles);
   }
