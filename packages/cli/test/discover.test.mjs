@@ -423,6 +423,23 @@ describe("vinyaas info", () => {
     assert.equal("content" in parsed, false);
   });
 
+  it("fails for an unknown component with catalog suggestions", async () => {
+    await assert.rejects(
+      () =>
+        executeInfo({
+          name: "buton",
+          env: { REGISTRY_BASE_URL: "http://localhost:3000" },
+          fetch: catalogFetch(),
+        }),
+      (error) => {
+        assert.match(error.message, /Unknown component: buton/);
+        assert.match(error.message, /Did you mean:/);
+        assert.match(error.message, /button/);
+        return true;
+      },
+    );
+  });
+
   it("fails for an unknown component", async () => {
     await assert.rejects(
       () =>

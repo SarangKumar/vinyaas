@@ -11,6 +11,7 @@ import {
   toRegistryItemSummary,
 } from "./format.ts";
 import { searchRegistryCatalog } from "./search.ts";
+import { formatUnknownComponentMessage } from "./suggest.ts";
 import {
   defaultRegistryStyle,
   type RegistryCatalog,
@@ -64,7 +65,22 @@ export async function getRegistryItem({
       error instanceof RegistryError &&
       error.message.startsWith("Registry item not found:")
     ) {
-      throw new RegistryError(`Unknown component: ${trimmed}`);
+      let catalogNames: string[] = [];
+
+      try {
+        const catalog = await getRegistryCatalog({
+          style,
+          env,
+          ...(fetchImpl ? { fetch: fetchImpl } : {}),
+        });
+        catalogNames = catalog.items.map((item) => item.name);
+      } catch {
+        catalogNames = [];
+      }
+
+      throw new RegistryError(
+        formatUnknownComponentMessage([trimmed], catalogNames),
+      );
     }
 
     throw error;

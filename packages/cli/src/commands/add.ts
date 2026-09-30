@@ -36,7 +36,9 @@ import {
   type FileSnapshot,
 } from "../lib/transaction/files.ts";
 import { RegistryError } from "../lib/registry/client.ts";
-import { resolveRegistryItems } from "../lib/registry/resolve.ts";
+import { getRegistryCatalog } from "../lib/registry/discover.ts";
+import { resolveRegistryGraph } from "../lib/registry/resolve.ts";
+import { formatUnknownComponentMessage } from "../lib/registry/suggest.ts";
 import type { RegistryItem } from "../lib/registry/types.ts";
 
 const missingConfigMessage = [
@@ -48,20 +50,38 @@ export function registerAddCommand(program: Command): void {
   program
     .command("add")
     .description("Add one or more components from the Vinyaas registry.")
-    .argument("<name...>", "Registry item names")
+    .argument("<name...>", "Component names to install")
     .option("--cwd <path>", "Consumer project directory.")
-    .option("--force", "Overwrite existing component files.")
-    .addHelpText("after", "\nExample:\n  $ vinyaas add button card badge")
+    .option(
+      "--force",
+      "Overwrite existing component files instead of skipping them.",
+    )
+    .addHelpText(
+      "after",
+      [
+        "",
+        "Examples:",
+        "  $ vinyaas add button",
+        "  $ vinyaas add button card dialog",
+        "  $ vinyaas add button --force",
+        "",
+        "Already-installed components are skipped unless --force is set.",
+      ].join("\n"),
+    )
     .action(
       async (name: string[], options: { cwd?: string; force?: boolean }) => {
         try {
-          await executeAdd({
+          const plan = await executeAdd({
             name: name[0] ?? "",
             names: name,
             cwd: options.cwd,
             force: options.force === true,
             env: process.env,
           });
+
+          if (plan.failed.length > 0) {
+            process.exit(1);
+          }
         } catch (error) {
           if (
             error instanceof CliError ||
@@ -139,13 +159,24 @@ export async function runAdd({
 }): Promise<InstallPlan> {
   const requested = uniqueNames(names && names.length > 0 ? names : [name]);
   const config = await readComponentsConfig(cwd);
-  const resolvedItems = await resolveRegistryItems({
+  const resolved = await resolveRegistryGraph({
     style: config.style,
     name: requested[0] ?? name,
     names: requested,
     env,
+    allowMissing: true,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
   });
+  const failed = [...resolved.missing];
+  const resolvedItems = resolved.items;
+
+  if (resolvedItems.length === 0) {
+    throw await unknownComponentsWithSuggestions(failed, {
+      env,
+      ...(fetchImpl ? { fetch: fetchImpl } : {}),
+    });
+  }
+
   const scoutPlan = await createInstallPlan({
     cwd,
     config,
@@ -174,6 +205,7 @@ export async function runAdd({
   plan.skipped = requested.filter((itemName) =>
     existing.skipped.includes(itemName),
   );
+  plan.failed = failed;
 
   const overwrite = new Set(existing.overwriteItemNames);
 
@@ -353,20 +385,17 @@ function formatAdded(
   requested: readonly string[],
 ): string {
   const installedRequested = requested.filter(
-    (component) => !plan.skipped.includes(component),
+    (component) =>
+      !plan.skipped.includes(component) && !plan.failed.includes(component),
   );
   const lines: string[] = [];
 
-  if (plan.skipped.length > 0) {
-    lines.push("Skipped:", ...plan.skipped.map((name) => `- ${name}`));
-  }
-
   if (installedRequested.length > 0) {
-    if (lines.length > 0) {
-      lines.push("");
-    }
-
-    if (installedRequested.length === 1) {
+    if (
+      installedRequested.length === 1 &&
+      plan.skipped.length === 0 &&
+      plan.failed.length === 0
+    ) {
       lines.push(`Added ${installedRequested[0]}.`);
     } else {
       lines.push(
@@ -374,7 +403,36 @@ function formatAdded(
         ...installedRequested.map((name) => `- ${name}`),
       );
     }
-  } else if (plan.entries.length === 0 && plan.skipped.length > 0) {
+  }
+
+  if (plan.skipped.length > 0) {
+    if (lines.length > 0) {
+      lines.push("");
+    }
+
+    lines.push(
+      "Skipped:",
+      ...plan.skipped.map((name) => `- ${name} — already installed`),
+    );
+  }
+
+  if (plan.failed.length > 0) {
+    if (lines.length > 0) {
+      lines.push("");
+    }
+
+    lines.push(
+      "Failed:",
+      ...plan.failed.map((name) => `- ${name} — not found`),
+    );
+  }
+
+  if (
+    installedRequested.length === 0 &&
+    plan.entries.length === 0 &&
+    plan.skipped.length > 0 &&
+    plan.failed.length === 0
+  ) {
     if (lines.length > 0) {
       lines.push("");
     }
@@ -417,6 +475,32 @@ function formatAdded(
   }
 
   return lines.join("\n");
+}
+
+async function unknownComponentsWithSuggestions(
+  names: readonly string[],
+  {
+    env,
+    fetch: fetchImpl,
+  }: {
+    env?: Record<string, string | undefined>;
+    fetch?: typeof fetch;
+  },
+): Promise<RegistryError> {
+  let catalogNames: string[] = [];
+
+  try {
+    const catalog = await getRegistryCatalog({
+      env,
+      ...(fetchImpl ? { fetch: fetchImpl } : {}),
+    });
+    catalogNames = catalog.items.map((item) => item.name);
+  } catch {
+    catalogNames = [];
+  }
+
+  const message = formatUnknownComponentMessage(names, catalogNames);
+  return new RegistryError(`${message}\n\nNo files were changed.`);
 }
 
 function uniqueNames(names: readonly string[]): string[] {

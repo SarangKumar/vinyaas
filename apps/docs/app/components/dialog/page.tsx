@@ -415,9 +415,10 @@ export default async function DialogPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/dialog/index.tsx</code>. It imports{" "}
-          <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
-          <code>clsx</code> and <code>tailwind-merge</code>.
+          <code>components/ui/dialog/index.tsx</code> and copy{" "}
+          <code>dialog.css</code> beside it. It imports <code>cn</code> from{" "}
+          <code>@/lib/utils</code>. The project also needs <code>clsx</code> and{" "}
+          <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}

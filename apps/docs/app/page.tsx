@@ -44,9 +44,9 @@ export default function Home() {
           Build. Ship. Beautifully.
         </h1>
         <p className="text-muted-foreground mt-4 max-w-136 text-sm leading-6 sm:text-base sm:leading-7">
-          Vinyaas is a production-focused component library and CLI for building
-          polished, accessible interfaces faster—with composable components,
-          thoughtful defaults, and a workflow designed for real products.
+          A registry-driven component library for React and Tailwind CSS v4. Run{" "}
+          <code className="font-mono text-[0.95em]">vinyaas init</code>, add the
+          components you need, and keep the source in your project.
         </p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
           <Link href="/installation" className={primaryLink}>

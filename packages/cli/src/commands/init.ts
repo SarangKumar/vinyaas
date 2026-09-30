@@ -30,10 +30,21 @@ export function registerInitCommand(program: Command): void {
   program
     .command("init")
     .description(
-      "Prepare a React project for Vinyaas components (Tailwind v4, theme, aliases, components.json).",
+      "Prepare a React project for Vinyaas (Tailwind v4, theme CSS, aliases, components.json).",
     )
     .option("--cwd <path>", "Consumer project directory.")
     .option("-y, --yes", "Skip prompts and use safe defaults.")
+    .addHelpText(
+      "after",
+      [
+        "",
+        "Examples:",
+        "  $ vinyaas init",
+        "  $ vinyaas init --cwd ./my-app",
+        "",
+        "Safe to run more than once. Existing components.json is left unchanged.",
+      ].join("\n"),
+    )
     .action(async (options: { cwd?: string; yes?: boolean }) => {
       try {
         await executeInit({

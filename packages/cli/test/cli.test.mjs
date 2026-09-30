@@ -75,7 +75,8 @@ describe("vinyaas", () => {
     assert.match(add.stdout, /--force/);
     assert.match(add.stdout, /overwrite existing component files/i);
     assert.match(add.stdout, /<name\.\.\.>/);
-    assert.match(add.stdout, /vinyaas add button card badge/);
+    assert.match(add.stdout, /vinyaas add button card dialog/);
+    assert.match(add.stdout, /already-installed/i);
     assert.equal(list.exitCode, 0);
     assert.match(list.stdout, /--json/);
     assert.equal(search.exitCode, 0);

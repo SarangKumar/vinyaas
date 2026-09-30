@@ -81,9 +81,10 @@ export default function IntroductionPage() {
           Accessible React components you install as source.
         </h1>
         <p className={`${body} max-w-2xl text-lg leading-8`}>
-          Vinyaas is a component library and documentation system for React and
-          Tailwind. The CLI copies components into your repository. You own the
-          files, edit them freely, and ship without a Vinyaas runtime package.
+          Vinyaas is a registry-driven component library for React and Tailwind
+          CSS v4. The CLI prepares your project, discovers components, and
+          installs them as source. You own the files, edit them freely, and ship
+          without a Vinyaas runtime package.
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
@@ -219,12 +220,25 @@ export default function IntroductionPage() {
         </h2>
         <ol className={`${body} list-decimal space-y-3 pl-5`}>
           <li>
-            Run <code>vinyaas init</code> to create <code>components.json</code>
-            , utilities, and theme hooks for your app.
+            Create a supported React, Next.js, or Vite project with Tailwind CSS
+            v4.
           </li>
           <li>
-            Add components with <code>vinyaas add …</code>. The CLI writes files
-            under your configured components path.
+            Run <code>vinyaas init</code> to configure theme CSS, aliases,{" "}
+            <code>components.json</code>, and utilities. Init is idempotent.
+          </li>
+          <li>
+            Discover components with <code>vinyaas list</code>,{" "}
+            <code>search</code>, and <code>info</code> when you need the catalog
+            from the terminal.
+          </li>
+          <li>
+            Install one or more components with <code>vinyaas add …</code>.
+            Files land at{" "}
+            <code className="font-mono">
+              components/ui/&lt;name&gt;/index.tsx
+            </code>
+            .
           </li>
           <li>
             Import from your local path (for example{" "}
@@ -242,7 +256,8 @@ export default function IntroductionPage() {
           >
             Installation
           </Link>{" "}
-          page, including multi-component adds and framework notes.
+          page, including multi-component adds, skip/force behavior, discovery
+          commands, and framework notes.
         </p>
       </section>
 

@@ -11,9 +11,14 @@ import { RegistryError } from "../lib/registry/client.ts";
 export function registerListCommand(program: Command): void {
   program
     .command("list")
-    .description("List available components from the Vinyaas registry.")
-    .option("--json", "Print machine-readable JSON.")
-    .addHelpText("after", "\nExample:\n  $ vinyaas list")
+    .description("List installable components from the Vinyaas registry.")
+    .option("--json", "Print machine-readable JSON to stdout.")
+    .addHelpText(
+      "after",
+      ["", "Examples:", "  $ vinyaas list", "  $ vinyaas list --json"].join(
+        "\n",
+      ),
+    )
     .action(async (options: { json?: boolean }) => {
       try {
         await executeList({

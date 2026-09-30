@@ -38,7 +38,8 @@ const pages: SearchPage[] = [
   {
     title: "Installation",
     href: "/installation",
-    description: "Install the CLI, initialize a project, and add a component.",
+    description:
+      "Install the CLI, run init, discover components, and add them as source.",
     group: "Getting Started",
   },
   {

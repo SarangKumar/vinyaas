@@ -169,10 +169,39 @@ export default function ChangelogPage() {
           v1.1.0
         </h2>
         <p className="text-foreground text-base leading-7">
-          v{currentVersion} continues the catalog with focused foundation work
-          and new components. It adds {v11.length} component
+          v{currentVersion} continues the catalog with focused foundation work,
+          CLI project setup, registry discovery, and new components. It adds{" "}
+          {v11.length} component
           {v11.length === 1 ? "" : "s"}.
         </p>
+        <h3
+          id="v1.1.0-cli"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          CLI
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            <code>vinyaas init</code> prepares a Tailwind CSS v4 project: theme
+            tokens in the global stylesheet, aliases, PostCSS when needed,{" "}
+            <code>components.json</code>, and <code>lib/utils.ts</code>. Init is
+            idempotent.
+          </li>
+          <li>
+            <code>vinyaas add</code> installs one or many components, resolves
+            registry dependencies, and skips already-installed components unless{" "}
+            <code>--force</code> is set.
+          </li>
+          <li>
+            Discovery commands: <code>vinyaas list</code>,{" "}
+            <code>vinyaas search</code>, and <code>vinyaas info</code>, each
+            with optional <code>--json</code> output.
+          </li>
+          <li>
+            Clearer install summaries, typo suggestions for unknown names, and
+            concise CLI errors for expected failures.
+          </li>
+        </ul>
         <h3
           id="v1.1.0-catalog"
           className="text-foreground scroll-mt-8 text-base font-medium"
@@ -183,6 +212,24 @@ export default function ChangelogPage() {
           {v11.map((component) => (
             <li key={component.slug}>{component.name}</li>
           ))}
+        </ul>
+        <h3
+          id="v1.1.0-registry"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Components and registry
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Installed components use{" "}
+            <code>components/ui/&lt;name&gt;/index.tsx</code>. Supporting CSS
+            files stay beside the entry file when a component needs them.
+          </li>
+          <li>
+            Registry-driven discovery through a generated style catalog (
+            <code>index.json</code>) used by <code>list</code> and{" "}
+            <code>search</code>.
+          </li>
         </ul>
         <h3
           id="v1.1.0-tailwind"
@@ -208,11 +255,27 @@ export default function ChangelogPage() {
             large legacy theme file.
           </li>
         </ul>
-        <p className="text-foreground text-base leading-7">
-          Installed components use the{" "}
-          <code>components/ui/&lt;name&gt;/index.tsx</code> layout. Supporting
-          CSS files stay beside the entry file when a component needs them.
-        </p>
+        <h3
+          id="v1.1.0-docs"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Documentation and website
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Component pages keep production-oriented examples, In practice
+            sections, and the current <code>index.tsx</code> install paths.
+          </li>
+          <li>
+            Homepage showcase, theme tokens, accessibility notes, and SEO
+            metadata (Open Graph, robots, sitemap) stay aligned with the v1.1
+            catalog.
+          </li>
+          <li>
+            Installation docs cover init, multi-component add, skip/force
+            behavior, and discovery commands.
+          </li>
+        </ul>
       </section>
     </DocsArticle>
   );

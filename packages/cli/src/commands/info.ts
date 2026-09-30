@@ -11,10 +11,18 @@ import {
 export function registerInfoCommand(program: Command): void {
   program
     .command("info")
-    .description("Show details for a registry component before installing it.")
+    .description("Show registry details for a component before installing it.")
     .argument("<component>", "Component name")
-    .option("--json", "Print machine-readable JSON.")
-    .addHelpText("after", "\nExample:\n  $ vinyaas info button")
+    .option("--json", "Print machine-readable JSON to stdout.")
+    .addHelpText(
+      "after",
+      [
+        "",
+        "Examples:",
+        "  $ vinyaas info button",
+        "  $ vinyaas info toast --json",
+      ].join("\n"),
+    )
     .action(async (component: string, options: { json?: boolean }) => {
       try {
         await executeInfo({

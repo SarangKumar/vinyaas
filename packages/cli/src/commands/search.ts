@@ -11,10 +11,18 @@ import {
 export function registerSearchCommand(program: Command): void {
   program
     .command("search")
-    .description("Search available components in the Vinyaas registry.")
+    .description("Search registry components by name or description.")
     .argument("<query>", "Search query")
-    .option("--json", "Print machine-readable JSON.")
-    .addHelpText("after", "\nExample:\n  $ vinyaas search input")
+    .option("--json", "Print machine-readable JSON to stdout.")
+    .addHelpText(
+      "after",
+      [
+        "",
+        "Examples:",
+        "  $ vinyaas search input",
+        "  $ vinyaas search form --json",
+      ].join("\n"),
+    )
     .action(async (query: string, options: { json?: boolean }) => {
       try {
         await executeSearch({

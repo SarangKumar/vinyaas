@@ -8,7 +8,7 @@ import { store } from "@/lib/store/store";
 import InstallationPage from "./page";
 
 describe("installation docs", () => {
-  it("shows a bash command for the common form components", () => {
+  it("documents init, add, discovery, and form installs", () => {
     store.dispatch(setCodeLanguage("jsx"));
 
     render(
@@ -17,6 +17,27 @@ describe("installation docs", () => {
       </DocsStoreProvider>,
     );
 
+    expect(screen.getByRole("heading", { name: "init" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "add" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Discover" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "list" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "search" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "info" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Installed file structure" }),
+    ).toBeInTheDocument();
+    expect(document.body.textContent).toContain(
+      "components/ui/button/index.tsx",
+    );
+    expect(document.body.textContent).toContain("toast.css");
+    expect(document.body.textContent).toContain("--force");
+    expect(document.body.textContent).toContain("--json");
+    expect(document.body.textContent).toContain("Tailwind CSS v4");
+    expect(document.body.textContent).not.toContain(
+      "components/ui/button/button.tsx",
+    );
     expect(
       screen.getByRole("heading", { name: "Install form components" }),
     ).toBeInTheDocument();

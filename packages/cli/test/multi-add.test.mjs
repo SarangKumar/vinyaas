@@ -5,7 +5,6 @@ import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
 
 import { runAdd } from "../src/commands/add.ts";
-import { RegistryError } from "../src/lib/registry/client.ts";
 
 const cssContent = '@import "tailwindcss";\n';
 
@@ -220,26 +219,23 @@ describe("vinyaas add multiple components", () => {
     assert.ok(calls[0].args.includes("class-variance-authority"));
   });
 
-  it("reports every unknown component and writes nothing", async () => {
+  it("installs known components and reports unknown names as failed", async () => {
     const cwd = await writeProject();
     const registry = fetchCatalog(catalog);
+    const { stdout, plan } = await add(
+      cwd,
+      ["button", "does-not-exist", "card"],
+      registry,
+    );
 
-    await assert.rejects(
-      () => add(cwd, ["button", "does-not-exist", "card"], registry),
-      (error) => {
-        assert.ok(error instanceof RegistryError);
-        assert.match(error.message, /Unknown component\(s\):/);
-        assert.match(error.message, /- does-not-exist/);
-        assert.match(error.message, /No files were changed\./);
-        return true;
-      },
-    );
-    await assert.rejects(access(join(cwd, "components/ui/button/index.tsx")));
-    await assert.rejects(access(join(cwd, "components/ui/card/index.tsx")));
-    assert.equal(
-      await readFile(join(cwd, "app/globals.css"), "utf8"),
-      cssContent,
-    );
+    assert.match(stdout, /Installed:/);
+    assert.match(stdout, /- button/);
+    assert.match(stdout, /- card/);
+    assert.match(stdout, /Failed:/);
+    assert.match(stdout, /- does-not-exist — not found/);
+    assert.deepEqual(plan.failed, ["does-not-exist"]);
+    await access(join(cwd, "components/ui/button/index.tsx"));
+    await access(join(cwd, "components/ui/card/index.tsx"));
   });
 
   it("skips already-installed components and continues with the rest", async () => {
@@ -249,9 +245,10 @@ describe("vinyaas add multiple components", () => {
     const registry = fetchCatalog(catalog);
     const { stdout, plan, calls } = await add(cwd, ["button", "card"], registry);
 
+    assert.match(stdout, /Installed:/);
+    assert.match(stdout, /- card/);
     assert.match(stdout, /Skipped:/);
-    assert.match(stdout, /- button/);
-    assert.match(stdout, /Added card\./);
+    assert.match(stdout, /- button — already installed/);
     assert.deepEqual(plan.skipped, ["button"]);
     assert.equal(
       await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
@@ -294,9 +291,9 @@ describe("vinyaas add multiple components", () => {
     );
 
     assert.match(stdout, /Skipped:/);
-    assert.match(stdout, /- button/);
-    assert.match(stdout, /- card/);
-    assert.match(stdout, /- badge/);
+    assert.match(stdout, /- button — already installed/);
+    assert.match(stdout, /- card — already installed/);
+    assert.match(stdout, /- badge — already installed/);
     assert.match(stdout, /Installed:/);
     assert.match(stdout, /- textarea/);
     assert.match(stdout, /- spinner/);

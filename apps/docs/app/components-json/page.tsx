@@ -14,7 +14,7 @@ const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 
 const example = `{
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "https://vinyaas.vercel.app/schema/components.json",
   "style": "new-york",
   "tsx": true,
   "tailwind": {
@@ -77,7 +77,8 @@ export default function ComponentsJsonPage() {
           </li>
           <li>
             <code>tailwind</code> — CSS entry path and related Tailwind
-            settings. The CLI does not write theme CSS into that file today.
+            settings. <code>vinyaas init</code> writes theme tokens into that
+            stylesheet for Tailwind CSS v4.
           </li>
           <li>
             <code>aliases</code> — import aliases for components, utils, ui, and
@@ -120,8 +121,8 @@ export default function ComponentsJsonPage() {
           <code>vinyaas init</code> creates <code>components.json</code> when
           the file is missing. A later init does not overwrite an existing file.{" "}
           <code>vinyaas add</code> reads the aliases and style from that file.
-          Future init improvements may write more defaults, but they will keep
-          the same local-config role.
+          Init also prepares the configured CSS path, aliases, and utilities;
+          <code>components.json</code> remains local project configuration.
         </p>
       </section>
     </DocsArticle>

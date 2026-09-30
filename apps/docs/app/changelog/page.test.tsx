@@ -31,7 +31,9 @@ describe("Changelog", () => {
     expect(
       screen.getByRole("heading", { name: "Documentation" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "CLI" })).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("heading", { name: "CLI" }).length,
+    ).toBeGreaterThanOrEqual(2);
     expect(
       screen.getByRole("heading", { name: "Released" }),
     ).toBeInTheDocument();
@@ -50,6 +52,13 @@ describe("Changelog", () => {
     expect(document.body.textContent).toContain(
       `v${currentVersion} continues the catalog`,
     );
+    expect(document.body.textContent).toContain("vinyaas init");
+    expect(document.body.textContent).toContain("vinyaas list");
+    expect(document.body.textContent).toContain("vinyaas search");
+    expect(document.body.textContent).toContain("vinyaas info");
+    expect(document.body.textContent).toContain("--json");
+    expect(document.body.textContent).toContain("index.tsx");
+    expect(document.body.textContent).toContain("Documentation and website");
     expect(document.body.textContent).toContain("Tabs");
     expect(document.body.textContent).toContain("Drawer");
     expect(document.body.textContent).toContain("Chart");

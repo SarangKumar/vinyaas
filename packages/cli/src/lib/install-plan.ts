@@ -34,6 +34,8 @@ export interface InstallPlan {
   items: string[];
   /** Requested components skipped because every destination file already exists. */
   skipped: string[];
+  /** Requested components that were not found in the registry. */
+  failed: string[];
 }
 
 export interface PackageDependencyPlan {
@@ -97,6 +99,7 @@ export async function createInstallPlan({
     devDependencies: packages.devDependencies,
     items: items.map((item) => item.name),
     skipped: [],
+    failed: [],
   };
 }
 

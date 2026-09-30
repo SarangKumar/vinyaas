@@ -269,10 +269,10 @@ export default async function ToastPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/toast/index.tsx</code>. It imports <code>cn</code>{" "}
-          from <code>@/lib/utils</code>. The project also needs{" "}
-          <code>clsx</code> and <code>tailwind-merge</code>. Mount{" "}
-          <code>Toaster</code> yourself.
+          <code>components/ui/toast/index.tsx</code> and copy{" "}
+          <code>toast.css</code> beside it. It imports <code>cn</code> from{" "}
+          <code>@/lib/utils</code>. The project also needs <code>clsx</code> and{" "}
+          <code>tailwind-merge</code>. Mount <code>Toaster</code> yourself.
         </p>
       }
       usage={usage}

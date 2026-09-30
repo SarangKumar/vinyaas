@@ -82,21 +82,46 @@ vinyaas add button
 Install multiple components in one call. Shared packages install once:
 
 ```bash
-npx vinyaas add button card badge
+vinyaas add button card badge
+```
+
+Already-installed components are skipped. Missing ones still install:
+
+```bash
+vinyaas add button card badge textarea spinner
+```
+
+Example output when some components already exist:
+
+```text
+Installed:
+- textarea
+- spinner
+
+Skipped:
+- button — already installed
+- card — already installed
+- badge — already installed
+```
+
+Overwrite an existing component only with `--force`:
+
+```bash
+vinyaas add button --force
 ```
 
 For each component, Vinyaas:
 
 1. Fetches the registry item.
-2. Resolves registry dependencies when the item declares them. Button does not declare any.
+2. Resolves registry dependencies when the item declares them.
 3. Collects the npm dependencies declared by those items.
 4. Installs dependencies that the project does not already declare.
-5. Writes the component source files.
+5. Writes the component source files under `components/ui/<name>/index.tsx`.
 6. Applies CSS only when the registry item declares `cssVars` or `css`.
 7. Reports required environment variables only when the item declares `envVars`.
 8. Reports documentation URLs only when the item declares `docs`.
 
-Not every component includes CSS, environment variables, or documentation.
+Not every component includes CSS, environment variables, or documentation. Some components also ship local CSS beside `index.tsx` (for example `toast.css`).
 
 ## Discover components
 
@@ -112,7 +137,7 @@ vinyaas info button
 - `vinyaas search <query>` matches component names and descriptions. It is case-insensitive.
 - `vinyaas info <component>` shows files, dependencies, registry dependencies, and documentation before you run `add`.
 
-Each command accepts `--json` for machine-readable output:
+Each discovery command accepts `--json` for machine-readable stdout (errors still go to stderr):
 
 ```bash
 vinyaas list --json
@@ -142,7 +167,7 @@ vinyaas add --cwd ./my-app button
 vinyaas add button --force
 ```
 
-`--force` replaces existing component files with the exact registry content. It does not overwrite CSS when the existing value differs, and it does not modify `.env` files or `components.json`. Path checks, dependency conflicts, and other validation still run. `vinyaas init` does not accept `--force`.
+`--force` replaces existing component files with the exact registry content. Without it, already-installed components are skipped and the command continues. It does not overwrite CSS when the existing value differs, and it does not modify `.env` files or `components.json`. Path checks, dependency conflicts, and other validation still run. `vinyaas init` does not accept `--force`.
 
 ## CSS
 

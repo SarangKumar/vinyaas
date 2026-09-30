@@ -30,7 +30,9 @@ export function readPackageVersion(moduleUrl = import.meta.url): string {
 export function createProgram(): Command {
   const program = new Command()
     .name("vinyaas")
-    .description("Install Vinyaas components into a project.")
+    .description(
+      "Install and discover Vinyaas UI components from the registry.",
+    )
     .version(readPackageVersion());
 
   registerInitCommand(program);
