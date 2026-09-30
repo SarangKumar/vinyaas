@@ -382,10 +382,10 @@ export default function ChangelogPage() {
             discoverability (description, keywords, homepage).
           </li>
           <li>
-            CLI package version aligned to v{currentVersion}. Install and
-            discovery commands remain the same: <code>init</code>,{" "}
-            <code>add</code>, <code>list</code>, <code>search</code>, and{" "}
-            <code>info</code>.
+            CLI package version aligned to v{currentVersion}. Commands:{" "}
+            <code>init</code>, <code>doctor</code>, <code>add</code>,{" "}
+            <code>list</code>, <code>search</code>, <code>info</code>, and{" "}
+            <code>--version</code>.
           </li>
         </ul>
       </section>

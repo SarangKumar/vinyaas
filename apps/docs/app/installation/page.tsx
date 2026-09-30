@@ -29,10 +29,10 @@ export default function InstallationPage() {
           Use the CLI
         </h2>
         <p className={body}>
-          Use the CLI to scaffold and configure a Vinyaas project directly from
-          your terminal.
+          Initialize an existing project, then add components as source:
         </p>
         <InstallCommand commands={cliCommands("init")} />
+        <InstallCommand commands={cliCommands("add button")} />
         <ul className={`${body} list-disc space-y-2 pl-5`}>
           <li>
             <code>vinyaas init</code> detects the project framework when
@@ -44,7 +44,7 @@ export default function InstallationPage() {
           </li>
           <li>Installs required utility dependencies when needed.</li>
           <li>
-            Prepares the project for <code>vinyaas add</code>.
+            Then use <code>vinyaas add</code> to install components.
           </li>
         </ul>
       </section>

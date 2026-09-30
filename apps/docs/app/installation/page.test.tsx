@@ -48,6 +48,8 @@ describe("installation docs", () => {
     expect(screen.queryByText(/Continue/i)).toBeNull();
     expect(screen.queryByText(/React framework with App Router/i)).toBeNull();
     expect(document.body.textContent).toContain("vinyaas init");
+    expect(document.body.textContent).toContain("add button");
+    expect(document.body.textContent).not.toContain("dist/index.js vinyaas");
     expect(
       screen.getAllByRole("tablist", { name: "Package manager" }).length,
     ).toBeGreaterThan(0);

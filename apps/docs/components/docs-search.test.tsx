@@ -82,6 +82,25 @@ describe("documentation search", () => {
     expect(screen.queryByRole("option")).toBeNull();
   });
 
+  it("finds the CLI guide when searching for doctor", async () => {
+    render(<Search />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Search documentation" }),
+    );
+
+    const input = await screen.findByRole("combobox", {
+      name: "Search documentation",
+    });
+
+    fireEvent.change(input, { target: { value: "doctor" } });
+
+    expect(
+      screen.getByRole("option", {
+        name: (name) => name.startsWith("CLI"),
+      }),
+    ).toBeInTheDocument();
+  });
+
   it("opens from the keyboard shortcut and focuses the field", async () => {
     render(<Search />);
 

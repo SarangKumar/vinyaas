@@ -67,7 +67,7 @@ const pages: SearchPage[] = [
     title: "CLI",
     href: "/cli",
     description:
-      "Initialize projects, add components as source, and discover the catalog.",
+      "Initialize projects, run doctor, add components as source, and discover the catalog.",
     group: "Getting Started",
   },
   {

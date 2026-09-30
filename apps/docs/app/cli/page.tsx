@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { CodeBlock } from "@/components/code-block";
 import { DocsArticle } from "@/components/docs-article";
 import { focusRing } from "@/components/focus-ring";
 import { InstallCommand } from "@/components/install-command";
-import {
-  cliCommands,
-  packageInstallCommands,
-} from "@/components/package-managers";
+import { packageInstallCommands } from "@/components/package-managers";
 import { installationPath } from "@/components/docs-nav";
 import { pageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "CLI",
   description:
-    "Use the Vinyaas CLI to initialize projects, add components as source, and discover the catalog.",
+    "Use the Vinyaas CLI (v1.2.0) to initialize projects, validate setup with doctor, add components as source, and discover the catalog.",
   path: "/cli",
 });
 
@@ -26,16 +24,17 @@ export default function CliPage() {
   return (
     <DocsArticle
       title="CLI"
-      description="The vinyaas package on npm provides init, add, and discovery commands. Framework-specific setup lives on Installation."
+      description="The vinyaas package on npm (v1.2.0) provides setup, component, and discovery commands. Framework-specific setup lives on Installation."
     >
       <section className="flex flex-col gap-4">
         <h2 id="install" className={sectionHeading}>
           Install
         </h2>
         <p className={body}>
-          Use the CLI via <code>npx</code> / <code>pnpm dlx</code>, or install
-          it into the project. For framework create-app flows and project-state
-          guidance, start at{" "}
+          Install the CLI into the project, or run it with <code>npx</code> /{" "}
+          <code>pnpm dlx</code> without a local install. After install, invoke
+          commands as <code>vinyaas &lt;command&gt;</code>. For framework
+          create-app flows and project-state guidance, start at{" "}
           <Link
             href={installationPath}
             className={`text-primary underline underline-offset-4 ${focusRing}`}
@@ -48,21 +47,27 @@ export default function CliPage() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 id="init" className={sectionHeading}>
-          Initialize
+        <h2 id="setup" className={sectionHeading}>
+          Setup
         </h2>
         <p className={body}>
-          Run from the project root. Init detects the framework when possible,
-          finds a CSS entry, and creates <code>components.json</code>, theme
-          tokens, aliases, and utils when missing. It does not overwrite an
-          existing <code>components.json</code>.
+          Run from the project root. <code>vinyaas init</code> detects the
+          framework when possible, finds a CSS entry, and creates{" "}
+          <code>components.json</code>, theme tokens, aliases, and utils when
+          missing. It does not overwrite an existing{" "}
+          <code>components.json</code>.
         </p>
-        <InstallCommand commands={cliCommands("init")} />
+        <CodeBlock language="bash" code="vinyaas init" />
+        <p className={body}>
+          <code>vinyaas doctor</code> validates an existing project setup
+          (config, Tailwind, aliases, and related checks) without writing files.
+        </p>
+        <CodeBlock language="bash" code="vinyaas doctor" />
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 id="add" className={sectionHeading}>
-          Add components
+        <h2 id="components" className={sectionHeading}>
+          Components
         </h2>
         <p className={body}>
           Copies registry source into{" "}
@@ -71,21 +76,60 @@ export default function CliPage() {
           missing npm packages are installed. Pass multiple names together; use{" "}
           <code>--force</code> to overwrite existing files.
         </p>
-        <InstallCommand commands={cliCommands("add button")} />
-        <InstallCommand commands={cliCommands("add button card dialog")} />
+        <CodeBlock language="bash" code="vinyaas add button" />
+        <CodeBlock language="bash" code="vinyaas add button card dialog" />
+        <CodeBlock language="bash" code="vinyaas add button --force" />
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 id="discover" className={sectionHeading}>
-          Discover
+        <h2 id="discovery" className={sectionHeading}>
+          Discovery
+        </h2>
+        <p className={body}>Browse the catalog without writing files.</p>
+        <CodeBlock language="bash" code="vinyaas list" />
+        <CodeBlock language="bash" code="vinyaas search button" />
+        <CodeBlock language="bash" code="vinyaas info button" />
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="output" className={sectionHeading}>
+          Output
         </h2>
         <p className={body}>
-          Browse the catalog without writing files. Each command accepts{" "}
-          <code>--json</code>.
+          Discovery and doctor commands accept <code>--json</code> for
+          machine-readable stdout.
         </p>
-        <InstallCommand commands={cliCommands("list")} />
-        <InstallCommand commands={cliCommands("search input")} />
-        <InstallCommand commands={cliCommands("info button")} />
+        <CodeBlock language="bash" code="vinyaas list --json" />
+        <CodeBlock language="bash" code="vinyaas info button --json" />
+        <CodeBlock language="bash" code="vinyaas doctor --json" />
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="version" className={sectionHeading}>
+          Version
+        </h2>
+        <p className={body}>
+          Print the installed CLI version (currently v1.2.0).
+        </p>
+        <CodeBlock language="bash" code="vinyaas --version" />
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="local-development" className={sectionHeading}>
+          Local development
+        </h2>
+        <p className={body}>
+          If you are testing the CLI directly from the repository after building
+          it:
+        </p>
+        <CodeBlock
+          language="bash"
+          code="node packages/cli/dist/index.js init"
+        />
+        <p className={body}>
+          The executable path already represents the <code>vinyaas</code>{" "}
+          command, so do not add <code>vinyaas</code> after it.
+        </p>
       </section>
     </DocsArticle>
   );
