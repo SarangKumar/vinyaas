@@ -1,66 +1,95 @@
 # vinyaas
 
-CLI for installing [Vinyaas](https://vinyaas.vercel.app) UI components from the registry into an existing React project. Components are copied in as source — not consumed from a runtime package.
+**Vinyaas** is a registry-driven React component library. The CLI installs UI components as **source** into your project — the same style of workflow as shadcn-style registries — built for **Tailwind CSS v4**.
 
-**npm:** [https://www.npmjs.com/package/vinyaas](https://www.npmjs.com/package/vinyaas)
+Components land in your tree so you can edit them. They are not imported from a locked runtime package.
 
-## Requirements
+Docs: [https://vinyaas.vercel.app](https://vinyaas.vercel.app) · npm: [https://www.npmjs.com/package/vinyaas](https://www.npmjs.com/package/vinyaas)
 
-- Node.js 20+
-- A React project with Tailwind CSS v4
-- A package manager lockfile (`pnpm-lock.yaml`, `package-lock.json`, `yarn.lock`, or `bun.lock` / `bun.lockb`)
+## Installation
 
-## Install
+Global:
+
+```bash
+npm install -g vinyaas
+# or
+pnpm add -g vinyaas
+yarn global add vinyaas
+bun add -g vinyaas
+```
+
+Project-local (recommended for apps):
 
 ```bash
 npm install vinyaas
-# or
 pnpm add vinyaas
 yarn add vinyaas
 bun add vinyaas
 ```
 
-Run without a local install:
+Or run without installing:
 
 ```bash
 npx vinyaas --help
 pnpm dlx vinyaas --help
+yarn dlx vinyaas --help
+bunx vinyaas --help
 ```
+
+Requires Node.js 20+.
+
+## Quick start
+
+```bash
+vinyaas init
+vinyaas add button
+```
+
+`init` prepares a React, Next.js, or Vite project (theme tokens, aliases, `components.json`, utils). `add` copies components into `components/ui/` and installs missing npm dependencies.
+
+## Features
+
+- Source-based components you own and edit
+- Tailwind CSS v4 theme tokens and setup
+- Registry architecture with installable JSON items
+- Customizable UI after install — no locked design package
+- Discovery commands (`list`, `search`, `info`) before you add files
 
 ## Commands
 
-### `vinyaas init`
-
-Prepares the project for the registry: theme tokens in your global stylesheet, aliases, `components.json`, and `lib/utils.ts`. Idempotent — safe to re-run. Does not overwrite an existing `components.json` or utils file.
+### Project setup
 
 ```bash
-npx vinyaas init
+vinyaas init
 ```
 
-### `vinyaas add <components…>`
+Creates `components.json`, configures Tailwind v4 theme tokens and aliases, and installs required utilities when needed. Safe to re-run; does not overwrite an existing `components.json` or utils file.
 
-Installs one or more registry components as source under `components/ui/<name>/`, resolves registry dependencies, and installs only missing npm packages.
+### Component installation
 
 ```bash
-npx vinyaas add button
-npx vinyaas add button card dialog
-npx vinyaas add button --force
+vinyaas add button
+vinyaas add card dialog
+vinyaas add button --force
 ```
 
-### Discovery
+Copies registry source into your project. Files stay editable. Registry and npm dependencies resolve automatically. Already-installed components are skipped unless you pass `--force`.
+
+### Component discovery
 
 ```bash
-npx vinyaas list
-npx vinyaas search drawer
-npx vinyaas info button
+vinyaas list
+vinyaas search button
+vinyaas info button
 ```
 
-Each discovery command accepts `--json` for machine-readable output.
+Browse the catalog without writing files. Each command accepts `--json` for scripting.
 
-## Docs
+## Documentation
 
 - Site: [https://vinyaas.vercel.app](https://vinyaas.vercel.app)
 - Installation: [https://vinyaas.vercel.app/installation](https://vinyaas.vercel.app/installation)
+- Components: [https://vinyaas.vercel.app/components](https://vinyaas.vercel.app/components)
 - Source: [https://github.com/SarangKumar/vinyaas](https://github.com/SarangKumar/vinyaas)
 
 ## License

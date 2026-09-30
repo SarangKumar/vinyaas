@@ -27,6 +27,11 @@ describe("workspace package versions", () => {
     assert.equal(cli.version, "1.1.0");
     assert.equal(cli.bin.vinyaas, "dist/index.js");
     assert.equal(cli.publishConfig?.access, "public");
+    assert.match(cli.description, /registry-driven React component/i);
+    assert.ok(cli.keywords.includes("tailwind-v4"));
+    assert.ok(cli.keywords.includes("shadcn"));
+    assert.ok(cli.keywords.includes("react-components"));
+    assert.equal(cli.homepage, "https://vinyaas.vercel.app");
 
     // Docs/website ships with the same release line; remains private.
     assert.equal(docs.name, "docs");

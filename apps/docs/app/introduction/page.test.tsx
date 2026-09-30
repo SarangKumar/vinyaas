@@ -76,7 +76,7 @@ describe("introduction", () => {
     ).toHaveAttribute("href", "/components-json");
     expect(screen.getByRole("link", { name: "CLI" })).toHaveAttribute(
       "href",
-      "/installation#cli",
+      "/installation",
     );
     expect(screen.getByRole("link", { name: "Components" })).toHaveAttribute(
       "href",

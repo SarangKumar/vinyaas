@@ -11,6 +11,7 @@ import {
 import {
   componentsPath,
   homePath,
+  installationPath,
   introductionPath,
   themesPath,
   typesetPath,
@@ -59,6 +60,9 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
                 </Link>
                 <Link href={componentsPath} className={headerLink}>
                   Components
+                </Link>
+                <Link href={installationPath} className={headerLink}>
+                  Installation
                 </Link>
                 <Link href={themesPath} className={headerLink}>
                   Themes

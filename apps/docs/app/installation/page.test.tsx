@@ -5,67 +5,92 @@ import { DocsStoreProvider } from "@/lib/store/provider";
 import { setCodeLanguage } from "@/lib/store/slices/code-language";
 import { store } from "@/lib/store/store";
 
-import InstallationPage from "./page";
+import InstallationPage, { metadata } from "./page";
+import NextJsInstallationPage, {
+  metadata as nextMetadata,
+} from "./nextjs/page";
+import ViteInstallationPage, { metadata as viteMetadata } from "./vite/page";
+import ReactInstallationPage, { metadata as reactMetadata } from "./react/page";
+
+function renderWithStore(ui: React.ReactElement) {
+  store.dispatch(setCodeLanguage("jsx"));
+  return render(<DocsStoreProvider>{ui}</DocsStoreProvider>);
+}
 
 describe("installation docs", () => {
-  it("documents init, add, discovery, and form installs", () => {
-    store.dispatch(setCodeLanguage("jsx"));
+  it("renders framework selection cards on the landing page", () => {
+    renderWithStore(<InstallationPage />);
 
-    render(
-      <DocsStoreProvider>
-        <InstallationPage />
-      </DocsStoreProvider>,
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Install Vinyaas" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Choose your framework" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Next\.js/i })).toHaveAttribute(
+      "href",
+      "/installation/nextjs",
     );
+    expect(
+      screen.getByRole("link", { name: /React \+ Vite/i }),
+    ).toHaveAttribute("href", "/installation/vite");
+    expect(
+      screen.getByRole("link", { name: /Other React projects/i }),
+    ).toHaveAttribute("href", "/installation/react");
 
-    expect(screen.getByRole("heading", { name: "init" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "add" })).toBeInTheDocument();
+    expect(metadata.title).toBe("Install Vinyaas");
+    expect(metadata.alternates).toMatchObject({ canonical: "/installation" });
+  });
+
+  it("renders framework guides with init, add, and discovery content", () => {
+    const { unmount } = renderWithStore(<NextJsInstallationPage />);
     expect(
-      screen.getByRole("heading", { name: "Discover" }),
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Install Vinyaas with Next.js",
+      }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "list" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "search" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "info" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Installed file structure" }),
+      screen.getByRole("heading", { name: "Prerequisites" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Initialize Vinyaas" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Add components" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Import components" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Discover components" }),
+    ).toBeInTheDocument();
+    expect(document.body.textContent).toContain("vinyaas init");
+    expect(document.body.textContent).toContain("add button");
     expect(document.body.textContent).toContain(
       "components/ui/button/index.tsx",
     );
-    expect(document.body.textContent).toContain("toast.css");
-    expect(document.body.textContent).toContain("--force");
-    expect(document.body.textContent).toContain("--json");
-    expect(document.body.textContent).toContain("Tailwind CSS v4");
-    expect(document.body.textContent).not.toContain(
-      "components/ui/button/button.tsx",
-    );
-    expect(
-      screen.getByRole("heading", { name: "Install form components" }),
-    ).toBeInTheDocument();
-    const command = [...document.querySelectorAll("code")].find((code) =>
-      code.textContent?.includes(
-        "add button checkbox radio-group input textarea label input-group native-select slider spinner skeleton",
-      ),
-    );
+    expect(document.body.textContent).toContain("App Router");
+    expect(nextMetadata.title).toBe("Install Vinyaas with Next.js");
+    unmount();
 
-    expect(command).toBeDefined();
-    expect(command).toHaveAttribute("data-language", "bash");
-    expect(screen.getByRole("heading", { name: "React" })).toBeInTheDocument();
+    renderWithStore(<ViteInstallationPage />);
     expect(
-      screen.getByRole("heading", { name: "Next.js" }),
+      screen.getByRole("heading", {
+        name: "Install Vinyaas with React + Vite",
+      }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Vite" })).toBeInTheDocument();
+    expect(document.body.textContent).toContain("src/index.css");
+    expect(viteMetadata.alternates).toMatchObject({
+      canonical: "/installation/vite",
+    });
+    unmount();
+
+    renderWithStore(<ReactInstallationPage />);
     expect(
-      command?.parentElement?.parentElement?.querySelector(
-        "[data-line-numbers]",
-      ),
-    ).toBeNull();
-    expect(screen.queryByRole("tab", { name: "TSX" })).toBeNull();
-    expect(screen.getAllByRole("tab", { name: "npm" }).length).toBeGreaterThan(
-      0,
-    );
-    expect(screen.getByRole("link", { name: "vinyaas" })).toHaveAttribute(
-      "href",
-      "https://www.npmjs.com/package/vinyaas",
-    );
+      screen.getByRole("heading", { name: "Install Vinyaas with React" }),
+    ).toBeInTheDocument();
+    expect(document.body.textContent).toContain("neither");
+    expect(reactMetadata.description).toMatch(/React projects/i);
   });
 });

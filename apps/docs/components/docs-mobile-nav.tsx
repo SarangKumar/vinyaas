@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import {
   componentsPath,
+  installationPath,
   introductionPath,
   themesPath,
   typesetPath,
@@ -103,6 +104,9 @@ export function DocsMobileNav() {
                 </Link>
                 <Link href={componentsPath} className={menuLink}>
                   Components
+                </Link>
+                <Link href={installationPath} className={menuLink}>
+                  Installation
                 </Link>
                 <Link href={themesPath} className={menuLink}>
                   Themes

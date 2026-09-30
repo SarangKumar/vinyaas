@@ -8,52 +8,64 @@ import {
   docsNav,
   githubUrl,
   homePath,
+  installationPath,
   introductionPath,
   themesPath,
   typesetPath,
 } from "./docs-nav";
 
 describe("documentation navigation", () => {
-  it("lists sections, components, then get started", () => {
+  it("lists components, then get started with nested installation guides", () => {
     expect(githubUrl).toBe("https://github.com/SarangKumar/vinyaas");
     expect(homePath).toBe("/");
     expect(introductionPath).toBe("/introduction");
     expect(componentsPath).toBe("/components");
     expect(componentsJsonPath).toBe("/components-json");
+    expect(installationPath).toBe("/installation");
     expect(themesPath).toBe("/themes");
     expect(typesetPath).toBe("/typeset");
-    expect(cliPath).toBe("/installation#cli");
+    expect(cliPath).toBe("/installation");
     expect(docsNav.map((group) => group.title)).toEqual([
-      "SECTIONS",
       "COMPONENTS",
       "GET STARTED",
       "RESOURCES",
     ]);
-    expect(docsNav[0]?.items.map((item) => item.title)).toEqual([
-      "Installation",
-      "CLI",
-    ]);
-    expect(docsNav[0]?.items.map((item) => item.href)).toEqual([
-      "/installation",
-      "/installation#cli",
-    ]);
-    expect(docsNav[1]?.layout).toBe("names");
-    expect(docsNav[2]?.items.map((item) => item.title)).toEqual([
+    expect(docsNav[0]?.layout).toBe("names");
+
+    const getStarted = docsNav[1]?.items;
+    expect(getStarted?.map((item) => item.title)).toEqual([
       "Introduction",
-      "Components",
+      "Installation",
       "components.json",
+      "CLI",
       "Themes",
       "Typeset",
     ]);
-    expect(docsNav[2]?.items.map((item) => item.href)).toEqual([
+    expect(getStarted?.map((item) => item.href)).toEqual([
       "/introduction",
-      "/components",
+      "/installation",
       "/components-json",
+      "/installation",
       "/themes",
       "/typeset",
     ]);
-    expect(docsNav[3]?.items.map((item) => item.title)).toEqual(["Changelog"]);
-    expect(docsNav[3]?.items.map((item) => item.href)).toEqual(["/changelog"]);
+
+    const installation = getStarted?.find(
+      (item) => item.title === "Installation",
+    );
+    expect(installation?.children?.map((item) => item.title)).toEqual([
+      "Next.js",
+      "React + Vite",
+      "React",
+    ]);
+    expect(installation?.children?.map((item) => item.href)).toEqual([
+      "/installation/nextjs",
+      "/installation/vite",
+      "/installation/react",
+    ]);
+
+    expect(docsNav[2]?.items.map((item) => item.title)).toEqual(["Changelog"]);
+    expect(docsNav[2]?.items.map((item) => item.href)).toEqual(["/changelog"]);
     expect(docsNav.some((group) => group.title === "Forms")).toBe(false);
     expect(JSON.stringify(docsNav)).not.toContain('"icon"');
   });

@@ -63,6 +63,18 @@ export function DocsNavLinks({ className }: { className?: string }) {
                 className={group.label ? "pl-2" : undefined}
               >
                 <NavLink item={item} current={isCurrent(pathname, item.href)} />
+                {item.children && item.children.length > 0 ? (
+                  <ul className="border-border mt-0.5 ml-2 flex flex-col gap-0.5 border-l pl-2">
+                    {item.children.map((child) => (
+                      <li key={child.href}>
+                        <NavLink
+                          item={child}
+                          current={isCurrent(pathname, child.href)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </li>
             ))}
           </ul>

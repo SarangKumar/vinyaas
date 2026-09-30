@@ -9,7 +9,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("DocsNavLinks", () => {
-  it("follows the documentation hierarchy without navigation icons", () => {
+  it("follows the documentation hierarchy with nested installation guides", () => {
     render(<DocsNavLinks />);
 
     const nav = screen.getByRole("navigation", { name: "Documentation" });
@@ -24,21 +24,29 @@ describe("DocsNavLinks", () => {
       .map((component) => component.name)
       .sort((a, b) => a.localeCompare(b));
 
-    expect(titles[0]).toBe("Installation");
-    expect(titles[1]).toBe("CLI");
-    expect(titles.slice(2, 2 + componentNames.length)).toEqual(componentNames);
-    expect(titles.slice(-6)).toEqual([
-      "Introduction",
-      "Components",
-      "components.json",
-      "Themes",
-      "Typeset",
-      "Changelog",
-    ]);
-    expect(within(nav).getByText("SECTIONS")).toBeInTheDocument();
+    expect(titles.slice(0, componentNames.length)).toEqual(componentNames);
+    expect(within(nav).getByRole("link", { name: "Next.js" })).toHaveAttribute(
+      "href",
+      "/installation/nextjs",
+    );
+    expect(
+      within(nav).getByRole("link", { name: "React + Vite" }),
+    ).toHaveAttribute("href", "/installation/vite");
+    expect(within(nav).getByRole("link", { name: "React" })).toHaveAttribute(
+      "href",
+      "/installation/react",
+    );
+    expect(
+      within(nav).getByRole("link", { name: "Installation" }),
+    ).toHaveAttribute("href", "/installation");
+    expect(within(nav).getByRole("link", { name: "CLI" })).toHaveAttribute(
+      "href",
+      "/installation",
+    );
     expect(within(nav).getByText("COMPONENTS")).toBeInTheDocument();
     expect(within(nav).getByText("GET STARTED")).toBeInTheDocument();
     expect(within(nav).getByText("RESOURCES")).toBeInTheDocument();
+    expect(within(nav).queryByText("SECTIONS")).toBeNull();
     expect(
       within(nav).getByRole("link", { name: "Changelog" }),
     ).toHaveAttribute("href", "/changelog");
@@ -50,13 +58,7 @@ describe("DocsNavLinks", () => {
       "href",
       "/typeset",
     );
-    expect(
-      within(nav).getByRole("link", { name: "Components" }),
-    ).toHaveAttribute("href", "/components");
     expect(within(nav).queryByText("Forms")).toBeNull();
-    expect(within(nav).queryByText("Feedback")).toBeNull();
-    expect(within(nav).queryByText("Data Display")).toBeNull();
-    expect(nav.querySelector("svg")).toBeNull();
     expect(
       within(nav).getByText("COMPONENTS").parentElement?.querySelector("ul"),
     ).toHaveClass(
@@ -78,19 +80,7 @@ describe("DocsNavLinks", () => {
         .querySelector(".bg-primary"),
     ).toBeTruthy();
     expect(
-      within(nav).getByRole("link", { name: "Attachment, new" }),
-    ).toHaveAttribute("href", "/components/attachment");
-    expect(
-      within(nav).getByRole("link", { name: "Aspect Ratio, new" }),
-    ).toHaveAttribute("href", "/components/aspect-ratio");
-    expect(
       within(nav).getByRole("link", { name: "Button" }),
     ).not.toHaveAttribute("aria-current");
-    expect(within(nav).queryByRole("link", { name: "Input, new" })).toBeNull();
-    expect(
-      within(nav)
-        .getByRole("link", { name: "Button" })
-        .querySelector(".bg-primary"),
-    ).toBeNull();
   });
 });

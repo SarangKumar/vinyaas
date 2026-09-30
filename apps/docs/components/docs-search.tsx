@@ -39,7 +39,28 @@ const pages: SearchPage[] = [
     title: "Installation",
     href: "/installation",
     description:
-      "Install the CLI, run init, discover components, and add them as source.",
+      "Choose Next.js, React + Vite, or React, then install Vinyaas as source.",
+    group: "Getting Started",
+  },
+  {
+    title: "Install with Next.js",
+    href: "/installation/nextjs",
+    description:
+      "Initialize Vinyaas in a Next.js App Router project with Tailwind CSS v4.",
+    group: "Getting Started",
+  },
+  {
+    title: "Install with React + Vite",
+    href: "/installation/vite",
+    description:
+      "Initialize Vinyaas in a Vite + React project with Tailwind CSS v4.",
+    group: "Getting Started",
+  },
+  {
+    title: "Install with React",
+    href: "/installation/react",
+    description:
+      "Initialize Vinyaas in other React projects with Tailwind CSS v4.",
     group: "Getting Started",
   },
   {

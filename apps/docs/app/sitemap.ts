@@ -1,12 +1,14 @@
 import type { MetadataRoute } from "next";
 
 import { components } from "@/components/component-meta";
+import { installationFrameworkPaths } from "@/lib/installation/frameworks";
 import { siteUrl } from "@/lib/site";
 
 const staticRoutes = [
   "/",
   "/introduction",
   "/installation",
+  ...installationFrameworkPaths(),
   "/components",
   "/components-json",
   "/themes",

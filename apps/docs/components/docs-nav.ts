@@ -4,6 +4,7 @@ import {
   components,
   type ComponentMeta,
 } from "@/components/component-meta";
+import { installationFrameworks } from "@/lib/installation/frameworks";
 
 export const githubUrl = "https://github.com/SarangKumar/vinyaas";
 
@@ -17,6 +18,8 @@ export const componentsPath = "/components";
 
 export const componentsJsonPath = "/components-json";
 
+export const installationPath = "/installation";
+
 export const themesPath = "/themes";
 
 export const typesetPath = "/typeset";
@@ -26,6 +29,8 @@ export type DocsNavItem = {
   href: string;
   description?: string;
   isNew?: boolean;
+  /** Nested links (e.g. framework installation guides). */
+  children?: DocsNavItem[];
 };
 
 export type DocsNavGroup = {
@@ -45,19 +50,12 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
   };
 }
 
-export const cliPath = "/installation#cli";
+/** Start of the installation flow (framework selection). */
+export const cliPath = installationPath;
 
 export const changelogPath = "/changelog";
 
 export const docsNav: DocsNavGroup[] = [
-  {
-    title: "SECTIONS",
-    label: true,
-    items: [
-      { title: "Installation", href: "/installation" },
-      { title: "CLI", href: cliPath },
-    ],
-  },
   {
     title: "COMPONENTS",
     label: true,
@@ -71,8 +69,16 @@ export const docsNav: DocsNavGroup[] = [
     label: true,
     items: [
       { title: "Introduction", href: introductionPath },
-      { title: "Components", href: componentsPath },
+      {
+        title: "Installation",
+        href: installationPath,
+        children: installationFrameworks.map((framework) => ({
+          title: framework.name,
+          href: framework.href,
+        })),
+      },
       { title: "components.json", href: componentsJsonPath },
+      { title: "CLI", href: cliPath },
       { title: "Themes", href: themesPath },
       { title: "Typeset", href: typesetPath },
     ],

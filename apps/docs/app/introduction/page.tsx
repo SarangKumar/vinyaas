@@ -293,7 +293,7 @@ export default function IntroductionPage() {
           </Link>{" "}
           and the{" "}
           <Link
-            href="/installation#cli"
+            href="/installation"
             className={`text-foreground rounded-sm underline ${focusRing}`}
           >
             CLI
