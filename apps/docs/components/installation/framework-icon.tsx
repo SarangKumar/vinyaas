@@ -85,7 +85,7 @@ export function FrameworkIconBadge({
   children?: ReactNode;
 }) {
   return (
-    <span className="border-border bg-muted text-foreground inline-flex size-11 items-center justify-center rounded-xl border">
+    <span className="border-border bg-muted text-foreground inline-flex size-12 shrink-0 items-center justify-center rounded-lg border">
       {children ?? <FrameworkIcon id={id} />}
     </span>
   );

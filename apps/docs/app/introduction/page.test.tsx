@@ -38,6 +38,13 @@ describe("introduction", () => {
       screen.getByRole("heading", { name: "Core philosophy" }),
     ).toBeInTheDocument();
     expect(
+      screen.getByRole("heading", { name: "Own the source" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Native semantics" }),
+    ).toBeInTheDocument();
+    expect(document.querySelectorAll("[data-philosophy-card]")).toHaveLength(4);
+    expect(
       screen.getByRole("heading", { name: "How the components work" }),
     ).toBeInTheDocument();
     expect(
@@ -65,8 +72,8 @@ describe("introduction", () => {
     expect(
       screen.getByRole("tablist", { name: "Component example language" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Save" })).toBeNull();
+    expect(screen.queryByRole("textbox", { name: "Name" })).toBeNull();
     expect(screen.getByRole("link", { name: "Installation" })).toHaveAttribute(
       "href",
       "/installation",
@@ -76,7 +83,7 @@ describe("introduction", () => {
     ).toHaveAttribute("href", "/components-json");
     expect(screen.getByRole("link", { name: "CLI" })).toHaveAttribute(
       "href",
-      "/installation",
+      "/cli",
     );
     expect(screen.getByRole("link", { name: "Components" })).toHaveAttribute(
       "href",

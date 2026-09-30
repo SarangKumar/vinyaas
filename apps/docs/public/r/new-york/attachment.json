@@ -1,5 +1,5 @@
 {
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "http://localhost:3000/schema/registry-item.json",
   "name": "attachment",
   "type": "registry:ui",
   "description": "A file or image chip with media, metadata, upload state, and actions.",

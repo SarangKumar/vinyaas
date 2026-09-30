@@ -14,7 +14,7 @@ import {
   installationPath,
   introductionPath,
   themesPath,
-  typesetPath,
+  typesetPlaygroundPath,
 } from "@/components/docs-nav";
 import { portfolioUrl } from "@/lib/public-env";
 import { focusRing } from "@/components/focus-ring";
@@ -67,7 +67,7 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
                 <Link href={themesPath} className={headerLink}>
                   Themes
                 </Link>
-                <Link href={typesetPath} className={headerLink}>
+                <Link href={typesetPlaygroundPath} className={headerLink}>
                   Typeset
                 </Link>
               </nav>

@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { Children, useEffect, useState, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -23,7 +25,7 @@ export function PlaygroundBlock({
       data-playground-block
       data-example={title}
       className={cn(
-        "border-border bg-card text-card-foreground mb-(--gap) flex w-full min-w-0 break-inside-avoid flex-col gap-4 overflow-hidden rounded-xl border p-4 sm:gap-5 sm:p-5",
+        "border-border bg-card text-card-foreground flex w-full min-w-0 flex-col gap-4 overflow-hidden rounded-xl border p-4 sm:gap-5 sm:p-5",
         className,
       )}
     >
@@ -47,17 +49,65 @@ export function PlaygroundBlock({
 }
 
 /**
- * Same column breakpoints as the homepage masonry (no side skeletons).
- * Width comes from PlaygroundContent — keep this full-bleed inside that column.
+ * Column count mirrors the previous CSS columns breakpoints:
  * 1 · md:2 · lg:3 · min-1400:4 · min-1900:5
+ *
+ * Items are distributed round-robin into explicit flex columns so every
+ * column starts on the same top edge (no CSS-columns balance shifts).
  */
+function usePlaygroundColumnCount() {
+  const [count, setCount] = useState(1);
+
+  useEffect(() => {
+    function update() {
+      const width = window.innerWidth;
+
+      if (width >= 1900) {
+        setCount(5);
+      } else if (width >= 1400) {
+        setCount(4);
+      } else if (width >= 1024) {
+        setCount(3);
+      } else if (width >= 768) {
+        setCount(2);
+      } else {
+        setCount(1);
+      }
+    }
+
+    update();
+    window.addEventListener("resize", update);
+
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return count;
+}
+
 export function PlaygroundGrid({ children }: { children: ReactNode }) {
+  const columnCount = usePlaygroundColumnCount();
+  const items = Children.toArray(children);
+  const columns = Array.from({ length: columnCount }, () => [] as ReactNode[]);
+
+  items.forEach((item, index) => {
+    columns[index % columnCount]!.push(item);
+  });
+
   return (
     <div
       data-playground-grid
-      className="relative z-10 w-full columns-1 gap-(--gap) **:data-[slot=card]:w-full min-[1400px]:columns-4! min-[1900px]:columns-5! md:columns-2 lg:columns-3"
+      data-playground-columns={columnCount}
+      className="relative z-10 flex w-full items-start gap-(--gap)"
     >
-      {children}
+      {columns.map((column, index) => (
+        <div
+          key={index}
+          data-playground-column
+          className="flex min-w-0 flex-1 flex-col gap-(--gap)"
+        >
+          {column}
+        </div>
+      ))}
     </div>
   );
 }

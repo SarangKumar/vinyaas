@@ -1,5 +1,5 @@
 {
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "http://localhost:3000/schema/registry-item.json",
   "name": "radio-group",
   "type": "registry:ui",
   "description": "A set of mutually exclusive options.",

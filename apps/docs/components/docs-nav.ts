@@ -3,7 +3,6 @@ import {
   components,
   type ComponentMeta,
 } from "@/components/component-meta";
-import { installationFrameworks } from "@/lib/installation/frameworks";
 
 export const githubUrl = "https://github.com/SarangKumar/vinyaas";
 
@@ -19,15 +18,31 @@ export const componentsJsonPath = "/components-json";
 
 export const installationPath = "/installation";
 
+export const cliPath = "/cli";
+
+/** Theme system documentation (tokens, CSS variables, customization). */
+export const themingPath = "/theming";
+
+/** Visual theme playground / showcase. */
 export const themesPath = "/themes";
 
+/** Typeset documentation (content rhythm and Markdown presentation). */
 export const typesetPath = "/typeset";
+
+/** Typeset playground / showcase. */
+export const typesetPlaygroundPath = "/typeset/playground";
+
+export const packageImportPath = "/package-import";
+
+export const darkModePath = "/dark-mode";
+
+export const changelogPath = "/changelog";
 
 export type DocsNavItem = {
   title: string;
   href: string;
   description?: string;
-  /** Nested links (e.g. framework installation guides). */
+  /** Nested links. Prefer flat items — avoid third-level nesting. */
   children?: DocsNavItem[];
 };
 
@@ -47,12 +62,20 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
   };
 }
 
-/** Start of the installation flow (framework selection). */
-export const cliPath = installationPath;
-
-export const changelogPath = "/changelog";
-
 export const docsNav: DocsNavGroup[] = [
+  {
+    title: "SECTIONS",
+    label: true,
+    items: [
+      { title: "Introduction", href: introductionPath },
+      { title: "Components", href: componentsPath },
+      { title: "Installation", href: installationPath },
+      { title: "CLI", href: cliPath },
+      { title: "Theming", href: themingPath },
+      { title: "Typeset", href: typesetPath },
+      { title: "Changelog", href: changelogPath },
+    ],
+  },
   {
     title: "COMPONENTS",
     label: true,
@@ -65,24 +88,13 @@ export const docsNav: DocsNavGroup[] = [
     title: "GET STARTED",
     label: true,
     items: [
-      { title: "Introduction", href: introductionPath },
-      {
-        title: "Installation",
-        href: installationPath,
-        children: installationFrameworks.map((framework) => ({
-          title: framework.name,
-          href: framework.href,
-        })),
-      },
+      { title: "Installation", href: installationPath },
       { title: "components.json", href: componentsJsonPath },
-      { title: "CLI", href: cliPath },
-      { title: "Themes", href: themesPath },
+      { title: "Theming", href: themingPath },
       { title: "Typeset", href: typesetPath },
+      { title: "Package Import", href: packageImportPath },
+      { title: "Dark Mode", href: darkModePath },
+      { title: "CLI", href: cliPath },
     ],
-  },
-  {
-    title: "RESOURCES",
-    label: true,
-    items: [{ title: "Changelog", href: changelogPath }],
   },
 ];

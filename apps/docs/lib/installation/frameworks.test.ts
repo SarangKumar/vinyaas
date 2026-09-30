@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  darkModeFrameworkHref,
+  darkModeFrameworkPaths,
   getInstallationFramework,
   installationFrameworkPaths,
   installationFrameworks,
@@ -26,6 +28,15 @@ describe("installation frameworks", () => {
     expect(getInstallationFramework("nextjs").name).toBe("Next.js");
     expect(getInstallationFramework("vite").preferredCss).toBe("src/index.css");
     expect(getInstallationFramework("react").supported).toBe(true);
+  });
+
+  it("exposes dark mode routes derived from framework ids", () => {
+    expect(darkModeFrameworkHref("nextjs")).toBe("/dark-mode/nextjs");
+    expect(darkModeFrameworkPaths()).toEqual([
+      "/dark-mode/nextjs",
+      "/dark-mode/vite",
+      "/dark-mode/react",
+    ]);
   });
 
   it("defines fresh, existing, and shadcn-style setups per framework", () => {

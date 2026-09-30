@@ -1,5 +1,5 @@
 {
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "http://localhost:3000/schema/registry-item.json",
   "name": "checkbox",
   "type": "registry:ui",
   "description": "A native checkbox for selecting one or more options.",

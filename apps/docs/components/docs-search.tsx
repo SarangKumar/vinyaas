@@ -64,9 +64,10 @@ const pages: SearchPage[] = [
     group: "Getting Started",
   },
   {
-    title: "Changelog",
-    href: "/changelog",
-    description: "What shipped in v0.1, v1.0.0, v1.1.0, and v1.2.0.",
+    title: "CLI",
+    href: "/cli",
+    description:
+      "Initialize projects, add components as source, and discover the catalog.",
     group: "Getting Started",
   },
   {
@@ -76,7 +77,14 @@ const pages: SearchPage[] = [
     group: "Getting Started",
   },
   {
-    title: "Themes",
+    title: "Theming",
+    href: "/theming",
+    description:
+      "CSS variables, semantic colors, radius, dark mode, and theme customization.",
+    group: "Getting Started",
+  },
+  {
+    title: "Themes playground",
     href: "/themes",
     description:
       "Visual theme playground: curated presets, radius, and real UI compositions.",
@@ -86,7 +94,52 @@ const pages: SearchPage[] = [
     title: "Typeset",
     href: "/typeset",
     description:
-      "Typography playground: measure, fonts, size, leading, and flow for Markdown-style content.",
+      "Markdown-first content typography docs. Distinct from the Typography component.",
+    group: "Getting Started",
+  },
+  {
+    title: "Typeset playground",
+    href: "/typeset/playground",
+    description:
+      "Experiment with measure, fonts, size, leading, and flow on Markdown-style content.",
+    group: "Getting Started",
+  },
+  {
+    title: "Package Import",
+    href: "/package-import",
+    description:
+      "Import installed Vinyaas components via project aliases and local source paths.",
+    group: "Getting Started",
+  },
+  {
+    title: "Dark Mode",
+    href: "/dark-mode",
+    description:
+      "Choose a framework, then enable light and dark themes with the class strategy.",
+    group: "Getting Started",
+  },
+  {
+    title: "Dark Mode with Next.js",
+    href: "/dark-mode/nextjs",
+    description: "Wire Vinyaas dark class tokens in a Next.js App Router app.",
+    group: "Getting Started",
+  },
+  {
+    title: "Dark Mode with React + Vite",
+    href: "/dark-mode/vite",
+    description: "Wire Vinyaas dark class tokens in a Vite + React app.",
+    group: "Getting Started",
+  },
+  {
+    title: "Dark Mode with React",
+    href: "/dark-mode/react",
+    description: "Wire Vinyaas dark class tokens in a generic React app.",
+    group: "Getting Started",
+  },
+  {
+    title: "Changelog",
+    href: "/changelog",
+    description: "What shipped in v0.1, v1.0.0, v1.1.0, and v1.2.0.",
     group: "Getting Started",
   },
   ...components.map((component) => ({

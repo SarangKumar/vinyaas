@@ -18,34 +18,55 @@ function renderWithStore(ui: React.ReactElement) {
 }
 
 describe("installation docs", () => {
-  it("renders framework selection cards on the landing page", () => {
+  it("renders CLI, existing-project, and framework selection sections", () => {
     renderWithStore(<InstallationPage />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Install Vinyaas" }),
+      screen.getByRole("heading", { level: 1, name: "Installation" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Choose your framework" }),
+      screen.getByRole("heading", { name: "Use the CLI" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Next\.js/i })).toHaveAttribute(
+    expect(
+      screen.getByRole("heading", { name: "Existing Project" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Choose Your Framework" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Next.js" })).toHaveAttribute(
       "href",
       "/installation/nextjs",
     );
-    expect(
-      screen.getByRole("link", { name: /React \+ Vite/i }),
-    ).toHaveAttribute("href", "/installation/vite");
-    expect(
-      screen.getByRole("link", { name: /Other React projects/i }),
-    ).toHaveAttribute("href", "/installation/react");
+    expect(screen.getByRole("link", { name: "React + Vite" })).toHaveAttribute(
+      "href",
+      "/installation/vite",
+    );
+    expect(screen.getByRole("link", { name: "React" })).toHaveAttribute(
+      "href",
+      "/installation/react",
+    );
     expect(screen.queryByText(/Continue/i)).toBeNull();
+    expect(screen.queryByText(/React framework with App Router/i)).toBeNull();
+    expect(document.body.textContent).toContain("vinyaas init");
+    expect(
+      screen.getAllByRole("tablist", { name: "Package manager" }).length,
+    ).toBeGreaterThan(0);
     expect(
       document.querySelector("[data-docs-article] .grid")?.className,
     ).toContain("sm:grid-cols-2");
     expect(
       document.querySelector("[data-docs-article] .grid")?.className,
+    ).toContain("w-full");
+    expect(
+      document.querySelector("[data-docs-article] .grid")?.className,
+    ).not.toContain("max-w-xl");
+    expect(
+      document.querySelector("[data-docs-article] .grid")?.className,
     ).not.toContain("lg:grid-cols-3");
-
-    expect(metadata.title).toBe("Install Vinyaas");
+    expect(document.querySelector("[data-docs-article]")?.className).toContain(
+      "max-w-3xl",
+    );
+    expect(metadata.title).toBe("Installation");
     expect(metadata.alternates).toMatchObject({ canonical: "/installation" });
   });
 

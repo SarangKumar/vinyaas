@@ -15,10 +15,13 @@ describe("theme presets", () => {
       "Yellow",
       "Rose",
       "Orange",
-      "Lavender",
+      "Green",
       "Violet",
       "Blue",
     ]);
+    expect(getThemePreset("green").theme.light.primary).toContain("oklch");
+    expect(getThemePreset("violet").theme.light.primary).toContain("0.26");
+    expect(getThemePreset("blue").theme.light.primary).toContain("245");
     expect(getThemePreset("default").theme.light.primary).toBe(
       createDefaultTheme().light.primary,
     );

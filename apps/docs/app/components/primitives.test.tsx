@@ -393,11 +393,17 @@ describe("composed examples", () => {
       true,
     );
     expect(
-      [...document.querySelectorAll("svg")].some((node) =>
-        node.className.baseVal
-          ? node.className.baseVal.includes("right-2.5")
-          : String(node.getAttribute("class") ?? "").includes("right-2.5"),
+      [...document.querySelectorAll("[data-slot='native-select-icon']")].some(
+        (node) => node.className.includes("pointer-events-none"),
       ),
+    ).toBe(true);
+    expect(
+      [...document.querySelectorAll("svg")].some((node) => {
+        const className = node.className.baseVal
+          ? node.className.baseVal
+          : String(node.getAttribute("class") ?? "");
+        return className.includes("size-4");
+      }),
     ).toBe(true);
   });
 

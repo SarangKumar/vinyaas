@@ -17,6 +17,7 @@ import {
   componentsJsonPath,
   componentsPath,
   themesPath,
+  themingPath,
 } from "@/components/docs-nav";
 
 const sectionHeading =
@@ -201,12 +202,19 @@ components/ui/toast/toast.css`}
           </li>
           <li>
             <Link
+              href={themingPath}
+              className={`text-primary underline underline-offset-4 ${focusRing}`}
+            >
+              Theming
+            </Link>{" "}
+            — CSS variables and tokens; try presets in the{" "}
+            <Link
               href={themesPath}
               className={`text-primary underline underline-offset-4 ${focusRing}`}
             >
-              Themes
-            </Link>{" "}
-            — curated presets to try after install.
+              Themes playground
+            </Link>
+            .
           </li>
         </ul>
       </section>

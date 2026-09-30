@@ -277,7 +277,7 @@ export default function ChangelogPage() {
           <li>
             <strong>Themes</strong> (<code>/themes</code>) is a website
             playground — not a registry component. Switch curated presets
-            (Default, Yellow, Rose, Orange, Olive, Violet, Blue), adjust border
+            (Default, Yellow, Rose, Orange, Green, Violet, Blue), adjust border
             radius, preview themes across real Vinyaas UI compositions, and open
             Code dialogs to inspect and copy each example&apos;s source. Theme
             selection stays scoped to the playground and does not change the
@@ -336,12 +336,18 @@ export default function ChangelogPage() {
         </h3>
         <ul className="text-foreground list-disc pl-5 text-base leading-7">
           <li>
-            Themes and Typeset playgrounds remain first-class docs routes with
-            scoped previews.
+            Theming docs at <code>/theming</code> explain CSS variables,
+            semantic tokens, radius, and customization. The Themes playground
+            stays at <code>/themes</code>.
           </li>
           <li>
-            Updated navigation: Installation nested under Get Started with
-            framework children, plus Installation in the site header.
+            Typeset docs at <code>/typeset</code> cover Markdown/content rhythm.
+            The Typeset playground moves to <code>/typeset/playground</code>.
+          </li>
+          <li>
+            Flat sidebar navigation: SECTIONS, COMPONENTS, and GET STARTED
+            without nested framework children. CLI, Package Import, and Dark
+            Mode are dedicated pages.
           </li>
           <li>
             Component documentation continues with examples, API notes, and

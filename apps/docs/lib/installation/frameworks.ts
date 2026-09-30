@@ -224,3 +224,15 @@ export function getInstallationFramework(
 export function installationFrameworkPaths(): string[] {
   return installationFrameworks.map((framework) => framework.href);
 }
+
+export function darkModeFrameworkHref(
+  id: InstallationFrameworkId,
+): `/dark-mode/${InstallationFrameworkId}` {
+  return `/dark-mode/${id}`;
+}
+
+export function darkModeFrameworkPaths(): string[] {
+  return installationFrameworks.map((framework) =>
+    darkModeFrameworkHref(framework.id),
+  );
+}

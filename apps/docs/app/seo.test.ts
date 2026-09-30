@@ -15,7 +15,14 @@ describe("SEO routes", () => {
     expect(urls).toContain("https://vinyaas.vercel.app/installation/nextjs");
     expect(urls).toContain("https://vinyaas.vercel.app/installation/vite");
     expect(urls).toContain("https://vinyaas.vercel.app/installation/react");
+    expect(urls).toContain("https://vinyaas.vercel.app/cli");
+    expect(urls).toContain("https://vinyaas.vercel.app/theming");
+    expect(urls).toContain("https://vinyaas.vercel.app/themes");
+    expect(urls).toContain("https://vinyaas.vercel.app/package-import");
+    expect(urls).toContain("https://vinyaas.vercel.app/dark-mode");
+    expect(urls).toContain("https://vinyaas.vercel.app/dark-mode/nextjs");
     expect(urls).toContain("https://vinyaas.vercel.app/typeset");
+    expect(urls).toContain("https://vinyaas.vercel.app/typeset/playground");
     expect(urls).not.toContain("https://vinyaas.vercel.app/playground");
     expect(urls).toContain("https://vinyaas.vercel.app/components/chart");
     expect(urls).toContain("https://vinyaas.vercel.app/components/drawer");

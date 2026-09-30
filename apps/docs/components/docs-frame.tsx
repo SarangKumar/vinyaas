@@ -8,24 +8,24 @@ import { TableOfContents } from "@/components/table-of-contents";
 
 /**
  * Docs pages keep the sidebar and the table of contents.
- * Homepage, Themes, and Typeset are full-width showcases (no sidebar).
+ * Homepage, Themes playground, and Typeset playground are full-width showcases.
  */
 export function DocsFrame({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const showcase =
-    pathname === "/" ||
-    pathname === "/themes" ||
-    pathname === "/typeset" ||
-    pathname.startsWith("/themes/") ||
-    pathname.startsWith("/typeset/");
+  const themesShowcase =
+    pathname === "/themes" || pathname.startsWith("/themes/");
+  const typesetShowcase =
+    pathname === "/typeset/playground" ||
+    pathname.startsWith("/typeset/playground/");
+  const showcase = pathname === "/" || themesShowcase || typesetShowcase;
 
   if (showcase) {
     const frame =
       pathname === "/"
         ? "home"
-        : pathname.startsWith("/typeset")
+        : typesetShowcase
           ? "typeset"
-          : pathname.startsWith("/themes")
+          : themesShowcase
             ? "themes"
             : "home";
 

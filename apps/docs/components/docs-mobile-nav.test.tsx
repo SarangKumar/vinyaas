@@ -51,11 +51,12 @@ describe("DocsMobileNav", () => {
     );
     expect(screen.getByText("COMPONENTS")).toBeInTheDocument();
     expect(screen.getByText("GET STARTED")).toBeInTheDocument();
-    expect(screen.getByText("RESOURCES")).toBeInTheDocument();
-    expect(screen.queryByText("SECTIONS")).toBeNull();
-    expect(screen.getByRole("link", { name: "Next.js" })).toHaveAttribute(
+    expect(screen.getByText("SECTIONS")).toBeInTheDocument();
+    expect(screen.queryByText("RESOURCES")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Next.js" })).toBeNull();
+    expect(screen.getAllByRole("link", { name: "CLI" })[0]).toHaveAttribute(
       "href",
-      "/installation/nextjs",
+      "/cli",
     );
     expect(screen.getByRole("link", { name: "Changelog" })).toHaveAttribute(
       "href",

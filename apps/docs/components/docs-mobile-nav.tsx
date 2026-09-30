@@ -10,7 +10,7 @@ import {
   installationPath,
   introductionPath,
   themesPath,
-  typesetPath,
+  typesetPlaygroundPath,
 } from "@/components/docs-nav";
 import { DocsNavLinks } from "@/components/docs-nav-links";
 import { focusRing } from "@/components/focus-ring";
@@ -111,7 +111,7 @@ export function DocsMobileNav() {
                 <Link href={themesPath} className={menuLink}>
                   Themes
                 </Link>
-                <Link href={typesetPath} className={menuLink}>
+                <Link href={typesetPlaygroundPath} className={menuLink}>
                   Typeset
                 </Link>
               </nav>

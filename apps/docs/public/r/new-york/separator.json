@@ -1,5 +1,5 @@
 {
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "http://localhost:3000/schema/registry-item.json",
   "name": "separator",
   "type": "registry:ui",
   "description": "A horizontal or vertical divider between content.",
