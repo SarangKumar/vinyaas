@@ -1,6 +1,6 @@
 {
   "name": "vinyaas",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Command-line interface for installing Vinyaas components.",
   "license": "MIT",
   "type": "module",
