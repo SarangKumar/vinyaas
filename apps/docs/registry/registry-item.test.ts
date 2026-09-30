@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import registryItemSchema from "../public/schema/registry-item.json";
+import { withDefaultDocs } from "./docs";
 import { registry as newYork } from "./new-york/registry";
 import { themes } from "./registry";
 import { readRegistryItemFiles, serializeRegistryItem } from "./serialize";
@@ -14,6 +15,24 @@ const registryDirectory = path.dirname(fileURLToPath(import.meta.url));
 const docsRoot = path.resolve(registryDirectory, "..");
 const repoRoot = path.resolve(docsRoot, "../..");
 const schemaUrl = "https://registry.example/schema/registry-item.json";
+
+function registryBaseUrlFromSchema(itemSchemaUrl: string): string {
+  return itemSchemaUrl
+    .replace(/\/r\/schema\/registry-item\.json$/, "")
+    .replace(/\/schema\/registry-item\.json$/, "");
+}
+
+function serializeBuiltItem(
+  item: RegistryItem,
+  files: Awaited<ReturnType<typeof readRegistryItemFiles>>,
+  itemSchemaUrl: string,
+) {
+  return serializeRegistryItem(
+    withDefaultDocs(item, registryBaseUrlFromSchema(itemSchemaUrl)),
+    files,
+    itemSchemaUrl,
+  );
+}
 
 function buttonItem() {
   const button = newYork.find((item) => item.name === "button");
@@ -265,10 +284,10 @@ describe("registry build output", () => {
       expect(relativePath).toBe("ui/button/index.tsx");
       return source;
     });
-    const payload = serializeRegistryItem(button, files, generated.$schema);
+    const payload = serializeBuiltItem(button, files, generated.$schema);
 
     expect(Object.keys(themes)).toEqual(["new-york"]);
-    expect(generated.$schema).toMatch(/\/schema\/registry-item\.json$/);
+    expect(generated.$schema).toMatch(/\/r\/schema\/registry-item\.json$/);
     expect(generated).toEqual(payload);
     expect(generated.dependencies).toEqual([
       "class-variance-authority",
@@ -280,12 +299,14 @@ describe("registry build output", () => {
     ]);
     expect(generated.files[0]?.content).toBe(source);
     expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
+    expect(generated.docs).toBe(
+      `${registryBaseUrlFromSchema(generated.$schema)}/components/button`,
+    );
     expect(generated).not.toHaveProperty("registryDependencies");
     expect(generated).not.toHaveProperty("devDependencies");
     expect(generated).not.toHaveProperty("cssVars");
     expect(generated).not.toHaveProperty("css");
     expect(generated).not.toHaveProperty("envVars");
-    expect(generated).not.toHaveProperty("docs");
   });
 
   it("keeps the new-york attachment artifact aligned with the source item", async () => {
@@ -311,7 +332,7 @@ describe("registry build output", () => {
       expect(relativePath).toBe("ui/attachment/index.tsx");
       return source;
     });
-    const payload = serializeRegistryItem(item!, files, generated.$schema);
+    const payload = serializeBuiltItem(item!, files, generated.$schema);
 
     expect(generated).toEqual(payload);
     expect(generated.dependencies).toEqual([
@@ -351,12 +372,10 @@ describe("registry build output", () => {
       expect(relativePath).toBe("ui/input/index.tsx");
       return source;
     });
-    const payload = serializeRegistryItem(input, files, generated.$schema);
+    const payload = serializeBuiltItem(input, files, generated.$schema);
 
     expect(generated).toEqual(payload);
-    expect(generated.$schema).toBe(
-      "https://vinyaas.vercel.app/schema/registry-item.json",
-    );
+    expect(generated.$schema).toMatch(/\/r\/schema\/registry-item\.json$/);
     expect(generated.name).toBe("input");
     expect(generated.type).toBe("registry:ui");
     expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
@@ -395,12 +414,10 @@ describe("registry build output", () => {
         return source;
       },
     );
-    const payload = serializeRegistryItem(textarea, files, generated.$schema);
+    const payload = serializeBuiltItem(textarea, files, generated.$schema);
 
     expect(generated).toEqual(payload);
-    expect(generated.$schema).toBe(
-      "https://vinyaas.vercel.app/schema/registry-item.json",
-    );
+    expect(generated.$schema).toMatch(/\/r\/schema\/registry-item\.json$/);
     expect(generated.name).toBe("textarea");
     expect(generated.type).toBe("registry:ui");
     expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
@@ -437,12 +454,10 @@ describe("registry build output", () => {
       expect(relativePath).toBe("ui/label/index.tsx");
       return source;
     });
-    const payload = serializeRegistryItem(label, files, generated.$schema);
+    const payload = serializeBuiltItem(label, files, generated.$schema);
 
     expect(generated).toEqual(payload);
-    expect(generated.$schema).toBe(
-      "https://vinyaas.vercel.app/schema/registry-item.json",
-    );
+    expect(generated.$schema).toMatch(/\/r\/schema\/registry-item\.json$/);
     expect(generated.name).toBe("label");
     expect(generated.type).toBe("registry:ui");
     expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
@@ -482,12 +497,10 @@ describe("registry build output", () => {
         return source;
       },
     );
-    const payload = serializeRegistryItem(checkbox, files, generated.$schema);
+    const payload = serializeBuiltItem(checkbox, files, generated.$schema);
 
     expect(generated).toEqual(payload);
-    expect(generated.$schema).toBe(
-      "https://vinyaas.vercel.app/schema/registry-item.json",
-    );
+    expect(generated.$schema).toMatch(/\/r\/schema\/registry-item\.json$/);
     expect(generated.name).toBe("checkbox");
     expect(generated.type).toBe("registry:ui");
     expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
@@ -529,12 +542,10 @@ describe("registry build output", () => {
         return source;
       },
     );
-    const payload = serializeRegistryItem(radioGroup, files, generated.$schema);
+    const payload = serializeBuiltItem(radioGroup, files, generated.$schema);
 
     expect(generated).toEqual(payload);
-    expect(generated.$schema).toBe(
-      "https://vinyaas.vercel.app/schema/registry-item.json",
-    );
+    expect(generated.$schema).toMatch(/\/r\/schema\/registry-item\.json$/);
     expect(generated.name).toBe("radio-group");
     expect(generated.type).toBe("registry:ui");
     expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
@@ -622,15 +633,13 @@ describe("registry build output", () => {
         expect(filePaths).toContain(relativePath);
         return sources[relativePath]!;
       });
-      const payload = serializeRegistryItem(item, files, generated.$schema);
+      const payload = serializeBuiltItem(item, files, generated.$schema);
       const componentFile = generated.files.find((file) =>
         file.path.endsWith(".tsx"),
       );
 
       expect(generated).toEqual(payload);
-      expect(generated.$schema).toBe(
-        "https://vinyaas.vercel.app/schema/registry-item.json",
-      );
+      expect(generated.$schema).toMatch(/\/r\/schema\/registry-item\.json$/);
       expect(generated.name).toBe(name);
       expect(generated.type).toBe("registry:ui");
       expect(generated.dependencies).toEqual([...(item.dependencies ?? [])]);

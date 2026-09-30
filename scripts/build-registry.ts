@@ -3,6 +3,7 @@ import path from "node:path";
 
 import prettier from "prettier";
 
+import { withDefaultDocs } from "../apps/docs/registry/docs";
 import { themes } from "../apps/docs/registry/registry";
 import {
   readRegistryItemFiles,
@@ -13,6 +14,7 @@ import type {
   RegistryCatalog,
   RegistryItemPayload,
 } from "../apps/docs/registry/types";
+import { validateRegistry } from "../apps/docs/registry/validate";
 import { config } from "./config";
 
 const root = process.cwd();
@@ -22,15 +24,30 @@ const outputRoot = path.join(root, "apps/docs/public/r");
 async function buildRegistry() {
   await fs.rm(outputRoot, { recursive: true, force: true });
 
-  const schemaUrl = `${config.registryBaseUrl}/schema/registry-item.json`;
+  const schemaUrl = config.registryItemSchemaUrl;
+  await publishRegistrySchemas();
 
   for (const [themeName, items] of Object.entries(themes)) {
+    const issues = validateRegistry(items);
+
+    if (issues.length > 0) {
+      const details = issues
+        .map((issue) => `- ${issue.name}.${issue.field}: ${issue.message}`)
+        .join("\n");
+      throw new Error(
+        `Registry metadata incomplete for ${themeName}:\n${details}`,
+      );
+    }
+
     const themeRoot = path.join(registryRoot, themeName);
     const themeOutputRoot = path.join(outputRoot, themeName);
+    const itemsWithDocs = items.map((item) =>
+      withDefaultDocs(item, config.registryBaseUrl),
+    );
 
     await fs.mkdir(themeOutputRoot, { recursive: true });
 
-    for (const item of items) {
+    for (const item of itemsWithDocs) {
       // Only files declared on the item are installed. Imports such as
       // `@/lib/utils` stay in the source; they are not turned into dependencies.
       const files = await readRegistryItemFiles(item, (relativePath) =>
@@ -46,7 +63,7 @@ async function buildRegistry() {
       console.log(`Generated ${themeName}/${item.name}`);
     }
 
-    const catalog = serializeRegistryCatalog(themeName, items);
+    const catalog = serializeRegistryCatalog(themeName, itemsWithDocs);
     const catalogPath = path.join(themeOutputRoot, "index.json");
     const catalogJson = await formatCatalogJson(catalogPath, catalog);
 
@@ -55,6 +72,24 @@ async function buildRegistry() {
   }
 
   console.log("Registry build complete");
+}
+
+/** Publish JSON schemas under `/r/schema` so $schema URLs resolve. */
+async function publishRegistrySchemas(): Promise<void> {
+  const schemaSourceRoot = path.join(root, "apps/docs/public/schema");
+  const schemaOutputRoot = path.join(outputRoot, "schema");
+  const schemaFiles = ["registry-item.json", "components.json"] as const;
+
+  await fs.mkdir(schemaOutputRoot, { recursive: true });
+
+  for (const name of schemaFiles) {
+    await fs.copyFile(
+      path.join(schemaSourceRoot, name),
+      path.join(schemaOutputRoot, name),
+    );
+  }
+
+  console.log("Generated schema/");
 }
 
 function resolveThemeFile(themeRoot: string, relativePath: string): string {

@@ -1,16 +1,21 @@
 import "dotenv/config";
 
-import { componentsSchemaUrl } from "../config/components";
+import {
+  componentsSchemaUrl,
+  getRegistryBasePath,
+  getRegistryOrigin,
+  registryItemSchemaUrl,
+} from "../config/registry.ts";
 
-const registryBaseUrl = process.env.REGISTRY_BASE_URL;
-
-if (!registryBaseUrl) {
-  throw new Error("REGISTRY_BASE_URL is not defined");
-}
-
-const baseUrl = registryBaseUrl.replace(/\/$/, "");
+/**
+ * Tooling config for registry artifact generation.
+ * Requires REGISTRY_BASE_PATH (or legacy REGISTRY_BASE_URL).
+ */
+const registryBasePath = getRegistryBasePath(process.env, { require: true });
 
 export const config = {
-  registryBaseUrl: baseUrl,
-  componentsSchemaUrl: componentsSchemaUrl(baseUrl),
+  registryBasePath,
+  registryBaseUrl: getRegistryOrigin(registryBasePath),
+  registryItemSchemaUrl: registryItemSchemaUrl(registryBasePath),
+  componentsSchemaUrl: componentsSchemaUrl(registryBasePath),
 };

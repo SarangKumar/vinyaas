@@ -4,7 +4,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "button",
     type: "registry:ui",
-    description: "A button with variant and size styles.",
+    description: "A reusable button component with variants.",
     dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
     files: [
       {
@@ -173,7 +173,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "tooltip",
     type: "registry:ui",
-    description: "A short label for a control.",
+    description: "A short floating label shown on hover or focus.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -189,7 +189,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "native-select",
     type: "registry:ui",
-    description: "A composed native select.",
+    description:
+      "A styled native select with a chevron and consistent field chrome.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -201,7 +202,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "toast",
     type: "registry:ui",
-    description: "A temporary notice.",
+    description:
+      "A temporary notice for success, error, or informational feedback.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -303,7 +305,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "dialog",
     type: "registry:ui",
-    description: "A modal panel for a focused task.",
+    description:
+      "A composable dialog component for confirmations, forms, and interactive workflows.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -480,7 +483,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "dropdown-menu",
     type: "registry:ui",
-    description: "A menu of actions anchored to a button.",
+    description: "A menu of actions anchored to a trigger control.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {

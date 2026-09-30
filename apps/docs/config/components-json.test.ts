@@ -24,7 +24,7 @@ import {
 
 function validComponentsConfig(): ComponentsConfig {
   return {
-    $schema: componentsSchemaUrl("https://registry.example"),
+    $schema: componentsSchemaUrl("https://registry.example/r"),
     style: "new-york",
     tsx: true,
     tailwind: {
@@ -85,7 +85,7 @@ describe("components.json", () => {
     ).toBe(false);
   });
 
-  it("builds the schema url from the registry base url", async () => {
+  it("builds the schema url from the registry base path", async () => {
     const testDirectory = path.dirname(fileURLToPath(import.meta.url));
     const example = await fs.readFile(
       path.resolve(testDirectory, "../../../.env.example"),
@@ -99,25 +99,31 @@ describe("components.json", () => {
     ) as { $schema: string };
 
     expect(componentsSchemaUrl("https://registry.example/")).toBe(
-      "https://registry.example/schema/components.json",
+      "https://registry.example/r/schema/components.json",
     );
-    expect(() => componentsSchemaUrl("  ")).toThrow(ComponentsConfigError);
+    expect(componentsSchemaUrl("https://registry.example/r")).toBe(
+      "https://registry.example/r/schema/components.json",
+    );
+    expect(() => componentsSchemaUrl("  ")).toThrow();
     expect(validComponentsConfig().$schema).toBe(
-      "https://registry.example/schema/components.json",
+      "https://registry.example/r/schema/components.json",
     );
     expect(example.trim()).toBe(
-      `REGISTRY_BASE_URL=${defaultRegistryBaseUrl}\n\n# Docs site only. Read by apps/docs at build and dev time.\nNEXT_PUBLIC_PORTFOLIO_URL=https://sarangkumar.vercel.app`,
+      `REGISTRY_BASE_PATH=https://vinyaas.vercel.app/r\n\n# Docs site only. Read by apps/docs at build and dev time.\nNEXT_PUBLIC_PORTFOLIO_URL=https://sarangkumar.vercel.app`,
     );
     expect(registryBaseUrlFromEnv({})).toBe(defaultRegistryBaseUrl);
     expect(
       registryBaseUrlFromEnv({ REGISTRY_BASE_URL: "http://localhost:3000" }),
     ).toBe("http://localhost:3000");
-    expect(componentsSchemaUrl("https://vinyaas.vercel.app")).toBe(
-      "https://vinyaas.vercel.app/schema/components.json",
+    expect(
+      registryBaseUrlFromEnv({
+        REGISTRY_BASE_PATH: "https://vinyaas.vercel.app/r",
+      }),
+    ).toBe("https://vinyaas.vercel.app");
+    expect(componentsSchemaUrl("https://vinyaas.vercel.app/r")).toBe(
+      "https://vinyaas.vercel.app/r/schema/components.json",
     );
-    expect(button.$schema).toBe(
-      "https://vinyaas.vercel.app/schema/registry-item.json",
-    );
+    expect(button.$schema).toMatch(/\/r\/schema\/registry-item\.json$/);
   });
 
   it("rejects an unsupported style and non-boolean flags", () => {
@@ -253,7 +259,7 @@ describe("components.json", () => {
     );
   });
 
-  it("does not depend on the registry source", async () => {
+  it("does not depend on the docs registry source", async () => {
     const testDirectory = path.dirname(fileURLToPath(import.meta.url));
     const source = await fs.readFile(
       path.resolve(testDirectory, "../../../config/components.ts"),
@@ -265,9 +271,11 @@ describe("components.json", () => {
     );
 
     expect(source).not.toContain("apps/docs/registry");
-    expect(source).not.toMatch(/from\s+["'][^"']*registry/);
+    expect(source).not.toMatch(/from\s+["'][^"']*apps\/docs\/registry/);
+    expect(source).toContain('from "./registry.ts"');
     expect(toolingConfig).toContain("componentsSchemaUrl");
-    expect(toolingConfig).toContain("REGISTRY_BASE_URL");
+    expect(toolingConfig).toContain("getRegistryBasePath");
     expect(toolingConfig).not.toContain("localhost");
+    expect(toolingConfig).not.toContain("process.env.REGISTRY_BASE_PATH");
   });
 });

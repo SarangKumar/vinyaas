@@ -1,8 +1,8 @@
 {
-  "$schema": "http://localhost:3000/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "dialog",
   "type": "registry:ui",
-  "description": "A modal panel for a focused task.",
+  "description": "A composable dialog component for confirmations, forms, and interactive workflows.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
@@ -15,5 +15,6 @@
       "content": "@keyframes vinyaas-dialog-in {\n  from {\n    opacity: 0;\n    transform: scale(0.98);\n  }\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n@keyframes vinyaas-dialog-out {\n  from {\n    opacity: 1;\n    transform: none;\n  }\n  to {\n    opacity: 0;\n    transform: scale(0.98);\n  }\n}\n\n.vinyaas-dialog-in {\n  animation: vinyaas-dialog-in 160ms ease-out;\n}\n\n.vinyaas-dialog-out {\n  animation: vinyaas-dialog-out 160ms ease-in forwards;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .vinyaas-dialog-in,\n  .vinyaas-dialog-out {\n    animation: none;\n  }\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/dialog"
 }

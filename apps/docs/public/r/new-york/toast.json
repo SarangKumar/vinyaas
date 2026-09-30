@@ -1,8 +1,8 @@
 {
-  "$schema": "http://localhost:3000/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "toast",
   "type": "registry:ui",
-  "description": "A temporary notice.",
+  "description": "A temporary notice for success, error, or informational feedback.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
@@ -15,5 +15,6 @@
       "content": "@keyframes vinyaas-toast-in {\n  from {\n    opacity: 0;\n    transform: translateY(6px);\n  }\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n@keyframes vinyaas-toast-out {\n  from {\n    opacity: 1;\n    transform: none;\n  }\n  to {\n    opacity: 0;\n    transform: translateY(6px);\n  }\n}\n\n.vinyaas-toast-in {\n  animation: vinyaas-toast-in 180ms ease-out;\n}\n\n.vinyaas-toast-out {\n  animation: vinyaas-toast-out 160ms ease-in forwards;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .vinyaas-toast-in,\n  .vinyaas-toast-out {\n    animation: none;\n  }\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/toast"
 }

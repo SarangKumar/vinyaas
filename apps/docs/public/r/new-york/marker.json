@@ -1,5 +1,5 @@
 {
-  "$schema": "http://localhost:3000/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "marker",
   "type": "registry:ui",
   "description": "An inline status, bordered row, or labeled divider.",
@@ -10,5 +10,6 @@
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst markerVariants = {\n  default: \"inline-flex\",\n  border: \"flex w-full border-b border-border pb-2\",\n  separator:\n    \"flex w-full before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border\",\n} as const;\n\nexport type MarkerVariant = keyof typeof markerVariants;\n\nexport function Marker({\n  className,\n  variant = \"default\",\n  ...props\n}: React.ComponentProps<\"div\"> & {\n  variant?: MarkerVariant;\n}) {\n  return (\n    <div\n      data-variant={variant}\n      className={cn(\n        \"text-muted-foreground items-center gap-2 text-sm\",\n        markerVariants[variant],\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function MarkerIcon({\n  className,\n  ...props\n}: React.ComponentProps<\"span\">) {\n  return (\n    <span\n      aria-hidden=\"true\"\n      className={cn(\n        \"inline-flex size-4 shrink-0 items-center justify-center [&_svg]:size-4\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function MarkerContent({\n  className,\n  ...props\n}: React.ComponentProps<\"span\">) {\n  return <span className={cn(\"min-w-0\", className)} {...props} />;\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/marker"
 }

@@ -191,10 +191,7 @@ describe("fetchRegistryItem", () => {
         }),
       (error) => {
         assert.ok(error instanceof RegistryError);
-        assert.equal(
-          error.message,
-          "Failed to fetch registry item.\nHTTP status: 500",
-        );
+        assert.match(error.message, /Unable to load Vinyaas registry/);
         return true;
       },
     );
@@ -233,7 +230,7 @@ describe("fetchRegistryItem", () => {
         }),
       (error) => {
         assert.ok(error instanceof RegistryError);
-        assert.equal(error.message, "The registry could not be reached.");
+        assert.match(error.message, /Unable to load Vinyaas registry/);
         assert.doesNotMatch(error.message, /ECONNREFUSED/);
         return true;
       },

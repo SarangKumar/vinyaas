@@ -104,7 +104,7 @@ describe("vinyaas init", () => {
       raw,
       `${JSON.stringify(
         {
-          $schema: "https://vinyaas.vercel.app/schema/components.json",
+          $schema: "https://vinyaas.vercel.app/r/schema/components.json",
           style: "new-york",
           tsx: true,
           tailwind: {
@@ -537,14 +537,14 @@ describe("vinyaas init", () => {
     );
   });
 
-  it("uses REGISTRY_BASE_URL for the schema url", async () => {
+  it("uses REGISTRY_BASE_PATH for the schema url", async () => {
     const production = await writeProject(nextProject());
     const local = await writeProject(nextProject());
 
     await run(production, {
-      REGISTRY_BASE_URL: "https://vinyaas.vercel.app",
+      REGISTRY_BASE_PATH: "https://vinyaas.vercel.app/r",
     });
-    await run(local, { REGISTRY_BASE_URL: "http://localhost:3000" });
+    await run(local, { REGISTRY_BASE_PATH: "http://localhost:3000/r" });
 
     const productionConfig = JSON.parse(
       await readFile(join(production, "components.json"), "utf8"),
@@ -555,11 +555,11 @@ describe("vinyaas init", () => {
 
     assert.equal(
       productionConfig.$schema,
-      "https://vinyaas.vercel.app/schema/components.json",
+      "https://vinyaas.vercel.app/r/schema/components.json",
     );
     assert.equal(
       localConfig.$schema,
-      "http://localhost:3000/schema/components.json",
+      "http://localhost:3000/r/schema/components.json",
     );
   });
 

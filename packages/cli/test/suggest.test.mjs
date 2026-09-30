@@ -38,9 +38,9 @@ describe("formatUnknownComponentMessage", () => {
   it("includes suggestions when available", () => {
     const message = formatUnknownComponentMessage(["buton"], names);
 
-    assert.match(message, /Unknown component: buton/);
+    assert.match(message, /Component "buton" not found\./);
     assert.match(message, /Did you mean:/);
-    assert.match(message, / {2}button/);
+    assert.match(message, /- button/);
   });
 
   it("lists multiple unknown names", () => {
@@ -49,9 +49,18 @@ describe("formatUnknownComponentMessage", () => {
       names,
     );
 
-    assert.match(message, /Unknown component\(s\):/);
+    assert.match(message, /Components not found:/);
     assert.match(message, /- nope/);
     assert.match(message, /- also-nope/);
     assert.doesNotMatch(message, /Did you mean:/);
+  });
+
+  it("suggests close typos like buttton", () => {
+    const catalog = ["button", "button-group", "badge", "input"];
+    const message = formatUnknownComponentMessage(["buttton"], catalog);
+
+    assert.match(message, /Component "buttton" not found\./);
+    assert.match(message, /Did you mean:/);
+    assert.match(message, /- button/);
   });
 });

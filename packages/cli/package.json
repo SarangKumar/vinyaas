@@ -47,7 +47,7 @@
     "url": "https://github.com/SarangKumar"
   },
   "scripts": {
-    "build": "rm -rf dist && esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js --packages=external --sourcemap",
+    "build": "rm -rf dist && pnpm exec tsx ./scripts/build.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "test": "pnpm build && node --test test",
     "start": "node dist/index.js"

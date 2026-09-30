@@ -6,9 +6,9 @@ import {
   componentBaseColors,
   componentStyles,
   componentsSchemaUrl,
-  ComponentsConfigError,
+  getRegistryBasePath,
   parseComponentsConfig,
-  registryBaseUrlFromEnv,
+  ComponentsConfigError,
   type ComponentsConfig,
 } from "../../../../config/components.ts";
 
@@ -301,7 +301,7 @@ function createConfig(
   env: Record<string, string | undefined>,
 ): ComponentsConfig {
   return parseComponentsConfig({
-    $schema: componentsSchemaUrl(registryBaseUrlFromEnv(env)),
+    $schema: componentsSchemaUrl(getRegistryBasePath(env)),
     style: componentStyles[0],
     tsx: project.tsx,
     tailwind: {

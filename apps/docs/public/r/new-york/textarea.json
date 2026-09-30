@@ -1,5 +1,5 @@
 {
-  "$schema": "http://localhost:3000/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "textarea",
   "type": "registry:ui",
   "description": "A multiline text field that passes through native textarea attributes.",
@@ -10,5 +10,6 @@
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type TextareaProps = React.ComponentProps<\"textarea\">;\n\nexport function Textarea({ className, ref, ...props }: TextareaProps) {\n  return (\n    <textarea\n      ref={ref}\n      className={cn(\n        \"border-input bg-muted text-foreground placeholder:text-muted-foreground focus-visible:ring-ring focus-visible:ring-offset-background flex min-h-20 w-full resize-y rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/textarea"
 }

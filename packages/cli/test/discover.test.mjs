@@ -25,7 +25,7 @@ const catalog = {
     {
       name: "button",
       type: "registry:ui",
-      description: "A button with variant and size styles.",
+      description: "A reusable button component with variants.",
       dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
       files: ["ui/button/index.tsx"],
     },
@@ -54,7 +54,8 @@ const catalog = {
     {
       name: "toast",
       type: "registry:ui",
-      description: "A temporary notice.",
+      description:
+        "A temporary notice for success, error, or informational feedback.",
       dependencies: ["clsx", "tailwind-merge"],
       files: ["ui/toast/index.tsx", "ui/toast/toast.css"],
     },
@@ -73,7 +74,7 @@ const buttonItem = {
   $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
   name: "button",
   type: "registry:ui",
-  description: "A button with variant and size styles.",
+  description: "A reusable button component with variants.",
   dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
   files: [
     {
@@ -82,13 +83,15 @@ const buttonItem = {
       type: "registry:ui",
     },
   ],
+  docs: "https://vinyaas.vercel.app/components/button",
 };
 
 const toastItem = {
   $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
   name: "toast",
   type: "registry:ui",
-  description: "A temporary notice.",
+  description:
+    "A temporary notice for success, error, or informational feedback.",
   dependencies: ["clsx", "tailwind-merge"],
   files: [
     {
@@ -102,6 +105,7 @@ const toastItem = {
       type: "registry:ui",
     },
   ],
+  docs: "https://vinyaas.vercel.app/components/toast",
 };
 
 const attachmentItem = {
@@ -250,6 +254,12 @@ describe("searchRegistryCatalog", () => {
       searchRegistryCatalog(items, "temporary notice").map((item) => item.name),
       ["toast"],
     );
+    assert.deepEqual(
+      searchRegistryCatalog(items, "informational feedback").map(
+        (item) => item.name,
+      ),
+      ["toast"],
+    );
   });
 
   it("returns an empty list when nothing matches", () => {
@@ -269,7 +279,7 @@ describe("vinyaas list", () => {
     assert.match(stdout, /^Components\n/);
     assert.match(stdout, /attachment/);
     assert.match(stdout, /button/);
-    assert.match(stdout, /A button with variant and size styles\./);
+    assert.match(stdout, /A reusable button component with variants\./);
     assert.ok(stdout.indexOf("attachment") < stdout.indexOf("badge"));
     assert.ok(stdout.indexOf("badge") < stdout.indexOf("button"));
   });
@@ -304,7 +314,7 @@ describe("vinyaas list", () => {
         }),
       (error) => {
         assert.ok(error instanceof RegistryError);
-        assert.match(error.message, /could not be reached/i);
+        assert.match(error.message, /Unable to load Vinyaas registry/);
         return true;
       },
     );
@@ -363,7 +373,7 @@ describe("vinyaas search", () => {
           env: { REGISTRY_BASE_URL: "http://localhost:3000" },
           fetch: catalogFetch({ catalogStatus: 500 }),
         }),
-      /Failed to fetch registry catalog/,
+      /Unable to load Vinyaas registry/,
     );
   });
 });
@@ -379,12 +389,18 @@ describe("vinyaas info", () => {
     );
 
     assert.match(stdout, /^Button\n/);
-    assert.match(stdout, /A button with variant and size styles\./);
-    assert.match(stdout, /registry:ui/);
-    assert.match(stdout, /ui\/button\/index\.tsx/);
-    assert.match(stdout, /class-variance-authority/);
-    assert.match(stdout, /Registry dependencies\n {2}none/);
+    assert.match(stdout, /Description:\nA reusable button component with variants\./);
+    assert.match(stdout, /Files:\n✓ components\/ui\/button\/index\.tsx/);
+    assert.match(stdout, /Dependencies:\n✓ class-variance-authority/);
+    assert.match(stdout, /✓ clsx/);
+    assert.match(stdout, /✓ tailwind-merge/);
+    assert.match(stdout, /Registry dependencies:\nnone/);
+    assert.match(
+      stdout,
+      /Documentation:\nhttps:\/\/vinyaas\.vercel\.app\/components\/button/,
+    );
     assert.doesNotMatch(stdout, /apps\/docs/);
+    assert.doesNotMatch(stdout, /registry:ui/);
   });
 
   it("shows supporting CSS and registry dependencies", async () => {
@@ -403,8 +419,8 @@ describe("vinyaas info", () => {
       }),
     );
 
-    assert.match(toast.stdout, /ui\/toast\/toast\.css/);
-    assert.match(attachment.stdout, /Registry dependencies\n {2}button/);
+    assert.match(toast.stdout, /✓ components\/ui\/toast\/toast\.css/);
+    assert.match(attachment.stdout, /Registry dependencies:\n✓ button/);
   });
 
   it("returns JSON without file contents", async () => {
@@ -420,6 +436,7 @@ describe("vinyaas info", () => {
 
     assert.deepEqual(parsed, toRegistryItemSummary(buttonItem));
     assert.equal(parsed.files[0], "ui/button/index.tsx");
+    assert.equal(parsed.docs, "https://vinyaas.vercel.app/components/button");
     assert.equal("content" in parsed, false);
   });
 
@@ -432,9 +449,9 @@ describe("vinyaas info", () => {
           fetch: catalogFetch(),
         }),
       (error) => {
-        assert.match(error.message, /Unknown component: buton/);
+        assert.match(error.message, /Component "buton" not found\./);
         assert.match(error.message, /Did you mean:/);
-        assert.match(error.message, /button/);
+        assert.match(error.message, /- button/);
         return true;
       },
     );
@@ -448,7 +465,7 @@ describe("vinyaas info", () => {
           env: { REGISTRY_BASE_URL: "http://localhost:3000" },
           fetch: catalogFetch(),
         }),
-      /Unknown component: nonexistent-component/,
+      /Component "nonexistent-component" not found\./,
     );
   });
 
@@ -462,7 +479,7 @@ describe("vinyaas info", () => {
             throw new Error("offline");
           },
         }),
-      /could not be reached/i,
+      /Unable to load Vinyaas registry/,
     );
   });
 });

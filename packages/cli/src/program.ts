@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 
 import { registerAddCommand } from "./commands/add.js";
+import { registerDoctorCommand } from "./commands/doctor.js";
 import { registerInfoCommand } from "./commands/info.js";
 import { registerInitCommand } from "./commands/init.js";
 import { registerListCommand } from "./commands/list.js";
@@ -40,6 +41,7 @@ export function createProgram(): Command {
   registerListCommand(program);
   registerSearchCommand(program);
   registerInfoCommand(program);
+  registerDoctorCommand(program);
 
   return program;
 }

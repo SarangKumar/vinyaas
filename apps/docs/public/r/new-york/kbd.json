@@ -1,5 +1,5 @@
 {
-  "$schema": "http://localhost:3000/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "kbd",
   "type": "registry:ui",
   "description": "A compact label for a keyboard key.",
@@ -10,5 +10,6 @@
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type KbdProps = React.ComponentProps<\"kbd\">;\n\nexport function Kbd({ className, ref, ...props }: KbdProps) {\n  return (\n    <kbd\n      ref={ref}\n      className={cn(\n        \"border-border bg-muted text-foreground inline-flex h-5 min-w-5 items-center justify-center rounded-sm border px-1 font-mono text-xs leading-none\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/kbd"
 }

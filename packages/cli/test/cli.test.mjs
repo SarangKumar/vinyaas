@@ -60,6 +60,7 @@ describe("vinyaas", () => {
     assert.match(result.stdout, /\blist\b/);
     assert.match(result.stdout, /\bsearch\b/);
     assert.match(result.stdout, /\binfo\b/);
+    assert.match(result.stdout, /\bdoctor\b/);
   });
 
   it("shows --cwd on init and add", async () => {
@@ -68,6 +69,7 @@ describe("vinyaas", () => {
     const list = await run(["list", "--help"]);
     const search = await run(["search", "--help"]);
     const info = await run(["info", "--help"]);
+    const doctor = await run(["doctor", "--help"]);
 
     assert.equal(init.exitCode, 0);
     assert.match(init.stdout, /--cwd <path>/);
@@ -86,6 +88,9 @@ describe("vinyaas", () => {
     assert.equal(info.exitCode, 0);
     assert.match(info.stdout, /<component>/);
     assert.match(info.stdout, /--json/);
+    assert.equal(doctor.exitCode, 0);
+    assert.match(doctor.stdout, /--json/);
+    assert.match(doctor.stdout, /--cwd <path>/);
   });
 
   it("rejects --force on init", async () => {
