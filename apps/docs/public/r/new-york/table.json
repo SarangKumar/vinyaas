@@ -11,5 +11,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/table"
+  "docs": "http://localhost:3000/components/table",
+  "category": "data-display"
 }

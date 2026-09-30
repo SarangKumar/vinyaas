@@ -5,235 +5,274 @@
       "name": "accordion",
       "type": "registry:ui",
       "description": "A stack of sections that expand and collapse.",
-      "docs": "http://localhost:3000/components/accordion"
+      "docs": "http://localhost:3000/components/accordion",
+      "category": "layout"
     },
     {
       "name": "alert",
       "type": "registry:ui",
       "description": "A notice for a status that should be announced.",
-      "docs": "http://localhost:3000/components/alert"
+      "docs": "http://localhost:3000/components/alert",
+      "category": "feedback"
     },
     {
       "name": "aspect-ratio",
       "type": "registry:ui",
       "description": "A container that preserves a fixed width-to-height aspect ratio.",
-      "docs": "http://localhost:3000/components/aspect-ratio"
+      "docs": "http://localhost:3000/components/aspect-ratio",
+      "category": "layout"
     },
     {
       "name": "attachment",
       "type": "registry:ui",
       "description": "A file or image chip with media, metadata, upload state, and actions.",
-      "docs": "http://localhost:3000/components/attachment"
+      "docs": "http://localhost:3000/components/attachment",
+      "category": "data-display"
     },
     {
       "name": "avatar",
       "type": "registry:ui",
       "description": "An image with a fallback for a person or entity.",
-      "docs": "http://localhost:3000/components/avatar"
+      "docs": "http://localhost:3000/components/avatar",
+      "category": "data-display"
     },
     {
       "name": "badge",
       "type": "registry:ui",
       "description": "A compact label for status or category.",
-      "docs": "http://localhost:3000/components/badge"
+      "docs": "http://localhost:3000/components/badge",
+      "category": "data-display"
     },
     {
       "name": "breadcrumb",
       "type": "registry:ui",
       "description": "A trail of links for the current page.",
-      "docs": "http://localhost:3000/components/breadcrumb"
+      "docs": "http://localhost:3000/components/breadcrumb",
+      "category": "navigation"
     },
     {
       "name": "button",
       "type": "registry:ui",
       "description": "A composable button component with variants and sizes.",
-      "docs": "http://localhost:3000/components/button"
+      "docs": "http://localhost:3000/components/button",
+      "category": "forms"
     },
     {
       "name": "card",
       "type": "registry:ui",
       "description": "A bordered container for related content.",
-      "docs": "http://localhost:3000/components/card"
+      "docs": "http://localhost:3000/components/card",
+      "category": "layout"
     },
     {
       "name": "chart",
       "type": "registry:ui",
       "description": "Themed charts for dashboards and product analytics.",
-      "docs": "http://localhost:3000/components/chart"
+      "docs": "http://localhost:3000/components/chart",
+      "category": "charts"
     },
     {
       "name": "checkbox",
       "type": "registry:ui",
       "description": "A native checkbox for selecting one or more options.",
-      "docs": "http://localhost:3000/components/checkbox"
+      "docs": "http://localhost:3000/components/checkbox",
+      "category": "forms"
     },
     {
       "name": "command",
       "type": "registry:ui",
       "description": "A searchable list for pages and actions.",
-      "docs": "http://localhost:3000/components/command"
+      "docs": "http://localhost:3000/components/command",
+      "category": "navigation"
     },
     {
       "name": "dialog",
       "type": "registry:ui",
       "description": "A composable dialog component for confirmations, forms, and interactive workflows.",
-      "docs": "http://localhost:3000/components/dialog"
+      "docs": "http://localhost:3000/components/dialog",
+      "category": "feedback"
     },
     {
       "name": "drawer",
       "type": "registry:ui",
       "description": "A panel that slides in from the edge of the screen.",
-      "docs": "http://localhost:3000/components/drawer"
+      "docs": "http://localhost:3000/components/drawer",
+      "category": "feedback"
     },
     {
       "name": "dropdown-menu",
       "type": "registry:ui",
       "description": "A menu of actions anchored to a trigger control.",
-      "docs": "http://localhost:3000/components/dropdown-menu"
+      "docs": "http://localhost:3000/components/dropdown-menu",
+      "category": "feedback"
     },
     {
       "name": "file-upload",
       "type": "registry:ui",
       "description": "A native file picker that also accepts a drag and drop.",
-      "docs": "http://localhost:3000/components/file-upload"
+      "docs": "http://localhost:3000/components/file-upload",
+      "category": "forms"
     },
     {
       "name": "hover-card",
       "type": "registry:ui",
       "description": "A preview that opens when a link or button is hovered or focused.",
-      "docs": "http://localhost:3000/components/hover-card"
+      "docs": "http://localhost:3000/components/hover-card",
+      "category": "feedback"
     },
     {
       "name": "input",
       "type": "registry:ui",
       "description": "A text field that passes through native input attributes.",
-      "docs": "http://localhost:3000/components/input"
+      "docs": "http://localhost:3000/components/input",
+      "category": "forms"
     },
     {
       "name": "input-group",
       "type": "registry:ui",
       "description": "A field with icons, text, and actions in one row.",
-      "docs": "http://localhost:3000/components/input-group"
+      "docs": "http://localhost:3000/components/input-group",
+      "category": "forms"
     },
     {
       "name": "input-otp",
       "type": "registry:ui",
       "description": "A one-time code made of grouped digit slots.",
-      "docs": "http://localhost:3000/components/input-otp"
+      "docs": "http://localhost:3000/components/input-otp",
+      "category": "forms"
     },
     {
       "name": "kbd",
       "type": "registry:ui",
       "description": "A compact label for a keyboard key.",
-      "docs": "http://localhost:3000/components/kbd"
+      "docs": "http://localhost:3000/components/kbd",
+      "category": "data-display"
     },
     {
       "name": "label",
       "type": "registry:ui",
       "description": "A visible name for a form control.",
-      "docs": "http://localhost:3000/components/label"
+      "docs": "http://localhost:3000/components/label",
+      "category": "forms"
     },
     {
       "name": "marker",
       "type": "registry:ui",
       "description": "An inline status, bordered row, or labeled divider.",
-      "docs": "http://localhost:3000/components/marker"
+      "docs": "http://localhost:3000/components/marker",
+      "category": "utilities"
     },
     {
       "name": "native-select",
       "type": "registry:ui",
       "description": "A styled native select with a chevron and consistent field chrome.",
-      "docs": "http://localhost:3000/components/native-select"
+      "docs": "http://localhost:3000/components/native-select",
+      "category": "forms"
     },
     {
       "name": "popover",
       "type": "registry:ui",
       "description": "A floating panel with interactive content.",
-      "docs": "http://localhost:3000/components/popover"
+      "docs": "http://localhost:3000/components/popover",
+      "category": "feedback"
     },
     {
       "name": "progress",
       "type": "registry:ui",
       "description": "A native progress indicator for a known amount of work.",
-      "docs": "http://localhost:3000/components/progress"
+      "docs": "http://localhost:3000/components/progress",
+      "category": "feedback"
     },
     {
       "name": "radio-group",
       "type": "registry:ui",
       "description": "A set of mutually exclusive options.",
-      "docs": "http://localhost:3000/components/radio-group"
+      "docs": "http://localhost:3000/components/radio-group",
+      "category": "forms"
     },
     {
       "name": "scroll-area",
       "type": "registry:ui",
       "description": "A native scroll container with a thin scrollbar.",
-      "docs": "http://localhost:3000/components/scroll-area"
+      "docs": "http://localhost:3000/components/scroll-area",
+      "category": "layout"
     },
     {
       "name": "separator",
       "type": "registry:ui",
       "description": "A horizontal or vertical divider between content.",
-      "docs": "http://localhost:3000/components/separator"
+      "docs": "http://localhost:3000/components/separator",
+      "category": "layout"
     },
     {
       "name": "skeleton",
       "type": "registry:ui",
       "description": "A placeholder shown while content is loading.",
-      "docs": "http://localhost:3000/components/skeleton"
+      "docs": "http://localhost:3000/components/skeleton",
+      "category": "data-display"
     },
     {
       "name": "slider",
       "type": "registry:ui",
       "description": "A native range input for a value between two bounds.",
-      "docs": "http://localhost:3000/components/slider"
+      "docs": "http://localhost:3000/components/slider",
+      "category": "forms"
     },
     {
       "name": "spinner",
       "type": "registry:ui",
       "description": "A compact loading indicator for inline and button contexts.",
-      "docs": "http://localhost:3000/components/spinner"
+      "docs": "http://localhost:3000/components/spinner",
+      "category": "feedback"
     },
     {
       "name": "switch",
       "type": "registry:ui",
       "description": "A switch control for binary on and off settings.",
-      "docs": "http://localhost:3000/components/switch"
+      "docs": "http://localhost:3000/components/switch",
+      "category": "forms"
     },
     {
       "name": "table",
       "type": "registry:ui",
       "description": "A semantic table for rows and columns.",
-      "docs": "http://localhost:3000/components/table"
+      "docs": "http://localhost:3000/components/table",
+      "category": "data-display"
     },
     {
       "name": "tabs",
       "type": "registry:ui",
       "description": "A set of panels that share one visible view at a time.",
-      "docs": "http://localhost:3000/components/tabs"
+      "docs": "http://localhost:3000/components/tabs",
+      "category": "navigation"
     },
     {
       "name": "textarea",
       "type": "registry:ui",
       "description": "A multiline text field that passes through native textarea attributes.",
-      "docs": "http://localhost:3000/components/textarea"
+      "docs": "http://localhost:3000/components/textarea",
+      "category": "forms"
     },
     {
       "name": "toast",
       "type": "registry:ui",
       "description": "A temporary notice for success, error, or informational feedback.",
-      "docs": "http://localhost:3000/components/toast"
+      "docs": "http://localhost:3000/components/toast",
+      "category": "feedback"
     },
     {
       "name": "tooltip",
       "type": "registry:ui",
       "description": "A short floating label shown on hover or focus.",
-      "docs": "http://localhost:3000/components/tooltip"
+      "docs": "http://localhost:3000/components/tooltip",
+      "category": "feedback"
     },
     {
       "name": "typography",
       "type": "registry:ui",
       "description": "Semantic text styles for titles, body, and supporting copy.",
-      "docs": "http://localhost:3000/components/typography"
+      "docs": "http://localhost:3000/components/typography",
+      "category": "typography"
     }
   ]
 }

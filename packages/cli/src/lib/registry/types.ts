@@ -42,6 +42,7 @@ export interface RegistryItem {
   css?: Record<string, string>;
   envVars?: Record<string, string>;
   docs?: string;
+  category?: string;
 }
 
 /** Lightweight catalog entry from `/r/<style>/index.json`. */
@@ -50,6 +51,7 @@ export interface RegistryCatalogItem {
   type: RegistryItemType;
   description?: string;
   docs?: string;
+  category?: string;
   /** @deprecated Present only on older catalogs. Prefer full item payloads. */
   dependencies?: string[];
   /** @deprecated Present only on older catalogs. */
@@ -75,6 +77,7 @@ export interface RegistryDiscoverySummary {
   type: RegistryItemType;
   description?: string;
   docs?: string;
+  category?: string;
 }
 
 /**
@@ -90,6 +93,7 @@ export interface RegistryItemSummary {
   devDependencies?: string[];
   registryDependencies: string[];
   docs?: string;
+  category?: string;
   cssVars?: boolean;
   css?: boolean;
   envVars?: string[];

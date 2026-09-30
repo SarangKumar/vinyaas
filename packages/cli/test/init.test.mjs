@@ -122,7 +122,10 @@ describe("vinyaas init", () => {
         2,
       )}\n`,
     );
-    assert.match(result.stdout, /Created lib\/utils\.ts/);
+    assert.match(result.stdout, /✓ Vinyaas initialized/);
+    assert.match(result.stdout, /lib\/utils\.ts/);
+    assert.match(result.stdout, /vinyaas add button/);
+    assert.match(result.stdout, /vinyaas doctor/);
     assert.match(
       await readFile(join(cwd, "lib/utils.ts"), "utf8"),
       /export function cn/,
@@ -446,7 +449,7 @@ describe("vinyaas init", () => {
       await readFile(join(cwd, "components.json"), "utf8"),
       configAfterFirst,
     );
-    assert.match(second.stdout, /already configured|CSS ready|already exists/i);
+    assert.match(second.stdout, /✓ Vinyaas initialized/);
   });
 
   it("preserves custom user CSS while adding missing theme tokens", async () => {
@@ -515,7 +518,7 @@ describe("vinyaas init", () => {
     });
 
     assert.equal(result.exitCode, 0, result.stderr);
-    assert.match(result.stdout, /lib\/utils\.ts already exists/);
+    assert.match(result.stdout, /lib\/utils\.ts/);
     assert.equal(
       await readFile(join(cwd, "lib/utils.ts"), "utf8"),
       "export const kept = true;\n",
@@ -587,7 +590,7 @@ describe("vinyaas init", () => {
       },
     );
 
-    assert.match(result.stdout, /Created components\.json|Vinyaas initialized/);
+    assert.match(result.stdout, /✓ Vinyaas initialized/);
     const config = JSON.parse(
       await readFile(join(project, "components.json"), "utf8"),
     );

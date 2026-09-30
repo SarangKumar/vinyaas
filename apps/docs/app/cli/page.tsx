@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = pageMetadata({
   title: "CLI",
   description:
-    "Use the Vinyaas CLI (v1.2.0) to initialize projects, validate setup with doctor, add components as source, and discover the catalog.",
+    "Use the Vinyaas CLI (v1.2.0) to initialize projects, run doctor, add components as source, and discover the catalog by category.",
   path: "/cli",
 });
 
@@ -58,11 +58,60 @@ export default function CliPage() {
           <code>components.json</code>.
         </p>
         <CodeBlock language="bash" code="vinyaas init" />
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="doctor" className={sectionHeading}>
+          Doctor
+        </h2>
         <p className={body}>
-          <code>vinyaas doctor</code> validates an existing project setup
-          (config, Tailwind, aliases, and related checks) without writing files.
+          <code>vinyaas doctor</code> validates an existing project without
+          writing files. Run it after <code>init</code>, before adding
+          components, or when installs fail unexpectedly.
         </p>
         <CodeBlock language="bash" code="vinyaas doctor" />
+        <p className={body}>It checks:</p>
+        <ul className={`${body} list-disc space-y-2 pl-5`}>
+          <li>
+            Project config: <code>components.json</code>, aliases, and utils.
+          </li>
+          <li>Styling: Tailwind v4, global CSS, and theme tokens.</li>
+          <li>
+            Dependencies: <code>clsx</code>, <code>tailwind-merge</code>,{" "}
+            <code>tailwindcss</code>, and <code>@tailwindcss/postcss</code> when
+            applicable.
+          </li>
+          <li>Registry URL configuration and reachability.</li>
+        </ul>
+        <p className={body}>
+          When something fails, the report includes an actionable fix—usually{" "}
+          <code>vinyaas init</code>.
+        </p>
+        <CodeBlock
+          language="text"
+          code={`✓ Vinyaas doctor
+
+Project
+  ✓ components.json
+  ✓ aliases configured
+  ✓ utils file found
+
+Styling
+  ✓ Tailwind v4
+  ✓ global CSS
+  ✓ theme tokens
+
+Dependencies
+  ✓ clsx
+  ✓ tailwind-merge
+  ✓ tailwindcss
+  ✓ @tailwindcss/postcss
+
+Registry
+  ✓ https://vinyaas.vercel.app/r
+
+No issues found.`}
+        />
       </section>
 
       <section className="flex flex-col gap-4">
@@ -85,7 +134,11 @@ export default function CliPage() {
         <h2 id="discovery" className={sectionHeading}>
           Discovery
         </h2>
-        <p className={body}>Browse the catalog without writing files.</p>
+        <p className={body}>
+          Browse the catalog without writing files. Components include an
+          optional category (forms, layout, navigation, feedback, data-display,
+          typography, charts, utilities) shown in list, search, and info output.
+        </p>
         <CodeBlock language="bash" code="vinyaas list" />
         <CodeBlock language="bash" code="vinyaas search button" />
         <CodeBlock language="bash" code="vinyaas info button" />

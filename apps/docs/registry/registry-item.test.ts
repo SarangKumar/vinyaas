@@ -670,6 +670,7 @@ describe("registry build output", () => {
     expect(Object.keys(registryItemSchema.properties).sort()).toEqual(
       [
         "$schema",
+        "category",
         "css",
         "cssVars",
         "dependencies",

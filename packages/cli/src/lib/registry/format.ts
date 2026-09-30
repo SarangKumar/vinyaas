@@ -1,3 +1,4 @@
+import { formatRegistryCategoryLabel } from "./categories.ts";
 import type {
   RegistryCatalogItem,
   RegistryDiscoverySummary,
@@ -31,6 +32,10 @@ export function toRegistryItemSummary(
 
   if (item.docs) {
     summary.docs = item.docs;
+  }
+
+  if (item.category) {
+    summary.category = item.category;
   }
 
   if ("cssVars" in item && item.cssVars) {
@@ -71,6 +76,10 @@ export function toRegistryDiscoverySummary(
     summary.docs = item.docs;
   }
 
+  if (item.category) {
+    summary.category = item.category;
+  }
+
   return summary;
 }
 
@@ -95,16 +104,25 @@ export function formatRegistryList(
     return "No components are available in the registry.";
   }
 
-  const nameWidth = Math.max(...items.map((item) => item.name.length));
   const lines = ["Components", ""];
 
   for (const item of items) {
+    lines.push(item.name);
+
+    if (item.category) {
+      lines.push(`  ${formatRegistryCategoryLabel(item.category)}`);
+    }
+
     const description = item.description?.trim();
-    lines.push(
-      description
-        ? `${item.name.padEnd(nameWidth)}  ${description}`
-        : item.name,
-    );
+    if (description) {
+      lines.push(`  ${description}`);
+    }
+
+    lines.push("");
+  }
+
+  if (lines.at(-1) === "") {
+    lines.pop();
   }
 
   return lines.join("\n");
@@ -122,6 +140,10 @@ export function formatRegistrySearch(
 
   for (const item of items) {
     lines.push(`  ${item.name}`);
+
+    if (item.category) {
+      lines.push(`    ${formatRegistryCategoryLabel(item.category)}`);
+    }
 
     if (item.description) {
       lines.push(`    ${item.description}`);
@@ -148,6 +170,10 @@ export function formatRegistryInfo(item: RegistryItem): string {
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
   const lines: string[] = [title];
+
+  if (item.category) {
+    lines.push("", "Category:", formatRegistryCategoryLabel(item.category));
+  }
 
   lines.push(
     "",

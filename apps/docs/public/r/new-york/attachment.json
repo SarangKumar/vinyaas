@@ -12,5 +12,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/attachment"
+  "docs": "http://localhost:3000/components/attachment",
+  "category": "data-display"
 }

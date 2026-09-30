@@ -99,6 +99,20 @@
     "docs": {
       "description": "Optional documentation for this item.",
       "type": "string"
+    },
+    "category": {
+      "description": "Optional discovery category.",
+      "type": "string",
+      "enum": [
+        "forms",
+        "layout",
+        "navigation",
+        "feedback",
+        "data-display",
+        "typography",
+        "charts",
+        "utilities"
+      ]
     }
   }
 }

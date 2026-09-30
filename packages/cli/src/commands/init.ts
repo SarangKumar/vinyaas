@@ -13,7 +13,12 @@ import {
 } from "../../../../config/components.ts";
 
 import { CliError } from "../lib/cli-error.ts";
-import { detectProject, type DetectedProject } from "../lib/detect-project.ts";
+import {
+  detectProject,
+  hasDependency,
+  type DetectedProject,
+} from "../lib/detect-project.ts";
+import { formatInitSummary, type InitSummary } from "../lib/init/format.ts";
 import { findPackageManager } from "../lib/package-manager/detect.ts";
 import { installDependencies } from "../lib/package-manager/install.ts";
 import type { RunPackageManager } from "../lib/package-manager/types.ts";
@@ -102,7 +107,6 @@ export async function runInit({
 }): Promise<void> {
   void yes;
   const project = await detectProject(cwd);
-  const summary: string[] = [];
 
   if (project.tailwind.kind === "unsupported") {
     throw new CliError(
@@ -114,9 +118,6 @@ export async function runInit({
     );
   }
 
-  summary.push(`Framework: ${frameworkLabel(project.framework)}`);
-  summary.push(`TypeScript: ${project.tsx ? "yes" : "no"}`);
-
   const aliasResult = project.hasAlias
     ? "exists"
     : await ensureProjectAlias({
@@ -124,16 +125,6 @@ export async function runInit({
         tsx: project.tsx,
         aliasTarget: project.aliasTarget,
       });
-
-  if (aliasResult === "created") {
-    summary.push(
-      `Created ${project.tsx ? "tsconfig.json" : "jsconfig.json"} with @/* alias.`,
-    );
-  } else if (aliasResult === "updated") {
-    summary.push(
-      `Updated ${project.tsx ? "tsconfig.json" : "jsconfig.json"} with @/* alias.`,
-    );
-  }
 
   const cssRelative = project.css ?? project.preferredCss;
   const cssAbsolute = join(cwd, cssRelative);
@@ -151,17 +142,9 @@ export async function runInit({
   if (cssUpdate.changed) {
     await mkdir(dirname(cssAbsolute), { recursive: true });
     await writeFile(cssAbsolute, cssUpdate.next);
-    summary.push(
-      cssUpdate.created ? `Created ${cssRelative}.` : `Updated ${cssRelative}.`,
-    );
-  } else {
-    summary.push(`CSS ready: ${cssRelative}.`);
   }
 
-  const postcss = await ensurePostcssConfig(cwd);
-  if (postcss === "created") {
-    summary.push("Created postcss.config.mjs.");
-  }
+  await ensurePostcssConfig(cwd);
 
   const dependencyPlan = planInitDependencies(project.packageJson);
   if (
@@ -177,21 +160,10 @@ export async function runInit({
       env,
       run,
     });
-
-    if (dependencyPlan.dependencies.length > 0) {
-      summary.push(`Installed: ${dependencyPlan.dependencies.join(", ")}.`);
-    }
-    if (dependencyPlan.devDependencies.length > 0) {
-      summary.push(
-        `Installed (dev): ${dependencyPlan.devDependencies.join(", ")}.`,
-      );
-    }
-  } else {
-    summary.push("Dependencies already declared.");
   }
 
   const configPath = join(cwd, "components.json");
-  const configResult = await writeComponentsConfig({
+  await writeComponentsConfig({
     cwd,
     configPath,
     project,
@@ -199,37 +171,54 @@ export async function runInit({
     env,
   });
 
-  if (configResult === "created") {
-    summary.push("Created components.json.");
-  } else if (configResult === "updated") {
-    summary.push("Updated components.json.");
-  } else {
-    summary.push("components.json already configured.");
-  }
-
   const utils = await ensureProjectUtils({
     cwd,
     tsx: project.tsx,
     utilsAlias: project.aliases.utils,
   });
 
-  if (utils.status === "created") {
-    summary.push(`Created ${utils.relativePath}.`);
-  } else {
-    summary.push(`${utils.relativePath} already exists.`);
-  }
+  const declaredDependencies = collectDeclaredDependencies(
+    project.packageJson,
+    dependencyPlan.dependencies,
+  );
 
-  console.log("Vinyaas initialized.\n");
-  for (const line of summary) {
-    console.log(`- ${line}`);
-  }
-  console.log("\nNext: vinyaas add button");
+  const summary: InitSummary = {
+    framework: project.framework,
+    typescript: project.tsx,
+    tailwind:
+      project.tailwind.kind === "ready"
+        ? normalizeTailwindLabel(project.tailwind.version)
+        : "v4",
+    configured: {
+      componentsJson: true,
+      cssVariables: true,
+      aliases:
+        aliasResult === "created" ||
+        aliasResult === "updated" ||
+        project.hasAlias,
+      utilsPath: utils.relativePath,
+    },
+    dependencies: declaredDependencies,
+  };
+
+  console.log(formatInitSummary(summary));
 }
 
-function frameworkLabel(framework: DetectedProject["framework"]): string {
-  if (framework === "next") return "Next.js";
-  if (framework === "vite") return "Vite";
-  return "React";
+function normalizeTailwindLabel(version: string): string {
+  const match = version.match(/(\d+)/);
+  return match ? `v${match[1]}` : version;
+}
+
+function collectDeclaredDependencies(
+  packageJson: DetectedProject["packageJson"],
+  installed: readonly string[],
+): string[] {
+  const preferred = ["clsx", "tailwind-merge"] as const;
+  const installedNames = new Set(installed);
+
+  return preferred.filter(
+    (name) => hasDependency(packageJson, name) || installedNames.has(name),
+  );
 }
 
 async function writeComponentsConfig({

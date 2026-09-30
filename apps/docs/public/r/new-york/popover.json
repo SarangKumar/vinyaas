@@ -11,5 +11,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/popover"
+  "docs": "http://localhost:3000/components/popover",
+  "category": "feedback"
 }

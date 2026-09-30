@@ -65,6 +65,14 @@ vinyaas init
 
 Creates `components.json`, configures Tailwind v4 theme tokens and aliases, and installs required utilities when needed. Safe to re-run; does not overwrite an existing `components.json` or utils file.
 
+### Project health
+
+```bash
+vinyaas doctor
+```
+
+Validates `components.json`, aliases, Tailwind v4, theme tokens, utility dependencies, and registry reachability without writing files. Use `--json` for scripting.
+
 ### Component installation
 
 ```bash
@@ -83,7 +91,7 @@ vinyaas search button
 vinyaas info button
 ```
 
-Browse the catalog without writing files. Each command accepts `--json` for scripting.
+Browse the catalog without writing files. List and info show each component's category. Each command accepts `--json` for scripting.
 
 ## Documentation
 

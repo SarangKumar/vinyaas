@@ -24,6 +24,7 @@ export function serializeRegistryItem(
   const css = copyRecord(item.css);
   const envVars = copyRecord(item.envVars);
   const docs = normalizeDocs(item.docs);
+  const category = item.category;
 
   return {
     $schema: schemaUrl,
@@ -38,6 +39,7 @@ export function serializeRegistryItem(
     ...(css ? { css } : {}),
     ...(envVars ? { envVars } : {}),
     ...(docs ? { docs } : {}),
+    ...(category ? { category } : {}),
   };
 }
 
@@ -73,6 +75,7 @@ function serializeCatalogItem(item: RegistryItem): RegistryCatalogItem {
     type: item.type,
     description,
     docs,
+    ...(item.category ? { category: item.category } : {}),
   };
 }
 

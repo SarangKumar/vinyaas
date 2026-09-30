@@ -11,5 +11,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/label"
+  "docs": "http://localhost:3000/components/label",
+  "category": "forms"
 }

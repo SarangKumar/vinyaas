@@ -1,6 +1,7 @@
+import { registryComponentCategories } from "../categories";
 import type { RegistryItem } from "../types";
 
-export const registry: readonly RegistryItem[] = [
+const items: readonly RegistryItem[] = [
   {
     name: "button",
     type: "registry:ui",
@@ -494,3 +495,13 @@ export const registry: readonly RegistryItem[] = [
     ],
   },
 ];
+
+export const registry: readonly RegistryItem[] = items.map((item) => {
+  const category = registryComponentCategories[item.name];
+
+  if (!category) {
+    throw new Error(`Missing registry category for "${item.name}"`);
+  }
+
+  return { ...item, category };
+});

@@ -11,5 +11,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/skeleton"
+  "docs": "http://localhost:3000/components/skeleton",
+  "category": "data-display"
 }

@@ -72,6 +72,38 @@ describe("validateRegistryItem", () => {
       true,
     );
   });
+
+  it("rejects an invalid category", () => {
+    const issues = validateRegistryItem(
+      validItem({
+        name: "button",
+        // @ts-expect-error intentional invalid category for validation
+        category: "random",
+      }),
+    );
+
+    expect(issues).toEqual([
+      {
+        name: "button",
+        field: "category",
+        message: 'invalid category "random"',
+      },
+    ]);
+    expect(formatRegistryValidationFailure(issues)).toContain(
+      'invalid category "random"',
+    );
+  });
+
+  it("accepts a valid category", () => {
+    expect(
+      validateRegistryItem(
+        validItem({
+          name: "button",
+          category: "forms",
+        }),
+      ),
+    ).toEqual([]);
+  });
 });
 
 describe("validateRegistry + catalog consistency", () => {
@@ -118,5 +150,27 @@ describe("validateRegistry + catalog consistency", () => {
     });
     expect(catalog.items[0]).not.toHaveProperty("files");
     expect(catalog.items[0]).not.toHaveProperty("dependencies");
+  });
+
+  it("includes category in catalog when present on source items", () => {
+    const items = [
+      withDefaultDocs(
+        validItem({
+          name: "button",
+          description: "A composable button component with variants and sizes.",
+          category: "forms",
+        }),
+        "https://vinyaas.vercel.app",
+      ),
+    ];
+    const catalog = serializeRegistryCatalog("new-york", items);
+
+    expect(catalog.items[0]).toEqual({
+      name: "button",
+      type: "registry:ui",
+      description: "A composable button component with variants and sizes.",
+      docs: "https://vinyaas.vercel.app/components/button",
+      category: "forms",
+    });
   });
 });

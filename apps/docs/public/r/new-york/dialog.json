@@ -16,5 +16,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/dialog"
+  "docs": "http://localhost:3000/components/dialog",
+  "category": "feedback"
 }

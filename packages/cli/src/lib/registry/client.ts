@@ -26,6 +26,7 @@ const registryItemFields = [
   "css",
   "envVars",
   "docs",
+  "category",
 ] as const;
 
 const registryItemRequiredFields = [
@@ -284,6 +285,7 @@ export function parseRegistryItem(input: unknown): RegistryItem {
   const css = optionalStringRecord(item.css, "css");
   const envVars = optionalStringRecord(item.envVars, "envVars");
   const docs = optionalString(item.docs, "docs");
+  const category = optionalString(item.category, "category");
 
   return {
     $schema: requireString(item.$schema, "$schema"),
@@ -298,6 +300,7 @@ export function parseRegistryItem(input: unknown): RegistryItem {
     ...(css ? { css } : {}),
     ...(envVars ? { envVars } : {}),
     ...(docs ? { docs } : {}),
+    ...(category ? { category } : {}),
   };
 }
 
@@ -308,6 +311,7 @@ const registryCatalogItemFields = [
   "type",
   "description",
   "docs",
+  "category",
   // Older catalogs may still ship install metadata. Accept and ignore.
   "dependencies",
   "devDependencies",
@@ -346,6 +350,7 @@ function parseCatalogItem(input: unknown, label: string): RegistryCatalogItem {
 
   const description = optionalString(item.description, `${label}.description`);
   const docs = optionalString(item.docs, `${label}.docs`);
+  const category = optionalString(item.category, `${label}.category`);
   const dependencies = optionalStringArray(
     item.dependencies,
     `${label}.dependencies`,
@@ -365,6 +370,7 @@ function parseCatalogItem(input: unknown, label: string): RegistryCatalogItem {
     type: requireRegistryType(item.type, `${label}.type`),
     ...(description ? { description } : {}),
     ...(docs ? { docs } : {}),
+    ...(category ? { category } : {}),
     ...(dependencies ? { dependencies } : {}),
     ...(devDependencies ? { devDependencies } : {}),
     ...(registryDependencies ? { registryDependencies } : {}),

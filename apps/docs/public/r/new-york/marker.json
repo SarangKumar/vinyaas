@@ -11,5 +11,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/marker"
+  "docs": "http://localhost:3000/components/marker",
+  "category": "utilities"
 }

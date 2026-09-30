@@ -1,3 +1,4 @@
+import { isRegistryCategory } from "./categories";
 import type { RegistryItem } from "./types";
 
 const WEAK_DESCRIPTIONS = new Set([
@@ -48,6 +49,16 @@ export function validateRegistryItem(
       field: "type",
       message: `invalid type (expected registry:ui, got ${String(item.type)})`,
     });
+  }
+
+  if (item.category !== undefined) {
+    if (!isRegistryCategory(item.category)) {
+      issues.push({
+        name: label,
+        field: "category",
+        message: `invalid category "${String(item.category)}"`,
+      });
+    }
   }
 
   const description = item.description?.trim() ?? "";

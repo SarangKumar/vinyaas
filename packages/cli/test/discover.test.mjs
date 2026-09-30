@@ -18,30 +18,35 @@ const catalog = {
     {
       name: "badge",
       type: "registry:ui",
+      category: "data-display",
       description: "A compact label for status or category.",
       docs: "https://vinyaas.vercel.app/components/badge",
     },
     {
       name: "button",
       type: "registry:ui",
+      category: "forms",
       description: "A composable button component with variants and sizes.",
       docs: "https://vinyaas.vercel.app/components/button",
     },
     {
       name: "input",
       type: "registry:ui",
+      category: "forms",
       description: "A text field that passes through native input attributes.",
       docs: "https://vinyaas.vercel.app/components/input",
     },
     {
       name: "input-otp",
       type: "registry:ui",
+      category: "forms",
       description: "A one-time code made of grouped digit slots.",
       docs: "https://vinyaas.vercel.app/components/input-otp",
     },
     {
       name: "textarea",
       type: "registry:ui",
+      category: "forms",
       description:
         "A multiline text field that passes through native textarea attributes.",
       docs: "https://vinyaas.vercel.app/components/textarea",
@@ -49,6 +54,7 @@ const catalog = {
     {
       name: "toast",
       type: "registry:ui",
+      category: "feedback",
       description:
         "A temporary notice for success, error, or informational feedback.",
       docs: "https://vinyaas.vercel.app/components/toast",
@@ -56,6 +62,7 @@ const catalog = {
     {
       name: "attachment",
       type: "registry:ui",
+      category: "data-display",
       description: "A file or image chip with media and actions.",
       docs: "https://vinyaas.vercel.app/components/attachment",
     },
@@ -66,6 +73,7 @@ const buttonItem = {
   $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
   name: "button",
   type: "registry:ui",
+  category: "forms",
   description: "A composable button component with variants and sizes.",
   dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
   files: [
@@ -82,6 +90,7 @@ const toastItem = {
   $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
   name: "toast",
   type: "registry:ui",
+  category: "feedback",
   description:
     "A temporary notice for success, error, or informational feedback.",
   dependencies: ["clsx", "tailwind-merge"],
@@ -274,6 +283,7 @@ describe("vinyaas list", () => {
     assert.match(stdout, /^Components\n/);
     assert.match(stdout, /attachment/);
     assert.match(stdout, /button/);
+    assert.match(stdout, /Forms/);
     assert.match(stdout, /A composable button component with variants and sizes\./);
     assert.ok(stdout.indexOf("attachment") < stdout.indexOf("badge"));
     assert.ok(stdout.indexOf("badge") < stdout.indexOf("button"));
@@ -293,6 +303,7 @@ describe("vinyaas list", () => {
     assert.ok(Array.isArray(parsed));
     assert.equal(parsed[0].name, "attachment");
     assert.equal(button.description, "A composable button component with variants and sizes.");
+    assert.equal(button.category, "forms");
     assert.equal(button.docs, "https://vinyaas.vercel.app/components/button");
     assert.equal("files" in button, false);
     assert.equal("dependencies" in button, false);
@@ -391,6 +402,7 @@ describe("vinyaas info", () => {
     );
 
     assert.match(stdout, /^Button\n/);
+    assert.match(stdout, /Category:\nForms/);
     assert.match(
       stdout,
       /Description:\nA composable button component with variants and sizes\./,

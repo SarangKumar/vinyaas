@@ -23,6 +23,7 @@ describe("CLI docs", () => {
       screen.getByRole("heading", { name: "Install" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Setup" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Doctor" })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Components" }),
     ).toBeInTheDocument();
@@ -40,6 +41,8 @@ describe("CLI docs", () => {
     const body = document.body.textContent ?? "";
     expect(body).toContain("vinyaas init");
     expect(body).toContain("vinyaas doctor");
+    expect(body).toContain("theme tokens");
+    expect(body).toContain("forms");
     expect(body).toContain("vinyaas add button");
     expect(body).toContain("vinyaas list");
     expect(body).toContain("vinyaas search button");

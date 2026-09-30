@@ -11,5 +11,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/breadcrumb"
+  "docs": "http://localhost:3000/components/breadcrumb",
+  "category": "navigation"
 }

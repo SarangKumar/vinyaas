@@ -45,13 +45,20 @@ export async function executeDoctor({
   cwd,
   from = process.cwd(),
   json = false,
+  env = process.env,
+  fetch: fetchImpl,
 }: {
   cwd?: string;
   from?: string;
   json?: boolean;
+  env?: Record<string, string | undefined>;
+  fetch?: typeof fetch;
 }): Promise<{ ok: boolean }> {
   const projectRoot = await resolveProjectRoot(cwd, from);
-  const report = await runDoctorChecks(projectRoot);
+  const report = await runDoctorChecks(projectRoot, {
+    env,
+    fetch: fetchImpl,
+  });
 
   if (json) {
     console.log(JSON.stringify(report, null, 2));
