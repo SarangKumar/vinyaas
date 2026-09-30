@@ -23,7 +23,7 @@ export function Alert({
       data-slot="alert"
       data-variant={variant}
       className={cn(
-        "relative grid w-full grid-cols-[0_minmax(0,1fr)] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_minmax(0,1fr)] has-[>svg]:gap-x-3 [&>*:not(svg)]:col-start-2 [&>svg]:col-start-1 [&>svg]:row-span-2 [&>svg]:row-start-1 [&>svg]:mt-0.5 [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:translate-y-0 [&>svg]:text-current",
+        "relative grid w-full grid-cols-[0_minmax(0,1fr)] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm has-[>svg]:grid-cols-[--spacing(4)_minmax(0,1fr)] has-[>svg]:gap-x-3 [&>*:not(svg)]:col-start-2 [&>svg]:col-start-1 [&>svg]:row-span-2 [&>svg]:row-start-1 [&>svg]:mt-0.5 [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:translate-y-0 [&>svg]:text-current",
         alertVariants[variant],
         className,
       )}

@@ -37,7 +37,7 @@ export function Checkbox({
         }}
         type="checkbox"
         className={cn(
-          "peer border-input bg-background accent-primary checked:border-primary checked:bg-primary indeterminate:border-primary indeterminate:bg-primary focus-visible:border-primary focus-visible:ring-ring focus-visible:ring-offset-background size-4 cursor-pointer appearance-none rounded-[4px] border focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          "peer border-input bg-background accent-primary checked:border-primary checked:bg-primary indeterminate:border-primary indeterminate:bg-primary focus-visible:border-primary focus-visible:ring-ring focus-visible:ring-offset-background size-4 cursor-pointer appearance-none rounded-lg border focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
       />
