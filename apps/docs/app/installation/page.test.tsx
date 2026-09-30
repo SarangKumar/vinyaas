@@ -112,6 +112,12 @@ describe("installation docs", () => {
       "components/ui/button/index.tsx",
     );
     expect(document.body.textContent).toContain("App Router");
+    expect(
+      screen.getAllByRole("button", { name: /copy/i }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("tablist", { name: "Package manager" }).length,
+    ).toBeGreaterThan(1);
     expect(nextMetadata.title).toBe("Install Vinyaas with Next.js");
     next.unmount();
 

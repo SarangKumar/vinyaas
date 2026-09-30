@@ -2,6 +2,12 @@
  * Framework guides for the installation docs.
  * Matches CLI detection labels: next → nextjs route, vite, react.
  */
+import {
+  createNextAppCommands,
+  createViteAppCommands,
+  type PackageManagerCommands,
+} from "@/components/package-managers";
+
 export type InstallationFrameworkId = "nextjs" | "vite" | "react";
 
 /** CLI `detectProject` framework values for cross-reference. */
@@ -14,7 +20,7 @@ export type ProjectSetupOption = {
   title: string;
   summary: string;
   /** Shell commands shown before `vinyaas init` (create-app / install). */
-  preludeCommands?: string;
+  preludeCommands?: PackageManagerCommands;
   bullets: string[];
 };
 
@@ -74,15 +80,7 @@ export const installationFrameworks: InstallationFramework[] = [
         title: "Fresh project",
         summary:
           "Create a new Next.js app with the recommended flags, then initialize Vinyaas.",
-        preludeCommands: `npx create-next-app@latest my-app \\
-  --typescript \\
-  --tailwind \\
-  --eslint \\
-  --app \\
-  --src-dir \\
-  --import-alias "@/*"
-
-cd my-app`,
+        preludeCommands: createNextAppCommands(),
         bullets: [
           "Creates the Next.js App Router application.",
           "Configures TypeScript, ESLint, and Tailwind.",
@@ -130,9 +128,7 @@ cd my-app`,
         title: "Fresh project",
         summary:
           "Scaffold Vite + React + TypeScript, install dependencies, add Tailwind v4, then initialize Vinyaas.",
-        preludeCommands: `npm create vite@latest my-app -- --template react-ts
-cd my-app
-npm install`,
+        preludeCommands: createViteAppCommands(),
         bullets: [
           "Creates a Vite + React + TypeScript application.",
           "Install project dependencies, then wire Tailwind CSS v4 to `src/index.css`.",

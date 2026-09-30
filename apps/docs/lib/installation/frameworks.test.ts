@@ -52,14 +52,21 @@ describe("installation frameworks", () => {
     const nextFresh = getInstallationFramework("nextjs").setups.find(
       (setup) => setup.id === "fresh",
     );
-    expect(nextFresh?.preludeCommands).toContain("create-next-app@latest");
-    expect(nextFresh?.preludeCommands).toContain("--typescript");
+    expect(nextFresh?.preludeCommands?.npm).toContain("create-next-app@latest");
+    expect(nextFresh?.preludeCommands?.pnpm).toContain(
+      "create next-app@latest",
+    );
+    expect(nextFresh?.preludeCommands?.yarn).toContain("create next-app");
+    expect(nextFresh?.preludeCommands?.bun).toContain("create-next-app@latest");
+    expect(nextFresh?.preludeCommands?.npm).toContain("--typescript");
 
     const viteFresh = getInstallationFramework("vite").setups.find(
       (setup) => setup.id === "fresh",
     );
-    expect(viteFresh?.preludeCommands).toContain("create vite@latest");
-    expect(viteFresh?.preludeCommands).toContain("react-ts");
+    expect(viteFresh?.preludeCommands?.npm).toContain("create vite@latest");
+    expect(viteFresh?.preludeCommands?.pnpm).toContain("create vite@latest");
+    expect(viteFresh?.preludeCommands?.yarn).toContain("create vite");
+    expect(viteFresh?.preludeCommands?.npm).toContain("react-ts");
 
     const reactFresh = getInstallationFramework("react").setups.find(
       (setup) => setup.id === "fresh",

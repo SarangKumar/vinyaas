@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { CodeBlock } from "@/components/code-block";
 import { DocsArticle } from "@/components/docs-article";
 import { FrameworkIconBadge } from "@/components/installation/framework-icon";
 import { InstallCommand } from "@/components/install-command";
@@ -26,14 +27,6 @@ const subsectionHeading =
   "text-foreground scroll-mt-8 text-base font-medium tracking-tight";
 const body = "text-foreground text-base leading-7";
 
-function BashBlock({ code }: { code: string }) {
-  return (
-    <pre className="border-border bg-card text-card-foreground overflow-x-auto rounded-md border p-4 font-mono text-[13px] leading-6">
-      <code>{code}</code>
-    </pre>
-  );
-}
-
 function SetupCard({ setup }: { setup: ProjectSetupOption }) {
   return (
     <div
@@ -47,7 +40,7 @@ function SetupCard({ setup }: { setup: ProjectSetupOption }) {
         </p>
       </div>
       {setup.preludeCommands ? (
-        <BashBlock code={setup.preludeCommands} />
+        <InstallCommand commands={setup.preludeCommands} />
       ) : null}
       <InstallCommand commands={cliCommands("init")} />
       <ul className={`${body} list-disc space-y-2 pl-5 text-sm`}>
@@ -155,9 +148,10 @@ export function FrameworkGuide({
           Import components
         </h2>
         <p className={body}>Import the component directory after install:</p>
-        <BashBlock code={importExample} />
+        <CodeBlock language="tsx" code={importExample} />
         <p className={body}>Default file layout:</p>
-        <BashBlock
+        <CodeBlock
+          language="bash"
           code={`components/ui/button/index.tsx
 components/ui/toast/index.tsx
 components/ui/toast/toast.css`}
