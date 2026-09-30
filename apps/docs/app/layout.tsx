@@ -79,8 +79,10 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: ["/og.png"],
   },
+  verification: {
+    google: "IAk36o0wRdV4UaM6vJ7qh_d518L26eOemV5QjxpM0II",
+  },
 };
-
 /**
  * Theme class comes from the cookie the toggle writes.
  * ThemeSync reconciles localStorage after mount. There is no inline script,
