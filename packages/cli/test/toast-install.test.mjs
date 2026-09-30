@@ -152,7 +152,7 @@ describe("installable toast registry", () => {
         await writeFile(
           join(cwd, "components/ui/toast/example.tsx"),
           [
-            'import { toast, Toaster } from "@/components/ui/toast/toast";',
+            'import { toast, Toaster } from "@/components/ui/toast";',
             "",
             "export function Notice() {",
             "  return (",
@@ -168,9 +168,14 @@ describe("installable toast registry", () => {
         );
 
         const sourceFile = await readFile(
-          join(cwd, "components/ui/toast/toast.tsx"),
+          join(cwd, "components/ui/toast/index.tsx"),
           "utf8",
         );
+        const animationCss = await readFile(
+          join(cwd, "components/ui/toast/toast.css"),
+          "utf8",
+        );
+        const globalsCss = await readFile(join(cwd, "app/globals.css"), "utf8");
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");
         const config = await readFile(join(cwd, "components.json"), "utf8");
         const packageJson = JSON.parse(
@@ -178,7 +183,13 @@ describe("installable toast registry", () => {
         );
 
         assert.match(sourceFile, /from "@\/lib\/utils"/);
+        assert.match(sourceFile, /import "\.\/toast\.css"/);
         assert.match(sourceFile, /toast.add/);
+        assert.doesNotMatch(sourceFile, /dangerouslySetInnerHTML/);
+        assert.doesNotMatch(sourceFile, /<style/);
+        assert.match(animationCss, /@keyframes vinyaas-toast-in/);
+        assert.match(animationCss, /prefers-reduced-motion: reduce/);
+        assert.doesNotMatch(globalsCss, /vinyaas-toast-/);
         assert.match(utils, /export function cn/);
         assert.match(config, /"style": "new-york"/);
         assert.deepEqual(

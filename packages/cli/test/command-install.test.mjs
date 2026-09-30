@@ -152,7 +152,7 @@ describe("installable command registry", () => {
         await writeFile(
           join(cwd, "components/ui/command/example.tsx"),
           [
-            'import { Command, CommandInput } from "@/components/ui/command/command";',
+            'import { Command, CommandInput } from "@/components/ui/command";',
             "",
             "export function Pages() {",
             "  return (",
@@ -166,7 +166,7 @@ describe("installable command registry", () => {
         );
 
         const installed = await readFile(
-          join(cwd, "components/ui/command/command.tsx"),
+          join(cwd, "components/ui/command/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

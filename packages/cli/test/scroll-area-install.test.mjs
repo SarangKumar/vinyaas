@@ -152,7 +152,7 @@ describe("installable scroll-area registry", () => {
         await writeFile(
           join(cwd, "components/ui/scroll-area/example.tsx"),
           [
-            'import { ScrollArea } from "@/components/ui/scroll-area/scroll-area";',
+            'import { ScrollArea } from "@/components/ui/scroll-area";',
             "",
             "export function Example() {",
             "  return <ScrollArea>Notes</ScrollArea>;",
@@ -162,7 +162,7 @@ describe("installable scroll-area registry", () => {
         );
 
         const card = await readFile(
-          join(cwd, "components/ui/scroll-area/scroll-area.tsx"),
+          join(cwd, "components/ui/scroll-area/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

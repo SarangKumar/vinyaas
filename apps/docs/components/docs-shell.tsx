@@ -12,13 +12,15 @@ import {
   componentsPath,
   homePath,
   introductionPath,
+  themesPath,
+  typesetPath,
 } from "@/components/docs-nav";
 import { portfolioUrl } from "@/lib/public-env";
 import { focusRing } from "@/components/focus-ring";
 import { GitHubLink } from "@/components/github-link";
 import logo from "@/components/logo.png";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Toaster } from "@/registry/new-york/ui/toast/toast";
+import { Toaster } from "@/registry/new-york/ui/toast";
 
 const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-sidebar-foreground hover:text-foreground ${focusRing}`;
 
@@ -28,7 +30,7 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
   return (
     <DocsSearchProvider>
       <div className="bg-background text-foreground flex h-full min-h-0 flex-col">
-        <header className="border-border bg-background sticky top-0 z-30 h-12 shrink-0 border-b">
+        <header className="border-border bg-background relative z-30 h-12 shrink-0 border-b print:hidden">
           <div className="grid h-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 px-4">
             <div
               data-header-section="start"
@@ -58,6 +60,12 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
                 <Link href={componentsPath} className={headerLink}>
                   Components
                 </Link>
+                <Link href={themesPath} className={headerLink}>
+                  Themes
+                </Link>
+                <Link href={typesetPath} className={headerLink}>
+                  Typeset
+                </Link>
               </nav>
             </div>
             <div
@@ -86,7 +94,9 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <DocsFrame>{children}</DocsFrame>
-        <Toaster />
+        <div className="print:hidden">
+          <Toaster />
+        </div>
       </div>
     </DocsSearchProvider>
   );

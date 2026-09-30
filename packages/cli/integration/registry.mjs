@@ -71,7 +71,7 @@ assert.ok(item.dependencies.includes("tailwind-merge"));
 assert.ok(
   item.files.some(
     (file) =>
-      file.path === "ui/button/button.tsx" &&
+      file.path === "ui/button/index.tsx" &&
       file.content.includes("export function Button"),
   ),
 );
@@ -149,11 +149,11 @@ try {
   });
 
   const installed = await readFile(
-    join(fixture, "components/ui/button/button.tsx"),
+    join(fixture, "components/ui/button/index.tsx"),
     "utf8",
   );
   const buttonFile = generated.files.find(
-    (file) => file.path === "ui/button/button.tsx",
+    (file) => file.path === "ui/button/index.tsx",
   );
 
   assert.equal(installed, buttonFile.content);

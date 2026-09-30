@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { ScrollArea } from "./scroll-area";
+import { ScrollArea } from ".";
 
 describe("ScrollArea", () => {
   it("is a native scroll container with a vertical scrollbar hook", () => {

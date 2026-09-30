@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Alert, AlertDescription, AlertTitle } from "./alert";
+import { Alert, AlertDescription, AlertTitle } from ".";
 
 describe("Alert", () => {
   it("renders a default alert with a title and description", () => {
@@ -15,9 +15,22 @@ describe("Alert", () => {
     const alert = screen.getByRole("alert");
 
     expect(alert).toHaveAttribute("data-variant", "default");
-    expect(alert).toHaveClass("bg-muted", "text-foreground");
-    expect(screen.getByText("Deployment complete").tagName).toBe("P");
-    expect(screen.getByText("Production is running.").tagName).toBe("P");
+    expect(alert).toHaveClass(
+      "bg-card",
+      "text-card-foreground",
+      "border-border",
+    );
+    expect(screen.getByText("Deployment complete")).toHaveAttribute(
+      "data-slot",
+      "alert-title",
+    );
+    expect(screen.getByText("Production is running.")).toHaveAttribute(
+      "data-slot",
+      "alert-description",
+    );
+    expect(screen.getByText("Production is running.")).toHaveClass(
+      "text-muted-foreground",
+    );
   });
 
   it("uses the destructive palette without relying on color alone", () => {
@@ -29,9 +42,9 @@ describe("Alert", () => {
     );
 
     expect(screen.getByRole("alert")).toHaveClass(
-      "bg-muted",
+      "bg-card",
       "text-destructive",
-      "border-destructive",
+      "border-destructive/50",
     );
     expect(screen.getByRole("alert")).not.toHaveClass("bg-destructive");
   });
@@ -46,6 +59,6 @@ describe("Alert", () => {
     const alert = screen.getByRole("alert");
 
     expect(alert).toHaveAttribute("id", "notice");
-    expect(alert).toHaveClass("max-w-md", "rounded-md");
+    expect(alert).toHaveClass("max-w-md", "rounded-lg");
   });
 });

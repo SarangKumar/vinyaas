@@ -82,6 +82,14 @@ describe("introduction", () => {
       "href",
       "/components",
     );
+    expect(screen.getByRole("link", { name: "Themes" })).toHaveAttribute(
+      "href",
+      "/themes",
+    );
+    expect(screen.getByRole("link", { name: "Typeset" })).toHaveAttribute(
+      "href",
+      "/typeset",
+    );
     expect(screen.getByRole("link", { name: "Changelog" })).toHaveAttribute(
       "href",
       "/changelog",

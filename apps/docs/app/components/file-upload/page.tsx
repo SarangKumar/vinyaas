@@ -1,21 +1,26 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Button } from "@/registry/new-york/ui/button";
+import { Label } from "@/registry/new-york/ui/label";
 import { FileStatusPreview } from "./file-upload-demos";
 import {
   FileUpload,
   FileUploadDropzone,
   FileUploadList,
-} from "@/registry/new-york/ui/file-upload/file-upload";
+} from "@/registry/new-york/ui/file-upload";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("file-upload");
 
-const usage = `import { FileUpload, FileUploadDropzone, FileUploadList } from "@/components/ui/file-upload/file-upload";
+const usage = `import { FileUpload, FileUploadDropzone, FileUploadList } from "@/components/ui/file-upload";
 
 export function ResumeUpload() {
   return (
@@ -23,6 +28,133 @@ export function ResumeUpload() {
       <FileUploadDropzone>Drop a resume, or click to browse</FileUploadDropzone>
       <FileUploadList />
     </FileUpload>
+  );
+}
+`;
+
+const avatarUploadCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { FileUpload, FileUploadDropzone, FileUploadList } from "@/components/ui/file-upload";
+
+export function PortraitUpload() {
+  return (
+    <div className="flex w-full max-w-sm items-center gap-4 text-left">
+      <Avatar>
+        <AvatarFallback>SK</AvatarFallback>
+      </Avatar>
+      <FileUpload accept="image/*" className="flex-1">
+        <FileUploadDropzone>Upload a portrait</FileUploadDropzone>
+        <FileUploadList />
+      </FileUpload>
+    </div>
+  );
+}
+`;
+
+const documentUploadCode = `import { FileUpload, FileUploadDropzone, FileUploadList } from "@/components/ui/file-upload";
+
+export function DocumentUpload() {
+  return (
+    <FileUpload accept=".pdf,.doc,.docx" maxSize={5_000_000} className="max-w-sm">
+      <FileUploadDropzone>Drop a document</FileUploadDropzone>
+      <FileUploadList />
+    </FileUpload>
+  );
+}
+`;
+
+const imagesUploadCode = `import { FileUpload, FileUploadDropzone, FileUploadList } from "@/components/ui/file-upload";
+
+export function ImageUpload() {
+  return (
+    <FileUpload accept="image/*" multiple className="max-w-sm">
+      <FileUploadDropzone>Drop images</FileUploadDropzone>
+      <FileUploadList />
+    </FileUpload>
+  );
+}
+`;
+
+const fileStatusCode = `import { useState } from "react";
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadList,
+  type FileUploadFile,
+} from "@/components/ui/file-upload";
+
+const initialFiles: FileUploadFile[] = [
+  {
+    id: "doc",
+    file: new File(
+      ["report"],
+      "a-very-long-file-name-that-should-not-resize-the-upload-component.pdf",
+      { type: "application/pdf" },
+    ),
+    progress: 40,
+  },
+  {
+    id: "image",
+    file: new File(["portrait"], "portrait.png", { type: "image/png" }),
+    progress: 100,
+  },
+  {
+    id: "audio",
+    file: new File(["clip"], "standup-notes.mp3", { type: "audio/mpeg" }),
+  },
+  {
+    id: "video",
+    file: new File(["reel"], "product-walkthrough.mp4", { type: "video/mp4" }),
+    progress: 100,
+  },
+  {
+    id: "failed",
+    file: new File(["bundle"], "package.zip", { type: "application/zip" }),
+    error: "Upload failed",
+  },
+];
+
+export function FileStatusPreview() {
+  const [files, setFiles] = useState(initialFiles);
+
+  return (
+    <FileUpload files={files} onFilesChange={setFiles} className="max-w-sm">
+      <FileUploadDropzone>Drop files here, or browse</FileUploadDropzone>
+      <FileUploadList />
+    </FileUpload>
+  );
+}
+`;
+
+const resumeCardCode = `import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadList,
+} from "@/components/ui/file-upload";
+
+export function ResumeUploadCard() {
+  return (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-1">
+        <Label>Resume</Label>
+        <p className="text-muted-foreground text-sm">
+          PDF or Word, up to 2 MB. Used for the open design role.
+        </p>
+      </div>
+      <FileUpload accept=".pdf,.doc,.docx" maxSize={2_000_000}>
+        <FileUploadDropzone>
+          Drop a resume, or click to browse
+        </FileUploadDropzone>
+        <FileUploadList />
+      </FileUpload>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Submit application</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 }
 `;
@@ -67,7 +199,7 @@ const examples: ComponentExample[] = [
         </FileUpload>
       </div>
     ),
-    code: usage,
+    code: { tsx: avatarUploadCode, jsx: avatarUploadCode },
   },
   {
     id: "document",
@@ -83,7 +215,7 @@ const examples: ComponentExample[] = [
         <FileUploadList />
       </FileUpload>
     ),
-    code: usage,
+    code: { tsx: documentUploadCode, jsx: documentUploadCode },
   },
   {
     id: "images",
@@ -95,21 +227,7 @@ const examples: ComponentExample[] = [
         <FileUploadList />
       </FileUpload>
     ),
-    code: usage,
-  },
-  {
-    id: "resume",
-    title: "Resume",
-    description: "Click or drop a resume. The list shows progress and errors.",
-    preview: (
-      <FileUpload accept=".pdf" maxSize={2_000_000} className="max-w-sm">
-        <FileUploadDropzone>
-          Drop a resume, or click to browse
-        </FileUploadDropzone>
-        <FileUploadList />
-      </FileUpload>
-    ),
-    code: usage,
+    code: { tsx: imagesUploadCode, jsx: imagesUploadCode },
   },
   {
     id: "status",
@@ -117,16 +235,41 @@ const examples: ComponentExample[] = [
     description:
       "A long name truncates. Uploading, uploaded, failed, and pending rows share the dropzone width.",
     preview: <FileStatusPreview />,
-    code: usage,
+    code: { tsx: fileStatusCode, jsx: fileStatusCode },
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A job application asks for a resume, explains the file rules, and offers Submit and Cancel.",
+  preview: (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-1">
+        <Label>Resume</Label>
+        <p className="text-muted-foreground text-sm">
+          PDF or Word, up to 2 MB. Used for the open design role.
+        </p>
+      </div>
+      <FileUpload accept=".pdf,.doc,.docx" maxSize={2_000_000}>
+        <FileUploadDropzone>
+          Drop a resume, or click to browse
+        </FileUploadDropzone>
+        <FileUploadList />
+      </FileUpload>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Submit application</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
+  ),
+  code: resumeCardCode,
+};
+
 export default async function FileUploadPage() {
   const source = await readFile(
-    path.join(
-      process.cwd(),
-      "registry/new-york/ui/file-upload/file-upload.tsx",
-    ),
+    path.join(process.cwd(), "registry/new-york/ui/file-upload/index.tsx"),
     "utf8",
   );
 
@@ -147,13 +290,14 @@ export default async function FileUploadPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/file-upload/file-upload.tsx</code>. It imports{" "}
+          <code>components/ui/file-upload/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

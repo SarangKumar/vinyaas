@@ -43,16 +43,19 @@ describe("components catalog", () => {
 
     expect(names(lists[0]!)).toEqual(added);
     expect(names(lists[1]!)).toEqual(all);
-    expect(lists[0]!.querySelectorAll(".bg-new").length).toBe(added.length);
-    expect(lists[1]!.querySelectorAll(".bg-new").length).toBe(added.length);
+    expect(lists[0]!.querySelectorAll(".bg-primary").length).toBe(added.length);
+    expect(lists[1]!.querySelectorAll(".bg-primary").length).toBe(added.length);
     expect(
-      lists[1]!.querySelector('a[href="/components/button"] .bg-new'),
+      lists[1]!.querySelector('a[href="/components/button"] .bg-primary'),
     ).toBeNull();
     expect(added).not.toContain("Button");
     expect(all).toContain("Button");
     expect(all).toHaveLength(components.length);
     expect(document.body.textContent).toContain(
-      `The v1.0.0 catalog has ${components.length} independently installable`,
+      `The catalog has ${components.length} independently installable`,
+    );
+    expect(document.body.textContent).toContain(
+      "Components marked new were introduced in v1.1.0",
     );
     expect(
       screen.queryByText(

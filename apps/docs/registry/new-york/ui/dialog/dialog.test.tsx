@@ -1,3 +1,7 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
@@ -9,7 +13,9 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from "./dialog";
+} from ".";
+
+const dialogDir = path.dirname(fileURLToPath(import.meta.url));
 
 function Example({
   defaultOpen = false,
@@ -28,7 +34,9 @@ function Example({
       <DialogContent>
         <DialogTitle>Edit profile</DialogTitle>
         <DialogDescription>Update your public profile.</DialogDescription>
-        <DialogClose>Close</DialogClose>
+        <DialogClose>
+          <button type="button">Close</button>
+        </DialogClose>
       </DialogContent>
     </Dialog>
   );
@@ -50,12 +58,35 @@ describe("Dialog", () => {
     expect(dialog.getAttribute("aria-describedby")).toBe(
       screen.getByText("Update your public profile.").id,
     );
+    expect(dialog).toHaveClass("vinyaas-dialog-in");
+    expect(document.querySelector("style")).toBeNull();
     await waitFor(() => {
       expect(document.activeElement).toBe(
         screen.getByRole("button", { name: "Close" }),
       );
       expect(document.body.style.overflow).toBe("hidden");
     });
+  });
+
+  it("ships dialog motion CSS beside the component", async () => {
+    const css = await fs.readFile(path.join(dialogDir, "dialog.css"), "utf8");
+    const source = await fs.readFile(path.join(dialogDir, "index.tsx"), "utf8");
+
+    expect(source).toContain('import "./dialog.css"');
+    expect(source).not.toContain("dangerouslySetInnerHTML");
+    expect(source).not.toContain("<style");
+    expect(css).toContain("@keyframes vinyaas-dialog-in");
+    expect(css).toContain("@keyframes vinyaas-dialog-out");
+    expect(css).toContain(".vinyaas-dialog-in");
+    expect(css).toContain(".vinyaas-dialog-out");
+    expect(css).toContain("animation: vinyaas-dialog-in 160ms ease-out");
+    expect(css).toContain(
+      "animation: vinyaas-dialog-out 160ms ease-in forwards",
+    );
+    expect(css).toContain("@media (prefers-reduced-motion: reduce)");
+    expect(css).toMatch(
+      /prefers-reduced-motion: reduce[\s\S]*\.vinyaas-dialog-in[\s\S]*animation:\s*none/,
+    );
   });
 
   it("opens from defaultOpen and restores focus when closed", async () => {

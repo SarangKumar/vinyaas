@@ -6,20 +6,20 @@ import { useRouter } from "next/navigation";
 import { componentHref, components } from "@/components/component-meta";
 import { BookIcon, ComponentIcon, SearchIcon } from "@/components/icons";
 import { focusRing } from "@/components/focus-ring";
-import { Kbd } from "@/registry/new-york/ui/kbd/kbd";
+import { Kbd } from "@/registry/new-york/ui/kbd";
 import {
   Command,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/registry/new-york/ui/command/command";
+} from "@/registry/new-york/ui/command";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
-} from "@/registry/new-york/ui/dialog/dialog";
+} from "@/registry/new-york/ui/dialog";
 
 type SearchPage = {
   title: string;
@@ -38,19 +38,34 @@ const pages: SearchPage[] = [
   {
     title: "Installation",
     href: "/installation",
-    description: "Install the CLI, initialize a project, and add a component.",
+    description:
+      "Install the CLI, run init, discover components, and add them as source.",
     group: "Getting Started",
   },
   {
     title: "Changelog",
     href: "/changelog",
-    description: "What shipped in v0.1 and v1.0.0.",
+    description: "What shipped in v0.1, v1.0.0, and v1.1.0.",
     group: "Getting Started",
   },
   {
     title: "components.json",
     href: "/components-json",
     description: "Local project config for style, aliases, and Tailwind paths.",
+    group: "Getting Started",
+  },
+  {
+    title: "Themes",
+    href: "/themes",
+    description:
+      "Visual theme playground: curated presets, radius, and real UI compositions.",
+    group: "Getting Started",
+  },
+  {
+    title: "Typeset",
+    href: "/typeset",
+    description:
+      "Typography playground: measure, fonts, size, leading, and flow for Markdown-style content.",
     group: "Getting Started",
   },
   ...components.map((component) => ({

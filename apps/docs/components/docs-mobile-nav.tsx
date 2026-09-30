@@ -5,7 +5,12 @@ import { createPortal } from "react-dom";
 
 import Link from "next/link";
 
-import { componentsPath, introductionPath } from "@/components/docs-nav";
+import {
+  componentsPath,
+  introductionPath,
+  themesPath,
+  typesetPath,
+} from "@/components/docs-nav";
 import { DocsNavLinks } from "@/components/docs-nav-links";
 import { focusRing } from "@/components/focus-ring";
 import { GitHubLink } from "@/components/github-link";
@@ -98,6 +103,12 @@ export function DocsMobileNav() {
                 </Link>
                 <Link href={componentsPath} className={menuLink}>
                   Components
+                </Link>
+                <Link href={themesPath} className={menuLink}>
+                  Themes
+                </Link>
+                <Link href={typesetPath} className={menuLink}>
+                  Typeset
                 </Link>
               </nav>
               <DocsNavLinks className="flex flex-col gap-5" />

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import { Switch } from "./switch";
+import { Switch } from ".";
 
 describe("Switch", () => {
   it("renders an unchecked switch button", () => {

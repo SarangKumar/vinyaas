@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Badge } from "./badge";
+import { Badge } from ".";
 
 describe("Badge", () => {
   it("renders an inline label and supports every variant", () => {
@@ -16,16 +16,17 @@ describe("Badge", () => {
     );
 
     rerender(<Badge variant="secondary">Pro</Badge>);
-    expect(badge()).toHaveClass("bg-secondary", "text-secondary-foreground");
-
-    rerender(<Badge variant="destructive">Pro</Badge>);
     expect(badge()).toHaveClass(
-      "bg-destructive",
-      "text-destructive-foreground",
+      "border-border",
+      "bg-secondary",
+      "text-secondary-foreground",
     );
 
+    rerender(<Badge variant="destructive">Pro</Badge>);
+    expect(badge()).toHaveClass("bg-destructive/10", "text-destructive");
+
     rerender(<Badge variant="outline">Pro</Badge>);
-    expect(badge()).toHaveClass("border", "text-foreground");
+    expect(badge()).toHaveClass("border-border", "text-foreground");
 
     rerender(<Badge variant="ghost">Pro</Badge>);
     expect(badge()).toHaveClass("hover:bg-accent");

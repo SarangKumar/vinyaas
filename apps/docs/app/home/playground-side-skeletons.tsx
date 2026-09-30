@@ -1,12 +1,11 @@
 import type { CSSProperties, ReactNode } from "react";
 
-import { Skeleton } from "@/registry/new-york/ui/skeleton/skeleton";
+import { Skeleton } from "@/registry/new-york/ui/skeleton";
 
 /**
- * Ultra-wide decorative rails (≥2200px), inspired by shadcn's demo shell.
+ * Ultra-wide decorative rails (≥2200px).
  *
- * Positioned absolute outside the centered 1900px main band:
- *   fade ← [2-col left rail] | main (≤1900px) | [2-col right rail] → fade
+ * fade ← [2 skeleton cols] | main masonry (5 cols) | [2 skeleton cols] → fade
  */
 export function PlaygroundSideRails() {
   return (
@@ -98,7 +97,7 @@ function FormSkeletonCard() {
         <Skeleton className="h-5 w-44" />
         <Skeleton className="h-4 w-52" />
       </div>
-      <div className="flex h-[200px] w-full items-end gap-3">
+      <div className="flex h-50 w-full items-end gap-3">
         {[60, 80, 65, 95, 50, 100].map((height) => (
           <div
             key={height}
@@ -269,7 +268,7 @@ function ProgressSkeletonCard() {
       </div>
       <div className="flex flex-col gap-2">
         <Skeleton className="h-3 w-16" />
-        <Skeleton className="h-[100px] w-full rounded-lg" />
+        <Skeleton className="h-25 w-full rounded-lg" />
       </div>
       <Skeleton className="h-9 w-full rounded-lg" />
     </SkeletonCard>

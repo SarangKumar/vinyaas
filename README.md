@@ -82,21 +82,68 @@ vinyaas add button
 Install multiple components in one call. Shared packages install once:
 
 ```bash
-npx vinyaas add button card badge
+vinyaas add button card badge
+```
+
+Already-installed components are skipped. Missing ones still install:
+
+```bash
+vinyaas add button card badge textarea spinner
+```
+
+Example output when some components already exist:
+
+```text
+Installed:
+- textarea
+- spinner
+
+Skipped:
+- button — already installed
+- card — already installed
+- badge — already installed
+```
+
+Overwrite an existing component only with `--force`:
+
+```bash
+vinyaas add button --force
 ```
 
 For each component, Vinyaas:
 
 1. Fetches the registry item.
-2. Resolves registry dependencies when the item declares them. Button does not declare any.
+2. Resolves registry dependencies when the item declares them.
 3. Collects the npm dependencies declared by those items.
 4. Installs dependencies that the project does not already declare.
-5. Writes the component source files.
+5. Writes the component source files under `components/ui/<name>/index.tsx`.
 6. Applies CSS only when the registry item declares `cssVars` or `css`.
 7. Reports required environment variables only when the item declares `envVars`.
 8. Reports documentation URLs only when the item declares `docs`.
 
-Not every component includes CSS, environment variables, or documentation.
+Not every component includes CSS, environment variables, or documentation. Some components also ship local CSS beside `index.tsx` (for example `toast.css`).
+
+## Discover components
+
+Browse the registry without installing anything:
+
+```bash
+vinyaas list
+vinyaas search input
+vinyaas info button
+```
+
+- `vinyaas list` prints every installable component and a short description.
+- `vinyaas search <query>` matches component names and descriptions. It is case-insensitive.
+- `vinyaas info <component>` shows files, dependencies, registry dependencies, and documentation before you run `add`.
+
+Each discovery command accepts `--json` for machine-readable stdout (errors still go to stderr):
+
+```bash
+vinyaas list --json
+vinyaas search input --json
+vinyaas info toast --json
+```
 
 ## Where files are installed
 
@@ -120,7 +167,7 @@ vinyaas add --cwd ./my-app button
 vinyaas add button --force
 ```
 
-`--force` replaces existing component files with the exact registry content. It does not overwrite CSS when the existing value differs, and it does not modify `.env` files or `components.json`. Path checks, dependency conflicts, and other validation still run. `vinyaas init` does not accept `--force`.
+`--force` replaces existing component files with the exact registry content. Without it, already-installed components are skipped and the command continues. It does not overwrite CSS when the existing value differs, and it does not modify `.env` files or `components.json`. Path checks, dependency conflicts, and other validation still run. `vinyaas init` does not accept `--force`.
 
 ## CSS
 
@@ -153,28 +200,29 @@ vinyaas init
 vinyaas add button
 ```
 
-`vinyaas init` writes `components.json` and `lib/utils.ts`. `vinyaas add button` adds `class-variance-authority`, `clsx`, and `tailwind-merge` when they are not already declared, and writes the button source:
+`vinyaas init` prepares the consumer project for Vinyaas: Tailwind CSS v4, semantic theme tokens in the project CSS entry, `components.json`, import aliases, PostCSS, and `lib/utils`. `vinyaas add button` adds `class-variance-authority`, `clsx`, and `tailwind-merge` when they are not already declared, and writes the button source:
 
 ```text
 components.json
 lib/utils.ts
-components/ui/button/button.tsx
+components/ui/button/index.tsx
 ```
 
 The current Button item does not declare CSS, environment variables, or a documentation URL, so those steps do not change `app/globals.css` and do not print an environment or documentation section.
 
 ## Component conventions
 
-v1.0.0 components follow the existing Button.
+v1.1.0 components follow the existing Button.
 
-- Registry name, folder, and file use the same lowercase name: `button` → `ui/button/button.tsx`.
-- `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/button.tsx`.
+- Registry name and folder use the same lowercase name; the entry file is `index.tsx`: `button` → `ui/button/index.tsx`.
+- `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/index.tsx`.
+- Consumers import the directory: `import { Button } from "@/components/ui/button"`.
 - The file exports a PascalCase component, `Button`, and a props type, `ButtonProps`.
 - Variants use `class-variance-authority` when a component has more than one visual style. Input, Textarea, Label, Checkbox, Radio Group, Avatar, Progress, Skeleton, Separator, and Kbd do not use it.
 - Class names are merged with `cn` from `@/lib/utils`.
 - Form controls share one height scale: `sm` is `h-8`, the default is `h-9`, and `lg` is `h-10`. Button `md` and Input are both `h-9` and `text-sm`. Textarea uses the same border, type, padding, focus, and disabled treatment, with a content height.
 - Components render the native element and pass through its attributes, including `disabled` and `aria-*`.
-- Colors use semantic utilities such as `bg-primary`, `text-foreground`, and `border-border`. The docs site defines those tokens in `apps/docs/app/globals.css`. Installed projects do not receive that theme file yet.
+- Colors use semantic utilities such as `bg-primary`, `text-foreground`, and `border-border`. `vinyaas init` writes those tokens into the consumer global CSS for Tailwind CSS v4.
 - Documentation pages live at `/components/<name>`. Each page shows a live example, the install command, a usage snippet, and the registry source.
 
 ## Accessibility

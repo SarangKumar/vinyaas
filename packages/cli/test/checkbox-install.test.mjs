@@ -152,7 +152,7 @@ describe("installable checkbox registry", () => {
         await writeFile(
           join(cwd, "components/ui/checkbox/example.tsx"),
           [
-            'import { Checkbox } from "@/components/ui/checkbox/checkbox";',
+            'import { Checkbox } from "@/components/ui/checkbox";',
             "",
             "export function TermsField() {",
             "  return (",
@@ -173,7 +173,7 @@ describe("installable checkbox registry", () => {
         );
 
         const checkbox = await readFile(
-          join(cwd, "components/ui/checkbox/checkbox.tsx"),
+          join(cwd, "components/ui/checkbox/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

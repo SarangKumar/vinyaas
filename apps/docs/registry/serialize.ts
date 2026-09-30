@@ -1,4 +1,6 @@
 import type {
+  RegistryCatalog,
+  RegistryCatalogItem,
   RegistryCssVars,
   RegistryFile,
   RegistryItem,
@@ -15,6 +17,7 @@ export function serializeRegistryItem(
   files: readonly RegistryItemFile[],
   schemaUrl: string,
 ): RegistryItemPayload {
+  const description = normalizeDocs(item.description);
   const devDependencies = copyStrings(item.devDependencies);
   const registryDependencies = copyStrings(item.registryDependencies);
   const cssVars = copyCssVars(item.cssVars);
@@ -26,6 +29,7 @@ export function serializeRegistryItem(
     $schema: schemaUrl,
     name: item.name,
     type: item.type,
+    ...(description ? { description } : {}),
     dependencies: copyStrings(item.dependencies) ?? [],
     ...(devDependencies ? { devDependencies } : {}),
     ...(registryDependencies ? { registryDependencies } : {}),
@@ -33,6 +37,39 @@ export function serializeRegistryItem(
     ...(cssVars ? { cssVars } : {}),
     ...(css ? { css } : {}),
     ...(envVars ? { envVars } : {}),
+    ...(docs ? { docs } : {}),
+  };
+}
+
+/** Builds the style catalog used by discovery commands. Sorted by name. */
+export function serializeRegistryCatalog(
+  style: string,
+  items: readonly RegistryItem[],
+): RegistryCatalog {
+  const catalogItems = items
+    .map((item) => serializeCatalogItem(item))
+    .sort((left, right) => left.name.localeCompare(right.name));
+
+  return {
+    style,
+    items: catalogItems,
+  };
+}
+
+function serializeCatalogItem(item: RegistryItem): RegistryCatalogItem {
+  const description = normalizeDocs(item.description);
+  const devDependencies = copyStrings(item.devDependencies);
+  const registryDependencies = copyStrings(item.registryDependencies);
+  const docs = normalizeDocs(item.docs);
+
+  return {
+    name: item.name,
+    type: item.type,
+    ...(description ? { description } : {}),
+    dependencies: copyStrings(item.dependencies) ?? [],
+    ...(devDependencies ? { devDependencies } : {}),
+    ...(registryDependencies ? { registryDependencies } : {}),
+    files: item.files.map((file) => normalizePath(file.path)),
     ...(docs ? { docs } : {}),
   };
 }

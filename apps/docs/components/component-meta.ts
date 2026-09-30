@@ -8,9 +8,9 @@ export type ComponentCategory =
   | "utility";
 
 /** The docs version whose additions count as New Components. */
-export const currentVersion = "1.0.0";
+export const currentVersion = "1.1.0";
 
-export type ReleaseVersion = "0.1" | "1.0.0";
+export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0";
 
 export type ComponentMeta = {
   name: string;
@@ -38,6 +38,20 @@ export const components: readonly ComponentMeta[] = [
     description: "A notice for a status that should be announced.",
     category: "feedback",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Aspect Ratio",
+    slug: "aspect-ratio",
+    description: "Displays content within a desired ratio.",
+    category: "layout",
+    introducedIn: "1.1.0",
+  },
+  {
+    name: "Attachment",
+    slug: "attachment",
+    description: "A file or image chip with media, metadata, and actions.",
+    category: "display",
+    introducedIn: "1.1.0",
   },
   {
     name: "Avatar",
@@ -75,6 +89,13 @@ export const components: readonly ComponentMeta[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Chart",
+    slug: "chart",
+    description: "Themed charts for dashboards and product analytics.",
+    category: "display",
+    introducedIn: "1.1.0",
+  },
+  {
     name: "Checkbox",
     slug: "checkbox",
     description: "A native checkbox control for selecting one or more options.",
@@ -94,6 +115,13 @@ export const components: readonly ComponentMeta[] = [
     description: "A modal panel for a focused task.",
     category: "overlay",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Drawer",
+    slug: "drawer",
+    description: "A panel that slides in from the edge of the screen.",
+    category: "overlay",
+    introducedIn: "1.1.0",
   },
   {
     name: "Dropdown Menu",
@@ -234,6 +262,13 @@ export const components: readonly ComponentMeta[] = [
     description: "A semantic table for rows and columns.",
     category: "display",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Tabs",
+    slug: "tabs",
+    description: "A set of panels that share one visible view at a time.",
+    category: "navigation",
+    introducedIn: "1.1.0",
   },
   {
     name: "Textarea",

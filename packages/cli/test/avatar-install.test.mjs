@@ -152,7 +152,7 @@ describe("installable avatar registry", () => {
         await writeFile(
           join(cwd, "components/ui/avatar/example.tsx"),
           [
-            'import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar/avatar";',
+            'import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";',
             "",
             "export function Profile() {",
             "  return (",
@@ -167,7 +167,7 @@ describe("installable avatar registry", () => {
         );
 
         const avatar = await readFile(
-          join(cwd, "components/ui/avatar/avatar.tsx"),
+          join(cwd, "components/ui/avatar/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

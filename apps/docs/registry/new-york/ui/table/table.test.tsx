@@ -10,7 +10,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./table";
+} from ".";
 
 describe("Table", () => {
   it("renders a semantic table with a caption, header, body, and footer", () => {

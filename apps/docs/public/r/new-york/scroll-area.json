@@ -2,10 +2,11 @@
   "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
   "name": "scroll-area",
   "type": "registry:ui",
+  "description": "A native scroll container with a thin scrollbar.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
-      "path": "ui/scroll-area/scroll-area.tsx",
+      "path": "ui/scroll-area/index.tsx",
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type ScrollAreaOrientation = \"vertical\" | \"horizontal\" | \"both\";\n\nconst overflowClass: Record<ScrollAreaOrientation, string> = {\n  vertical: \"overflow-y-auto overflow-x-hidden\",\n  horizontal: \"overflow-x-auto overflow-y-hidden\",\n  both: \"overflow-auto\",\n};\n\nconst scrollbarClass =\n  \"[scrollbar-width:thin] [scrollbar-color:var(--border)_transparent] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-border\";\n\nexport function ScrollArea({\n  className,\n  orientation = \"vertical\",\n  tabIndex,\n  children,\n  ...props\n}: React.HTMLAttributes<HTMLDivElement> & {\n  orientation?: ScrollAreaOrientation;\n}) {\n  return (\n    <div\n      data-scroll-area=\"\"\n      data-orientation={orientation}\n      tabIndex={tabIndex ?? 0}\n      className={cn(\n        \"relative min-h-0 min-w-0 overscroll-contain focus-visible:outline-none\",\n        overflowClass[orientation],\n        scrollbarClass,\n        className,\n      )}\n      {...props}\n    >\n      {children}\n      <ScrollBar\n        orientation={orientation === \"horizontal\" ? \"horizontal\" : \"vertical\"}\n      />\n    </div>\n  );\n}\n\nexport function ScrollBar({\n  className,\n  orientation = \"vertical\",\n  ...props\n}: React.HTMLAttributes<HTMLDivElement> & {\n  orientation?: \"vertical\" | \"horizontal\";\n}) {\n  return (\n    <div\n      aria-hidden=\"true\"\n      data-scroll-bar=\"\"\n      data-orientation={orientation}\n      className={cn(\"pointer-events-none\", className)}\n      {...props}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }

@@ -2,7 +2,7 @@ import { createRef, useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { RadioGroup, RadioGroupItem } from "./radio-group";
+import { RadioGroup, RadioGroupItem } from ".";
 
 describe("RadioGroup", () => {
   it("renders a native radio group", () => {
@@ -24,13 +24,44 @@ describe("RadioGroup", () => {
     expect(comfortable).toBeChecked();
     expect(screen.getByRole("radio", { name: "Default" })).not.toBeChecked();
     expect(comfortable).not.toHaveAttribute("role");
-    expect(comfortable).toHaveClass("size-4");
+    expect(comfortable).toHaveClass("opacity-0");
     expect(
-      comfortable.parentElement?.querySelector("[aria-hidden]"),
-    ).toHaveClass("size-1.5", "ring-background", "bg-foreground");
-    expect(
-      comfortable.parentElement?.querySelector("[aria-hidden]"),
-    ).not.toHaveClass("size-2");
+      comfortable.parentElement?.querySelector("[data-slot=radio-indicator]"),
+    ).toHaveClass("size-1.5", "bg-primary", "peer-checked:opacity-100");
+  });
+
+  it("shows the primary center indicator when checked", () => {
+    render(
+      <RadioGroup aria-label="Spacing" defaultValue="comfortable">
+        <RadioGroupItem value="default" aria-label="Default" />
+        <RadioGroupItem value="comfortable" aria-label="Comfortable" />
+      </RadioGroup>,
+    );
+
+    const comfortable = screen.getByRole("radio", { name: "Comfortable" });
+    const defaultOption = screen.getByRole("radio", { name: "Default" });
+    const checkedDot = comfortable.parentElement?.querySelector(
+      "[data-slot=radio-indicator]",
+    );
+    const uncheckedDot = defaultOption.parentElement?.querySelector(
+      "[data-slot=radio-indicator]",
+    );
+    const checkedRing = comfortable.parentElement?.querySelector(
+      "[aria-hidden]:not([data-slot])",
+    );
+
+    expect(comfortable).toBeChecked();
+    expect(checkedDot).toHaveClass(
+      "bg-primary",
+      "opacity-0",
+      "peer-checked:opacity-100",
+    );
+    expect(uncheckedDot).toHaveClass("opacity-0");
+    expect(checkedRing).toHaveClass(
+      "rounded-full",
+      "border",
+      "peer-checked:border-primary",
+    );
   });
 
   it("selects one option at a time", () => {
@@ -86,9 +117,6 @@ describe("RadioGroup", () => {
     );
     expect(screen.getByRole("radio", { name: "Default" })).toBeDisabled();
     expect(screen.getByRole("radio", { name: "Comfortable" })).toBeDisabled();
-    expect(
-      screen.getByRole("radio", { name: "Default" }).className,
-    ).not.toContain("pointer-events-none");
   });
 
   it("disables a single item", () => {
@@ -116,7 +144,7 @@ describe("RadioGroup", () => {
       "aria-required",
       "true",
     );
-    expect(radio).toHaveClass("mt-1");
+    expect(radio.parentElement).toHaveClass("mt-1");
     radio.focus();
     expect(radio).toHaveFocus();
   });

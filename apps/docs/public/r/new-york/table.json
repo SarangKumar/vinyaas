@@ -2,10 +2,11 @@
   "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
   "name": "table",
   "type": "registry:ui",
+  "description": "A semantic table for rows and columns.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
-      "path": "ui/table/table.tsx",
+      "path": "ui/table/index.tsx",
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport function Table({\n  className,\n  ref,\n  ...props\n}: React.ComponentProps<\"table\">) {\n  return (\n    <div className=\"w-full min-w-0 overflow-x-auto\">\n      <table\n        ref={ref}\n        className={cn(\"w-full caption-bottom text-sm\", className)}\n        {...props}\n      />\n    </div>\n  );\n}\n\nexport function TableHeader({\n  className,\n  ...props\n}: React.ComponentProps<\"thead\">) {\n  return (\n    <thead className={cn(\"border-border border-b\", className)} {...props} />\n  );\n}\n\nexport function TableBody({\n  className,\n  ...props\n}: React.ComponentProps<\"tbody\">) {\n  return <tbody className={cn(className)} {...props} />;\n}\n\nexport function TableFooter({\n  className,\n  ...props\n}: React.ComponentProps<\"tfoot\">) {\n  return (\n    <tfoot\n      className={cn(\"border-border bg-muted border-t font-medium\", className)}\n      {...props}\n    />\n  );\n}\n\nexport function TableRow({ className, ...props }: React.ComponentProps<\"tr\">) {\n  return (\n    <tr\n      className={cn(\"border-border hover:bg-accent border-b\", className)}\n      {...props}\n    />\n  );\n}\n\nexport function TableHead({ className, ...props }: React.ComponentProps<\"th\">) {\n  return (\n    <th\n      className={cn(\n        \"text-muted-foreground h-10 px-3 text-left align-middle font-medium\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function TableCell({ className, ...props }: React.ComponentProps<\"td\">) {\n  return <td className={cn(\"px-3 py-2 align-middle\", className)} {...props} />;\n}\n\nexport function TableCaption({\n  className,\n  ...props\n}: React.ComponentProps<\"caption\">) {\n  return (\n    <caption\n      className={cn(\"text-muted-foreground mt-3 text-sm\", className)}\n      {...props}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }

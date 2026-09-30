@@ -7,7 +7,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "./accordion";
+} from ".";
 
 function Items({ disabled = false }: { disabled?: boolean }) {
   return (
@@ -37,6 +37,7 @@ describe("Accordion", () => {
 
     expect(first).toHaveAttribute("aria-expanded", "false");
     expect(first).toHaveAttribute("aria-controls", expect.any(String));
+    expect(first).toHaveClass("hover:underline", "underline-offset-4");
     expect(
       document.getElementById(first.getAttribute("aria-controls")!),
     ).toHaveAttribute("hidden");

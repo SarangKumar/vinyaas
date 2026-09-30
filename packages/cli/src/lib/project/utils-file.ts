@@ -1,5 +1,7 @@
 import { mkdir, stat, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
+
+import { resolveAliasDirectory } from "../resolve-alias.ts";
 
 /**
  * Project infrastructure written by `vinyaas init`.
@@ -13,24 +15,48 @@ export function cn(...inputs: ClassValue[]) {
 }
 `;
 
-export const projectUtilsPath = "lib/utils.ts";
+export const projectUtilsSourceJs = `import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
-export async function ensureProjectUtils(
-  cwd: string,
-): Promise<"created" | "exists"> {
-  const outputPath = join(cwd, projectUtilsPath);
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+`;
+
+/**
+ * Writes `lib/utils` at the path implied by the project's `@/lib/utils` alias.
+ */
+export async function ensureProjectUtils({
+  cwd,
+  tsx,
+  utilsAlias = "@/lib/utils",
+}: {
+  cwd: string;
+  tsx: boolean;
+  utilsAlias?: string;
+}): Promise<{ status: "created" | "exists"; relativePath: string }> {
+  let resolvedBase: string;
+
+  try {
+    resolvedBase = await resolveAliasDirectory(cwd, utilsAlias);
+  } catch {
+    resolvedBase = join(cwd, "lib", "utils");
+  }
+
+  const outputPath = `${resolvedBase}${tsx ? ".ts" : ".js"}`;
+  const relativePath = relative(cwd, outputPath).split("\\").join("/");
 
   if (await pathExists(outputPath)) {
-    return "exists";
+    return { status: "exists", relativePath };
   }
 
   await mkdir(dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, projectUtilsSource, {
+  await writeFile(outputPath, tsx ? projectUtilsSource : projectUtilsSourceJs, {
     encoding: "utf8",
     flag: "wx",
   });
 
-  return "created";
+  return { status: "created", relativePath };
 }
 
 async function pathExists(path: string): Promise<boolean> {
@@ -50,3 +76,6 @@ async function pathExists(path: string): Promise<boolean> {
     throw error;
   }
 }
+
+/** Path written by init for the default `@/*` → `./*` alias layout. */
+export const projectUtilsPath = "lib/utils.ts";

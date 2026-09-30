@@ -28,13 +28,13 @@ export function ApiTable({ rows }: { rows: ApiRow[] }) {
               <th className="text-foreground px-3 py-2.5 align-top font-normal">
                 <code>{row.prop}</code>
               </th>
-              <td className="text-body px-3 py-2.5 align-top">
+              <td className="text-foreground px-3 py-2.5 align-top">
                 <code>{row.type}</code>
               </td>
-              <td className="text-body px-3 py-2.5 align-top">
+              <td className="text-foreground px-3 py-2.5 align-top">
                 {row.defaultValue ? <code>{row.defaultValue}</code> : "—"}
               </td>
-              <td className="text-body px-3 py-2.5 align-top">
+              <td className="text-foreground px-3 py-2.5 align-top">
                 {row.description}
               </td>
             </tr>

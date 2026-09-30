@@ -152,7 +152,7 @@ describe("installable typography registry", () => {
         await writeFile(
           join(cwd, "components/ui/typography/example.tsx"),
           [
-            'import { Typography, TypographyH1 } from "@/components/ui/typography/typography";',
+            'import { Typography, TypographyH1 } from "@/components/ui/typography";',
             "",
             "export function Article() {",
             "  return (",
@@ -166,7 +166,7 @@ describe("installable typography registry", () => {
         );
 
         const typography = await readFile(
-          join(cwd, "components/ui/typography/typography.tsx"),
+          join(cwd, "components/ui/typography/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

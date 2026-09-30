@@ -1,6 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { Card } from "@/registry/new-york/ui/card/card";
+import { Button } from "@/registry/new-york/ui/button";
+import { Card } from "@/registry/new-york/ui/card";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { Separator } from "@/registry/new-york/ui/separator";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -9,9 +13,12 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/registry/new-york/ui/breadcrumb/breadcrumb";
+} from "@/registry/new-york/ui/breadcrumb";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { ChevronRightIcon } from "@/components/icons";
 import type { Metadata } from "next";
@@ -26,7 +33,7 @@ const usage = `import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb/breadcrumb";
+} from "@/components/ui/breadcrumb";
 
 export function DocsTrail() {
   return (
@@ -82,39 +89,11 @@ function DocsTrail() {
   );
 }
 
-const examples: ComponentExample[] = [
-  {
-    id: "docs",
-    title: "Documentation",
-    description: "Earlier steps are links. The page you are on is text.",
-    preview: <DocsTrail />,
-    code: usage,
-  },
-  {
-    id: "account",
-    title: "Account",
-    description: "A trail can sit above the card it locates.",
-    preview: (
-      <Card className="w-full max-w-md text-left">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/introduction">Account</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/components">Settings</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Profile</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        <p className="text-sm">Public name, bio, and contact.</p>
-      </Card>
-    ),
-    code: `import { Card } from "@/components/ui/card/card";
+const accountCode = `import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -122,19 +101,19 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb/breadcrumb";
+} from "@/components/ui/breadcrumb";
 
-export function AccountTrail() {
+export function AccountSettingsTrail() {
   return (
-    <Card>
+    <Card className="w-full max-w-md gap-4 p-4 text-left">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/introduction">Account</BreadcrumbLink>
+            <BreadcrumbLink href="/account">Account</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/components">Settings</BreadcrumbLink>
+            <BreadcrumbLink href="/account/settings">Settings</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -142,11 +121,40 @@ export function AccountTrail() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <p>Public name, bio, and contact.</p>
+      <div>
+        <h3 className="text-sm font-medium">Profile</h3>
+        <p className="text-muted-foreground text-sm">
+          Public name, bio, and contact.
+        </p>
+      </div>
+      <Separator />
+      <div className="grid gap-3">
+        <div className="grid gap-2">
+          <Label htmlFor="profile-name">Display name</Label>
+          <Input id="profile-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="profile-email">Email</Label>
+          <Input
+            id="profile-email"
+            type="email"
+            defaultValue="sarang@example.com"
+          />
+        </div>
+      </div>
+      <Button className="self-start">Save changes</Button>
     </Card>
   );
 }
-`,
+`;
+
+const examples: ComponentExample[] = [
+  {
+    id: "docs",
+    title: "Documentation",
+    description: "Earlier steps are links. The page you are on is text.",
+    preview: <DocsTrail />,
+    code: usage,
   },
   {
     id: "collapsed",
@@ -182,7 +190,7 @@ export function AccountTrail() {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb/breadcrumb";
+} from "@/components/ui/breadcrumb";
 
 export function LongTrail() {
   return (
@@ -243,7 +251,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb/breadcrumb";
+} from "@/components/ui/breadcrumb";
 
 export function ChevronTrail() {
   return (
@@ -272,9 +280,56 @@ export function ChevronTrail() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "An account settings trail sits above a small profile form so the location and the work stay together.",
+  preview: (
+    <Card className="w-full max-w-md gap-4 p-4 text-left">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/introduction">Account</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/components">Settings</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Profile</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div>
+        <h3 className="text-sm font-medium">Profile</h3>
+        <p className="text-muted-foreground text-sm">
+          Public name, bio, and contact.
+        </p>
+      </div>
+      <Separator />
+      <div className="grid gap-3">
+        <div className="grid gap-2">
+          <Label htmlFor="breadcrumb-name">Display name</Label>
+          <Input id="breadcrumb-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="breadcrumb-email">Email</Label>
+          <Input
+            id="breadcrumb-email"
+            type="email"
+            defaultValue="sarang@example.com"
+          />
+        </div>
+      </div>
+      <Button className="self-start">Save changes</Button>
+    </Card>
+  ),
+  code: accountCode,
+};
+
 export default async function BreadcrumbDocsPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/breadcrumb/breadcrumb.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/breadcrumb/index.tsx"),
     "utf8",
   );
 
@@ -293,13 +348,14 @@ export default async function BreadcrumbDocsPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/breadcrumb/breadcrumb.tsx</code>. It imports{" "}
+          <code>components/ui/breadcrumb/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <p>

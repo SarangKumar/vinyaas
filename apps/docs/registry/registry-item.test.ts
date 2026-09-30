@@ -42,7 +42,7 @@ describe("button registry item", () => {
     expect(button.registryDependencies).toBeUndefined();
     expect(button.files).toEqual([
       {
-        path: "ui/button/button.tsx",
+        path: "ui/button/index.tsx",
         type: "registry:ui",
       },
     ]);
@@ -59,7 +59,7 @@ describe("serializeRegistryItem", () => {
       registryDependencies: ["button"],
       files: [
         {
-          path: "ui/card/card.tsx",
+          path: "ui/card/index.tsx",
           type: "registry:ui",
           target: "components/ui/card.tsx",
         },
@@ -81,7 +81,7 @@ describe("serializeRegistryItem", () => {
       item,
       [
         {
-          path: "ui/card/card.tsx",
+          path: "ui/card/index.tsx",
           content: "export function Card() { return null; }\n",
           type: "registry:ui",
           target: "components/ui/card.tsx",
@@ -99,7 +99,7 @@ describe("serializeRegistryItem", () => {
       registryDependencies: ["button"],
       files: [
         {
-          path: "ui/card/card.tsx",
+          path: "ui/card/index.tsx",
           content: "export function Card() { return null; }\n",
           type: "registry:ui",
           target: "components/ui/card.tsx",
@@ -182,12 +182,12 @@ describe("serializeRegistryItem", () => {
       name: "card",
       type: "registry:ui",
       registryDependencies: ["button"],
-      files: [{ path: "ui/card/card.tsx", type: "registry:ui" }],
+      files: [{ path: "ui/card/index.tsx", type: "registry:ui" }],
       docs: "Card layout.",
     };
     const files = [
       {
-        path: "ui/card/card.tsx",
+        path: "ui/card/index.tsx",
         content: "export function Card() { return null; }\n",
         type: "registry:ui" as const,
       },
@@ -208,7 +208,7 @@ describe("input registry item", () => {
     expect(input?.registryDependencies).toBeUndefined();
     expect(input?.files).toEqual([
       {
-        path: "ui/input/input.tsx",
+        path: "ui/input/index.tsx",
         type: "registry:ui",
       },
     ]);
@@ -216,11 +216,39 @@ describe("input registry item", () => {
 });
 
 describe("registry build output", () => {
+  it("uses index.tsx as the only component entry file layout", async () => {
+    for (const item of newYork) {
+      const entryFiles = item.files.filter((file) =>
+        file.path.endsWith(".tsx"),
+      );
+      expect(entryFiles.length).toBeGreaterThan(0);
+
+      for (const file of entryFiles) {
+        expect(file.path).toBe(`ui/${item.name}/index.tsx`);
+        expect(file.path).not.toBe(`ui/${item.name}/${item.name}.tsx`);
+      }
+
+      const sourceEntry = path.join(
+        docsRoot,
+        "registry/new-york",
+        `ui/${item.name}/index.tsx`,
+      );
+      const legacyEntry = path.join(
+        docsRoot,
+        "registry/new-york",
+        `ui/${item.name}/${item.name}.tsx`,
+      );
+
+      await expect(fs.access(sourceEntry)).resolves.toBeUndefined();
+      await expect(fs.access(legacyEntry)).rejects.toThrow();
+    }
+  });
+
   it("keeps the new-york button artifact aligned with the source item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/button.json");
     const sourcePath = path.join(
       docsRoot,
-      "registry/new-york/ui/button/button.tsx",
+      "registry/new-york/ui/button/index.tsx",
     );
     const [rawOutput, source] = await Promise.all([
       fs.readFile(outputPath, "utf8"),
@@ -234,7 +262,7 @@ describe("registry build output", () => {
     };
     const button = buttonItem();
     const files = await readRegistryItemFiles(button, async (relativePath) => {
-      expect(relativePath).toBe("ui/button/button.tsx");
+      expect(relativePath).toBe("ui/button/index.tsx");
       return source;
     });
     const payload = serializeRegistryItem(button, files, generated.$schema);
@@ -248,7 +276,7 @@ describe("registry build output", () => {
       "tailwind-merge",
     ]);
     expect(generated.files.map((file) => file.path)).toEqual([
-      "ui/button/button.tsx",
+      "ui/button/index.tsx",
     ]);
     expect(generated.files[0]?.content).toBe(source);
     expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
@@ -260,11 +288,47 @@ describe("registry build output", () => {
     expect(generated).not.toHaveProperty("docs");
   });
 
+  it("keeps the new-york attachment artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/attachment.json");
+    const sourcePath = path.join(
+      docsRoot,
+      "registry/new-york/ui/attachment/index.tsx",
+    );
+    const [rawOutput, source] = await Promise.all([
+      fs.readFile(outputPath, "utf8"),
+      fs.readFile(sourcePath, "utf8"),
+    ]);
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      dependencies: string[];
+      registryDependencies?: string[];
+      files: { path: string; content: string }[];
+    };
+    const item = newYork.find((entry) => entry.name === "attachment");
+
+    expect(item).toBeDefined();
+    const files = await readRegistryItemFiles(item!, async (relativePath) => {
+      expect(relativePath).toBe("ui/attachment/index.tsx");
+      return source;
+    });
+    const payload = serializeRegistryItem(item!, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.dependencies).toEqual([
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge",
+    ]);
+    expect(generated.registryDependencies).toEqual(["button"]);
+    expect(generated.files[0]?.content).toContain('from "../button"');
+    expect(generated.files[0]?.content).toContain("AttachmentMedia");
+  });
+
   it("keeps the new-york input artifact aligned with the source item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/input.json");
     const sourcePath = path.join(
       docsRoot,
-      "registry/new-york/ui/input/input.tsx",
+      "registry/new-york/ui/input/index.tsx",
     );
     const [rawOutput, source] = await Promise.all([
       fs.readFile(outputPath, "utf8"),
@@ -284,7 +348,7 @@ describe("registry build output", () => {
     }
 
     const files = await readRegistryItemFiles(input, async (relativePath) => {
-      expect(relativePath).toBe("ui/input/input.tsx");
+      expect(relativePath).toBe("ui/input/index.tsx");
       return source;
     });
     const payload = serializeRegistryItem(input, files, generated.$schema);
@@ -305,7 +369,7 @@ describe("registry build output", () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/textarea.json");
     const sourcePath = path.join(
       docsRoot,
-      "registry/new-york/ui/textarea/textarea.tsx",
+      "registry/new-york/ui/textarea/index.tsx",
     );
     const [rawOutput, source] = await Promise.all([
       fs.readFile(outputPath, "utf8"),
@@ -327,7 +391,7 @@ describe("registry build output", () => {
     const files = await readRegistryItemFiles(
       textarea,
       async (relativePath) => {
-        expect(relativePath).toBe("ui/textarea/textarea.tsx");
+        expect(relativePath).toBe("ui/textarea/index.tsx");
         return source;
       },
     );
@@ -350,7 +414,7 @@ describe("registry build output", () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/label.json");
     const sourcePath = path.join(
       docsRoot,
-      "registry/new-york/ui/label/label.tsx",
+      "registry/new-york/ui/label/index.tsx",
     );
     const [rawOutput, source] = await Promise.all([
       fs.readFile(outputPath, "utf8"),
@@ -370,7 +434,7 @@ describe("registry build output", () => {
     }
 
     const files = await readRegistryItemFiles(label, async (relativePath) => {
-      expect(relativePath).toBe("ui/label/label.tsx");
+      expect(relativePath).toBe("ui/label/index.tsx");
       return source;
     });
     const payload = serializeRegistryItem(label, files, generated.$schema);
@@ -392,7 +456,7 @@ describe("registry build output", () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/checkbox.json");
     const sourcePath = path.join(
       docsRoot,
-      "registry/new-york/ui/checkbox/checkbox.tsx",
+      "registry/new-york/ui/checkbox/index.tsx",
     );
     const [rawOutput, source] = await Promise.all([
       fs.readFile(outputPath, "utf8"),
@@ -414,7 +478,7 @@ describe("registry build output", () => {
     const files = await readRegistryItemFiles(
       checkbox,
       async (relativePath) => {
-        expect(relativePath).toBe("ui/checkbox/checkbox.tsx");
+        expect(relativePath).toBe("ui/checkbox/index.tsx");
         return source;
       },
     );
@@ -439,7 +503,7 @@ describe("registry build output", () => {
     );
     const sourcePath = path.join(
       docsRoot,
-      "registry/new-york/ui/radio-group/radio-group.tsx",
+      "registry/new-york/ui/radio-group/index.tsx",
     );
     const [rawOutput, source] = await Promise.all([
       fs.readFile(outputPath, "utf8"),
@@ -461,7 +525,7 @@ describe("registry build output", () => {
     const files = await readRegistryItemFiles(
       radioGroup,
       async (relativePath) => {
-        expect(relativePath).toBe("ui/radio-group/radio-group.tsx");
+        expect(relativePath).toBe("ui/radio-group/index.tsx");
         return source;
       },
     );
@@ -481,47 +545,66 @@ describe("registry build output", () => {
   });
 
   it.each([
-    ["avatar", "ui/avatar/avatar.tsx", '"use client"'],
-    ["progress", "ui/progress/progress.tsx", "<progress"],
-    ["skeleton", "ui/skeleton/skeleton.tsx", "aria-hidden"],
-    ["separator", "ui/separator/separator.tsx", "<hr"],
-    ["kbd", "ui/kbd/kbd.tsx", "<kbd"],
-    ["switch", "ui/switch/switch.tsx", 'role="switch"'],
-    ["table", "ui/table/table.tsx", "<table"],
-    ["tooltip", "ui/tooltip/tooltip.tsx", 'role="tooltip"'],
-    ["native-select", "ui/native-select/native-select.tsx", "<select"],
-    ["toast", "ui/toast/toast.tsx", "toast.add"],
-    ["popover", "ui/popover/popover.tsx", "PopoverContent"],
-    ["badge", "ui/badge/badge.tsx", "<span"],
-    ["spinner", "ui/spinner/spinner.tsx", "aria-hidden"],
-    ["card", "ui/card/card.tsx", "CardAction"],
-    ["alert", "ui/alert/alert.tsx", 'role="alert"'],
-    ["dialog", "ui/dialog/dialog.tsx", 'role="dialog"'],
-    ["accordion", "ui/accordion/accordion.tsx", "aria-expanded"],
-    ["breadcrumb", "ui/breadcrumb/breadcrumb.tsx", "breadcrumb"],
-    ["scroll-area", "ui/scroll-area/scroll-area.tsx", "data-scroll-area"],
-    ["slider", "ui/slider/slider.tsx", 'type="range"'],
-    ["hover-card", "ui/hover-card/hover-card.tsx", "HoverCardContent"],
-    ["marker", "ui/marker/marker.tsx", "MarkerContent"],
-    ["input-group", "ui/input-group/input-group.tsx", "InputGroupInput"],
-    ["input-otp", "ui/input-otp/input-otp.tsx", "InputOTPSlot"],
-    ["file-upload", "ui/file-upload/file-upload.tsx", "FileUploadDropzone"],
-    ["command", "ui/command/command.tsx", "CommandInput"],
+    ["avatar", ["ui/avatar/index.tsx"], '"use client"'],
+    ["progress", ["ui/progress/index.tsx"], "<progress"],
+    ["skeleton", ["ui/skeleton/index.tsx"], "aria-hidden"],
+    ["separator", ["ui/separator/index.tsx"], "<hr"],
+    ["kbd", ["ui/kbd/index.tsx"], "<kbd"],
+    ["switch", ["ui/switch/index.tsx"], 'role="switch"'],
+    ["table", ["ui/table/index.tsx"], "<table"],
     [
-      "dropdown-menu",
-      "ui/dropdown-menu/dropdown-menu.tsx",
-      "DropdownMenuContent",
+      "tooltip",
+      ["ui/tooltip/index.tsx", "ui/tooltip/tooltip.css"],
+      'role="tooltip"',
     ],
-    ["typography", "ui/typography/typography.tsx", "TypographyH1"],
+    ["native-select", ["ui/native-select/index.tsx"], "<select"],
+    ["toast", ["ui/toast/index.tsx", "ui/toast/toast.css"], "toast.add"],
+    ["popover", ["ui/popover/index.tsx"], "PopoverContent"],
+    ["badge", ["ui/badge/index.tsx"], "<span"],
+    ["spinner", ["ui/spinner/index.tsx"], "aria-hidden"],
+    ["card", ["ui/card/index.tsx"], "CardAction"],
+    ["alert", ["ui/alert/index.tsx"], 'role="alert"'],
+    ["aspect-ratio", ["ui/aspect-ratio/index.tsx"], "aspectRatio"],
+    [
+      "dialog",
+      ["ui/dialog/index.tsx", "ui/dialog/dialog.css"],
+      'role="dialog"',
+    ],
+    [
+      "drawer",
+      ["ui/drawer/index.tsx", "ui/drawer/drawer.css"],
+      'role="dialog"',
+    ],
+    ["chart", ["ui/chart/index.tsx"], "ChartContainer"],
+    ["accordion", ["ui/accordion/index.tsx"], "aria-expanded"],
+    ["breadcrumb", ["ui/breadcrumb/index.tsx"], "breadcrumb"],
+    ["scroll-area", ["ui/scroll-area/index.tsx"], "data-scroll-area"],
+    ["slider", ["ui/slider/index.tsx"], 'type="range"'],
+    ["hover-card", ["ui/hover-card/index.tsx"], "HoverCardContent"],
+    ["marker", ["ui/marker/index.tsx"], "MarkerContent"],
+    ["input-group", ["ui/input-group/index.tsx"], "InputGroupInput"],
+    ["input-otp", ["ui/input-otp/index.tsx"], "InputOTPSlot"],
+    ["file-upload", ["ui/file-upload/index.tsx"], "FileUploadDropzone"],
+    ["command", ["ui/command/index.tsx"], "CommandInput"],
+    ["dropdown-menu", ["ui/dropdown-menu/index.tsx"], "DropdownMenuContent"],
+    ["typography", ["ui/typography/index.tsx"], "TypographyH1"],
+    ["tabs", ["ui/tabs/index.tsx"], 'role="tablist"'],
   ])(
     "keeps the new-york %s artifact aligned with the source item",
-    async (name, filePath, sourceMarker) => {
+    async (name, filePaths, sourceMarker) => {
       const outputPath = path.join(docsRoot, `public/r/new-york/${name}.json`);
-      const sourcePath = path.join(docsRoot, `registry/new-york/${filePath}`);
-      const [rawOutput, source] = await Promise.all([
-        fs.readFile(outputPath, "utf8"),
-        fs.readFile(sourcePath, "utf8"),
-      ]);
+      const sources = Object.fromEntries(
+        await Promise.all(
+          filePaths.map(async (filePath) => {
+            const source = await fs.readFile(
+              path.join(docsRoot, `registry/new-york/${filePath}`),
+              "utf8",
+            );
+            return [filePath, source] as const;
+          }),
+        ),
+      );
+      const rawOutput = await fs.readFile(outputPath, "utf8");
       const generated = JSON.parse(rawOutput) as {
         $schema: string;
         name: string;
@@ -536,10 +619,13 @@ describe("registry build output", () => {
       }
 
       const files = await readRegistryItemFiles(item, async (relativePath) => {
-        expect(relativePath).toBe(filePath);
-        return source;
+        expect(filePaths).toContain(relativePath);
+        return sources[relativePath]!;
       });
       const payload = serializeRegistryItem(item, files, generated.$schema);
+      const componentFile = generated.files.find((file) =>
+        file.path.endsWith(".tsx"),
+      );
 
       expect(generated).toEqual(payload);
       expect(generated.$schema).toBe(
@@ -547,14 +633,28 @@ describe("registry build output", () => {
       );
       expect(generated.name).toBe(name);
       expect(generated.type).toBe("registry:ui");
-      expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+      expect(generated.dependencies).toEqual([...(item.dependencies ?? [])]);
       expect(item.registryDependencies).toBeUndefined();
-      expect(generated.files.map((file) => file.path)).toEqual([filePath]);
-      expect(generated.files[0]?.content).toBe(source);
-      expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
-      expect(generated.files[0]?.content).toContain(sourceMarker);
+      expect(generated.files.map((file) => file.path)).toEqual(filePaths);
+      expect(componentFile?.content).toBe(sources[filePaths[0]!]!);
+      expect(componentFile?.content).toContain('from "@/lib/utils"');
+      expect(componentFile?.content).toContain(sourceMarker);
+      expect(componentFile?.content).not.toContain("dangerouslySetInnerHTML");
+      expect(componentFile?.content).not.toContain("<style");
       expect(generated).not.toHaveProperty("registryDependencies");
       expect(JSON.stringify(generated)).not.toContain("utils.json");
+
+      for (const filePath of filePaths.filter((path) =>
+        path.endsWith(".css"),
+      )) {
+        const cssFile = generated.files.find((file) => file.path === filePath);
+        expect(cssFile?.content).toBe(sources[filePath]);
+        expect(cssFile?.content).toContain("@keyframes");
+        expect(cssFile?.content).toContain("prefers-reduced-motion");
+        expect(componentFile?.content).toContain(
+          `import "./${path.basename(filePath)}"`,
+        );
+      }
     },
   );
 
@@ -570,7 +670,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).rejects.toThrow();
     expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(34);
+    expect(newYork).toHaveLength(39);
   });
 
   it("matches the json schema item types", () => {
@@ -586,6 +686,7 @@ describe("registry build output", () => {
         "css",
         "cssVars",
         "dependencies",
+        "description",
         "devDependencies",
         "docs",
         "envVars",
@@ -602,7 +703,7 @@ describe("local imports", () => {
   it("does not turn local imports into dependencies or extra files", async () => {
     const source = [
       'import { cn } from "@/lib/utils";',
-      'import { Button } from "../button/button";',
+      'import { Button } from "../button";',
       "",
       "export function Card() {",
       "  return null;",
@@ -614,7 +715,7 @@ describe("local imports", () => {
       name: "card",
       type: "registry:ui",
       registryDependencies: ["button"],
-      files: [{ path: "ui/card/card.tsx", type: "registry:ui" }],
+      files: [{ path: "ui/card/index.tsx", type: "registry:ui" }],
     };
 
     const files = await readRegistryItemFiles(item, async (relativePath) => {
@@ -623,11 +724,11 @@ describe("local imports", () => {
     });
     const payload = serializeRegistryItem(item, files, schemaUrl);
 
-    expect(reads).toEqual(["ui/card/card.tsx"]);
+    expect(reads).toEqual(["ui/card/index.tsx"]);
     expect(payload.dependencies).toEqual([]);
     expect(payload.registryDependencies).toEqual(["button"]);
     expect(payload.files.map((file) => file.path)).toEqual([
-      "ui/card/card.tsx",
+      "ui/card/index.tsx",
     ]);
     expect(payload.files[0]?.content).toContain('from "@/lib/utils"');
   });

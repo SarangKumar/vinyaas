@@ -5,6 +5,7 @@ import {
   componentHref,
   componentIsNew,
   components,
+  currentVersion,
   newComponents,
   type ComponentMeta,
 } from "@/components/component-meta";
@@ -36,18 +37,18 @@ export default function ComponentsPage() {
       title="Components"
       description={`${components.length} accessible primitives you install into your project as source.`}
     >
-      <p className="text-body text-base leading-7">
-        The v1.0.0 catalog has {components.length} independently installable
-        registry items. Button is the v0.1 foundation; the other {added.length}{" "}
-        components were introduced in v1.0.0. The CLI copies each component into
-        your repository. Styles use Tailwind utilities and follow your theme
-        tokens.
+      <p className="text-muted-foreground text-sm leading-6">
+        The catalog has {components.length} independently installable registry
+        items. Button is the v0.1 foundation. v1.0.0 added the bulk of the
+        catalog. Components marked new were introduced in v{currentVersion}. The
+        CLI copies each component into your repository. Styles use Tailwind
+        utilities and follow your theme tokens.
       </p>
       <section className="flex flex-col gap-4">
         <h2 id="new" className={heading}>
           New Components
         </h2>
-        <p className="text-body text-base leading-7">
+        <p className="text-muted-foreground text-sm leading-6">
           Components introduced in the current release.
         </p>
         <NameGrid items={added} />

@@ -3,17 +3,18 @@
 import { useState } from "react";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { toast } from "@/registry/new-york/ui/toast/toast";
+import { Button } from "@/registry/new-york/ui/button";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { Separator } from "@/registry/new-york/ui/separator";
+import { toast } from "@/registry/new-york/ui/toast";
 
 export function LoginBlock() {
   const [visible, setVisible] = useState(false);
 
   return (
-    <PlayBlock title="Sign in" description="Return to your workspace.">
+    <PlayBlock title="Sign in" description="Email, password, or OAuth.">
       <form
         className="grid gap-4"
         onSubmit={(event) => {
@@ -21,6 +22,19 @@ export function LoginBlock() {
           toast.add({ title: "Signed in", description: "Welcome back, Ada." });
         }}
       >
+        <div className="grid gap-2">
+          <Button type="button" variant="outline" className="w-full">
+            Continue with Google
+          </Button>
+          <Button type="button" variant="outline" className="w-full">
+            Continue with GitHub
+          </Button>
+        </div>
+        <div className="flex items-center gap-3">
+          <Separator className="flex-1" />
+          <span className="text-muted-foreground text-xs">or email</span>
+          <Separator className="flex-1" />
+        </div>
         <div className="grid gap-2">
           <Label htmlFor="play-email">Email</Label>
           <Input
@@ -60,8 +74,8 @@ export function LoginBlock() {
           <Checkbox id="play-remember" defaultChecked />
           <Label htmlFor="play-remember">Remember this device</Label>
         </div>
-        <Button type="submit" className="w-full sm:w-auto">
-          Sign in
+        <Button type="submit" className="w-full">
+          Sign in with email
         </Button>
       </form>
     </PlayBlock>

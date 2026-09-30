@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Marker, MarkerContent, MarkerIcon } from "./marker";
+import { Marker, MarkerContent, MarkerIcon } from ".";
 
 describe("Marker", () => {
   it("renders the default, border, and separator variants", () => {

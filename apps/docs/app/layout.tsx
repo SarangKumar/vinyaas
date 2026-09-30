@@ -4,10 +4,12 @@ import { cookies } from "next/headers";
 
 import { DocsShell } from "@/components/docs-shell";
 import { DocsStoreProvider } from "@/lib/store/provider";
+import { siteDescription, siteName, siteUrl } from "@/lib/site";
 import { themeStorageKey } from "@/components/theme";
 import { ThemeSync } from "@/components/theme-sync";
 
 import "./globals.css";
+import "./docs.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,18 +22,48 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://vinyaas.vercel.app"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Vinyaas",
-    template: "%s · Vinyaas",
+    default: siteName,
+    template: `%s · ${siteName}`,
   },
-  description:
-    "Composable React UI components installed into your project as source.",
+  description: siteDescription,
+  applicationName: siteName,
+  authors: [{ name: "Sarang Kumar", url: "https://github.com/SarangKumar" }],
+  creator: "Sarang Kumar",
+  publisher: siteName,
+  keywords: [
+    "Vinyaas",
+    "React",
+    "Tailwind CSS",
+    "UI components",
+    "component registry",
+    "design system",
+    "shadcn",
+    "TypeScript",
+  ],
+  category: "technology",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "Vinyaas",
-    description:
-      "Composable React UI components installed into your project as source.",
+    title: siteName,
+    description: siteDescription,
     type: "website",
+    locale: "en_US",
+    siteName,
+    url: siteUrl,
     images: [
       {
         url: "/og.png",
@@ -43,9 +75,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vinyaas",
-    description:
-      "Composable React UI components installed into your project as source.",
+    title: siteName,
+    description: siteDescription,
     images: ["/og.png"],
   },
 };

@@ -5,7 +5,10 @@ import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 
 import { registerAddCommand } from "./commands/add.js";
+import { registerInfoCommand } from "./commands/info.js";
 import { registerInitCommand } from "./commands/init.js";
+import { registerListCommand } from "./commands/list.js";
+import { registerSearchCommand } from "./commands/search.js";
 
 export function readPackageVersion(moduleUrl = import.meta.url): string {
   const packageJsonPath = join(
@@ -27,11 +30,16 @@ export function readPackageVersion(moduleUrl = import.meta.url): string {
 export function createProgram(): Command {
   const program = new Command()
     .name("vinyaas")
-    .description("Install Vinyaas components into a project.")
+    .description(
+      "Install and discover Vinyaas UI components from the registry.",
+    )
     .version(readPackageVersion());
 
   registerInitCommand(program);
   registerAddCommand(program);
+  registerListCommand(program);
+  registerSearchCommand(program);
+  registerInfoCommand(program);
 
   return program;
 }

@@ -6,7 +6,7 @@ import { components, currentVersion } from "@/components/component-meta";
 import ChangelogPage from "./page";
 
 describe("Changelog", () => {
-  it("renders the version headings and v1.0.0 catalog details", () => {
+  it("renders the version headings and catalog details", () => {
     render(<ChangelogPage />);
 
     const v01 = components.filter(
@@ -15,19 +15,25 @@ describe("Changelog", () => {
     const v10 = components.filter(
       (component) => component.introducedIn === "1.0.0",
     );
+    const v11 = components.filter(
+      (component) => component.introducedIn === "1.1.0",
+    );
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Changelog" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "v0.1" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "v1.0.0" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "v1.1.0" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Component catalog" }),
-    ).toBeInTheDocument();
+      screen.getAllByRole("heading", { name: "Component catalog" }),
+    ).toHaveLength(2);
     expect(
       screen.getByRole("heading", { name: "Documentation" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "CLI" })).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("heading", { name: "CLI" }).length,
+    ).toBeGreaterThanOrEqual(2);
     expect(
       screen.getByRole("heading", { name: "Released" }),
     ).toBeInTheDocument();
@@ -38,11 +44,41 @@ describe("Changelog", () => {
       screen.getByText(`npx vinyaas add button card badge`),
     ).toBeInTheDocument();
     expect(document.body.textContent).toContain(
-      `${components.length} components in total`,
+      `The full catalog now has ${components.length} items`,
     );
     expect(document.body.textContent).toContain(
-      `the other ${v10.length} are introduced in ${currentVersion}`,
+      `the other ${v10.length} were introduced in v1.0.0`,
     );
+    expect(document.body.textContent).toContain(
+      `v${currentVersion} continues the catalog`,
+    );
+    expect(document.body.textContent).toContain("vinyaas init");
+    expect(document.body.textContent).toContain("vinyaas list");
+    expect(document.body.textContent).toContain("vinyaas search");
+    expect(document.body.textContent).toContain("vinyaas info");
+    expect(document.body.textContent).toContain("--json");
+    expect(document.body.textContent).toContain("index.tsx");
+    expect(document.body.textContent).toContain("Documentation and website");
+    expect(document.body.textContent).toContain("/themes");
+    expect(document.body.textContent).toContain("/typeset");
+    expect(document.body.textContent).toContain("not a registry component");
+    expect(document.body.textContent).toContain("Typeset");
+    expect(document.body.textContent).toContain("curated presets");
+    expect(document.body.textContent).not.toContain("/playground");
+    expect(document.body.textContent).toContain("Tabs");
+    expect(document.body.textContent).toContain("Drawer");
+    expect(document.body.textContent).toContain("Chart");
+    expect(document.body.textContent).toContain("Aspect Ratio");
+    expect(document.body.textContent).toContain("Attachment");
+    expect(document.body.textContent).toContain("Tailwind support");
+    expect(document.body.textContent).toContain("@theme");
+    expect(v11.map((component) => component.slug)).toEqual([
+      "aspect-ratio",
+      "attachment",
+      "chart",
+      "drawer",
+      "tabs",
+    ]);
     expect(document.body.textContent).toContain(
       `It ships ${v01.length} component`,
     );

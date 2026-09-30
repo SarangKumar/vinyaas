@@ -1,16 +1,21 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Separator } from "@/registry/new-york/ui/separator";
+import { Spinner } from "@/registry/new-york/ui/spinner";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("badge");
 
-const usage = `import { Badge } from "@/components/ui/badge/badge";
+const usage = `import { Badge } from "@/components/ui/badge";
 
 export function Plan() {
   return <Badge>Pro</Badge>;
@@ -32,6 +37,25 @@ const api: ApiRow[] = [
   },
 ];
 
+const issues: {
+  title: string;
+  status: string;
+  variant: "default" | "secondary" | "destructive" | "outline";
+}[] = [
+  {
+    title: "Keyboard focus escapes Dialog",
+    status: "Open",
+    variant: "default",
+  },
+  {
+    title: "Table scrolls on mobile",
+    status: "In progress",
+    variant: "secondary",
+  },
+  { title: "Toast dismiss race", status: "Blocked", variant: "destructive" },
+  { title: "Docs install path", status: "Done", variant: "outline" },
+];
+
 const examples: ComponentExample[] = [
   {
     id: "external-link",
@@ -51,7 +75,7 @@ const examples: ComponentExample[] = [
         </Badge>
       </a>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function DocsLink() {
   return (
@@ -76,8 +100,8 @@ export function DocsLink() {
         Processing
       </Badge>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Spinner } from "@/components/ui/spinner/spinner";
+    code: `import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
 
 export function ProcessingStatus() {
   return (
@@ -95,7 +119,7 @@ export function ProcessingStatus() {
     description:
       "Badge supplies the shape and type size. className replaces the color with your own Tailwind classes.",
     preview: <Badge className="bg-accent text-accent-foreground">Beta</Badge>,
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function BetaFlag() {
   return (
@@ -114,7 +138,7 @@ export function BetaFlag() {
         Claim offer
       </Badge>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function Offer() {
   return (
@@ -136,7 +160,7 @@ export function Offer() {
         <BookmarkIcon />
       </Badge>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function Saved() {
   return (
@@ -163,7 +187,7 @@ export function Saved() {
         <Badge variant="link">Link</Badge>
       </>
     ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
+    code: `import { Badge } from "@/components/ui/badge";
 
 export function StatusLabels() {
   return (
@@ -181,9 +205,86 @@ export function StatusLabels() {
   },
 ];
 
+const issuesCode = `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+
+const issues = [
+  ["Keyboard focus escapes Dialog", "Open", "default"],
+  ["Table scrolls on mobile", "In progress", "secondary"],
+  ["Toast dismiss race", "Blocked", "destructive"],
+  ["Docs install path", "Done", "outline"],
+] as const;
+
+export function IssueBoard() {
+  return (
+    <div className="w-full max-w-md text-left">
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge>All</Badge>
+        <Badge variant="secondary">Open</Badge>
+        <Badge variant="outline">In progress</Badge>
+        <Badge variant="ghost">Done</Badge>
+      </div>
+      <Separator className="my-4" />
+      <ul className="grid gap-3">
+        {issues.map(([title, status, variant]) => (
+          <li
+            key={title}
+            className="border-border flex items-center justify-between gap-3 rounded-md border px-3 py-2"
+          >
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">{title}</p>
+              <Badge variant={variant}>{status}</Badge>
+            </div>
+            <Button size="sm" variant="ghost">
+              Open
+            </Button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+`;
+
+const inPractice: ComponentInPractice = {
+  description:
+    "An issue board uses Badge variants as filters and row status labels.",
+  preview: (
+    <div className="w-full max-w-md text-left">
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge>All</Badge>
+        <Badge variant="secondary">Open</Badge>
+        <Badge variant="outline">In progress</Badge>
+        <Badge variant="ghost">Done</Badge>
+      </div>
+      <Separator className="my-4" />
+      <ul className="grid gap-3">
+        {issues.map(({ title, status, variant }) => (
+          <li
+            key={title}
+            className="border-border flex items-center justify-between gap-3 rounded-md border px-3 py-2"
+          >
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">{title}</p>
+              <Badge variant={variant} className="mt-1">
+                {status}
+              </Badge>
+            </div>
+            <Button size="sm" variant="ghost">
+              Open
+            </Button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ),
+  code: issuesCode,
+};
+
 export default async function BadgePage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/badge/badge.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/badge/index.tsx"),
     "utf8",
   );
 
@@ -207,13 +308,14 @@ export default async function BadgePage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/badge/badge.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/badge/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>
@@ -229,16 +331,10 @@ export default async function BadgePage() {
       }
       source={source}
     >
-      <Badge variant="link">
-        Documentation
-        <ExternalLinkIcon />
-      </Badge>
-      <Badge variant="secondary">
-        <Spinner className="size-3" label="" />
-        Processing
-      </Badge>
       <Badge>Default</Badge>
+      <Badge variant="secondary">Secondary</Badge>
       <Badge variant="outline">Outline</Badge>
+      <Badge variant="destructive">Destructive</Badge>
     </ComponentReference>
   );
 }

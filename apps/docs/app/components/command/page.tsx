@@ -1,10 +1,13 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
 import {
   Command,
   CommandEmpty,
@@ -13,13 +16,13 @@ import {
   CommandItem,
   CommandList,
   CommandShortcut,
-} from "@/registry/new-york/ui/command/command";
+} from "@/registry/new-york/ui/command";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("command");
 
-const usage = `import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command/command";
+const usage = `import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 export function PageSearch() {
   return (
@@ -30,6 +33,65 @@ export function PageSearch() {
         <CommandGroup heading="Components">
           <CommandItem value="Button">Button</CommandItem>
           <CommandItem value="Input">Input</CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
+`;
+
+const workspaceCode = `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from "@/components/ui/command";
+
+export function WorkspaceSearch() {
+  return (
+    <Command className="w-full max-w-md">
+      <CommandInput
+        aria-label="Search workspace"
+        placeholder="Search projects, people, settings..."
+      />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup heading="Projects">
+          <CommandItem value="vinyaas-web">
+            vinyaas-web
+            <Badge variant="secondary">Production</Badge>
+            <CommandShortcut>↵</CommandShortcut>
+          </CommandItem>
+          <CommandItem value="vinyaas-docs">
+            vinyaas-docs
+            <Badge variant="outline">Preview</Badge>
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="People">
+          <CommandItem value="Ada Lovelace">
+            <Avatar className="size-6">
+              <AvatarFallback>AL</AvatarFallback>
+            </Avatar>
+            Ada Lovelace
+            <Badge>Admin</Badge>
+          </CommandItem>
+          <CommandItem value="Grace Hopper">
+            <Avatar className="size-6">
+              <AvatarFallback>GH</AvatarFallback>
+            </Avatar>
+            Grace Hopper
+            <Badge variant="secondary">Member</Badge>
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Settings">
+          <CommandItem value="Billing">Billing</CommandItem>
+          <CommandItem value="Members">Members</CommandItem>
+          <CommandItem value="Integrations">Integrations</CommandItem>
         </CommandGroup>
       </CommandList>
     </Command>
@@ -111,7 +173,7 @@ const examples: ComponentExample[] = [
         </CommandList>
       </Command>
     ),
-    code: `import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command/command";
+    code: `import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 export function QuickActions() {
   return (
@@ -196,9 +258,9 @@ export function QuickActions() {
         </CommandList>
       </Command>
     ),
-    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar/avatar";
-import { Badge } from "@/components/ui/badge/badge";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command/command";
+    code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 export function PeopleSearch() {
   return (
@@ -223,9 +285,58 @@ export function PeopleSearch() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A workspace search groups projects, people, and settings. Avatars and Badges keep results scannable while the query filters the list.",
+  preview: (
+    <Command className="w-full max-w-md">
+      <CommandInput
+        aria-label="Search workspace"
+        placeholder="Search projects, people, settings..."
+      />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup heading="Projects">
+          <CommandItem value="vinyaas-web">
+            vinyaas-web
+            <Badge variant="secondary">Production</Badge>
+            <CommandShortcut>↵</CommandShortcut>
+          </CommandItem>
+          <CommandItem value="vinyaas-docs">
+            vinyaas-docs
+            <Badge variant="outline">Preview</Badge>
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="People">
+          <CommandItem value="Ada Lovelace">
+            <Avatar className="size-6">
+              <AvatarFallback>AL</AvatarFallback>
+            </Avatar>
+            Ada Lovelace
+            <Badge>Admin</Badge>
+          </CommandItem>
+          <CommandItem value="Grace Hopper">
+            <Avatar className="size-6">
+              <AvatarFallback>GH</AvatarFallback>
+            </Avatar>
+            Grace Hopper
+            <Badge variant="secondary">Member</Badge>
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Settings">
+          <CommandItem value="Billing">Billing</CommandItem>
+          <CommandItem value="Members">Members</CommandItem>
+          <CommandItem value="Integrations">Integrations</CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  ),
+  code: { tsx: workspaceCode, jsx: workspaceCode },
+};
+
 export default async function CommandPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/command/command.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/command/index.tsx"),
     "utf8",
   );
 
@@ -244,13 +355,14 @@ export default async function CommandPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/command/command.tsx</code>. It imports{" "}
+          <code>components/ui/command/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

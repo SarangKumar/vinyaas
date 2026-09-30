@@ -1,20 +1,45 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
+import { Button } from "@/registry/new-york/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york/ui/card";
 import {
   Marker,
   MarkerContent,
   MarkerIcon,
-} from "@/registry/new-york/ui/marker/marker";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
+} from "@/registry/new-york/ui/marker";
+import { Spinner } from "@/registry/new-york/ui/spinner";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("marker");
 
-const usage = `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker/marker";
+function CheckIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+const usage = `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
 
 export function Note() {
   return (
@@ -22,6 +47,50 @@ export function Note() {
       <MarkerIcon><span /></MarkerIcon>
       <MarkerContent>Explored 4 files</MarkerContent>
     </Marker>
+  );
+}
+`;
+
+const deployStatusCode = `import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function DeployStatus() {
+  return (
+    <Card className="w-full max-w-sm text-left">
+      <CardHeader>
+        <CardTitle>vinyaas-web</CardTitle>
+        <CardDescription>Production · us-east-1</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <p className="text-muted-foreground text-sm">
+          Last deploy finished 12 minutes ago. Traffic is healthy.
+        </p>
+        <Marker>
+          <MarkerIcon>
+            <CheckIcon />
+          </MarkerIcon>
+          <MarkerContent>Live on v1.1.0</MarkerContent>
+        </Marker>
+        <Button variant="outline" className="self-start">
+          View logs
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 `;
@@ -44,25 +113,58 @@ const api: ApiRow[] = [
 const examples: ComponentExample[] = [
   {
     id: "status",
-    title: "Status",
+    title: "Live status",
     description:
-      'A running note uses role="status" so the text can be announced.',
+      'Pair Marker with Spinner and role="status" for a running update assistive tech can announce.',
     preview: (
       <Marker role="status" className="max-w-sm">
         <MarkerIcon>
           <Spinner label="" />
         </MarkerIcon>
-        <MarkerContent>Compacting conversation</MarkerContent>
+        <MarkerContent>Indexing workspace…</MarkerContent>
       </Marker>
     ),
-    code: `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker/marker";
-import { Spinner } from "@/components/ui/spinner/spinner";
+    code: `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
+import { Spinner } from "@/components/ui/spinner";
 
-export function Running() {
+export function Indexing() {
   return (
     <Marker role="status">
       <MarkerIcon><Spinner label="" /></MarkerIcon>
-      <MarkerContent>Compacting conversation</MarkerContent>
+      <MarkerContent>Indexing workspace…</MarkerContent>
+    </Marker>
+  );
+}
+`,
+  },
+  {
+    id: "with-icon",
+    title: "With icon",
+    description:
+      "MarkerIcon holds a decorative glyph. The message stays ordinary text beside it.",
+    preview: (
+      <Marker className="max-w-sm">
+        <MarkerIcon>
+          <CheckIcon />
+        </MarkerIcon>
+        <MarkerContent>Checks passed on main</MarkerContent>
+      </Marker>
+    ),
+    code: `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function Passed() {
+  return (
+    <Marker>
+      <MarkerIcon><CheckIcon /></MarkerIcon>
+      <MarkerContent>Checks passed on main</MarkerContent>
     </Marker>
   );
 }
@@ -70,82 +172,111 @@ export function Running() {
   },
   {
     id: "border",
-    title: "Border",
-    description: "The row keeps the inline marker and adds a bottom border.",
+    title: "Bordered rows",
+    description:
+      "Use border when stacking a short activity list. Each row keeps the inline marker look.",
     preview: (
-      <div className="grid w-full max-w-sm gap-2 text-left">
+      <div className="grid w-full max-w-sm gap-0 text-left">
         <Marker variant="border">
-          <MarkerContent>Switched to release-candidate</MarkerContent>
+          <MarkerContent>Opened pull request #248</MarkerContent>
         </Marker>
         <Marker variant="border">
-          <MarkerContent>Reviewed 8 related files</MarkerContent>
+          <MarkerContent>Requested review from design</MarkerContent>
+        </Marker>
+        <Marker variant="border">
+          <MarkerContent>Updated CI for docs</MarkerContent>
         </Marker>
       </div>
     ),
-    code: `import { Marker, MarkerContent } from "@/components/ui/marker/marker";
+    code: `import { Marker, MarkerContent } from "@/components/ui/marker";
 
-export function Notes() {
+export function Activity() {
   return (
-    <Marker variant="border">
-      <MarkerContent>Reviewed 8 related files</MarkerContent>
-    </Marker>
+    <>
+      <Marker variant="border">
+        <MarkerContent>Opened pull request #248</MarkerContent>
+      </Marker>
+      <Marker variant="border">
+        <MarkerContent>Requested review from design</MarkerContent>
+      </Marker>
+      <Marker variant="border">
+        <MarkerContent>Updated CI for docs</MarkerContent>
+      </Marker>
+    </>
   );
 }
 `,
   },
   {
     id: "separator",
-    title: "Separator",
+    title: "Day separator",
     description:
-      "A date sits between two divider lines. The text stays ordinary content.",
+      "A labeled divider splits ordinary copy into days without making every line a Marker.",
     preview: (
-      <Marker variant="separator" className="w-full max-w-sm">
+      <div className="flex w-full max-w-sm flex-col gap-3 text-left">
+        <p className="text-muted-foreground text-sm">
+          Merged accessibility fixes for Dialog.
+        </p>
+        <Marker variant="separator">
+          <MarkerContent>Today</MarkerContent>
+        </Marker>
+        <p className="text-muted-foreground text-sm">
+          Published registry artifacts for Toast.
+        </p>
+      </div>
+    ),
+    code: `import { Marker, MarkerContent } from "@/components/ui/marker";
+
+export function ActivityDay() {
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-muted-foreground text-sm">
+        Merged accessibility fixes for Dialog.
+      </p>
+      <Marker variant="separator">
         <MarkerContent>Today</MarkerContent>
       </Marker>
-    ),
-    code: `import { Marker, MarkerContent } from "@/components/ui/marker/marker";
-
-export function Day() {
-  return (
-    <Marker variant="separator">
-      <MarkerContent>Today</MarkerContent>
-    </Marker>
-  );
-}
-`,
-  },
-  {
-    id: "link",
-    title: "Link",
-    description:
-      "The marker stays presentational. The link is a real anchor, so it keeps its own role.",
-    preview: (
-      <Marker>
-        <MarkerContent>
-          <a href="/components/marker" className="underline">
-            View the pull request
-          </a>
-        </MarkerContent>
-      </Marker>
-    ),
-    code: `import { Marker, MarkerContent } from "@/components/ui/marker/marker";
-
-export function PullRequest() {
-  return (
-    <Marker>
-      <MarkerContent>
-        <a href="/pulls">View the pull request</a>
-      </MarkerContent>
-    </Marker>
+      <p className="text-muted-foreground text-sm">
+        Published registry artifacts for Toast.
+      </p>
+    </div>
   );
 }
 `,
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A project card carries one status Marker. The rest of the surface is Card, copy, and a button.",
+  preview: (
+    <Card className="w-full max-w-sm text-left">
+      <CardHeader>
+        <CardTitle>vinyaas-web</CardTitle>
+        <CardDescription>Production · us-east-1</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <p className="text-muted-foreground text-sm">
+          Last deploy finished 12 minutes ago. Traffic is healthy.
+        </p>
+        <Marker>
+          <MarkerIcon>
+            <CheckIcon />
+          </MarkerIcon>
+          <MarkerContent>Live on v1.1.0</MarkerContent>
+        </Marker>
+        <Button variant="outline" className="self-start">
+          View logs
+        </Button>
+      </CardContent>
+    </Card>
+  ),
+  code: deployStatusCode,
+};
+
 export default async function MarkerPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/marker/marker.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/marker/index.tsx"),
     "utf8",
   );
 
@@ -165,13 +296,14 @@ export default async function MarkerPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/marker/marker.tsx</code>. It imports{" "}
+          <code>components/ui/marker/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

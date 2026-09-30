@@ -1,16 +1,19 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Label } from "@/registry/new-york/ui/label";
+import { Switch } from "@/registry/new-york/ui/switch";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/registry/new-york/ui/accordion/accordion";
+} from "@/registry/new-york/ui/accordion";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
@@ -22,7 +25,7 @@ const usage = `import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion/accordion";
+} from "@/components/ui/accordion";
 
 export function Faq() {
   return (
@@ -31,6 +34,57 @@ export function Faq() {
         <AccordionTrigger>What is Vinyaas?</AccordionTrigger>
         <AccordionContent>
           A source-installed component library.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
+}
+`;
+
+const settingsFaqCode = `import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+
+export function WorkspacePreferences() {
+  return (
+    <Accordion
+      type="multiple"
+      defaultValue={["notifications", "faq"]}
+      className="w-full max-w-md"
+    >
+      <AccordionItem value="notifications">
+        <AccordionTrigger>Notifications</AccordionTrigger>
+        <AccordionContent>
+          <div className="flex items-center justify-between gap-3 py-1">
+            <Label htmlFor="product-updates">Product updates</Label>
+            <Switch id="product-updates" defaultChecked />
+          </div>
+          <div className="flex items-center gap-2 py-1">
+            <Checkbox id="activity-mail" defaultChecked />
+            <Label htmlFor="activity-mail">Email me about activity</Label>
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="privacy">
+        <AccordionTrigger>Privacy</AccordionTrigger>
+        <AccordionContent>
+          <div className="flex items-center justify-between gap-3 py-1">
+            <Label htmlFor="profile-public">Public profile</Label>
+            <Switch id="profile-public" />
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="faq">
+        <AccordionTrigger>Where do settings apply?</AccordionTrigger>
+        <AccordionContent>
+          Preferences sync across the workspace. Each member can override email
+          notifications on their own account.
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -124,8 +178,8 @@ const examples: ComponentExample[] = [
           <AccordionTrigger>Notifications</AccordionTrigger>
           <AccordionContent>
             <div className="flex items-center justify-between gap-3 py-1">
-              <Label htmlFor="product-updates">Product updates</Label>
-              <Switch id="product-updates" defaultChecked />
+              <Label htmlFor="product-updates-example">Product updates</Label>
+              <Switch id="product-updates-example" defaultChecked />
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -133,8 +187,10 @@ const examples: ComponentExample[] = [
           <AccordionTrigger>Email</AccordionTrigger>
           <AccordionContent>
             <div className="flex items-center gap-2 py-1">
-              <Checkbox id="activity-mail" defaultChecked />
-              <Label htmlFor="activity-mail">Email me about activity</Label>
+              <Checkbox id="activity-mail-example" defaultChecked />
+              <Label htmlFor="activity-mail-example">
+                Email me about activity
+              </Label>
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -145,10 +201,10 @@ const examples: ComponentExample[] = [
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion/accordion";
-import { Checkbox } from "@/components/ui/checkbox/checkbox";
-import { Label } from "@/components/ui/label/label";
-import { Switch } from "@/components/ui/switch/switch";
+} from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export function SettingsAccordion() {
   return (
@@ -174,9 +230,52 @@ export function SettingsAccordion() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Workspace preferences mix settings panels with a short FAQ answer. Multiple sections stay open so controls and help share one stack.",
+  preview: (
+    <Accordion
+      type="multiple"
+      defaultValue={["notifications", "faq"]}
+      className="w-full max-w-md text-left"
+    >
+      <AccordionItem value="notifications">
+        <AccordionTrigger>Notifications</AccordionTrigger>
+        <AccordionContent>
+          <div className="flex items-center justify-between gap-3 py-1">
+            <Label htmlFor="product-updates">Product updates</Label>
+            <Switch id="product-updates" defaultChecked />
+          </div>
+          <div className="flex items-center gap-2 py-1">
+            <Checkbox id="activity-mail" defaultChecked />
+            <Label htmlFor="activity-mail">Email me about activity</Label>
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="privacy">
+        <AccordionTrigger>Privacy</AccordionTrigger>
+        <AccordionContent>
+          <div className="flex items-center justify-between gap-3 py-1">
+            <Label htmlFor="profile-public">Public profile</Label>
+            <Switch id="profile-public" />
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="faq">
+        <AccordionTrigger>Where do settings apply?</AccordionTrigger>
+        <AccordionContent>
+          Preferences sync across the workspace. Each member can override email
+          notifications on their own account.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  ),
+  code: { tsx: settingsFaqCode, jsx: settingsFaqCode },
+};
+
 export default async function AccordionPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/accordion/accordion.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/accordion/index.tsx"),
     "utf8",
   );
 
@@ -195,13 +294,14 @@ export default async function AccordionPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/accordion/accordion.tsx</code>. It imports{" "}
+          <code>components/ui/accordion/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

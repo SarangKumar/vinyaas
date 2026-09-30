@@ -10,6 +10,9 @@ export const registryItemTypes = ["registry:ui"] as const;
 
 export type RegistryItemType = (typeof registryItemTypes)[number];
 
+/** Default style used by discovery commands when no project config is loaded. */
+export const defaultRegistryStyle = "new-york";
+
 export interface RegistryCssVars {
   light?: Record<string, string>;
   dark?: Record<string, string>;
@@ -26,6 +29,8 @@ export interface RegistryItem {
   $schema: string;
   name: string;
   type: RegistryItemType;
+  /** Short user-facing summary for discovery commands. */
+  description?: string;
   /** npm packages. Always present, and possibly empty. */
   dependencies: string[];
   /** npm packages required only for development. */
@@ -37,4 +42,41 @@ export interface RegistryItem {
   css?: Record<string, string>;
   envVars?: Record<string, string>;
   docs?: string;
+}
+
+/** Lightweight catalog entry from `/r/<style>/index.json`. */
+export interface RegistryCatalogItem {
+  name: string;
+  type: RegistryItemType;
+  description?: string;
+  dependencies: string[];
+  devDependencies?: string[];
+  registryDependencies?: string[];
+  /** Registry-relative file paths, such as `ui/button/index.tsx`. */
+  files: string[];
+  docs?: string;
+}
+
+/** Style catalog for list and search. */
+export interface RegistryCatalog {
+  style: string;
+  items: RegistryCatalogItem[];
+}
+
+/**
+ * Stable discovery JSON for list/search/info.
+ * Omits file contents and other install-only payloads.
+ */
+export interface RegistryItemSummary {
+  name: string;
+  description?: string;
+  type: RegistryItemType;
+  files: string[];
+  dependencies: string[];
+  devDependencies?: string[];
+  registryDependencies: string[];
+  docs?: string;
+  cssVars?: boolean;
+  css?: boolean;
+  envVars?: string[];
 }

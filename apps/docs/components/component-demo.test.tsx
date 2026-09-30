@@ -38,7 +38,7 @@ describe("ComponentDemo", () => {
   }
 
   it("renders the preview, the complete source, and copy", () => {
-    const source = `import { Button } from "@/components/ui/button/button";
+    const source = `import { Button } from "@/components/ui/button";
 
 export function SaveButton() {
   return <Button>Save</Button>;
@@ -53,6 +53,9 @@ export function SaveButton() {
     );
 
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    expect(document.querySelector(".bg-background.min-h-48")).toHaveClass(
+      "text-sm",
+    );
     expect(document.querySelector("code")?.textContent).toContain(
       "export function SaveButton",
     );

@@ -1,14 +1,17 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/registry/new-york/ui/input-otp/input-otp";
+} from "@/registry/new-york/ui/input-otp";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -47,7 +50,7 @@ function Slots({ length, split }: { length: number; split?: boolean }) {
   );
 }
 
-const usage = `import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp/input-otp";
+const usage = `import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 
 export function Code() {
   return (
@@ -70,20 +73,22 @@ export function Code() {
 
 const verificationCode = `import { useState } from "react";
 
-import { Button } from "@/components/ui/button/button";
-import { Label } from "@/components/ui/label/label";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/ui/input-otp/input-otp";
-import { Spinner } from "@/components/ui/spinner/spinner";
-import { toast } from "@/components/ui/toast/toast";
+} from "@/components/ui/input-otp";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/components/ui/toast";
 
 export function VerificationCode() {
   const [value, setValue] = useState("");
   const [verifying, setVerifying] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [resending, setResending] = useState(false);
 
   function verify(code: string) {
     if (verifying || code.length !== 6) {
@@ -91,29 +96,65 @@ export function VerificationCode() {
     }
 
     setVerifying(true);
-    toast.add({
-      title: "Verification code",
-      description: code,
-      type: "success",
-    });
-    window.setTimeout(() => setVerifying(false), 1200);
+    setStatus("idle");
+    window.setTimeout(() => {
+      setVerifying(false);
+      if (code === "000000") {
+        setStatus("error");
+        return;
+      }
+      setStatus("success");
+      toast.add({
+        title: "Device verified",
+        description: "You can continue to your account.",
+        type: "success",
+      });
+    }, 1200);
+  }
+
+  function resend() {
+    if (resending || verifying) {
+      return;
+    }
+    setResending(true);
+    setStatus("idle");
+    setValue("");
+    window.setTimeout(() => {
+      setResending(false);
+      toast.add({
+        title: "Code sent",
+        description: "Check ada@analytical.engine for a new code.",
+        type: "success",
+      });
+    }, 900);
   }
 
   return (
     <form
-      className="grid max-w-sm gap-3"
+      className="grid max-w-sm gap-4"
       onSubmit={(event) => {
         event.preventDefault();
         verify(value);
       }}
     >
-      <Label htmlFor="otp">Verification code</Label>
+      <div className="grid gap-1">
+        <Label htmlFor="otp">Verification code</Label>
+        <p className="text-muted-foreground text-sm">
+          Enter the 6-digit code sent to ada@analytical.engine.
+        </p>
+      </div>
       <InputOTP
         id="otp"
         length={6}
         value={value}
+        invalid={status === "error"}
         aria-label="Verification code"
-        onChange={setValue}
+        onChange={(next) => {
+          setValue(next);
+          if (status !== "idle") {
+            setStatus("idle");
+          }
+        }}
         onComplete={verify}
       >
         <InputOTPGroup>
@@ -128,10 +169,33 @@ export function VerificationCode() {
           <InputOTPSlot index={5} />
         </InputOTPGroup>
       </InputOTP>
-      <Button type="submit" size="sm" className="gap-2" disabled={verifying}>
-        {verifying ? <Spinner label="" /> : null}
-        {verifying ? "Verifying" : "Verify"}
-      </Button>
+      {status === "error" ? (
+        <p className="text-destructive text-sm" role="alert">
+          That code is incorrect. Try again or resend a new one.
+        </p>
+      ) : null}
+      {status === "success" ? (
+        <p className="text-muted-foreground text-sm" role="status">
+          Device verified. You can continue.
+        </p>
+      ) : null}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <Button type="submit" size="sm" className="gap-2" disabled={verifying}>
+          {verifying ? <Spinner label="" /> : null}
+          {verifying ? "Verifying" : "Verify"}
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          className="gap-2"
+          disabled={resending || verifying}
+          onClick={resend}
+        >
+          {resending ? <Spinner label="" /> : null}
+          {resending ? "Sending" : "Resend code"}
+        </Button>
+      </div>
     </form>
   );
 }
@@ -167,14 +231,6 @@ const api: ApiRow[] = [
 ];
 
 const examples: ComponentExample[] = [
-  {
-    id: "otp",
-    title: "Verification code",
-    description:
-      "Six digits, split into two groups. Completing the code submits it, shows a toast, and puts Verify into a verifying state.",
-    preview: <VerificationCodeDemo />,
-    code: verificationCode,
-  },
   {
     id: "pin",
     title: "PIN",
@@ -215,9 +271,16 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Confirm a sign-in email with a six-digit code, Verify, Resend, and success or error copy.",
+  preview: <VerificationCodeDemo />,
+  code: verificationCode,
+};
+
 export default async function InputOTPPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/input-otp/input-otp.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/input-otp/index.tsx"),
     "utf8",
   );
 
@@ -237,13 +300,14 @@ export default async function InputOTPPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/input-otp/input-otp.tsx</code>. It imports{" "}
+          <code>components/ui/input-otp/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

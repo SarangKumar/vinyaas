@@ -1,9 +1,9 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -13,21 +13,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/registry/new-york/ui/dialog/dialog";
+} from "@/registry/new-york/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/registry/new-york/ui/radio-group/radio-group";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
-import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
+} from "@/registry/new-york/ui/dropdown-menu";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group";
+import { Switch } from "@/registry/new-york/ui/switch";
+import { Textarea } from "@/registry/new-york/ui/textarea";
 
 /**
  * Dense primitive kit — many controls in one composition.
@@ -91,8 +88,16 @@ export function PrimitivesKitBlock() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <DialogClose>Cancel</DialogClose>
-              <DialogClose>Archive</DialogClose>
+              <DialogClose>
+                <Button type="button" variant="outline">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <DialogClose>
+                <Button type="button" variant="destructive">
+                  Archive
+                </Button>
+              </DialogClose>
             </DialogFooter>
           </DialogContent>
         </Dialog>

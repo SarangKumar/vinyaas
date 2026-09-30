@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { CustomerTable } from "./table-demos";
 import {
@@ -13,7 +16,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/new-york/ui/table/table";
+} from "@/registry/new-york/ui/table";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -69,7 +72,7 @@ const usage = `import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table/table";
+} from "@/components/ui/table";
 
 export function Team() {
   return (
@@ -153,33 +156,40 @@ const examples: ComponentExample[] = [
     title: "Responsive",
     description:
       "A wide table scrolls inside its wrapper. The page itself does not scroll sideways.",
-    preview: <TeamTable wide />,
-    code: `<Table className="min-w-[40rem]">
-  <TableHeader>
-    <TableRow>
-      <TableHead>Name</TableHead>
-      <TableHead>Role</TableHead>
-    </TableRow>
-  </TableHeader>
-</Table>`,
+    preview: (
+      <div className="w-full max-w-md overflow-x-auto">
+        <TeamTable wide />
+      </div>
+    ),
+    code: `<div className="overflow-x-auto">
+  <Table className="min-w-[40rem]">
+    <TableHeader>
+      <TableRow>
+        <TableHead>Name</TableHead>
+        <TableHead>Role</TableHead>
+      </TableRow>
+    </TableHeader>
+  </Table>
+</div>`,
   },
-  {
-    id: "users",
-    title: "Users",
-    description:
-      "Search filters the rows in the page. Status uses a badge. The row menu is a dropdown. The table component itself stays a set of table elements.",
-    preview: <CustomerTable />,
-    code: `import { useState } from "react";
+];
 
-import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
+const inPractice: ComponentInPractice = {
+  description:
+    "A team directory pairs Avatar, Badge status, search, and a row menu. The table stays semantic; the page owns filtering and actions.",
+  preview: <CustomerTable />,
+  code: `import { useState } from "react";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu/dropdown-menu";
-import { Input } from "@/components/ui/input/input";
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -187,73 +197,101 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table/table";
+} from "@/components/ui/table";
 
-const customers = [
-  ["Aarav Sharma", "aarav@example.com", "Active"],
-  ["Priya Singh", "priya@example.com", "Pending"],
+const users = [
+  ["Aarav Sharma", "aarav@example.com", "AS", "Admin", "Active"],
+  ["Priya Singh", "priya@example.com", "PS", "Editor", "Pending"],
 ];
 
-export function CustomerTable() {
+export function TeamMembers() {
   const [query, setQuery] = useState("");
-  const visible = customers.filter(([name, email]) =>
+  const visible = users.filter(([name, email]) =>
     \`\${name} \${email}\`.toLowerCase().includes(query.trim().toLowerCase()),
   );
 
   return (
-    <div>
+    <div className="grid gap-3">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-medium">Team members</h3>
+          <p className="text-muted-foreground text-sm">
+            People with access to this workspace.
+          </p>
+        </div>
+        <Button size="sm">Invite</Button>
+      </div>
       <Input
-        aria-label="Search customers"
-        placeholder="Search customers..."
+        aria-label="Search users"
+        placeholder="Search users..."
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {visible.length === 0 ? (
+      <div className="overflow-x-auto">
+        <Table className="min-w-[36rem]">
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={4}>No customers match that search.</TableCell>
+              <TableHead>User</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>
+                <span className="sr-only">Actions</span>
+              </TableHead>
             </TableRow>
-          ) : (
-            visible.map(([name, email, status]) => (
+          </TableHeader>
+          <TableBody>
+            {visible.map(([name, email, initials, role, status]) => (
               <TableRow key={email}>
-                <TableCell>{name}</TableCell>
-                <TableCell>{email}</TableCell>
-                <TableCell><Badge>{status}</Badge></TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarFallback>{initials}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-medium">{name}</p>
+                      <p className="text-muted-foreground text-xs">{email}</p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>{role}</TableCell>
+                <TableCell>
+                  <Badge variant={status === "Active" ? "secondary" : "outline"}>
+                    {status}
+                  </Badge>
+                </TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger>
-                      <Button aria-label={\`Actions for \${name}\`}>⋮</Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        aria-label={\`Actions for \${name}\`}
+                      >
+                        ⋮
+                      </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem>View profile</DropdownMenuItem>
-                      <DropdownMenuItem variant="destructive">Remove</DropdownMenuItem>
+                      <DropdownMenuItem variant="destructive">
+                        Remove
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
 `,
-  },
-];
+};
 
 export default async function TablePage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/table/table.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/table/index.tsx"),
     "utf8",
   );
 
@@ -280,13 +318,14 @@ export default async function TablePage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/table/table.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/table/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

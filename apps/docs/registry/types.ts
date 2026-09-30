@@ -10,7 +10,7 @@ export type RegistryItemType = (typeof registryItemTypes)[number];
 
 /** File delivered to a consumer project. Content is added during the build. */
 export interface RegistryFile {
-  /** Path relative to the theme directory, such as `ui/button/button.tsx`. */
+  /** Path relative to the theme directory, such as `ui/button/index.tsx`. */
   path: string;
   type?: RegistryItemType;
   /** Optional destination hint for a future CLI. */
@@ -25,6 +25,8 @@ export interface RegistryCssVars {
 export interface RegistryItem {
   name: string;
   type: RegistryItemType;
+  /** Short user-facing summary for discovery commands. */
+  description?: string;
   /** npm packages required by this item. */
   dependencies?: readonly string[];
   /** npm packages required only for development. */
@@ -51,6 +53,7 @@ export interface RegistryItemPayload {
   $schema: string;
   name: string;
   type: RegistryItemType;
+  description?: string;
   dependencies: string[];
   devDependencies?: string[];
   registryDependencies?: string[];
@@ -59,4 +62,25 @@ export interface RegistryItemPayload {
   css?: Record<string, string>;
   envVars?: Record<string, string>;
   docs?: string;
+}
+
+/**
+ * Lightweight catalog entry written to `public/r/<style>/index.json`.
+ * File contents are omitted so discovery stays cheap.
+ */
+export interface RegistryCatalogItem {
+  name: string;
+  type: RegistryItemType;
+  description?: string;
+  dependencies: string[];
+  devDependencies?: string[];
+  registryDependencies?: string[];
+  files: string[];
+  docs?: string;
+}
+
+/** Style catalog for `vinyaas list` / `vinyaas search`. */
+export interface RegistryCatalog {
+  style: string;
+  items: RegistryCatalogItem[];
 }

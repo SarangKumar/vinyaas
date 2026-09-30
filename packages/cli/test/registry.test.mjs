@@ -14,7 +14,7 @@ const buttonItem = {
   dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
   files: [
     {
-      path: "ui/button/button.tsx",
+      path: "ui/button/index.tsx",
       content: "export function Button() { return null; }\n",
       type: "registry:ui",
     },
@@ -285,7 +285,7 @@ describe("fetchRegistryItem", () => {
     const { fetch } = mockFetch(
       jsonResponse(200, {
         ...buttonItem,
-        files: [{ path: "ui/button/button.tsx" }],
+        files: [{ path: "ui/button/index.tsx" }],
       }),
     );
 

@@ -1,3 +1,7 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import {
   act,
   fireEvent,
@@ -7,7 +11,9 @@ import {
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { toast, Toaster } from "./toast";
+import { toast, Toaster } from ".";
+
+const toastDir = path.dirname(fileURLToPath(import.meta.url));
 
 async function flushMount() {
   await act(async () => {
@@ -46,8 +52,30 @@ describe("Toast", () => {
     expect(status).toHaveAttribute("data-type", "success");
     expect(status).toHaveClass("vinyaas-toast-in");
     expect(status.closest("[data-toaster]")?.querySelector("style")).toBeNull();
+    expect(document.querySelector("style")).toBeNull();
     expect(status.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     expect(screen.getByRole("button", { name: "Page" })).toHaveFocus();
+  });
+
+  it("ships toast motion CSS beside the component", async () => {
+    const css = await fs.readFile(path.join(toastDir, "toast.css"), "utf8");
+    const source = await fs.readFile(path.join(toastDir, "index.tsx"), "utf8");
+
+    expect(source).toContain('import "./toast.css"');
+    expect(source).not.toContain("dangerouslySetInnerHTML");
+    expect(source).not.toContain("<style");
+    expect(css).toContain("@keyframes vinyaas-toast-in");
+    expect(css).toContain("@keyframes vinyaas-toast-out");
+    expect(css).toContain(".vinyaas-toast-in");
+    expect(css).toContain(".vinyaas-toast-out");
+    expect(css).toContain("animation: vinyaas-toast-in 180ms ease-out");
+    expect(css).toContain(
+      "animation: vinyaas-toast-out 160ms ease-in forwards",
+    );
+    expect(css).toContain("@media (prefers-reduced-motion: reduce)");
+    expect(css).toMatch(
+      /prefers-reduced-motion: reduce[\s\S]*\.vinyaas-toast-in[\s\S]*animation:\s*none/,
+    );
   });
 
   it("stacks toasts, runs an action, and dismisses one", async () => {
@@ -158,6 +186,10 @@ describe("Toast", () => {
       toast.add({ title: "Could not save", type: "error" });
     });
 
-    expect(screen.getByRole("alert")).toHaveTextContent("Could not save");
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent("Could not save");
+    expect(alert).toHaveClass("bg-muted", "text-foreground");
+    expect(alert.querySelector("svg")).toHaveClass("text-destructive");
+    expect(alert).not.toHaveClass("bg-destructive");
   });
 });

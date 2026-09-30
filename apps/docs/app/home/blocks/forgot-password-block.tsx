@@ -1,10 +1,10 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { toast } from "@/registry/new-york/ui/toast/toast";
+import { Button } from "@/registry/new-york/ui/button";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { toast } from "@/registry/new-york/ui/toast";
 
 export function ForgotPasswordBlock() {
   return (

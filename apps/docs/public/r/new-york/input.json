@@ -2,10 +2,11 @@
   "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
   "name": "input",
   "type": "registry:ui",
+  "description": "A text field that passes through native input attributes.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
-      "path": "ui/input/input.tsx",
+      "path": "ui/input/index.tsx",
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type InputProps = React.ComponentProps<\"input\">;\n\nexport function Input({ className, type = \"text\", ref, ...props }: InputProps) {\n  return (\n    <input\n      type={type}\n      ref={ref}\n      className={cn(\n        \"border-input bg-muted text-foreground placeholder:text-muted-foreground focus-visible:ring-ring focus-visible:ring-offset-background flex h-9 w-full rounded-md border px-3 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }

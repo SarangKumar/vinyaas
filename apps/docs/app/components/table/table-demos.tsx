@@ -2,15 +2,16 @@
 
 import { useState } from "react";
 
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
-import { Input } from "@/registry/new-york/ui/input/input";
+} from "@/registry/new-york/ui/dropdown-menu";
+import { Input } from "@/registry/new-york/ui/input";
 import {
   Table,
   TableBody,
@@ -18,12 +19,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/new-york/ui/table/table";
+} from "@/registry/new-york/ui/table";
 
 const users = [
-  ["Aarav Sharma", "Admin", "Active"],
-  ["Priya Singh", "Editor", "Pending"],
-  ["Rahul Mehta", "Viewer", "Disabled"],
+  ["Aarav Sharma", "aarav@example.com", "AS", "Admin", "Active"],
+  ["Priya Singh", "priya@example.com", "PS", "Editor", "Pending"],
+  ["Rahul Mehta", "rahul@example.com", "RM", "Viewer", "Disabled"],
 ] as const;
 
 function SearchIcon() {
@@ -58,14 +59,20 @@ function MoreIcon() {
 export function CustomerTable() {
   const [query, setQuery] = useState("");
   const normalized = query.trim().toLowerCase();
-  const visible = users.filter(([name, role, status]) =>
-    `${name} ${role} ${status}`.toLowerCase().includes(normalized),
+  const visible = users.filter(([name, email, , role, status]) =>
+    `${name} ${email} ${role} ${status}`.toLowerCase().includes(normalized),
   );
 
   return (
-    <div className="grid w-full max-w-xl gap-3 text-left">
-      <div>
-        <h3 className="text-sm font-medium">Users</h3>
+    <div className="grid w-full max-w-2xl gap-3 text-left">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-medium">Team members</h3>
+          <p className="text-muted-foreground text-sm">
+            People with access to this workspace.
+          </p>
+        </div>
+        <Button size="sm">Invite</Button>
       </div>
       <div className="relative">
         <SearchIcon />
@@ -77,58 +84,74 @@ export function CustomerTable() {
           onChange={(event) => setQuery(event.target.value)}
         />
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {visible.length === 0 ? (
+      <div className="overflow-x-auto">
+        <Table className="min-w-[36rem]">
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={4}>No users match that search.</TableCell>
+              <TableHead>User</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="w-12">
+                <span className="sr-only">Actions</span>
+              </TableHead>
             </TableRow>
-          ) : (
-            visible.map(([name, role, status]) => (
-              <TableRow key={name}>
-                <TableCell>{name}</TableCell>
-                <TableCell>{role}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={status === "Active" ? "secondary" : "outline"}
-                  >
-                    {status}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        aria-label={`Actions for ${name}`}
-                      >
-                        <MoreIcon />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View profile</DropdownMenuItem>
-                      <DropdownMenuItem>Copy email</DropdownMenuItem>
-                      <DropdownMenuItem variant="destructive">
-                        Remove
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+          </TableHeader>
+          <TableBody>
+            {visible.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4}>No users match that search.</TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+            ) : (
+              visible.map(([name, email, initials, role, status]) => (
+                <TableRow key={email}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarFallback>{initials}</AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium">{name}</p>
+                        <p className="text-muted-foreground truncate text-xs">
+                          {email}
+                        </p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>{role}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={status === "Active" ? "secondary" : "outline"}
+                    >
+                      {status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          aria-label={`Actions for ${name}`}
+                        >
+                          <MoreIcon />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>View profile</DropdownMenuItem>
+                        <DropdownMenuItem>Copy email</DropdownMenuItem>
+                        <DropdownMenuItem variant="destructive">
+                          Remove
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

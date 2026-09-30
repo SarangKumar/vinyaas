@@ -9,7 +9,8 @@
   },
   "files": [
     "dist/index.js",
-    "dist/index.js.map"
+    "dist/index.js.map",
+    "README.md"
   ],
   "publishConfig": {
     "access": "public"
@@ -17,6 +18,24 @@
   "engines": {
     "node": ">=20"
   },
+  "homepage": "https://www.npmjs.com/package/vinyaas",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SarangKumar/vinyaas.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/SarangKumar/vinyaas/issues"
+  },
+  "keywords": [
+    "vinyaas",
+    "cli",
+    "react",
+    "tailwindcss",
+    "components",
+    "registry",
+    "ui"
+  ],
   "author": {
     "name": "Sarang Kumar",
     "url": "https://github.com/SarangKumar"

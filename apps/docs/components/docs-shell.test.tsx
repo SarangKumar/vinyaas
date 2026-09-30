@@ -96,6 +96,13 @@ describe("DocsShell", () => {
     expect(
       within(start).getByRole("link", { name: "Components" }),
     ).toHaveAttribute("href", "/components");
+    expect(within(start).getByRole("link", { name: "Themes" })).toHaveAttribute(
+      "href",
+      "/themes",
+    );
+    expect(
+      within(start).getByRole("link", { name: "Typeset" }),
+    ).toHaveAttribute("href", "/typeset");
     expect(
       within(start).queryByRole("button", { name: "Search documentation" }),
     ).toBeNull();
@@ -127,9 +134,13 @@ describe("DocsShell", () => {
     expect(end.className).toContain("lg:gap-4");
     expect(document.querySelector("header")).toHaveClass(
       "h-12",
-      "sticky",
-      "top-0",
+      "relative",
       "z-30",
+    );
+    expect(document.querySelector("header")).not.toHaveClass("sticky");
+    expect(document.querySelector("[data-docs-sidebar]")).toHaveClass(
+      "relative",
+      "z-0",
     );
     expect(
       within(end).getAllByRole("button", { name: "Search documentation" })

@@ -2,12 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "./input-otp";
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from ".";
 
 function Slots() {
   return (

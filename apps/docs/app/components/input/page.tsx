@@ -1,15 +1,21 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Input } from "@/registry/new-york/ui/input/input";
+import { Button } from "@/registry/new-york/ui/button";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("input");
 
-const usage = `import { Input } from "@/components/ui/input/input";
+const usage = `import { Input } from "@/components/ui/input";
 
 export function EmailField() {
   return (
@@ -17,6 +23,46 @@ export function EmailField() {
       Email
       <Input id="email" name="email" type="email" placeholder="name@example.com" />
     </label>
+  );
+}
+`;
+
+const inPracticeSource = `import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+export function SignInForm() {
+  return (
+    <form className="grid w-full max-w-sm gap-4 text-left">
+      <div className="grid gap-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="username"
+          defaultValue="ada@analytical.engine"
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          defaultValue="notes"
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox id="remember" defaultChecked />
+        <Label htmlFor="remember">Remember this device</Label>
+      </div>
+      <Button type="submit" className="w-full sm:w-auto">
+        Sign in
+      </Button>
+    </form>
   );
 }
 `;
@@ -154,9 +200,46 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Email and password fields sit above a remember checkbox and a Sign in button.",
+  preview: (
+    <form className="grid w-full max-w-sm gap-4 text-left">
+      <div className="grid gap-2">
+        <Label htmlFor="practice-email">Email</Label>
+        <Input
+          id="practice-email"
+          name="email"
+          type="email"
+          autoComplete="username"
+          defaultValue="ada@analytical.engine"
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="practice-password">Password</Label>
+        <Input
+          id="practice-password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          defaultValue="notes"
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox id="practice-remember" defaultChecked />
+        <Label htmlFor="practice-remember">Remember this device</Label>
+      </div>
+      <Button type="submit" className="w-full sm:w-auto">
+        Sign in
+      </Button>
+    </form>
+  ),
+  code: inPracticeSource,
+};
+
 export default async function InputPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/input/input.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/input/index.tsx"),
     "utf8",
   );
 
@@ -175,13 +258,14 @@ export default async function InputPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/input/input.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/input/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

@@ -4,7 +4,7 @@ import { tsxToJsx } from "./tsx-to-jsx";
 
 describe("tsxToJsx", () => {
   it("leaves plain JSX-compatible examples unchanged", () => {
-    const source = `import { Button } from "@/components/ui/button/button";
+    const source = `import { Button } from "@/components/ui/button";
 
 export function SaveButton() {
   return <Button>Save</Button>;

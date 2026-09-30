@@ -1,0 +1,215 @@
+/*
+ * Docs site only — not part of the consumer theme stylesheet.
+ * Imported by the docs app layout after globals.css.
+ */
+
+:root {
+  /* New-component marker follows primary so dots match the theme accent. */
+  --new: var(--primary);
+  --sidebar-foreground: var(--muted-foreground);
+
+  /*
+   * Homepage playground rhythm. --gap is set from these on the shell
+   * and shrinks on smaller viewports.
+   * Aligns with Tailwind spacing: 4=1rem, 6=1.5rem, 8=2rem, 10=2.5rem.
+   */
+  --playground-gap: 1rem;
+  --playground-gap-md: 1.5rem;
+  --playground-gap-xl: 2rem;
+  --playground-gap-2xl: 2.5rem;
+  --playground-pad: 1.5rem;
+  --playground-pad-lg: 1.5rem;
+  --playground-pad-xl: 3rem;
+
+  /*
+   * Syntax colors for CodeBlock — brighter than body copy so tokens
+   * separate clearly inside muted card surfaces.
+   */
+  --syntax-plain: oklch(0.28 0.02 286);
+  --syntax-keyword: oklch(0.42 0.18 303);
+  --syntax-fn: oklch(0.4 0.16 255);
+  --syntax-string: oklch(0.4 0.14 160);
+  --syntax-param: oklch(0.45 0.14 55);
+  --syntax-number: oklch(0.45 0.15 35);
+  --syntax-comment: oklch(0.55 0.02 286);
+  --syntax-punct: oklch(0.42 0.02 286);
+}
+
+.dark {
+  --new: var(--primary);
+  --sidebar-foreground: var(--muted-foreground);
+
+  --syntax-plain: oklch(0.92 0.02 286);
+  --syntax-keyword: oklch(0.84 0.14 303);
+  --syntax-fn: oklch(0.82 0.12 250);
+  --syntax-string: oklch(0.84 0.13 160);
+  --syntax-param: oklch(0.86 0.1 55);
+  --syntax-number: oklch(0.86 0.11 35);
+  --syntax-comment: oklch(0.68 0.02 286);
+  --syntax-punct: oklch(0.78 0.02 286);
+}
+
+@theme inline {
+  --color-new: var(--new);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+
+  --spacing-playground-gap: var(--playground-gap);
+  --spacing-playground-gap-md: var(--playground-gap-md);
+  --spacing-playground-gap-xl: var(--playground-gap-xl);
+  --spacing-playground-gap-2xl: var(--playground-gap-2xl);
+}
+
+/*
+ * Docs prose inline code (installation pages, component notes, etc.).
+ * CodeBlock uses data-language and is excluded. Consumers do not get this
+ * from globals.css — opt into .typeset-docs when wrapping Typography.
+ */
+:not(pre) > code:not([data-language]) {
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  padding: 0.125rem 0.375rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: calc(0.875em - 2px);
+  color: var(--foreground);
+}
+
+code[data-language] {
+  color: var(--syntax-plain);
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+code[data-language] .hljs-keyword,
+code[data-language] .hljs-selector-tag,
+code[data-language] .hljs-built_in,
+code[data-language] .hljs-type {
+  color: var(--syntax-keyword);
+  font-weight: 400;
+}
+
+code[data-language] .hljs-title,
+code[data-language] .hljs-title.function_,
+code[data-language] .hljs-title.class_,
+code[data-language] .hljs-function,
+code[data-language] .hljs-name {
+  color: var(--syntax-fn);
+  font-weight: 400;
+}
+
+code[data-language] .hljs-string,
+code[data-language] .hljs-regexp,
+code[data-language] .hljs-template-tag,
+code[data-language] .hljs-template-variable {
+  color: var(--syntax-string);
+}
+
+code[data-language] .hljs-attr,
+code[data-language] .hljs-attribute,
+code[data-language] .hljs-params,
+code[data-language] .hljs-variable {
+  color: var(--syntax-param);
+}
+
+code[data-language] .hljs-tag {
+  color: var(--syntax-punct);
+}
+
+code[data-language] .hljs-comment,
+code[data-language] .hljs-doctag {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+code[data-language] .hljs-number,
+code[data-language] .hljs-literal,
+code[data-language] .hljs-meta {
+  color: var(--syntax-number);
+}
+
+code[data-language] .hljs-punctuation,
+code[data-language] .hljs-operator {
+  color: var(--syntax-punct);
+}
+
+/*
+ * Optional long-form density for Typography. Documented on the Typography
+ * page — consumers copy this pattern into their own stylesheet when needed.
+ */
+.typeset-docs {
+  --typeset-font-body: var(--font-geist-sans);
+  --typeset-font-heading: var(--font-geist-sans);
+  --typeset-font-mono: var(--font-geist-mono);
+  --typeset-size: 15px;
+  --typeset-leading: 1.75;
+  --typeset-flow: 1.25em;
+  font-family: var(--typeset-font-body), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--typeset-size);
+  line-height: var(--typeset-leading);
+}
+
+.typeset-docs :where(h1, h2, h3, h4) {
+  font-family:
+    var(--typeset-font-heading), ui-sans-serif, system-ui, sans-serif;
+}
+
+.typeset-docs :where(code, kbd, samp) {
+  font-family: var(--typeset-font-mono), ui-monospace, monospace;
+}
+
+.typeset-docs :where(:not(pre) > code) {
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  padding: 0.125rem 0.375rem;
+  font-size: calc(0.875em - 2px);
+  color: var(--foreground);
+}
+
+/*
+ * Print: the docs shell uses nested overflow + fixed viewport heights so
+ * screen pages scroll in-place. Browsers then clip print output to the
+ * visible scrollport. Unlock overflow and let content flow as a document.
+ * Interactive chrome is hidden via print:hidden on the components.
+ */
+@media print {
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  body > div,
+  [data-docs-frame],
+  [data-docs-frame] > div,
+  #docs-content {
+    display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    position: static !important;
+  }
+
+  [data-playground-grid] {
+    columns: 1 !important;
+    column-fill: auto !important;
+  }
+
+  [data-playground-block] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+    width: 100% !important;
+  }
+
+  [data-theme-playground],
+  [data-typeset-playground] {
+    overflow: visible !important;
+  }
+
+  /*
+   * Start print at the current scroll position inside #docs-content.
+   * --print-scroll-offset is set from beforeprint (usePrintFromScroll).
+   */
+  #docs-content[data-print-from-scroll="true"] > * {
+    transform: translateY(var(--print-scroll-offset, 0));
+  }
+}

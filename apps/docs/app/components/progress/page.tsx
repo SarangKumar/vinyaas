@@ -1,18 +1,51 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Progress } from "@/registry/new-york/ui/progress/progress";
+import { Button } from "@/registry/new-york/ui/button";
+import { Label } from "@/registry/new-york/ui/label";
+import { Progress } from "@/registry/new-york/ui/progress";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("progress");
 
-const usage = `import { Progress } from "@/components/ui/progress/progress";
+const usage = `import { Progress } from "@/components/ui/progress";
 
 export function UploadProgress() {
   return <Progress aria-label="Upload" value={40} max={100} />;
+}
+`;
+
+const uploadPanelCode = `import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+
+export function UploadPanel() {
+  return (
+    <div className="grid w-full max-w-md gap-3 text-left">
+      <div className="flex items-baseline justify-between gap-3">
+        <Label htmlFor="upload-progress">Uploading report.pdf</Label>
+        <span className="text-muted-foreground text-sm tabular-nums">40%</span>
+      </div>
+      <Progress
+        id="upload-progress"
+        aria-label="Uploading report.pdf"
+        value={40}
+        max={100}
+      />
+      <p className="text-muted-foreground text-sm">
+        2 of 5 MB uploaded. Keep this tab open until the transfer finishes.
+      </p>
+      <Button type="button" variant="outline" className="w-fit">
+        Cancel upload
+      </Button>
+    </div>
+  );
 }
 `;
 
@@ -76,9 +109,35 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "An upload panel shows the file name, percent complete, status copy, and a Cancel action beside Progress.",
+  preview: (
+    <div className="grid w-full max-w-md gap-3 text-left">
+      <div className="flex items-baseline justify-between gap-3">
+        <Label htmlFor="practice-upload-progress">Uploading report.pdf</Label>
+        <span className="text-muted-foreground text-sm tabular-nums">40%</span>
+      </div>
+      <Progress
+        id="practice-upload-progress"
+        aria-label="Uploading report.pdf"
+        value={40}
+        max={100}
+      />
+      <p className="text-muted-foreground text-sm">
+        2 of 5 MB uploaded. Keep this tab open until the transfer finishes.
+      </p>
+      <Button type="button" variant="outline" className="w-fit">
+        Cancel upload
+      </Button>
+    </div>
+  ),
+  code: uploadPanelCode,
+};
+
 export default async function ProgressPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/progress/progress.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/progress/index.tsx"),
     "utf8",
   );
 
@@ -104,13 +163,14 @@ export default async function ProgressPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/progress/progress.tsx</code>. It imports{" "}
+          <code>components/ui/progress/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

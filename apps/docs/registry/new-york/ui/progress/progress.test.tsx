@@ -2,7 +2,7 @@ import { createRef } from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Progress } from "./progress";
+import { Progress } from ".";
 
 describe("Progress", () => {
   it("renders a native progress element with value and max", () => {

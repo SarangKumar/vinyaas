@@ -22,9 +22,19 @@ export type ComponentExample = {
   language?: CodeLanguage;
 };
 
+/** Realistic multi-component composition shown immediately before API. */
+export type ComponentInPractice = {
+  description: string;
+  preview: ReactNode;
+  code: DemoCode;
+  language?: CodeLanguage;
+};
+
 /**
  * Shared layout for a component documentation page.
- * Optional sections stay out of the page when a component does not need them.
+ *
+ * Order: Preview → Installation → Usage → Examples → In practice → API →
+ * Accessibility → Source. Optional sections stay out when unused.
  */
 export function ComponentReference({
   title,
@@ -34,6 +44,7 @@ export function ComponentReference({
   manual,
   usage,
   examples,
+  inPractice,
   api,
   accessibility,
   source,
@@ -46,6 +57,7 @@ export function ComponentReference({
   manual?: ReactNode;
   usage: string;
   examples?: ComponentExample[];
+  inPractice?: ComponentInPractice;
   api?: ApiRow[];
   accessibility?: ReactNode;
   source: string;
@@ -58,7 +70,7 @@ export function ComponentReference({
           <h2 id="overview" className={sectionHeading}>
             Overview
           </h2>
-          <div className="text-body flex flex-col gap-3 text-base leading-7">
+          <div className="text-foreground flex flex-col gap-3 text-sm leading-6">
             {overview}
           </div>
         </section>
@@ -82,7 +94,7 @@ export function ComponentReference({
           />
         </div>
         {manual ? (
-          <div className="text-body flex flex-col gap-3 text-base leading-7">
+          <div className="text-foreground flex flex-col gap-3 text-sm leading-6">
             <h3 id="manual" className={subsectionHeading}>
               Manual
             </h3>
@@ -106,7 +118,7 @@ export function ComponentReference({
               <h3 id={example.id} className={subsectionHeading}>
                 {example.title}
               </h3>
-              <p className="text-body text-sm leading-6">
+              <p className="text-muted-foreground text-sm leading-6">
                 {example.description}
               </p>
               <ComponentDemo
@@ -118,19 +130,34 @@ export function ComponentReference({
           ))}
         </section>
       ) : null}
+      {inPractice ? (
+        <section className="flex flex-col gap-4">
+          <h2 id="in-practice" className={sectionHeading}>
+            In practice
+          </h2>
+          <p className="text-muted-foreground text-sm leading-6">
+            {inPractice.description}
+          </p>
+          <ComponentDemo
+            preview={inPractice.preview}
+            code={inPractice.code}
+            language={inPractice.language}
+          />
+        </section>
+      ) : null}
       {api && api.length > 0 ? (
         <section className="flex flex-col gap-4">
           <h2 id="api" className={sectionHeading}>
             API
           </h2>
-          <p className="text-body text-sm leading-6">
+          <p className="text-foreground text-sm leading-6">
             Other attributes for the underlying element are passed through.
           </p>
           <ApiTable rows={api} />
         </section>
       ) : null}
       {accessibility ? (
-        <section className="text-body flex flex-col gap-4 text-base leading-7">
+        <section className="text-foreground flex flex-col gap-4 text-sm leading-6">
           <h2 id="accessibility" className={sectionHeading}>
             Accessibility
           </h2>

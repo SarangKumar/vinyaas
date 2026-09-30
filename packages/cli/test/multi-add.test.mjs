@@ -5,8 +5,6 @@ import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
 
 import { runAdd } from "../src/commands/add.ts";
-import { CliError } from "../src/lib/cli-error.ts";
-import { RegistryError } from "../src/lib/registry/client.ts";
 
 const cssContent = '@import "tailwindcss";\n';
 
@@ -34,7 +32,7 @@ function registryItem(name, extra = {}) {
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
-        path: `ui/${name}/${name}.tsx`,
+        path: `ui/${name}/index.tsx`,
         content: `export function ${name}() { return null; }\n`,
       },
     ],
@@ -152,7 +150,7 @@ describe("vinyaas add multiple components", () => {
     assert.equal(plan.name, "button");
     assert.deepEqual(plan.items, ["card", "button"]);
     const written = await readFile(
-      join(cwd, "components/ui/button/button.tsx"),
+      join(cwd, "components/ui/button/index.tsx"),
       "utf8",
     );
     assert.match(written, /function button/);
@@ -163,14 +161,14 @@ describe("vinyaas add multiple components", () => {
     const registry = fetchCatalog(catalog);
     const { stdout, plan } = await add(cwd, ["button", "badge"], registry);
 
-    assert.match(stdout, /Added button\./);
-    assert.match(stdout, /Added badge\./);
-    assert.match(stdout, /Installed 2 components\./);
+    assert.match(stdout, /Installed:/);
+    assert.match(stdout, /- button/);
+    assert.match(stdout, /- badge/);
     assert.ok(
       plan.entries.some((entry) => entry.destinationPath.includes("badge")),
     );
-    await access(join(cwd, "components/ui/badge/badge.tsx"));
-    await access(join(cwd, "components/ui/button/button.tsx"));
+    await access(join(cwd, "components/ui/badge/index.tsx"));
+    await access(join(cwd, "components/ui/button/index.tsx"));
   });
 
   it("installs three components and resolves each registry item once", async () => {
@@ -182,7 +180,10 @@ describe("vinyaas add multiple components", () => {
       registry,
     );
 
-    assert.match(stdout, /Installed 3 components\./);
+    assert.match(stdout, /Installed:/);
+    assert.match(stdout, /- button/);
+    assert.match(stdout, /- card/);
+    assert.match(stdout, /- badge/);
     assert.deepEqual(
       plan.items
         .filter((name) => ["button", "card", "badge"].includes(name))
@@ -192,7 +193,7 @@ describe("vinyaas add multiple components", () => {
     assert.equal(registry.counts.button, 1);
     assert.equal(registry.counts.card, 1);
     assert.equal(registry.counts.badge, 1);
-    await access(join(cwd, "components/ui/card/card.tsx"));
+    await access(join(cwd, "components/ui/card/index.tsx"));
   });
 
   it("installs shared npm dependencies once", async () => {
@@ -218,53 +219,108 @@ describe("vinyaas add multiple components", () => {
     assert.ok(calls[0].args.includes("class-variance-authority"));
   });
 
-  it("reports every unknown component and writes nothing", async () => {
+  it("installs known components and reports unknown names as failed", async () => {
     const cwd = await writeProject();
     const registry = fetchCatalog(catalog);
+    const { stdout, plan } = await add(
+      cwd,
+      ["button", "does-not-exist", "card"],
+      registry,
+    );
 
-    await assert.rejects(
-      () => add(cwd, ["button", "does-not-exist", "card"], registry),
-      (error) => {
-        assert.ok(error instanceof RegistryError);
-        assert.match(error.message, /Unknown component\(s\):/);
-        assert.match(error.message, /- does-not-exist/);
-        assert.match(error.message, /No files were changed\./);
-        return true;
-      },
-    );
-    await assert.rejects(access(join(cwd, "components/ui/button/button.tsx")));
-    await assert.rejects(access(join(cwd, "components/ui/card/card.tsx")));
-    assert.equal(
-      await readFile(join(cwd, "app/globals.css"), "utf8"),
-      cssContent,
-    );
+    assert.match(stdout, /Installed:/);
+    assert.match(stdout, /- button/);
+    assert.match(stdout, /- card/);
+    assert.match(stdout, /Failed:/);
+    assert.match(stdout, /- does-not-exist — not found/);
+    assert.deepEqual(plan.failed, ["does-not-exist"]);
+    await access(join(cwd, "components/ui/button/index.tsx"));
+    await access(join(cwd, "components/ui/card/index.tsx"));
   });
 
-  it("keeps the existing conflict error and skips later files", async () => {
+  it("skips already-installed components and continues with the rest", async () => {
     const cwd = await writeProject({
-      "components/ui/button/button.tsx": "export const existing = true;\n",
+      "components/ui/button/index.tsx": "export const existing = true;\n",
     });
     const registry = fetchCatalog(catalog);
+    const { stdout, plan, calls } = await add(cwd, ["button", "card"], registry);
 
-    await assert.rejects(
-      () => add(cwd, ["button", "card"], registry),
-      (error) => {
-        assert.ok(error instanceof CliError);
-        assert.match(error.message, /File already exists:/);
-        assert.match(error.message, /button\.tsx/);
-        return true;
-      },
-    );
+    assert.match(stdout, /Installed:/);
+    assert.match(stdout, /- card/);
+    assert.match(stdout, /Skipped:/);
+    assert.match(stdout, /- button — already installed/);
+    assert.deepEqual(plan.skipped, ["button"]);
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       "export const existing = true;\n",
     );
-    await assert.rejects(access(join(cwd, "components/ui/card/card.tsx")));
+    await access(join(cwd, "components/ui/card/index.tsx"));
+    assert.equal(calls.length, 1);
+  });
+
+  it("skips button, card, and badge while installing textarea and spinner", async () => {
+    const cwd = await writeProject({
+      "components/ui/button/index.tsx": "export const existingButton = true;\n",
+      "components/ui/card/index.tsx": "export const existingCard = true;\n",
+      "components/ui/badge/index.tsx": "export const existingBadge = true;\n",
+    });
+    const fullCatalog = {
+      ...catalog,
+      textarea: registryItem("textarea", {
+        dependencies: ["clsx"],
+        files: [
+          {
+            path: "ui/textarea/index.tsx",
+            content: "export function Textarea() { return null; }\n",
+          },
+          {
+            path: "ui/textarea/textarea.css",
+            content: ".textarea { display: block; }\n",
+          },
+        ],
+      }),
+      spinner: registryItem("spinner", {
+        dependencies: ["clsx"],
+      }),
+    };
+    const registry = fetchCatalog(fullCatalog);
+    const { stdout, plan, calls } = await add(
+      cwd,
+      ["button", "card", "badge", "textarea", "spinner"],
+      registry,
+    );
+
+    assert.match(stdout, /Skipped:/);
+    assert.match(stdout, /- button — already installed/);
+    assert.match(stdout, /- card — already installed/);
+    assert.match(stdout, /- badge — already installed/);
+    assert.match(stdout, /Installed:/);
+    assert.match(stdout, /- textarea/);
+    assert.match(stdout, /- spinner/);
+    assert.deepEqual(plan.skipped, ["button", "card", "badge"]);
+    assert.equal(
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
+      "export const existingButton = true;\n",
+    );
+    assert.equal(
+      await readFile(join(cwd, "components/ui/card/index.tsx"), "utf8"),
+      "export const existingCard = true;\n",
+    );
+    assert.equal(
+      await readFile(join(cwd, "components/ui/badge/index.tsx"), "utf8"),
+      "export const existingBadge = true;\n",
+    );
+    await access(join(cwd, "components/ui/textarea/index.tsx"));
+    await access(join(cwd, "components/ui/textarea/textarea.css"));
+    await access(join(cwd, "components/ui/spinner/index.tsx"));
+    assert.equal(calls.length, 1);
+    assert.ok(calls[0].args.includes("clsx"));
+    assert.equal(calls[0].args.filter((arg) => arg === "clsx").length, 1);
   });
 
   it("overwrites existing files when --force is set", async () => {
     const cwd = await writeProject({
-      "components/ui/button/button.tsx": "export const existing = true;\n",
+      "components/ui/button/index.tsx": "export const existing = true;\n",
     });
     const registry = fetchCatalog(catalog);
     const { plan } = await add(cwd, ["button", "badge"], {
@@ -273,14 +329,15 @@ describe("vinyaas add multiple components", () => {
     });
 
     assert.equal(
-      plan.entries.find((entry) => entry.destinationPath.endsWith("button.tsx"))
-        ?.overwrite,
+      plan.entries.find(
+        (entry) => entry.destinationPath === "components/ui/button/index.tsx",
+      )?.overwrite,
       true,
     );
     assert.match(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       /function button/,
     );
-    await access(join(cwd, "components/ui/badge/badge.tsx"));
+    await access(join(cwd, "components/ui/badge/index.tsx"));
   });
 });

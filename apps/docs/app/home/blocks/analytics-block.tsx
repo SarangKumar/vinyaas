@@ -1,14 +1,14 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Label } from "@/registry/new-york/ui/label";
 import {
   NativeSelect,
   NativeSelectOption,
-} from "@/registry/new-york/ui/native-select/native-select";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
+} from "@/registry/new-york/ui/native-select";
+import { Separator } from "@/registry/new-york/ui/separator";
 
 const metrics = [
   { label: "Signups", value: "1,284", delta: "+12.4%" },
@@ -41,7 +41,10 @@ export function AnalyticsBlock() {
       </div>
       <div className="grid min-w-0 grid-cols-3 gap-2">
         {metrics.map((metric) => (
-          <div key={metric.label} className="min-w-0">
+          <div
+            key={metric.label}
+            className="border-border bg-muted/30 min-w-0 rounded-xl border p-2.5"
+          >
             <p className="text-muted-foreground text-xs">{metric.label}</p>
             <p className="text-foreground mt-1 text-lg font-semibold tracking-tight">
               {metric.value}

@@ -19,5 +19,7 @@ describe("root layout theme", () => {
     expect(source).not.toContain("suppressHydrationWarning");
     expect(source).not.toContain("next/script");
     expect(source).not.toContain("beforeInteractive");
+    expect(source).toContain('import "./globals.css"');
+    expect(source).toContain('import "./docs.css"');
   });
 });

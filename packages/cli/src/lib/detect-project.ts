@@ -1,25 +1,45 @@
-import { readFile, stat } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 
-import { CliError } from "./cli-error.js";
-import { parseJsonConfig } from "./parse-jsonc.js";
+import { CliError } from "./cli-error.ts";
+import { parseJsonConfig } from "./parse-jsonc.ts";
 
-const cssCandidates = [
+export const cssCandidates = [
   "app/globals.css",
   "src/app/globals.css",
   "src/index.css",
+  "index.css",
 ] as const;
 
-const tailwindPackages = ["tailwindcss", "@tailwindcss/postcss"] as const;
+export type CssCandidate = (typeof cssCandidates)[number];
+
+export type ProjectFramework = "next" | "vite" | "react";
+
+export type TailwindStatus =
+  | { kind: "ready"; version: string }
+  | { kind: "missing" }
+  | { kind: "unsupported"; version: string };
 
 export interface DetectedProject {
+  framework: ProjectFramework;
   tsx: boolean;
-  css: (typeof cssCandidates)[number];
+  /** Existing global CSS relative path, if any. */
+  css: CssCandidate | null;
+  /** Preferred CSS path to create when none exists. */
+  preferredCss: CssCandidate;
+  /** Whether the project uses a `src/` app layout. */
+  srcLayout: boolean;
   aliases: {
     components: string;
     ui: string;
     utils: string;
   };
+  /** True when tsconfig/jsconfig already has a usable `@/*` mapping. */
+  hasAlias: boolean;
+  /** Where `@/*` should resolve on disk when configuring aliases. */
+  aliasTarget: "./*" | "./src/*";
+  tailwind: TailwindStatus;
+  packageJson: PackageManifest;
 }
 
 export async function detectProject(cwd: string): Promise<DetectedProject> {
@@ -37,100 +57,191 @@ export async function detectProject(cwd: string): Promise<DetectedProject> {
     );
   }
 
-  if (!tailwindPackages.some((name) => hasDependency(packageJson, name))) {
-    throw new CliError(
-      [
-        "Vinyaas requires Tailwind CSS.",
-        "No Tailwind dependency was found in this project.",
-      ].join("\n"),
-    );
-  }
-
+  const framework = detectFramework(packageJson);
   const tsx = await fileExists(join(cwd, "tsconfig.json"));
-  const css = await detectGlobalCss(cwd);
-  const aliases = await detectAliases(cwd);
+  const srcLayout = await detectSrcLayout(cwd, framework);
+  const css = await detectExistingCss(cwd);
+  const preferredCss = preferredCssPath(framework, srcLayout);
+  const aliasInfo = await detectAliasInfo(cwd, srcLayout);
+  const tailwind = detectTailwind(packageJson);
 
-  return { tsx, css, aliases };
+  return {
+    framework,
+    tsx,
+    css,
+    preferredCss,
+    srcLayout,
+    aliases: {
+      components: "@/components",
+      ui: "@/components/ui",
+      utils: "@/lib/utils",
+    },
+    hasAlias: aliasInfo.hasAlias,
+    aliasTarget: aliasInfo.aliasTarget,
+    tailwind,
+    packageJson,
+  };
 }
 
-async function detectGlobalCss(
+function detectFramework(packageJson: PackageManifest): ProjectFramework {
+  if (hasDependency(packageJson, "next")) {
+    return "next";
+  }
+
+  if (hasDependency(packageJson, "vite")) {
+    return "vite";
+  }
+
+  return "react";
+}
+
+function preferredCssPath(
+  framework: ProjectFramework,
+  srcLayout: boolean,
+): CssCandidate {
+  if (framework === "next") {
+    return srcLayout ? "src/app/globals.css" : "app/globals.css";
+  }
+
+  if (framework === "vite") {
+    return srcLayout ? "src/index.css" : "index.css";
+  }
+
+  return srcLayout ? "src/index.css" : "app/globals.css";
+}
+
+async function detectSrcLayout(
   cwd: string,
-): Promise<(typeof cssCandidates)[number]> {
+  framework: ProjectFramework,
+): Promise<boolean> {
+  if (framework === "next") {
+    if (await fileExists(join(cwd, "src/app/layout.tsx"))) return true;
+    if (await fileExists(join(cwd, "src/app/layout.js"))) return true;
+    if (await directoryExists(join(cwd, "src/app"))) return true;
+    return false;
+  }
+
+  if (await directoryExists(join(cwd, "src"))) {
+    return true;
+  }
+
+  return false;
+}
+
+async function detectExistingCss(cwd: string): Promise<CssCandidate | null> {
   for (const candidate of cssCandidates) {
     if (await fileExists(join(cwd, candidate))) {
       return candidate;
     }
   }
 
-  throw new CliError(
-    [
-      "Could not find a supported global CSS file.",
-      "Expected one of:",
-      ...cssCandidates.map((candidate) => `- ${candidate}`),
-    ].join("\n"),
-  );
+  return null;
 }
 
-async function detectAliases(cwd: string): Promise<DetectedProject["aliases"]> {
+async function detectAliasInfo(
+  cwd: string,
+  srcLayout: boolean,
+): Promise<{ hasAlias: boolean; aliasTarget: "./*" | "./src/*" }> {
   const configPath = (await fileExists(join(cwd, "tsconfig.json")))
     ? join(cwd, "tsconfig.json")
     : join(cwd, "jsconfig.json");
 
+  const fallbackTarget: "./*" | "./src/*" = srcLayout ? "./src/*" : "./*";
+
   if (!(await fileExists(configPath))) {
-    throw aliasError();
+    return { hasAlias: false, aliasTarget: fallbackTarget };
   }
 
   const source = await readFile(configPath, "utf8");
-  const config = parseJsonConfig(source);
+  let config: unknown;
 
-  if (!hasSupportedAlias(config)) {
-    throw aliasError();
+  try {
+    config = parseJsonConfig(source);
+  } catch {
+    return { hasAlias: false, aliasTarget: fallbackTarget };
   }
 
-  return {
-    components: "@/components",
-    ui: "@/components/ui",
-    utils: "@/lib/utils",
-  };
+  const mapping = readAliasMapping(config);
+
+  if (!mapping) {
+    return { hasAlias: false, aliasTarget: fallbackTarget };
+  }
+
+  const aliasTarget = mapping.includes("src")
+    ? ("./src/*" as const)
+    : ("./*" as const);
+
+  return { hasAlias: true, aliasTarget };
 }
 
-function hasSupportedAlias(config: unknown): boolean {
+function readAliasMapping(config: unknown): string | null {
   if (typeof config !== "object" || config === null) {
-    return false;
+    return null;
   }
 
   const compilerOptions = (config as { compilerOptions?: unknown })
     .compilerOptions;
 
   if (typeof compilerOptions !== "object" || compilerOptions === null) {
-    return false;
+    return null;
   }
 
   const paths = (compilerOptions as { paths?: unknown }).paths;
 
   if (typeof paths !== "object" || paths === null) {
-    return false;
+    return null;
   }
 
   const mapping = (paths as Record<string, unknown>)["@/*"];
 
   if (!Array.isArray(mapping) || typeof mapping[0] !== "string") {
-    return false;
+    return null;
   }
 
-  return mapping[0].includes("*");
+  return mapping[0].includes("*") ? mapping[0] : null;
 }
 
-function aliasError(): CliError {
-  return new CliError(
-    [
-      "Could not find a supported import alias.",
-      'Expected compilerOptions.paths in tsconfig.json or jsconfig.json to include "@/*".',
-    ].join("\n"),
+export function detectTailwind(packageJson: PackageManifest): TailwindStatus {
+  const declared =
+    readDependencyVersion(packageJson, "tailwindcss") ??
+    readDependencyVersion(packageJson, "@tailwindcss/postcss") ??
+    readDependencyVersion(packageJson, "@tailwindcss/vite");
+
+  if (!declared) {
+    return { kind: "missing" };
+  }
+
+  const major = majorVersion(declared);
+
+  if (major === null) {
+    return { kind: "ready", version: declared };
+  }
+
+  if (major >= 4) {
+    return { kind: "ready", version: declared };
+  }
+
+  return { kind: "unsupported", version: declared };
+}
+
+function majorVersion(range: string): number | null {
+  const match = range.match(/(\d+)/);
+  return match ? Number(match[1]) : null;
+}
+
+function readDependencyVersion(
+  manifest: PackageManifest,
+  name: string,
+): string | undefined {
+  return (
+    manifest.dependencies?.[name] ??
+    manifest.devDependencies?.[name] ??
+    manifest.peerDependencies?.[name]
   );
 }
 
-interface PackageManifest {
+export interface PackageManifest {
+  name?: string;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
@@ -160,7 +271,10 @@ async function readPackageJson(cwd: string): Promise<PackageManifest> {
   }
 }
 
-function hasDependency(manifest: PackageManifest, name: string): boolean {
+export function hasDependency(
+  manifest: PackageManifest,
+  name: string,
+): boolean {
   return Boolean(
     manifest.dependencies?.[name] ||
     manifest.devDependencies?.[name] ||
@@ -181,6 +295,19 @@ async function fileExists(path: string): Promise<boolean> {
   }
 }
 
+async function directoryExists(path: string): Promise<boolean> {
+  try {
+    const file = await stat(path);
+    return file.isDirectory();
+  } catch (error) {
+    if (isNotFound(error)) {
+      return false;
+    }
+
+    throw error;
+  }
+}
+
 function isNotFound(error: unknown): boolean {
   return (
     typeof error === "object" &&
@@ -188,4 +315,13 @@ function isNotFound(error: unknown): boolean {
     "code" in error &&
     error.code === "ENOENT"
   );
+}
+
+/** Used by tests and diagnostics. */
+export async function listTopLevelNames(cwd: string): Promise<string[]> {
+  try {
+    return await readdir(cwd);
+  } catch {
+    return [];
+  }
 }

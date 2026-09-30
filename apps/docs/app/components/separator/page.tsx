@@ -1,15 +1,22 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
+import { Button } from "@/registry/new-york/ui/button";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { Separator } from "@/registry/new-york/ui/separator";
+import { Switch } from "@/registry/new-york/ui/switch";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("separator");
 
-const usage = `import { Separator } from "@/components/ui/separator/separator";
+const usage = `import { Separator } from "@/components/ui/separator";
 
 export function SectionBreak() {
   return <Separator />;
@@ -91,9 +98,107 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const settingsCode = `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+
+export function WorkspaceSettings() {
+  return (
+    <div className="border-border bg-card w-full max-w-md rounded-md border p-4 text-left">
+      <div className="grid gap-1">
+        <h3 className="text-sm font-medium">Workspace</h3>
+        <p className="text-muted-foreground text-sm">
+          Name and default visibility for this project.
+        </p>
+      </div>
+      <Separator className="my-4" />
+      <div className="grid gap-3">
+        <div className="grid gap-2">
+          <Label htmlFor="workspace-name">Name</Label>
+          <Input id="workspace-name" defaultValue="Design system" />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="workspace-public">Public repository</Label>
+          <Switch id="workspace-public" />
+        </div>
+      </div>
+      <Separator className="my-4" />
+      <div className="grid gap-1">
+        <h3 className="text-sm font-medium">Notifications</h3>
+        <p className="text-muted-foreground text-sm">
+          Choose how this workspace reaches you.
+        </p>
+      </div>
+      <Separator className="my-4" />
+      <div className="grid gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="workspace-email">Email digests</Label>
+          <Switch id="workspace-email" defaultChecked />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="workspace-mentions">Mentions only</Label>
+          <Switch id="workspace-mentions" defaultChecked />
+        </div>
+      </div>
+      <Separator className="my-4" />
+      <Button className="self-start">Save settings</Button>
+    </div>
+  );
+}
+`;
+
+const inPractice: ComponentInPractice = {
+  description:
+    "Separators group labeled settings blocks so each section keeps its heading, controls, and actions.",
+  preview: (
+    <div className="border-border bg-card w-full max-w-md rounded-md border p-4 text-left">
+      <div className="grid gap-1">
+        <h3 className="text-sm font-medium">Workspace</h3>
+        <p className="text-muted-foreground text-sm">
+          Name and default visibility for this project.
+        </p>
+      </div>
+      <Separator className="my-4" />
+      <div className="grid gap-3">
+        <div className="grid gap-2">
+          <Label htmlFor="separator-workspace-name">Name</Label>
+          <Input id="separator-workspace-name" defaultValue="Design system" />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="separator-workspace-public">Public repository</Label>
+          <Switch id="separator-workspace-public" />
+        </div>
+      </div>
+      <Separator className="my-4" />
+      <div className="grid gap-1">
+        <h3 className="text-sm font-medium">Notifications</h3>
+        <p className="text-muted-foreground text-sm">
+          Choose how this workspace reaches you.
+        </p>
+      </div>
+      <Separator className="my-4" />
+      <div className="grid gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="separator-workspace-email">Email digests</Label>
+          <Switch id="separator-workspace-email" defaultChecked />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="separator-workspace-mentions">Mentions only</Label>
+          <Switch id="separator-workspace-mentions" defaultChecked />
+        </div>
+      </div>
+      <Separator className="my-4" />
+      <Button className="self-start">Save settings</Button>
+    </div>
+  ),
+  code: settingsCode,
+};
+
 export default async function SeparatorPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/separator/separator.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/separator/index.tsx"),
     "utf8",
   );
 
@@ -115,13 +220,14 @@ export default async function SeparatorPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/separator/separator.tsx</code>. It imports{" "}
+          <code>components/ui/separator/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

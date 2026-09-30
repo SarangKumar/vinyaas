@@ -1,13 +1,13 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { Separator } from "@/registry/new-york/ui/separator";
+import { Switch } from "@/registry/new-york/ui/switch";
 
 export function AccountSettingsBlock() {
   return (

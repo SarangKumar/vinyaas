@@ -1,0 +1,36 @@
+@keyframes vinyaas-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vinyaas-toast-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.vinyaas-toast-in {
+  animation: vinyaas-toast-in 180ms ease-out;
+}
+
+.vinyaas-toast-out {
+  animation: vinyaas-toast-out 160ms ease-in forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyaas-toast-in,
+  .vinyaas-toast-out {
+    animation: none;
+  }
+}

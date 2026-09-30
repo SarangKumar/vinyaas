@@ -148,7 +148,7 @@ describe("installable input registry", () => {
         await writeFile(
           join(cwd, "components/ui/input/example.tsx"),
           [
-            'import { Input } from "@/components/ui/input/input";',
+            'import { Input } from "@/components/ui/input";',
             "",
             "export function EmailField() {",
             "  return (",
@@ -170,7 +170,7 @@ describe("installable input registry", () => {
         );
 
         const input = await readFile(
-          join(cwd, "components/ui/input/input.tsx"),
+          join(cwd, "components/ui/input/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

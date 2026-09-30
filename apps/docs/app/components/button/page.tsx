@@ -1,32 +1,36 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Button } from "@/registry/new-york/ui/button";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("button");
 
-const usage = `import { Button } from "@/components/ui/button/button";
+const usage = `import { Button } from "@/components/ui/button";
 
 export function SaveButton() {
   return <Button>Save</Button>;
 }
 `;
 
-const saveSource = {
-  tsx: `import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+const withFieldSource = {
+  tsx: `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SaveName() {
   return (
-    <form className="flex items-end gap-3">
-      <div className="grid gap-2">
+    <form className="flex flex-col gap-3 sm:flex-row sm:items-end">
+      <div className="grid min-w-0 flex-1 gap-2">
         <Label htmlFor="name">Name</Label>
         <Input id="name" defaultValue="Ada Lovelace" />
       </div>
@@ -35,18 +39,89 @@ export function SaveName() {
   );
 }
 `,
-  jsx: `import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+  jsx: `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SaveName() {
   return (
-    <form className="flex items-end gap-3">
-      <div className="grid gap-2">
+    <form className="flex flex-col gap-3 sm:flex-row sm:items-end">
+      <div className="grid min-w-0 flex-1 gap-2">
         <Label htmlFor="name">Name</Label>
         <Input id="name" defaultValue="Ada Lovelace" />
       </div>
       <Button type="submit">Save</Button>
+    </form>
+  );
+}
+`,
+};
+
+const inPracticeSource = {
+  tsx: `import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+export function AccountForm() {
+  return (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-2">
+        <Label htmlFor="display-name">Display name</Label>
+        <Input id="display-name" defaultValue="Ada Lovelace" />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="account-email">Email</Label>
+        <Input
+          id="account-email"
+          type="email"
+          defaultValue="ada@analytical.engine"
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox id="directory" defaultChecked />
+        <Label htmlFor="directory">Show profile in the directory</Label>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Save changes</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
+}
+`,
+  jsx: `import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+export function AccountForm() {
+  return (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-2">
+        <Label htmlFor="display-name">Display name</Label>
+        <Input id="display-name" defaultValue="Ada Lovelace" />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="account-email">Email</Label>
+        <Input
+          id="account-email"
+          type="email"
+          defaultValue="ada@analytical.engine"
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox id="directory" defaultChecked />
+        <Label htmlFor="directory">Show profile in the directory</Label>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Save changes</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
     </form>
   );
 }
@@ -94,22 +169,6 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
-    id: "with-a-field",
-    title: "With a field",
-    description:
-      "The default button is the same height as Input, so a label, a field, and Save sit on one line.",
-    preview: (
-      <form className="flex items-end gap-3">
-        <div className="grid gap-2">
-          <Label htmlFor="button-name">Name</Label>
-          <Input id="button-name" defaultValue="Ada Lovelace" />
-        </div>
-        <Button type="submit">Save</Button>
-      </form>
-    ),
-    code: saveSource,
-  },
-  {
     id: "variants",
     title: "Variants",
     description:
@@ -124,7 +183,7 @@ const examples: ComponentExample[] = [
         <Button variant="link">Learn more</Button>
       </>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
+    code: `import { Button } from "@/components/ui/button";
 
 export function Actions() {
   return (
@@ -156,7 +215,7 @@ export function Actions() {
         </Button>
       </>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
+    code: `import { Button } from "@/components/ui/button";
 
 export function Sizes() {
   return (
@@ -173,11 +232,61 @@ export function Sizes() {
 }
 `,
   },
+  {
+    id: "with-a-field",
+    title: "With a field",
+    description:
+      "The default button is the same height as Input, so a label, a field, and Save sit on one line on wider screens.",
+    preview: (
+      <form className="flex w-full max-w-md flex-col gap-3 sm:flex-row sm:items-end">
+        <div className="grid min-w-0 flex-1 gap-2">
+          <Label htmlFor="button-name">Name</Label>
+          <Input id="button-name" defaultValue="Ada Lovelace" />
+        </div>
+        <Button type="submit">Save</Button>
+      </form>
+    ),
+    code: withFieldSource,
+  },
 ];
+
+const inPractice: ComponentInPractice = {
+  description:
+    "Save and Cancel close an account form. Labels, inputs, and a directory checkbox sit above the actions.",
+  preview: (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-2">
+        <Label htmlFor="practice-display-name">Display name</Label>
+        <Input id="practice-display-name" defaultValue="Ada Lovelace" />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="practice-account-email">Email</Label>
+        <Input
+          id="practice-account-email"
+          type="email"
+          defaultValue="ada@analytical.engine"
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox id="practice-directory" defaultChecked />
+        <Label htmlFor="practice-directory">
+          Show profile in the directory
+        </Label>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Save changes</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
+  ),
+  code: inPracticeSource,
+};
 
 export default async function ButtonPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/button/button.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/button/index.tsx"),
     "utf8",
   );
 
@@ -196,7 +305,7 @@ export default async function ButtonPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/button/button.tsx</code>. It imports{" "}
+          <code>components/ui/button/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>class-variance-authority</code>, <code>clsx</code>, and{" "}
           <code>tailwind-merge</code>.
@@ -204,6 +313,7 @@ export default async function ButtonPage() {
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

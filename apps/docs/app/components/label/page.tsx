@@ -1,18 +1,22 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
+import { Button } from "@/registry/new-york/ui/button";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { Textarea } from "@/registry/new-york/ui/textarea";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("label");
 
-const usage = `import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+const usage = `import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function EmailField() {
   return (
@@ -20,6 +24,54 @@ export function EmailField() {
       <Label htmlFor="email">Email</Label>
       <Input id="email" type="email" placeholder="you@example.com" />
     </div>
+  );
+}
+`;
+
+const inPracticeSource = `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+
+export function ContactForm() {
+  return (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid gap-2">
+          <Label htmlFor="first-name">First name</Label>
+          <Input id="first-name" name="firstName" defaultValue="Ada" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="last-name">Last name</Label>
+          <Input id="last-name" name="lastName" defaultValue="Lovelace" />
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="contact-email">Email</Label>
+        <Input
+          id="contact-email"
+          name="email"
+          type="email"
+          defaultValue="ada@analytical.engine"
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="contact-message">Message</Label>
+        <Textarea
+          id="contact-message"
+          name="message"
+          rows={4}
+          placeholder="How can we help?"
+          defaultValue="I would like a walkthrough of the component catalog."
+        />
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Send message</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 }
 `;
@@ -76,9 +128,58 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Each contact field has a visible Label. Name, email, and message share one form.",
+  preview: (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid gap-2">
+          <Label htmlFor="practice-first-name">First name</Label>
+          <Input id="practice-first-name" name="firstName" defaultValue="Ada" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="practice-last-name">Last name</Label>
+          <Input
+            id="practice-last-name"
+            name="lastName"
+            defaultValue="Lovelace"
+          />
+        </div>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="practice-contact-email">Email</Label>
+        <Input
+          id="practice-contact-email"
+          name="email"
+          type="email"
+          defaultValue="ada@analytical.engine"
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="practice-contact-message">Message</Label>
+        <Textarea
+          id="practice-contact-message"
+          name="message"
+          rows={4}
+          placeholder="How can we help?"
+          defaultValue="I would like a walkthrough of the component catalog."
+        />
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Send message</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
+  ),
+  code: inPracticeSource,
+};
+
 export default async function LabelPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/label/label.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/label/index.tsx"),
     "utf8",
   );
 
@@ -105,13 +206,14 @@ export default async function LabelPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/label/label.tsx</code>. It imports <code>cn</code>{" "}
+          <code>components/ui/label/index.tsx</code>. It imports <code>cn</code>{" "}
           from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

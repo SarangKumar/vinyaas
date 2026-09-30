@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
-import { Button } from "../button/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from ".";
+import { Button } from "../button";
 
 function Card({
   openDelay = 0,
@@ -38,7 +38,7 @@ describe("HoverCard", () => {
     const dialog = screen.getByRole("dialog");
 
     expect(dialog).toHaveTextContent("Wrote the first algorithm.");
-    expect(dialog).toHaveClass("bg-muted", "border", "rounded-md");
+    expect(dialog).toHaveClass("bg-popover", "border", "rounded-md");
     expect(trigger).toHaveAttribute("aria-expanded", "true");
     expect(trigger).toHaveAttribute("aria-controls", dialog.id);
 

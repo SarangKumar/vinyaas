@@ -15,7 +15,7 @@ import {
   TypographyMuted,
   TypographyP,
   TypographySmall,
-} from "./typography";
+} from ".";
 
 describe("Typography", () => {
   it("renders semantic elements and forwards className", () => {

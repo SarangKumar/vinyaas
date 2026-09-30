@@ -7,7 +7,7 @@ import {
   InputGroupButton,
   InputGroupInput,
   InputGroupTextarea,
-} from "./input-group";
+} from ".";
 
 describe("Input Group", () => {
   it("renders a field, addon, and action", () => {

@@ -152,7 +152,7 @@ describe("installable radio-group registry", () => {
         await writeFile(
           join(cwd, "components/ui/radio-group/example.tsx"),
           [
-            'import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group/radio-group";',
+            'import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";',
             "",
             "export function SpacingField() {",
             "  return (",
@@ -167,7 +167,7 @@ describe("installable radio-group registry", () => {
         );
 
         const radioGroup = await readFile(
-          join(cwd, "components/ui/radio-group/radio-group.tsx"),
+          join(cwd, "components/ui/radio-group/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

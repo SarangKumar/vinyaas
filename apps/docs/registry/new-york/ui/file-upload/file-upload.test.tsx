@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { FileUpload, FileUploadDropzone, FileUploadList } from "./file-upload";
+import { FileUpload, FileUploadDropzone, FileUploadList } from ".";
 
 function Upload(props: Partial<ComponentProps<typeof FileUpload>>) {
   return (
@@ -132,5 +132,8 @@ describe("File Upload", () => {
     expect(
       screen.getByRole("button", { name: "Retry upload" }),
     ).toHaveAttribute("title", "Retry upload");
+    // Pending/uploaded rows use file-type icons (muted), not a single shared glyph.
+    const list = screen.getByText("portrait.png").closest("li");
+    expect(list?.querySelector("svg")).toHaveClass("text-muted-foreground");
   });
 });

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import { Button } from "../button/button";
+import { Button } from "../button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +10,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "./dropdown-menu";
+} from ".";
 
 function Menu({ align = "end" }: { align?: "start" | "center" | "end" }) {
   return (
@@ -111,6 +114,36 @@ describe("DropdownMenu", () => {
     fireEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
     expect(onDelete).toHaveBeenCalledOnce();
     expect(screen.queryByRole("menu")).toBeNull();
+  });
+
+  it("opens a nested submenu on hover", async () => {
+    render(
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <button type="button">Open</button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem>Email</DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        </DropdownMenuContent>
+      </DropdownMenu>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open" }));
+    await screen.findByRole("menuitem", { name: "Profile" });
+    expect(screen.queryByRole("menuitem", { name: "Email" })).toBeNull();
+    const trigger = screen.getByRole("menuitem", {
+      name: /Invite users/,
+    });
+    fireEvent.mouseEnter(trigger.parentElement!);
+    expect(
+      await screen.findByRole("menuitem", { name: "Email" }),
+    ).toBeInTheDocument();
   });
 
   it("closes when the pointer goes outside the menu", async () => {

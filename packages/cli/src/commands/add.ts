@@ -20,7 +20,7 @@ import {
 import { createDocsPlan, formatDocsPlan } from "../lib/docs/plan.ts";
 import { createEnvPlan, formatEnvPlan } from "../lib/env/plan.ts";
 import {
-  assertDestinationsAvailable,
+  classifyExistingItems,
   createInstallPlan,
   writeInstallPlan,
   type InstallPlan,
@@ -36,7 +36,10 @@ import {
   type FileSnapshot,
 } from "../lib/transaction/files.ts";
 import { RegistryError } from "../lib/registry/client.ts";
-import { resolveRegistryItems } from "../lib/registry/resolve.ts";
+import { getRegistryCatalog } from "../lib/registry/discover.ts";
+import { resolveRegistryGraph } from "../lib/registry/resolve.ts";
+import { formatUnknownComponentMessage } from "../lib/registry/suggest.ts";
+import type { RegistryItem } from "../lib/registry/types.ts";
 
 const missingConfigMessage = [
   "components.json was not found.",
@@ -47,20 +50,38 @@ export function registerAddCommand(program: Command): void {
   program
     .command("add")
     .description("Add one or more components from the Vinyaas registry.")
-    .argument("<name...>", "Registry item names")
+    .argument("<name...>", "Component names to install")
     .option("--cwd <path>", "Consumer project directory.")
-    .option("--force", "Overwrite existing component files.")
-    .addHelpText("after", "\nExample:\n  $ vinyaas add button card badge")
+    .option(
+      "--force",
+      "Overwrite existing component files instead of skipping them.",
+    )
+    .addHelpText(
+      "after",
+      [
+        "",
+        "Examples:",
+        "  $ vinyaas add button",
+        "  $ vinyaas add button card dialog",
+        "  $ vinyaas add button --force",
+        "",
+        "Already-installed components are skipped unless --force is set.",
+      ].join("\n"),
+    )
     .action(
       async (name: string[], options: { cwd?: string; force?: boolean }) => {
         try {
-          await executeAdd({
+          const plan = await executeAdd({
             name: name[0] ?? "",
             names: name,
             cwd: options.cwd,
             force: options.force === true,
             env: process.env,
           });
+
+          if (plan.failed.length > 0) {
+            process.exit(1);
+          }
         } catch (error) {
           if (
             error instanceof CliError ||
@@ -138,32 +159,76 @@ export async function runAdd({
 }): Promise<InstallPlan> {
   const requested = uniqueNames(names && names.length > 0 ? names : [name]);
   const config = await readComponentsConfig(cwd);
-  const items = await resolveRegistryItems({
+  const resolved = await resolveRegistryGraph({
     style: config.style,
     name: requested[0] ?? name,
     names: requested,
     env,
+    allowMissing: true,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
   });
+  const failed = [...resolved.missing];
+  const resolvedItems = resolved.items;
+
+  if (resolvedItems.length === 0) {
+    throw await unknownComponentsWithSuggestions(failed, {
+      env,
+      ...(fetchImpl ? { fetch: fetchImpl } : {}),
+    });
+  }
+
+  const scoutPlan = await createInstallPlan({
+    cwd,
+    config,
+    name: requested[0] ?? name,
+    items: resolvedItems,
+  });
+  const existing = await classifyExistingItems({
+    cwd,
+    plan: scoutPlan,
+    force,
+    requested,
+  });
+  const installItemNames = selectInstallItemNames({
+    items: resolvedItems,
+    installItemNames: existing.installItemNames,
+    requested,
+  });
+  const itemsToInstall = filterItemsForInstall(resolvedItems, installItemNames);
   const plan = await createInstallPlan({
     cwd,
     config,
     name: requested[0] ?? name,
-    items,
+    items: itemsToInstall,
   });
 
-  await assertDestinationsAvailable(cwd, plan, force);
+  plan.skipped = requested.filter((itemName) =>
+    existing.skipped.includes(itemName),
+  );
+  plan.failed = failed;
+
+  const overwrite = new Set(existing.overwriteItemNames);
+
+  for (const entry of plan.entries) {
+    entry.overwrite = overwrite.has(entry.itemName);
+  }
+
   const cssUpdate = await createCssUpdate({
     cwd,
     cssPath: config.tailwind.css,
-    items,
+    items: itemsToInstall,
   });
-  const envPlan = await createEnvPlan({ cwd, items });
-  const docsPlan = createDocsPlan(items);
+  const envPlan = await createEnvPlan({ cwd, items: itemsToInstall });
+  const docsPlan = createDocsPlan(itemsToInstall);
   const dependencyInstall = classifyDependencies(
     plan,
     await readDeclaredDependencies(cwd),
   );
+
+  if (plan.entries.length === 0) {
+    console.log(formatAdded(plan, dependencyInstall, requested));
+    return plan;
+  }
 
   const needsInstall =
     dependencyInstall.installDependencies.length > 0 ||
@@ -210,6 +275,60 @@ export async function runAdd({
   }
 
   return plan;
+}
+
+/**
+ * Keep dependency-first order while dropping skipped registry items.
+ * A skipped shared dependency stays omitted when nothing remaining needs it.
+ * Registry deps of skipped requested components are not installed unless
+ * another component that is actually being installed still needs them.
+ */
+function selectInstallItemNames({
+  items,
+  installItemNames,
+  requested,
+}: {
+  items: readonly RegistryItem[];
+  installItemNames: readonly string[];
+  requested: readonly string[];
+}): string[] {
+  const installable = new Set(installItemNames);
+  const byName = new Map(items.map((item) => [item.name, item]));
+  const needed = new Set<string>();
+  const queue = requested.filter((name) => installable.has(name));
+
+  for (const name of queue) {
+    needed.add(name);
+  }
+
+  while (queue.length > 0) {
+    const name = queue.shift();
+
+    if (!name) {
+      continue;
+    }
+
+    const item = byName.get(name);
+
+    for (const dependency of item?.registryDependencies ?? []) {
+      if (!installable.has(dependency) || needed.has(dependency)) {
+        continue;
+      }
+
+      needed.add(dependency);
+      queue.push(dependency);
+    }
+  }
+
+  return items.map((item) => item.name).filter((name) => needed.has(name));
+}
+
+function filterItemsForInstall(
+  items: readonly RegistryItem[],
+  installItemNames: readonly string[],
+): RegistryItem[] {
+  const install = new Set(installItemNames);
+  return items.filter((item) => install.has(item.name));
 }
 
 async function rollbackMutation(
@@ -265,20 +384,69 @@ function formatAdded(
   dependencyInstall: DependencyInstallPlan,
   requested: readonly string[],
 ): string {
-  const lines =
-    requested.length === 1
-      ? [`Added ${requested[0]}.`]
-      : [
-          ...requested.map((component) => `Added ${component}.`),
-          "",
-          `Installed ${requested.length} components.`,
-        ];
-
-  lines.push(
-    "",
-    "Files:",
-    ...plan.entries.map((entry) => `  ${entry.destinationPath}`),
+  const installedRequested = requested.filter(
+    (component) =>
+      !plan.skipped.includes(component) && !plan.failed.includes(component),
   );
+  const lines: string[] = [];
+
+  if (installedRequested.length > 0) {
+    if (
+      installedRequested.length === 1 &&
+      plan.skipped.length === 0 &&
+      plan.failed.length === 0
+    ) {
+      lines.push(`Added ${installedRequested[0]}.`);
+    } else {
+      lines.push(
+        "Installed:",
+        ...installedRequested.map((name) => `- ${name}`),
+      );
+    }
+  }
+
+  if (plan.skipped.length > 0) {
+    if (lines.length > 0) {
+      lines.push("");
+    }
+
+    lines.push(
+      "Skipped:",
+      ...plan.skipped.map((name) => `- ${name} — already installed`),
+    );
+  }
+
+  if (plan.failed.length > 0) {
+    if (lines.length > 0) {
+      lines.push("");
+    }
+
+    lines.push(
+      "Failed:",
+      ...plan.failed.map((name) => `- ${name} — not found`),
+    );
+  }
+
+  if (
+    installedRequested.length === 0 &&
+    plan.entries.length === 0 &&
+    plan.skipped.length > 0 &&
+    plan.failed.length === 0
+  ) {
+    if (lines.length > 0) {
+      lines.push("");
+    }
+
+    lines.push("Nothing new to install.");
+  }
+
+  if (plan.entries.length > 0) {
+    lines.push(
+      "",
+      "Files:",
+      ...plan.entries.map((entry) => `  ${entry.destinationPath}`),
+    );
+  }
 
   if (dependencyInstall.installDependencies.length > 0) {
     lines.push(
@@ -307,6 +475,32 @@ function formatAdded(
   }
 
   return lines.join("\n");
+}
+
+async function unknownComponentsWithSuggestions(
+  names: readonly string[],
+  {
+    env,
+    fetch: fetchImpl,
+  }: {
+    env?: Record<string, string | undefined>;
+    fetch?: typeof fetch;
+  },
+): Promise<RegistryError> {
+  let catalogNames: string[] = [];
+
+  try {
+    const catalog = await getRegistryCatalog({
+      env,
+      ...(fetchImpl ? { fetch: fetchImpl } : {}),
+    });
+    catalogNames = catalog.items.map((item) => item.name);
+  } catch {
+    catalogNames = [];
+  }
+
+  const message = formatUnknownComponentMessage(names, catalogNames);
+  return new RegistryError(`${message}\n\nNo files were changed.`);
 }
 
 function uniqueNames(names: readonly string[]): string[] {

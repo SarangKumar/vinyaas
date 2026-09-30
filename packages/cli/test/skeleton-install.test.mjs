@@ -152,7 +152,7 @@ describe("installable skeleton registry", () => {
         await writeFile(
           join(cwd, "components/ui/skeleton/example.tsx"),
           [
-            'import { Skeleton } from "@/components/ui/skeleton/skeleton";',
+            'import { Skeleton } from "@/components/ui/skeleton";',
             "",
             "export function LoadingTitle() {",
             '  return <Skeleton className="h-4 w-64" />;',
@@ -162,7 +162,7 @@ describe("installable skeleton registry", () => {
         );
 
         const skeleton = await readFile(
-          join(cwd, "components/ui/skeleton/skeleton.tsx"),
+          join(cwd, "components/ui/skeleton/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

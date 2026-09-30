@@ -9,7 +9,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./card";
+} from ".";
 
 describe("Card", () => {
   it("composes the sections and merges class names", () => {

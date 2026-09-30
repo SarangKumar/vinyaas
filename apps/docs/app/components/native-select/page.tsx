@@ -1,25 +1,29 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Button } from "@/registry/new-york/ui/button";
+import { Label } from "@/registry/new-york/ui/label";
 import {
   NativeSelect,
   NativeSelectOptGroup,
   NativeSelectOption,
-} from "@/registry/new-york/ui/native-select/native-select";
+} from "@/registry/new-york/ui/native-select";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("native-select");
 
-const usage = `import { Label } from "@/components/ui/label/label";
+const usage = `import { Label } from "@/components/ui/label";
 import {
   NativeSelect,
   NativeSelectOptGroup,
   NativeSelectOption,
-} from "@/components/ui/native-select/native-select";
+} from "@/components/ui/native-select";
 
 export function RegionField() {
   return (
@@ -32,6 +36,62 @@ export function RegionField() {
         <NativeSelectOption value="us">United States</NativeSelectOption>
       </NativeSelect>
     </div>
+  );
+}
+`;
+
+const inPracticeSource = `import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  NativeSelect,
+  NativeSelectOptGroup,
+  NativeSelectOption,
+} from "@/components/ui/native-select";
+
+export function LocaleProfile() {
+  return (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-2">
+        <Label htmlFor="locale">Language</Label>
+        <NativeSelect id="locale" name="locale" defaultValue="en-US">
+          <NativeSelectOption value="en-US">English (United States)</NativeSelectOption>
+          <NativeSelectOption value="en-GB">English (United Kingdom)</NativeSelectOption>
+          <NativeSelectOption value="hi-IN">Hindi (India)</NativeSelectOption>
+        </NativeSelect>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="timezone">Timezone</Label>
+        <NativeSelect id="timezone" name="timezone" defaultValue="America/Los_Angeles">
+          <NativeSelectOptGroup label="Americas">
+            <NativeSelectOption value="America/Los_Angeles">
+              Pacific Time (Los Angeles)
+            </NativeSelectOption>
+            <NativeSelectOption value="America/New_York">
+              Eastern Time (New York)
+            </NativeSelectOption>
+          </NativeSelectOptGroup>
+          <NativeSelectOptGroup label="Asia">
+            <NativeSelectOption value="Asia/Kolkata">
+              India Standard Time (Kolkata)
+            </NativeSelectOption>
+          </NativeSelectOptGroup>
+        </NativeSelect>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="date-format">Date format</Label>
+        <NativeSelect id="date-format" name="dateFormat" defaultValue="mdy">
+          <NativeSelectOption value="mdy">Sep 29, 2026</NativeSelectOption>
+          <NativeSelectOption value="dmy">29 Sep 2026</NativeSelectOption>
+          <NativeSelectOption value="ymd">2026-09-29</NativeSelectOption>
+        </NativeSelect>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Save preferences</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 }
 `;
@@ -99,9 +159,12 @@ const examples: ComponentExample[] = [
         </NativeSelectOptGroup>
       </NativeSelect>
     ),
-    code: `<NativeSelect aria-label="Region" defaultValue="in">
+    code: `<NativeSelect aria-label="Region" defaultValue="in" className="max-w-sm">
   <NativeSelectOptGroup label="Asia">
     <NativeSelectOption value="in">India</NativeSelectOption>
+  </NativeSelectOptGroup>
+  <NativeSelectOptGroup label="Americas">
+    <NativeSelectOption value="us">United States</NativeSelectOption>
   </NativeSelectOptGroup>
 </NativeSelect>`,
   },
@@ -170,12 +233,71 @@ const examples: ComponentExample[] = [
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Language, timezone, and date format use labelled native selects on a profile form.",
+  preview: (
+    <form className="grid w-full max-w-md gap-4 text-left">
+      <div className="grid gap-2">
+        <Label htmlFor="practice-locale">Language</Label>
+        <NativeSelect id="practice-locale" name="locale" defaultValue="en-US">
+          <NativeSelectOption value="en-US">
+            English (United States)
+          </NativeSelectOption>
+          <NativeSelectOption value="en-GB">
+            English (United Kingdom)
+          </NativeSelectOption>
+          <NativeSelectOption value="hi-IN">Hindi (India)</NativeSelectOption>
+        </NativeSelect>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="practice-timezone">Timezone</Label>
+        <NativeSelect
+          id="practice-timezone"
+          name="timezone"
+          defaultValue="America/Los_Angeles"
+        >
+          <NativeSelectOptGroup label="Americas">
+            <NativeSelectOption value="America/Los_Angeles">
+              Pacific Time (Los Angeles)
+            </NativeSelectOption>
+            <NativeSelectOption value="America/New_York">
+              Eastern Time (New York)
+            </NativeSelectOption>
+          </NativeSelectOptGroup>
+          <NativeSelectOptGroup label="Asia">
+            <NativeSelectOption value="Asia/Kolkata">
+              India Standard Time (Kolkata)
+            </NativeSelectOption>
+          </NativeSelectOptGroup>
+        </NativeSelect>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="practice-date-format">Date format</Label>
+        <NativeSelect
+          id="practice-date-format"
+          name="dateFormat"
+          defaultValue="mdy"
+        >
+          <NativeSelectOption value="mdy">Sep 29, 2026</NativeSelectOption>
+          <NativeSelectOption value="dmy">29 Sep 2026</NativeSelectOption>
+          <NativeSelectOption value="ymd">2026-09-29</NativeSelectOption>
+        </NativeSelect>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit">Save preferences</Button>
+        <Button type="button" variant="outline">
+          Cancel
+        </Button>
+      </div>
+    </form>
+  ),
+  code: inPracticeSource,
+};
+
 export default async function NativeSelectPage() {
   const source = await readFile(
-    path.join(
-      process.cwd(),
-      "registry/new-york/ui/native-select/native-select.tsx",
-    ),
+    path.join(process.cwd(), "registry/new-york/ui/native-select/index.tsx"),
     "utf8",
   );
 
@@ -202,13 +324,14 @@ export default async function NativeSelectPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/native-select/native-select.tsx</code>. It imports{" "}
+          <code>components/ui/native-select/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <>

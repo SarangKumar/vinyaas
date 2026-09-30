@@ -152,7 +152,7 @@ describe("installable separator registry", () => {
         await writeFile(
           join(cwd, "components/ui/separator/example.tsx"),
           [
-            'import { Separator } from "@/components/ui/separator/separator";',
+            'import { Separator } from "@/components/ui/separator";',
             "",
             "export function SectionBreak() {",
             '  return <Separator orientation="vertical" className="h-8" />;',
@@ -162,7 +162,7 @@ describe("installable separator registry", () => {
         );
 
         const separator = await readFile(
-          join(cwd, "components/ui/separator/separator.tsx"),
+          join(cwd, "components/ui/separator/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

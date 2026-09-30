@@ -40,7 +40,7 @@ function item(name, extra = {}) {
     name,
     type: "registry:ui",
     dependencies: [],
-    files: [{ path: "ui/button/button.tsx", content: buttonContent }],
+    files: [{ path: "ui/button/index.tsx", content: buttonContent }],
     ...extra,
   };
 }
@@ -114,7 +114,7 @@ describe("file snapshots", () => {
     const original = Buffer.from(":root{--foo:bar}\n");
     const snapshot = await snapshotFiles(cwd, [
       "app/globals.css",
-      "components/ui/button/button.tsx",
+      "components/ui/button/index.tsx",
     ]);
 
     await writeFile(
@@ -122,16 +122,11 @@ describe("file snapshots", () => {
       ":root { --foo: changed; }\n",
     );
     await mkdir(join(cwd, "components/ui/button"), { recursive: true });
-    await writeFile(
-      join(cwd, "components/ui/button/button.tsx"),
-      buttonContent,
-    );
+    await writeFile(join(cwd, "components/ui/button/index.tsx"), buttonContent);
     await restoreFiles(cwd, snapshot);
 
     assert.deepEqual(await readFile(join(cwd, "app/globals.css")), original);
-    await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx")),
-    );
+    await assert.rejects(readFile(join(cwd, "components/ui/button/index.tsx")));
   });
 
   it("rejects a snapshot path outside the project", async () => {
@@ -164,9 +159,7 @@ describe("installation rollback", () => {
       packageJson,
     );
     assert.equal(await readFile(join(cwd, "pnpm-lock.yaml"), "utf8"), lockfile);
-    await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx")),
-    );
+    await assert.rejects(readFile(join(cwd, "components/ui/button/index.tsx")));
     assert.equal(
       await readFile(join(cwd, "app/globals.css"), "utf8"),
       cssContent,
@@ -183,7 +176,7 @@ describe("installation rollback", () => {
           item("button", {
             files: [
               { path: "ui/utils.ts", content: "export const cn = true;\n" },
-              { path: "ui/button/button.tsx", content: buttonContent },
+              { path: "ui/button/index.tsx", content: buttonContent },
             ],
           }),
           {
@@ -201,14 +194,12 @@ describe("installation rollback", () => {
       /component write failed/,
     );
     await assert.rejects(readFile(join(cwd, "components/ui/utils.ts")));
-    await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx")),
-    );
+    await assert.rejects(readFile(join(cwd, "components/ui/button/index.tsx")));
   });
 
   it("restores a file replaced with --force", async () => {
     const cwd = await project({
-      "components/ui/button/button.tsx": "// local modification\n",
+      "components/ui/button/index.tsx": "// local modification\n",
     });
 
     await assert.rejects(
@@ -224,7 +215,7 @@ describe("installation rollback", () => {
       /css write failed/,
     );
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       "// local modification\n",
     );
     assert.equal(
@@ -255,9 +246,7 @@ describe("installation rollback", () => {
       await readFile(join(cwd, "app/globals.css"), "utf8"),
       cssContent,
     );
-    await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx")),
-    );
+    await assert.rejects(readFile(join(cwd, "components/ui/button/index.tsx")));
   });
 
   it("does not run the package manager when the snapshot fails", async () => {
@@ -283,9 +272,7 @@ describe("installation rollback", () => {
       await readFile(join(cwd, "package.json"), "utf8"),
       packageJson,
     );
-    await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx")),
-    );
+    await assert.rejects(readFile(join(cwd, "components/ui/button/index.tsx")));
   });
 
   it("reports the original error and the rollback error", async () => {
@@ -324,7 +311,7 @@ describe("installation rollback", () => {
 
     assert.doesNotMatch(stdout, /rolled back/);
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
     assert.match(
@@ -354,9 +341,7 @@ describe("installation rollback", () => {
       /Changes were rolled back/,
     );
     assert.equal(await readFile(join(cwd, ".env"), "utf8"), envFile);
-    await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx")),
-    );
+    await assert.rejects(readFile(join(cwd, "components/ui/button/index.tsx")));
   });
 
   it("does not create package.json when none is needed", async () => {

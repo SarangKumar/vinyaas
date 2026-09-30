@@ -152,7 +152,7 @@ describe("installable breadcrumb registry", () => {
         await writeFile(
           join(cwd, "components/ui/breadcrumb/example.tsx"),
           [
-            'import { BreadcrumbPage } from "@/components/ui/breadcrumb/breadcrumb";',
+            'import { BreadcrumbPage } from "@/components/ui/breadcrumb";',
             "",
             "export function Example() {",
             "  return <BreadcrumbPage>Notes</BreadcrumbPage>;",
@@ -162,7 +162,7 @@ describe("installable breadcrumb registry", () => {
         );
 
         const card = await readFile(
-          join(cwd, "components/ui/breadcrumb/breadcrumb.tsx"),
+          join(cwd, "components/ui/breadcrumb/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

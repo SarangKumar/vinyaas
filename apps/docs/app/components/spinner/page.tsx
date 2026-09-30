@@ -1,25 +1,90 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { RefreshIcon } from "@/components/icons";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Spinner } from "@/registry/new-york/ui/spinner/spinner";
-import { SubmitSpinner } from "./spinner-demos";
+import { Spinner } from "@/registry/new-york/ui/spinner";
+import { FormSubmitSpinner, SubmitSpinner } from "./spinner-demos";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("spinner");
 
-const usage = `import { Spinner } from "@/components/ui/spinner/spinner";
+const usage = `import { useState } from "react";
 
-export function RefreshingData() {
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+
+export function SaveAction() {
+  const [pending, setPending] = useState(false);
+
   return (
-    <span className="inline-flex items-center gap-2 text-sm">
-      <Spinner label="Refreshing data" />
-      Refreshing data...
-    </span>
+    <Button
+      type="button"
+      className="gap-2"
+      disabled={pending}
+      onClick={() => {
+        setPending(true);
+        window.setTimeout(() => setPending(false), 1200);
+      }}
+    >
+      {pending ? <Spinner label="" /> : null}
+      {pending ? "Saving changes" : "Save changes"}
+    </Button>
+  );
+}
+`;
+
+const formSubmitCode = `import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+
+export function SaveProfile() {
+  const [pending, setPending] = useState(false);
+
+  return (
+    <form
+      className="grid max-w-sm gap-4"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setPending(true);
+        window.setTimeout(() => setPending(false), 1200);
+      }}
+    >
+      <div className="grid gap-2">
+        <Label htmlFor="display-name">Display name</Label>
+        <Input
+          id="display-name"
+          defaultValue="Ada Lovelace"
+          disabled={pending}
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          defaultValue="ada@analytical.engine"
+          disabled={pending}
+        />
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button type="submit" className="gap-2" disabled={pending}>
+          {pending ? <Spinner label="" /> : null}
+          {pending ? "Saving" : "Save changes"}
+        </Button>
+        <Button type="button" variant="outline" disabled={pending}>
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 }
 `;
@@ -41,6 +106,14 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
+    id: "in-a-button",
+    title: "In a button",
+    description:
+      "A pending action keeps its label and shows the spinner while work runs.",
+    preview: <SubmitSpinner />,
+    code: usage,
+  },
+  {
     id: "standalone",
     title: "Refreshing",
     description: "Pair the spinner with the work that is in progress.",
@@ -50,58 +123,14 @@ const examples: ComponentExample[] = [
         Refreshing data...
       </span>
     ),
-    code: usage,
-  },
-  {
-    id: "in-a-button",
-    title: "In a button",
-    description:
-      "A pending button keeps its label and shows the spinner beside it.",
-    preview: (
-      <Button type="button" className="gap-2" disabled>
-        <Spinner label="" />
-        Saving
-      </Button>
-    ),
-    code: `import { Button } from "@/components/ui/button/button";
-import { Spinner } from "@/components/ui/spinner/spinner";
+    code: `import { Spinner } from "@/components/ui/spinner";
 
-export function SavingButton() {
+export function RefreshingData() {
   return (
-    <Button type="button" className="gap-2" disabled>
-      <Spinner label="" />
-      Saving
-    </Button>
-  );
-}
-`,
-  },
-  {
-    id: "form-submit",
-    title: "Form submit",
-    description: "The submit button shows a spinner while the form is pending.",
-    preview: <SubmitSpinner />,
-    code: `import { useState } from "react";
-
-import { Button } from "@/components/ui/button/button";
-import { Spinner } from "@/components/ui/spinner/spinner";
-
-export function SubmitSpinner() {
-  const [pending, setPending] = useState(false);
-
-  return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        setPending(true);
-        window.setTimeout(() => setPending(false), 1200);
-      }}
-    >
-      <Button type="submit" className="gap-2" disabled={pending}>
-        {pending ? <Spinner label="" /> : null}
-        {pending ? "Saving" : "Save"}
-      </Button>
-    </form>
+    <span className="inline-flex items-center gap-2 text-sm">
+      <Spinner label="Refreshing data" />
+      Refreshing data...
+    </span>
   );
 }
 `,
@@ -131,9 +160,16 @@ export function RefreshingNote() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "Saving a short profile form disables the fields and shows a Spinner inside Save changes.",
+  preview: <FormSubmitSpinner />,
+  code: formSubmitCode,
+};
+
 export default async function SpinnerPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/spinner/spinner.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/spinner/index.tsx"),
     "utf8",
   );
 
@@ -153,13 +189,14 @@ export default async function SpinnerPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/spinner/spinner.tsx</code>. It imports{" "}
+          <code>components/ui/spinner/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">
@@ -175,14 +212,7 @@ export default async function SpinnerPage() {
       }
       source={source}
     >
-      <span className="inline-flex items-center gap-2 text-sm">
-        <Spinner label="Refreshing data" />
-        Refreshing data...
-      </span>
-      <Button type="button" className="gap-2" disabled>
-        <Spinner label="" />
-        Saving
-      </Button>
+      <SubmitSpinner />
     </ComponentReference>
   );
 }

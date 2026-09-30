@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
 
-import { RangeSlider, Slider } from "./slider";
+import { RangeSlider, Slider } from ".";
 
 describe("Slider", () => {
   it("renders a native range input", () => {
@@ -18,7 +18,7 @@ describe("Slider", () => {
     expect(slider).toHaveClass("h-2", "rounded-full");
     expect(slider).toHaveStyle({
       background:
-        "linear-gradient(to right, var(--muted) 0%, var(--foreground) 0%, var(--foreground) 40%, var(--muted) 40%)",
+        "linear-gradient(to right, var(--muted) 0%, var(--primary) 0%, var(--primary) 40%, var(--muted) 40%)",
     });
   });
 

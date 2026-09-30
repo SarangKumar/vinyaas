@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Spinner } from "./spinner";
+import { Spinner } from ".";
 
 describe("Spinner", () => {
   it("exposes a label and hides the graphic", () => {

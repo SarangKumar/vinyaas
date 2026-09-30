@@ -152,7 +152,7 @@ describe("installable alert registry", () => {
         await writeFile(
           join(cwd, "components/ui/alert/example.tsx"),
           [
-            'import { AlertTitle } from "@/components/ui/alert/alert";',
+            'import { AlertTitle } from "@/components/ui/alert";',
             "",
             "export function Example() {",
             "  return <AlertTitle>Notes</AlertTitle>;",
@@ -162,7 +162,7 @@ describe("installable alert registry", () => {
         );
 
         const card = await readFile(
-          join(cwd, "components/ui/alert/alert.tsx"),
+          join(cwd, "components/ui/alert/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

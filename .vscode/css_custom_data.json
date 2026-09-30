@@ -1,0 +1,25 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@theme",
+      "description": "Tailwind CSS v4 theme configuration. Maps design tokens to utilities."
+    },
+    {
+      "name": "@custom-variant",
+      "description": "Tailwind CSS v4 custom variant definition (for example `.dark`)."
+    },
+    {
+      "name": "@plugin",
+      "description": "Tailwind CSS v4 plugin import."
+    },
+    {
+      "name": "@source",
+      "description": "Tailwind CSS v4 content source path."
+    },
+    {
+      "name": "@utility",
+      "description": "Tailwind CSS v4 custom utility definition."
+    }
+  ]
+}

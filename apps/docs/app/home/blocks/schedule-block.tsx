@@ -1,7 +1,7 @@
 import { PlayBlock } from "@/app/home/play-block";
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Separator } from "@/registry/new-york/ui/separator/separator";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Separator } from "@/registry/new-york/ui/separator";
 
 const events = [
   {

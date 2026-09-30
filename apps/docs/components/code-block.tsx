@@ -12,7 +12,7 @@ import { CopyButton } from "@/components/copy-button";
 import { focusRing } from "@/components/focus-ring";
 import { tsxToJsx } from "@/components/tsx-to-jsx";
 import { useCodeLanguage, useSetCodeLanguage } from "@/lib/store/hooks";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Button } from "@/registry/new-york/ui/button";
 
 const collapseAfterLines = 16;
 
@@ -215,16 +215,16 @@ function CodeFrame({
         <pre
           className={
             collapsed
-              ? "m-0 max-h-72 overflow-hidden text-[13px] leading-6"
+              ? "m-0 max-h-72 overflow-hidden font-mono text-[13px] leading-6"
               : numbered
-                ? "m-0 overflow-x-auto text-[13px] leading-6"
-                : "m-0 overflow-x-auto px-0 py-4 text-[13px] leading-6"
+                ? "m-0 overflow-x-auto font-mono text-[13px] leading-6"
+                : "m-0 overflow-x-auto px-0 py-4 font-mono text-[13px] leading-6"
           }
         >
           {numbered ? (
             <NumberedSource code={code} language={language} />
           ) : (
-            <code data-language={language} className="block px-5">
+            <code data-language={language} className="block px-5 font-mono">
               {highlightCode(code, language) ?? code}
             </code>
           )}
@@ -277,7 +277,7 @@ function NumberedSource({
       <div
         data-line-numbers
         aria-hidden="true"
-        className="text-muted-foreground border-border bg-muted/40 sticky left-0 shrink-0 self-stretch border-r py-0 pr-2 pl-3 text-right tabular-nums select-none"
+        className="text-muted-foreground border-border bg-muted sticky left-0 shrink-0 self-stretch border-r py-0 pr-2 pl-3 text-right tabular-nums select-none"
       >
         {lines.map((_, index) => (
           <div key={index} className="h-6 leading-6">
@@ -287,7 +287,7 @@ function NumberedSource({
       </div>
       <code
         data-language={language}
-        className="block min-w-max flex-1 pr-3 pl-3 whitespace-pre"
+        className="block min-w-max flex-1 pr-3 pl-3 font-mono whitespace-pre"
       >
         {highlightCode(code.replace(/\n$/, ""), language) ??
           code.replace(/\n$/, "")}

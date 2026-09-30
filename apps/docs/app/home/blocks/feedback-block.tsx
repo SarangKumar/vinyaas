@@ -1,10 +1,10 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
-import { toast } from "@/registry/new-york/ui/toast/toast";
+import { Button } from "@/registry/new-york/ui/button";
+import { Label } from "@/registry/new-york/ui/label";
+import { Textarea } from "@/registry/new-york/ui/textarea";
+import { toast } from "@/registry/new-york/ui/toast";
 
 export function FeedbackBlock() {
   return (

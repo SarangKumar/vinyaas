@@ -7,9 +7,9 @@ import { focusRing } from "@/components/focus-ring";
 import { InstallCommand } from "@/components/install-command";
 import { cliCommands } from "@/components/package-managers";
 import { pageMetadata } from "@/lib/page-metadata";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
+import { Button } from "@/registry/new-york/ui/button";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
 
 export const metadata: Metadata = pageMetadata({
   title: "Introduction",
@@ -19,13 +19,13 @@ export const metadata: Metadata = pageMetadata({
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
-const body = "text-body text-base leading-7";
+const body = "text-foreground text-base leading-7";
 const actionLink = `inline-flex h-9 cursor-pointer items-center rounded-md px-4 text-sm font-medium ${focusRing}`;
 
 const usageExample = {
-  tsx: `import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+  tsx: `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SaveName() {
   return (
@@ -39,9 +39,9 @@ export function SaveName() {
   );
 }
 `,
-  jsx: `import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
+  jsx: `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SaveName() {
   return (
@@ -62,6 +62,9 @@ export default function IntroductionPage() {
     (component) => component.introducedIn === "0.1",
   ).length;
   const v10Count = components.filter(
+    (component) => component.introducedIn === "1.0.0",
+  ).length;
+  const currentCount = components.filter(
     (component) => component.introducedIn === currentVersion,
   ).length;
 
@@ -78,9 +81,10 @@ export default function IntroductionPage() {
           Accessible React components you install as source.
         </h1>
         <p className={`${body} max-w-2xl text-lg leading-8`}>
-          Vinyaas is a component library and documentation system for React and
-          Tailwind. The CLI copies components into your repository. You own the
-          files, edit them freely, and ship without a Vinyaas runtime package.
+          Vinyaas is a registry-driven component library for React and Tailwind
+          CSS v4. The CLI prepares your project, discovers components, and
+          installs them as source. You own the files, edit them freely, and ship
+          without a Vinyaas runtime package.
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
@@ -122,10 +126,12 @@ export default function IntroductionPage() {
         </h2>
         <p className={body}>
           The current catalog has {components.length} components. v0.1 ships{" "}
-          {v01Count} component (Button). v{currentVersion} is the major
-          production-focused release and adds the other {v10Count}. Components
-          are composable, theme-aware in light and dark, and documented with
-          production-oriented examples.
+          {v01Count} component (Button). v1.0.0 is the major production-focused
+          release and adds {v10Count} more. v{currentVersion} adds{" "}
+          {currentCount} component
+          {currentCount === 1 ? "" : "s"}. Components are composable,
+          theme-aware in light and dark, and documented with production-oriented
+          examples.
         </p>
         <p className={body}>
           Docs pages include API reference, installation, usage and composition
@@ -214,17 +220,30 @@ export default function IntroductionPage() {
         </h2>
         <ol className={`${body} list-decimal space-y-3 pl-5`}>
           <li>
-            Run <code>vinyaas init</code> to create <code>components.json</code>
-            , utilities, and theme hooks for your app.
+            Create a supported React, Next.js, or Vite project with Tailwind CSS
+            v4.
           </li>
           <li>
-            Add components with <code>vinyaas add …</code>. The CLI writes files
-            under your configured components path.
+            Run <code>vinyaas init</code> to configure theme CSS, aliases,{" "}
+            <code>components.json</code>, and utilities. Init is idempotent.
+          </li>
+          <li>
+            Discover components with <code>vinyaas list</code>,{" "}
+            <code>search</code>, and <code>info</code> when you need the catalog
+            from the terminal.
+          </li>
+          <li>
+            Install one or more components with <code>vinyaas add …</code>.
+            Files land at{" "}
+            <code className="font-mono">
+              components/ui/&lt;name&gt;/index.tsx
+            </code>
+            .
           </li>
           <li>
             Import from your local path (for example{" "}
-            <code>@/components/ui/button/button</code>) and compose like any
-            other React code.
+            <code>@/components/ui/button</code>) and compose like any other
+            React code.
           </li>
         </ol>
         <InstallCommand commands={cliCommands("init")} />
@@ -237,7 +256,8 @@ export default function IntroductionPage() {
           >
             Installation
           </Link>{" "}
-          page, including multi-component adds and framework notes.
+          page, including multi-component adds, skip/force behavior, discovery
+          commands, and framework notes.
         </p>
       </section>
 
@@ -336,6 +356,18 @@ export default function IntroductionPage() {
             className={`${actionLink} border-border text-foreground hover:bg-accent border`}
           >
             Components
+          </Link>
+          <Link
+            href="/themes"
+            className={`${actionLink} border-border text-foreground hover:bg-accent border`}
+          >
+            Themes
+          </Link>
+          <Link
+            href="/typeset"
+            className={`${actionLink} border-border text-foreground hover:bg-accent border`}
+          >
+            Typeset
           </Link>
           <Link
             href="/changelog"

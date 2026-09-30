@@ -2,7 +2,7 @@ import { createRef, useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Checkbox } from "./checkbox";
+import { Checkbox } from ".";
 
 describe("Checkbox", () => {
   it("renders a native checkbox that a label can name", () => {
@@ -19,6 +19,11 @@ describe("Checkbox", () => {
     expect(checkbox).toHaveAttribute("type", "checkbox");
     expect(checkbox).not.toBeChecked();
     expect(checkbox).not.toHaveAttribute("role");
+    expect(checkbox).toHaveClass(
+      "checked:border-primary",
+      "checked:bg-primary",
+      "accent-primary",
+    );
   });
 
   it("checks and unchecks", () => {

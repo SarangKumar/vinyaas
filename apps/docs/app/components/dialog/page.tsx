@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
-import { Checkbox } from "@/registry/new-york/ui/checkbox/checkbox";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
+import { Checkbox } from "@/registry/new-york/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -12,42 +12,103 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/registry/new-york/ui/dialog/dialog";
-import { Input } from "@/registry/new-york/ui/input/input";
-import { Label } from "@/registry/new-york/ui/label/label";
-import { Switch } from "@/registry/new-york/ui/switch/switch";
-import { Textarea } from "@/registry/new-york/ui/textarea/textarea";
+} from "@/registry/new-york/ui/dialog";
+import { Input } from "@/registry/new-york/ui/input";
+import { Label } from "@/registry/new-york/ui/label";
+import { Switch } from "@/registry/new-york/ui/switch";
+import { Textarea } from "@/registry/new-york/ui/textarea";
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = componentPageMetadata("dialog");
 
-const usage = `import { Button } from "@/components/ui/button/button";
+const usage = `import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog/dialog";
+} from "@/components/ui/dialog";
 
-export function EditDialog() {
+export function ConfirmDialog() {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button>Edit profile</Button>
+        <Button variant="outline">Open</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>Update your public profile.</DialogDescription>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </DialogDescription>
         </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline">Cancel</Button>
+          <Button>Continue</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+`;
+
+const deleteCode = `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+export function DeleteProjectDialog() {
+  return (
+    <div className="border-border flex w-full max-w-sm items-center justify-between gap-3 rounded-lg border p-3">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium">vinyaas-web</p>
+        <p className="text-muted-foreground text-xs">Production · us-east-1</p>
+      </div>
+      <Dialog>
+        <DialogTrigger>
+          <Button variant="destructive" size="sm">
+            Delete
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete project</DialogTitle>
+            <DialogDescription>
+              This removes the project and its deployments. This action cannot
+              be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <Badge variant="destructive">vinyaas-web</Badge>
+          <DialogFooter>
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <DialogClose>
+              <Button variant="destructive">Delete project</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
 `;
@@ -101,17 +162,17 @@ const examples: ComponentExample[] = [
             <Textarea id="profile-bio" defaultValue="Building accessible UI." />
           </div>
           <DialogFooter>
-            <DialogClose className="border-border inline-flex h-9 items-center rounded-md border px-4 text-sm">
-              Cancel
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <DialogClose className="bg-primary text-primary-foreground inline-flex h-9 items-center rounded-md px-4 text-sm">
-              Save
+            <DialogClose>
+              <Button>Save</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
+    code: `import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -121,10 +182,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog/dialog";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
-import { Textarea } from "@/components/ui/textarea/textarea";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export function EditProfileDialog() {
   return (
@@ -137,74 +198,21 @@ export function EditProfileDialog() {
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>Update your public profile.</DialogDescription>
         </DialogHeader>
-        <Label htmlFor="profile-name">Display name</Label>
-        <Input id="profile-name" defaultValue="Sarang Kumar" />
-        <Label htmlFor="profile-bio">Bio</Label>
-        <Textarea id="profile-bio" defaultValue="Building accessible UI." />
+        <div className="grid gap-2">
+          <Label htmlFor="profile-name">Display name</Label>
+          <Input id="profile-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="profile-bio">Bio</Label>
+          <Textarea id="profile-bio" defaultValue="Building accessible UI." />
+        </div>
         <DialogFooter>
-          <DialogClose>Cancel</DialogClose>
-          <DialogClose>Save</DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-`,
-  },
-  {
-    id: "delete-project",
-    title: "Delete confirmation",
-    description: "A destructive action stays behind a confirmation.",
-    preview: (
-      <Dialog>
-        <DialogTrigger>
-          <Button variant="destructive">Delete project</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete project</DialogTitle>
-            <DialogDescription>
-              This removes the project and its deployments.
-            </DialogDescription>
-          </DialogHeader>
-          <Badge variant="destructive">vinyaas-web</Badge>
-          <DialogFooter>
-            <DialogClose>Cancel</DialogClose>
-            <DialogClose>Delete</DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    ),
-    code: `import { Badge } from "@/components/ui/badge/badge";
-import { Button } from "@/components/ui/button/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog/dialog";
-
-export function DeleteProjectDialog() {
-  return (
-    <Dialog>
-      <DialogTrigger>
-        <Button variant="destructive">Delete project</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete project</DialogTitle>
-          <DialogDescription>
-            This removes the project and its deployments.
-          </DialogDescription>
-        </DialogHeader>
-        <Badge variant="destructive">vinyaas-web</Badge>
-        <DialogFooter>
-          <DialogClose>Cancel</DialogClose>
-          <DialogClose>Delete</DialogClose>
+          <DialogClose>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <DialogClose>
+            <Button>Save</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -260,14 +268,18 @@ export function DeleteProjectDialog() {
             ))}
           </ul>
           <DialogFooter>
-            <DialogClose>Cancel</DialogClose>
-            <DialogClose>Save changes</DialogClose>
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <DialogClose>
+              <Button>Save changes</Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     ),
-    code: `import { Button } from "@/components/ui/button/button";
-import { Checkbox } from "@/components/ui/checkbox/checkbox";
+    code: `import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -277,10 +289,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog/dialog";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label/label";
-import { Switch } from "@/components/ui/switch/switch";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export function AccountDialog() {
   return (
@@ -293,17 +305,39 @@ export function AccountDialog() {
           <DialogTitle>Account settings</DialogTitle>
           <DialogDescription>Name, email, and notification preferences.</DialogDescription>
         </DialogHeader>
-        <Label htmlFor="account-name">Display name</Label>
-        <Input id="account-name" defaultValue="Sarang Kumar" />
-        <Label htmlFor="account-email">Email</Label>
-        <Input id="account-email" defaultValue="sarang@example.com" />
-        <Label htmlFor="account-updates">Product updates</Label>
-        <Switch id="account-updates" defaultChecked />
-        <Checkbox id="account-activity" defaultChecked />
-        <Label htmlFor="account-activity">Email me about activity</Label>
+        <div className="grid gap-2">
+          <Label htmlFor="account-name">Display name</Label>
+          <Input id="account-name" defaultValue="Sarang Kumar" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="account-email">Email</Label>
+          <Input id="account-email" defaultValue="sarang@example.com" />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="account-updates">Product updates</Label>
+          <Switch id="account-updates" defaultChecked />
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox id="account-activity" defaultChecked />
+          <Label htmlFor="account-activity">Email me about activity</Label>
+        </div>
+        <ul className="text-muted-foreground grid gap-2 text-sm">
+          <li>Invoices</li>
+          <li>Receipts</li>
+          <li>API keys</li>
+          <li>Members</li>
+          <li>Audit log</li>
+          <li>Webhooks</li>
+          <li>Domains</li>
+          <li>Backups</li>
+        </ul>
         <DialogFooter>
-          <DialogClose>Cancel</DialogClose>
-          <DialogClose>Save changes</DialogClose>
+          <DialogClose>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <DialogClose>
+            <Button>Save changes</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -313,9 +347,48 @@ export function AccountDialog() {
   },
 ];
 
+const inPractice: ComponentInPractice = {
+  description:
+    "A project row keeps the destructive action behind a confirmation. Cancel stays available; the badge names what will be removed.",
+  preview: (
+    <div className="border-border flex w-full max-w-sm items-center justify-between gap-3 rounded-lg border p-3 text-left">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium">vinyaas-web</p>
+        <p className="text-muted-foreground text-xs">Production · us-east-1</p>
+      </div>
+      <Dialog>
+        <DialogTrigger>
+          <Button variant="destructive" size="sm">
+            Delete
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete project</DialogTitle>
+            <DialogDescription>
+              This removes the project and its deployments. This action cannot
+              be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <Badge variant="destructive">vinyaas-web</Badge>
+          <DialogFooter>
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <DialogClose>
+              <Button variant="destructive">Delete project</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  ),
+  code: { tsx: deleteCode, jsx: deleteCode },
+};
+
 export default async function DialogPage() {
   const source = await readFile(
-    path.join(process.cwd(), "registry/new-york/ui/dialog/dialog.tsx"),
+    path.join(process.cwd(), "registry/new-york/ui/dialog/index.tsx"),
     "utf8",
   );
 
@@ -342,13 +415,15 @@ export default async function DialogPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/dialog/dialog.tsx</code>. It imports{" "}
-          <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
-          <code>clsx</code> and <code>tailwind-merge</code>.
+          <code>components/ui/dialog/index.tsx</code> and copy{" "}
+          <code>dialog.css</code> beside it. It imports <code>cn</code> from{" "}
+          <code>@/lib/utils</code>. The project also needs <code>clsx</code> and{" "}
+          <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}
       examples={examples}
+      inPractice={inPractice}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">
@@ -366,15 +441,23 @@ export default async function DialogPage() {
     >
       <Dialog>
         <DialogTrigger>
-          <Button>Edit profile</Button>
+          <Button variant="outline">Open</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>Update your public profile.</DialogDescription>
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose>Close</DialogClose>
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <DialogClose>
+              <Button>Continue</Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>

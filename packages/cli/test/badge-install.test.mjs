@@ -152,7 +152,7 @@ describe("installable badge registry", () => {
         await writeFile(
           join(cwd, "components/ui/badge/example.tsx"),
           [
-            'import { Badge } from "@/components/ui/badge/badge";',
+            'import { Badge } from "@/components/ui/badge";',
             "",
             "export function Plan() {",
             "  return <Badge>Pro</Badge>;",
@@ -162,7 +162,7 @@ describe("installable badge registry", () => {
         );
 
         const badge = await readFile(
-          join(cwd, "components/ui/badge/badge.tsx"),
+          join(cwd, "components/ui/badge/index.tsx"),
           "utf8",
         );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");

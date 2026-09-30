@@ -47,7 +47,7 @@ const componentsConfig = {
 };
 
 function buttonItem(
-  files = [{ path: "ui/button/button.tsx", content: buttonContent }],
+  files = [{ path: "ui/button/index.tsx", content: buttonContent }],
   extra = {},
 ) {
   return {
@@ -193,13 +193,13 @@ describe("vinyaas add", { concurrency: false }, () => {
     const cwd = await writeProject(consumerProject());
     const { stdout } = await add(cwd, buttonItem());
     const written = await readFile(
-      join(cwd, "components/ui/button/button.tsx"),
+      join(cwd, "components/ui/button/index.tsx"),
       "utf8",
     );
 
     assert.equal(written, buttonContent);
     assert.match(stdout, /^Added button\./);
-    assert.match(stdout, /components\/ui\/button\/button\.tsx/);
+    assert.match(stdout, /components\/ui\/button\/index\.tsx/);
     assert.match(stdout, /class-variance-authority/);
     assert.match(stdout, /clsx/);
     assert.match(stdout, /tailwind-merge/);
@@ -233,24 +233,45 @@ describe("vinyaas add", { concurrency: false }, () => {
     await add(cwd, buttonItem());
 
     assert.equal(
-      await readFile(join(cwd, "src/lib/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "src/lib/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
-  it("does not overwrite an existing file or create later files", async () => {
+  it("skips an already-installed component without overwriting", async () => {
     const existing = "export const existing = true;\n";
     const cwd = await writeProject(
       consumerProject({
-        "components/ui/button/button.tsx": existing,
+        "components/ui/button/index.tsx": existing,
+      }),
+    );
+    const { plan, stdout } = await add(cwd, buttonItem());
+
+    assert.deepEqual(plan.skipped, ["button"]);
+    assert.equal(plan.entries.length, 0);
+    assert.match(stdout, /Skipped:/);
+    assert.match(stdout, /- button/);
+    assert.match(stdout, /Nothing new to install/);
+    assert.equal(
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
+      existing,
+    );
+    assert.equal(packageManagerCalls.length, 0);
+  });
+
+  it("errors when only some files of a multi-file item already exist", async () => {
+    const existing = "export const existing = true;\n";
+    const cwd = await writeProject(
+      consumerProject({
+        "components/ui/button/index.tsx": existing,
       }),
     );
     const item = buttonItem([
-      { path: "ui/card/card.tsx", content: "export function Card() {}\n" },
-      { path: "ui/button/button.tsx", content: buttonContent },
+      { path: "ui/card/index.tsx", content: "export function Card() {}\n" },
+      { path: "ui/button/index.tsx", content: buttonContent },
     ]);
 
     await assert.rejects(
@@ -258,16 +279,16 @@ describe("vinyaas add", { concurrency: false }, () => {
       (error) => {
         assert.ok(error instanceof CliError);
         assert.match(error.message, /File already exists:/);
-        assert.match(error.message, /components\/ui\/button\/button\.tsx/);
+        assert.match(error.message, /components\/ui\/button\/index\.tsx/);
         return true;
       },
     );
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       existing,
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/card/card.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/card/index.tsx"), "utf8"),
     );
     assert.equal(packageManagerCalls.length, 0);
   });
@@ -275,13 +296,13 @@ describe("vinyaas add", { concurrency: false }, () => {
   it("resolves every file before writing", async () => {
     const cwd = await writeProject(consumerProject());
     const item = buttonItem([
-      { path: "ui/button/button.tsx", content: buttonContent },
+      { path: "ui/button/index.tsx", content: buttonContent },
       { path: "../outside.ts", content: "export {};\n" },
     ]);
 
     await assert.rejects(() => add(cwd, item), /stay inside the project/);
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
     assert.equal(packageManagerCalls.length, 0);
   });
@@ -289,14 +310,14 @@ describe("vinyaas add", { concurrency: false }, () => {
   it("installs every file in a registry item", async () => {
     const cwd = await writeProject(consumerProject());
     const item = buttonItem([
-      { path: "ui/button/button.tsx", content: buttonContent },
+      { path: "ui/button/index.tsx", content: buttonContent },
       { path: "components/card.tsx", content: "export function Card() {}\n" },
     ]);
     const { plan } = await add(cwd, item);
 
     assert.deepEqual(
       plan.entries.map((entry) => entry.destinationPath),
-      ["components/ui/button/button.tsx", "components/card.tsx"],
+      ["components/ui/button/index.tsx", "components/card.tsx"],
     );
     assert.equal(
       await readFile(join(cwd, "components/card.tsx"), "utf8"),
@@ -343,7 +364,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       },
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -398,7 +419,7 @@ describe("vinyaas add", { concurrency: false }, () => {
 
     assert.deepEqual(
       plan.entries.map((entry) => entry.destinationPath),
-      ["lib/utils.ts", "components/ui/button/button.tsx"],
+      ["lib/utils.ts", "components/ui/button/index.tsx"],
     );
     assert.deepEqual(plan.dependencies, [
       "clsx",
@@ -410,7 +431,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       utilsSource,
     );
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
     const installed = calls.flatMap((call) => call.args);
@@ -461,7 +482,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       /Could not safely map "@\/components\/ui"/,
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -470,7 +491,7 @@ describe("vinyaas add", { concurrency: false }, () => {
 
     await add(
       cwd,
-      buttonItem([{ path: "ui/button/button.tsx", content: buttonContent }], {
+      buttonItem([{ path: "ui/button/index.tsx", content: buttonContent }], {
         cssVars: {
           light: { "--primary": "222.2 47.4% 11.2%" },
           dark: { "--primary": "210 40% 98%" },
@@ -490,23 +511,21 @@ describe("vinyaas add", { concurrency: false }, () => {
       1,
     );
 
-    await assert.rejects(
-      () =>
-        add(
-          cwd,
-          buttonItem(
-            [{ path: "ui/button/button.tsx", content: buttonContent }],
-            {
-              cssVars: {
-                light: { "--primary": "222.2 47.4% 11.2%" },
-                dark: { "--primary": "210 40% 98%" },
-              },
-              css: { ".button": "color: red;" },
-            },
-          ),
-        ),
-      /File already exists/,
+    const { stdout } = await add(
+      cwd,
+      buttonItem(
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
+        {
+          cssVars: {
+            light: { "--primary": "222.2 47.4% 11.2%" },
+            dark: { "--primary": "210 40% 98%" },
+          },
+          css: { ".button": "color: red;" },
+        },
+      ),
     );
+    assert.match(stdout, /Skipped:/);
+    assert.match(stdout, /Nothing new to install/);
     assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
   });
 
@@ -520,7 +539,7 @@ describe("vinyaas add", { concurrency: false }, () => {
 
     await add(
       cwd,
-      buttonItem([{ path: "ui/button/button.tsx", content: buttonContent }], {
+      buttonItem([{ path: "ui/button/index.tsx", content: buttonContent }], {
         cssVars: { light: { "--primary": "222.2 47.4% 11.2%" } },
         css: { ".button": "color: red;" },
       }),
@@ -546,7 +565,7 @@ describe("vinyaas add", { concurrency: false }, () => {
         add(
           cwd,
           buttonItem(
-            [{ path: "ui/button/button.tsx", content: buttonContent }],
+            [{ path: "ui/button/index.tsx", content: buttonContent }],
             {
               cssVars: { light: { "--primary": "registry-value" } },
             },
@@ -564,7 +583,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       existing,
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -583,7 +602,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     );
     assert.equal(calls.length, 0);
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -596,7 +615,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     );
     const { stdout, calls } = await add(
       cwd,
-      buttonItem([{ path: "ui/button/button.tsx", content: buttonContent }], {
+      buttonItem([{ path: "ui/button/index.tsx", content: buttonContent }], {
         envVars: { OPENAI_API_KEY: "OpenAI API key" },
       }),
     );
@@ -606,7 +625,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     assert.match(stdout, /No environment files were modified/);
     assert.equal(await readFile(join(cwd, ".env"), "utf8"), envFile);
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
     assert.equal(calls.length, 1);
@@ -621,7 +640,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     );
     const { stdout } = await add(
       cwd,
-      buttonItem([{ path: "ui/button/button.tsx", content: buttonContent }], {
+      buttonItem([{ path: "ui/button/index.tsx", content: buttonContent }], {
         dependencies: [],
         envVars: { OPENAI_API_KEY: "OpenAI API key" },
       }),
@@ -648,7 +667,7 @@ describe("vinyaas add", { concurrency: false }, () => {
         envVars: { API_URL: "Public API origin" },
       },
       button: buttonItem(
-        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
         {
           registryDependencies: ["utils"],
           envVars: { API_URL: "Private API origin" },
@@ -673,7 +692,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     assert.equal(await readFile(join(cwd, ".env"), "utf8"), envFile);
     await assert.rejects(readFile(join(cwd, "components/ui/utils.ts"), "utf8"));
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -710,7 +729,7 @@ describe("vinyaas add", { concurrency: false }, () => {
         ],
       },
       button: buttonItem(
-        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
         {
           dependencies: [],
           registryDependencies: ["utils", "icon"],
@@ -762,14 +781,14 @@ describe("vinyaas add", { concurrency: false }, () => {
     assert.equal(calls.length, 0);
     assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
-  it("does not report documentation when installation fails", async () => {
+  it("does not report documentation when the component is already installed", async () => {
     const cwd = await writeProject(
       consumerProject({
-        "components/ui/button/button.tsx": buttonContent,
+        "components/ui/button/index.tsx": buttonContent,
       }),
     );
     const logs = [];
@@ -779,27 +798,27 @@ describe("vinyaas add", { concurrency: false }, () => {
     };
 
     try {
-      await assert.rejects(
-        () =>
-          runAdd({
-            cwd,
-            name: "button",
-            env: { REGISTRY_BASE_URL: "http://localhost:3000" },
-            fetch: fetchItem(
-              buttonItem(undefined, {
-                docs: "https://vinyaas.vercel.app/docs/components/button",
-              }),
-            ),
-            runPackageManager: async () => {
-              throw new Error("package manager should not run");
-            },
+      const plan = await runAdd({
+        cwd,
+        name: "button",
+        env: { REGISTRY_BASE_URL: "http://localhost:3000" },
+        fetch: fetchItem(
+          buttonItem(undefined, {
+            docs: "https://vinyaas.vercel.app/docs/components/button",
           }),
-        /File already exists/,
-      );
+        ),
+        runPackageManager: async () => {
+          throw new Error("package manager should not run");
+        },
+      });
+
+      assert.deepEqual(plan.skipped, ["button"]);
+      assert.equal(plan.entries.length, 0);
     } finally {
       console.log = original;
     }
 
+    assert.match(logs.join("\n"), /Skipped:/);
     assert.equal(logs.join("\n").includes("Documentation:"), false);
   });
 
@@ -814,7 +833,7 @@ describe("vinyaas add", { concurrency: false }, () => {
         files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
       },
       button: buttonItem(
-        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
         {
           dependencies: ["clsx", "tailwind-merge"],
           registryDependencies: ["utils"],
@@ -838,7 +857,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       "export const cn = true;\n",
     );
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
   });
@@ -864,7 +883,7 @@ describe("vinyaas add", { concurrency: false }, () => {
         ],
       },
       button: buttonItem(
-        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
         { registryDependencies: ["utils", "input"] },
       ),
     });
@@ -894,7 +913,7 @@ describe("vinyaas add", { concurrency: false }, () => {
         files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
       },
       button: buttonItem(
-        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
         { registryDependencies: ["utils"] },
       ),
     });
@@ -922,7 +941,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     assert.equal(calls.length, 0);
     await assert.rejects(readFile(join(cwd, "components/ui/utils.ts"), "utf8"));
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -930,7 +949,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     const cwd = await writeProject(consumerProject());
     const catalog = fetchCatalog({
       button: buttonItem(
-        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
         { registryDependencies: ["does-not-exist"] },
       ),
     });
@@ -941,11 +960,11 @@ describe("vinyaas add", { concurrency: false }, () => {
     );
     assert.equal(packageManagerCalls.length, 0);
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
-  it("does not install a component when a dependency file already exists", async () => {
+  it("skips an already-installed registry dependency and still installs the component", async () => {
     const cwd = await writeProject(
       consumerProject({
         "components/ui/utils.ts": "export const existing = true;\n",
@@ -960,33 +979,33 @@ describe("vinyaas add", { concurrency: false }, () => {
         files: [{ path: "ui/utils.ts", content: "export const cn = true;\n" }],
       },
       button: buttonItem(
-        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
         { registryDependencies: ["utils"] },
       ),
     });
     const calls = [];
-
-    await assert.rejects(
-      () =>
-        add(
-          cwd,
-          null,
-          "button",
-          async (command) => {
-            calls.push(command);
-          },
-          catalog.fetch,
-        ),
-      /File already exists:\ncomponents\/ui\/utils\.ts/,
+    const { plan } = await add(
+      cwd,
+      null,
+      "button",
+      async (command) => {
+        calls.push(command);
+      },
+      catalog.fetch,
     );
-    assert.equal(calls.length, 0);
+
+    assert.equal(plan.entries.length, 1);
+    assert.equal(plan.entries[0].destinationPath, "components/ui/button/index.tsx");
     assert.equal(
       await readFile(join(cwd, "components/ui/utils.ts"), "utf8"),
       "export const existing = true;\n",
     );
-    await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+    assert.equal(
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
+      buttonContent,
     );
+    assert.equal(calls.length, 1);
+    assert.ok(calls[0].args.includes("clsx") || calls[0].args.includes("tailwind-merge"));
   });
 
   it("fails when two registry items resolve to the same file", async () => {
@@ -1051,7 +1070,7 @@ describe("vinyaas add", { concurrency: false }, () => {
         ],
       },
       button: buttonItem(
-        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
         {
           dependencies: ["clsx"],
           registryDependencies: ["utils", "icon"],
@@ -1109,7 +1128,7 @@ describe("vinyaas add", { concurrency: false }, () => {
         cssVars: { light: { "--primary": "0 0% 0%" } },
       },
       button: buttonItem(
-        [{ path: "ui/button/button.tsx", content: buttonContent }],
+        [{ path: "ui/button/index.tsx", content: buttonContent }],
         {
           dependencies: ["foo"],
           registryDependencies: ["utils"],
@@ -1135,7 +1154,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     assert.equal(await readFile(join(cwd, ".env"), "utf8"), "UNRELATED=1\n");
     await assert.rejects(readFile(join(cwd, "components/ui/utils.ts"), "utf8"));
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -1161,7 +1180,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     );
     assert.deepEqual(calls, [["add", "clsx"]]);
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -1175,7 +1194,7 @@ describe("vinyaas add", { concurrency: false }, () => {
         add(
           cwd,
           buttonItem(
-            [{ path: "ui/button/button.tsx", content: buttonContent }],
+            [{ path: "ui/button/index.tsx", content: buttonContent }],
             {
               dependencies: ["clsx"],
               devDependencies: ["prettier"],
@@ -1200,7 +1219,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     ]);
     assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -1242,7 +1261,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       /--primary:\s*1 2% 3%/,
     );
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
   });
@@ -1275,7 +1294,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     assert.equal(calls.length, 0);
     assert.equal(await readFile(join(cwd, "package.json"), "utf8"), manifest);
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
   });
@@ -1298,7 +1317,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     assert.equal(calls.length, 0);
     assert.equal(await readFile(join(cwd, "package.json"), "utf8"), "{\n");
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -1362,7 +1381,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     const cwd = await writeProject(
       consumerProject({
         "package.json": manifest,
-        "components/ui/button/button.tsx": "// local modification\n",
+        "components/ui/button/index.tsx": "// local modification\n",
       }),
     );
     const { calls } = await add(
@@ -1376,7 +1395,7 @@ describe("vinyaas add", { concurrency: false }, () => {
 
     assert.equal(calls.length, 0);
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
     assert.equal(await readFile(join(cwd, "package.json"), "utf8"), manifest);
@@ -1417,27 +1436,31 @@ describe("vinyaas add", { concurrency: false }, () => {
 
     assert.equal(calls.length, 0);
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
   });
 
-  it("fails before installing dependencies when a file already exists", async () => {
+  it("skips dependency installation when the component is already installed", async () => {
     const cwd = await writeProject(
       consumerProject({
-        "components/ui/button/button.tsx": buttonContent,
+        "components/ui/button/index.tsx": buttonContent,
       }),
     );
     const calls = [];
-
-    await assert.rejects(
-      () =>
-        add(cwd, buttonItem(), "button", async (command) => {
-          calls.push(command);
-        }),
-      /File already exists:/,
+    const { plan, stdout } = await add(
+      cwd,
+      buttonItem(),
+      "button",
+      async (command) => {
+        calls.push(command);
+      },
     );
+
+    assert.deepEqual(plan.skipped, ["button"]);
+    assert.equal(plan.entries.length, 0);
     assert.equal(calls.length, 0);
+    assert.match(stdout, /Nothing new to install/);
   });
 
   it("fails when the consumer project has no lockfile", async () => {
@@ -1450,7 +1473,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       /No package manager lockfile was found/,
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
     assert.equal(packageManagerCalls.length, 0);
   });
@@ -1476,7 +1499,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       },
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -1498,7 +1521,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       },
     );
     await assert.rejects(
-      readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -1530,11 +1553,11 @@ describe("vinyaas add", { concurrency: false }, () => {
     assert.equal(calls[0].cwd, projectA);
     assert.equal(calls[0].command, "pnpm");
     assert.equal(
-      await readFile(join(projectA, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(projectA, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
     await assert.rejects(
-      readFile(join(parent, "components/ui/button/button.tsx"), "utf8"),
+      readFile(join(parent, "components/ui/button/index.tsx"), "utf8"),
     );
   });
 
@@ -1623,7 +1646,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       );
       assert.equal(
         await readFile(
-          join(projectA, "components/ui/button/button.tsx"),
+          join(projectA, "components/ui/button/index.tsx"),
           "utf8",
         ),
         buttonContent,
@@ -1635,7 +1658,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       );
       assert.equal(await readFile(join(projectB, ".env"), "utf8"), envB);
       await assert.rejects(
-        readFile(join(projectB, "components/ui/button/button.tsx"), "utf8"),
+        readFile(join(projectB, "components/ui/button/index.tsx"), "utf8"),
       );
 
       const second = await runCli(
@@ -1648,14 +1671,14 @@ describe("vinyaas add", { concurrency: false }, () => {
       assert.doesNotMatch(second.stdout, /secret-b/);
       assert.equal(
         await readFile(
-          join(projectB, "components/ui/button/button.tsx"),
+          join(projectB, "components/ui/button/index.tsx"),
           "utf8",
         ),
         buttonContent,
       );
       assert.equal(
         await readFile(
-          join(projectA, "components/ui/button/button.tsx"),
+          join(projectA, "components/ui/button/index.tsx"),
           "utf8",
         ),
         buttonContent,
@@ -1674,7 +1697,7 @@ describe("vinyaas add", { concurrency: false }, () => {
   it("does not pass --force to the package manager", async () => {
     const cwd = await writeProject(
       consumerProject({
-        "components/ui/button/button.tsx": "// local modification\n",
+        "components/ui/button/index.tsx": "// local modification\n",
       }),
     );
     const { calls } = await add(
@@ -1695,7 +1718,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       "tailwind-merge",
     ]);
     assert.equal(
-      await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+      await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       buttonContent,
     );
   });
@@ -1726,16 +1749,17 @@ describe("vinyaas add", { concurrency: false }, () => {
 
       assert.equal(installed.exitCode, 0);
       await writeFile(
-        join(cwd, "components/ui/button/button.tsx"),
+        join(cwd, "components/ui/button/index.tsx"),
         "// local modification\n",
       );
 
       const blocked = await runCli(cwd, ["add", "button"], env);
 
-      assert.notEqual(blocked.exitCode, 0);
-      assert.match(blocked.stderr, /File already exists:/);
+      assert.equal(blocked.exitCode, 0);
+      assert.match(blocked.stdout, /Skipped:/);
+      assert.match(blocked.stdout, /Nothing new to install/);
       assert.equal(
-        await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+        await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
         "// local modification\n",
       );
 
@@ -1743,7 +1767,7 @@ describe("vinyaas add", { concurrency: false }, () => {
 
       assert.equal(replaced.exitCode, 0);
       assert.equal(
-        await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+        await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
         buttonContent,
       );
 
@@ -1751,7 +1775,7 @@ describe("vinyaas add", { concurrency: false }, () => {
 
       assert.equal(again.exitCode, 0);
       assert.equal(
-        await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+        await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
         buttonContent,
       );
     } finally {
@@ -1789,7 +1813,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       assert.equal(result.exitCode, 0);
       assert.match(result.stdout, /Added button\./);
       assert.equal(
-        await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+        await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
         buttonContent,
       );
       assert.equal(
@@ -1805,11 +1829,12 @@ describe("vinyaas add", { concurrency: false }, () => {
         REGISTRY_BASE_URL: `http://127.0.0.1:${address.port}`,
       });
 
-      assert.notEqual(again.exitCode, 0);
-      assert.match(again.stderr, /File already exists:/);
-      assert.match(again.stderr, /components\/ui\/button\/button\.tsx/);
+      assert.equal(again.exitCode, 0);
+      assert.match(again.stdout, /Skipped:/);
+      assert.match(again.stdout, /- button/);
+      assert.match(again.stdout, /Nothing new to install/);
       assert.equal(
-        await readFile(join(cwd, "components/ui/button/button.tsx"), "utf8"),
+        await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
         buttonContent,
       );
     } finally {

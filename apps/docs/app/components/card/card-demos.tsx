@@ -1,8 +1,8 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar/avatar";
-import { Badge } from "@/registry/new-york/ui/badge/badge";
-import { Button } from "@/registry/new-york/ui/button/button";
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
   Card,
   CardAction,
@@ -11,15 +11,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card/card";
+} from "@/registry/new-york/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu/dropdown-menu";
-import { Progress } from "@/registry/new-york/ui/progress/progress";
+} from "@/registry/new-york/ui/dropdown-menu";
+import { Progress } from "@/registry/new-york/ui/progress";
 
 function MoreIcon() {
   return (
@@ -37,12 +37,13 @@ export function ProfileCardDemo() {
       <CardHeader>
         <div className="flex min-w-0 items-start gap-3">
           <Avatar>
-            <AvatarFallback>SK</AvatarFallback>
+            <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <CardTitle>Sarang Kumar</CardTitle>
+            <CardTitle>John Doe</CardTitle>
             <CardDescription>
-              Developer. Building accessible UI that you install as source.
+              Product designer. Building accessible UI that you install as
+              source.
             </CardDescription>
           </div>
         </div>
@@ -60,10 +61,12 @@ export function ProfileCardDemo() {
           </DropdownMenu>
         </CardAction>
       </CardHeader>
-      <Badge>Verified</Badge>
+      <Badge variant="outline">Verified</Badge>
       <CardFooter className="gap-2">
-        <Button variant="outline">Message</Button>
-        <Button>Follow</Button>
+        <Button variant="outline" size="sm">
+          Message
+        </Button>
+        <Button size="sm">Follow</Button>
       </CardFooter>
     </Card>
   );
@@ -75,9 +78,7 @@ export function ProjectCardDemo() {
       <CardHeader>
         <div>
           <CardTitle>Production Dashboard</CardTitle>
-          <CardDescription>
-            Updated 2 hours ago by Sarang Kumar.
-          </CardDescription>
+          <CardDescription>Updated 2 hours ago by John Doe.</CardDescription>
         </div>
         <CardAction>
           <DropdownMenu>
@@ -99,7 +100,7 @@ export function ProjectCardDemo() {
         </CardAction>
       </CardHeader>
       <CardContent className="grid gap-2">
-        <Badge variant="secondary">On track</Badge>
+        <Badge variant="outline">On track</Badge>
         <Progress aria-label="Project progress" value={72} />
       </CardContent>
       <CardFooter>
