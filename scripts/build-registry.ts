@@ -6,9 +6,13 @@ import prettier from "prettier";
 import { themes } from "../apps/docs/registry/registry";
 import {
   readRegistryItemFiles,
+  serializeRegistryCatalog,
   serializeRegistryItem,
 } from "../apps/docs/registry/serialize";
-import type { RegistryItemPayload } from "../apps/docs/registry/types";
+import type {
+  RegistryCatalog,
+  RegistryItemPayload,
+} from "../apps/docs/registry/types";
 import { config } from "./config";
 
 const root = process.cwd();
@@ -41,6 +45,13 @@ async function buildRegistry() {
 
       console.log(`Generated ${themeName}/${item.name}`);
     }
+
+    const catalog = serializeRegistryCatalog(themeName, items);
+    const catalogPath = path.join(themeOutputRoot, "index.json");
+    const catalogJson = await formatCatalogJson(catalogPath, catalog);
+
+    await fs.writeFile(catalogPath, catalogJson, "utf8");
+    console.log(`Generated ${themeName}/index`);
   }
 
   console.log("Registry build complete");
@@ -65,6 +76,19 @@ function resolveThemeFile(themeRoot: string, relativePath: string): string {
 async function formatRegistryJson(
   outputPath: string,
   output: RegistryItemPayload,
+): Promise<string> {
+  const prettierConfig = await prettier.resolveConfig(outputPath);
+
+  return prettier.format(JSON.stringify(output), {
+    ...prettierConfig,
+    filepath: outputPath,
+    parser: "json",
+  });
+}
+
+async function formatCatalogJson(
+  outputPath: string,
+  output: RegistryCatalog,
 ): Promise<string> {
   const prettierConfig = await prettier.resolveConfig(outputPath);
 

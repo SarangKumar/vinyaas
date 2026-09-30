@@ -686,6 +686,7 @@ describe("registry build output", () => {
         "css",
         "cssVars",
         "dependencies",
+        "description",
         "devDependencies",
         "docs",
         "envVars",

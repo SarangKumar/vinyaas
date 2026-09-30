@@ -2,6 +2,7 @@
   "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
   "name": "file-upload",
   "type": "registry:ui",
+  "description": "A native file picker that also accepts a drag and drop.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {

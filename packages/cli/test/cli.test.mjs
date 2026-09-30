@@ -56,11 +56,17 @@ describe("vinyaas", () => {
     assert.match(result.stdout, /--help/);
     assert.match(result.stdout, /\binit\b/);
     assert.match(result.stdout, /\badd\b/);
+    assert.match(result.stdout, /\blist\b/);
+    assert.match(result.stdout, /\bsearch\b/);
+    assert.match(result.stdout, /\binfo\b/);
   });
 
   it("shows --cwd on init and add", async () => {
     const init = await run(["init", "--help"]);
     const add = await run(["add", "--help"]);
+    const list = await run(["list", "--help"]);
+    const search = await run(["search", "--help"]);
+    const info = await run(["info", "--help"]);
 
     assert.equal(init.exitCode, 0);
     assert.match(init.stdout, /--cwd <path>/);
@@ -70,6 +76,14 @@ describe("vinyaas", () => {
     assert.match(add.stdout, /overwrite existing component files/i);
     assert.match(add.stdout, /<name\.\.\.>/);
     assert.match(add.stdout, /vinyaas add button card badge/);
+    assert.equal(list.exitCode, 0);
+    assert.match(list.stdout, /--json/);
+    assert.equal(search.exitCode, 0);
+    assert.match(search.stdout, /<query>/);
+    assert.match(search.stdout, /--json/);
+    assert.equal(info.exitCode, 0);
+    assert.match(info.stdout, /<component>/);
+    assert.match(info.stdout, /--json/);
   });
 
   it("rejects --force on init", async () => {

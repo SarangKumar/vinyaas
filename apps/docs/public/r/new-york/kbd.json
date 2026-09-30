@@ -2,6 +2,7 @@
   "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
   "name": "kbd",
   "type": "registry:ui",
+  "description": "A compact label for a keyboard key.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {

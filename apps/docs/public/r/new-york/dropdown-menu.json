@@ -2,6 +2,7 @@
   "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
   "name": "dropdown-menu",
   "type": "registry:ui",
+  "description": "A menu of actions anchored to a button.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {

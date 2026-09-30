@@ -98,6 +98,28 @@ For each component, Vinyaas:
 
 Not every component includes CSS, environment variables, or documentation.
 
+## Discover components
+
+Browse the registry without installing anything:
+
+```bash
+vinyaas list
+vinyaas search input
+vinyaas info button
+```
+
+- `vinyaas list` prints every installable component and a short description.
+- `vinyaas search <query>` matches component names and descriptions. It is case-insensitive.
+- `vinyaas info <component>` shows files, dependencies, registry dependencies, and documentation before you run `add`.
+
+Each command accepts `--json` for machine-readable output:
+
+```bash
+vinyaas list --json
+vinyaas search input --json
+vinyaas info toast --json
+```
+
 ## Where files are installed
 
 The `ui` alias controls UI component paths. The default `@/components/ui` installs files under `components/ui/`.
@@ -153,7 +175,7 @@ vinyaas init
 vinyaas add button
 ```
 
-`vinyaas init` writes `components.json` and `lib/utils.ts`. `vinyaas add button` adds `class-variance-authority`, `clsx`, and `tailwind-merge` when they are not already declared, and writes the button source:
+`vinyaas init` prepares the consumer project for Vinyaas: Tailwind CSS v4, semantic theme tokens in the project CSS entry, `components.json`, import aliases, PostCSS, and `lib/utils`. `vinyaas add button` adds `class-variance-authority`, `clsx`, and `tailwind-merge` when they are not already declared, and writes the button source:
 
 ```text
 components.json
@@ -175,7 +197,7 @@ v1.1.0 components follow the existing Button.
 - Class names are merged with `cn` from `@/lib/utils`.
 - Form controls share one height scale: `sm` is `h-8`, the default is `h-9`, and `lg` is `h-10`. Button `md` and Input are both `h-9` and `text-sm`. Textarea uses the same border, type, padding, focus, and disabled treatment, with a content height.
 - Components render the native element and pass through its attributes, including `disabled` and `aria-*`.
-- Colors use semantic utilities such as `bg-primary`, `text-foreground`, and `border-border`. The docs site defines those tokens in `apps/docs/app/globals.css`. Installed projects do not receive that theme file yet.
+- Colors use semantic utilities such as `bg-primary`, `text-foreground`, and `border-border`. `vinyaas init` writes those tokens into the consumer global CSS for Tailwind CSS v4.
 - Documentation pages live at `/components/<name>`. Each page shows a live example, the install command, a usage snippet, and the registry source.
 
 ## Accessibility

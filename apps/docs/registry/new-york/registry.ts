@@ -4,6 +4,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "button",
     type: "registry:ui",
+    description: "A button with variant and size styles.",
     dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
     files: [
       {
@@ -15,6 +16,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "input",
     type: "registry:ui",
+    description: "A text field that passes through native input attributes.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -26,6 +28,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "textarea",
     type: "registry:ui",
+    description:
+      "A multiline text field that passes through native textarea attributes.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -37,6 +41,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "label",
     type: "registry:ui",
+    description: "A visible name for a form control.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -48,6 +53,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "checkbox",
     type: "registry:ui",
+    description: "A native checkbox for selecting one or more options.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -59,6 +65,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "radio-group",
     type: "registry:ui",
+    description: "A set of mutually exclusive options.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -70,6 +77,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "avatar",
     type: "registry:ui",
+    description: "An image with a fallback for a person or entity.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -81,6 +89,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "progress",
     type: "registry:ui",
+    description: "A native progress indicator for a known amount of work.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -92,6 +101,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "skeleton",
     type: "registry:ui",
+    description: "A placeholder shown while content is loading.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -103,6 +113,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "separator",
     type: "registry:ui",
+    description: "A horizontal or vertical divider between content.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -114,6 +125,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "kbd",
     type: "registry:ui",
+    description: "A compact label for a keyboard key.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -125,6 +137,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "switch",
     type: "registry:ui",
+    description: "A switch for a binary setting.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -136,6 +149,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "tabs",
     type: "registry:ui",
+    description: "A set of panels that share one visible view at a time.",
     dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
     files: [
       {
@@ -147,6 +161,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "table",
     type: "registry:ui",
+    description: "A semantic table for rows and columns.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -158,6 +173,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "tooltip",
     type: "registry:ui",
+    description: "A short label for a control.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -173,6 +189,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "native-select",
     type: "registry:ui",
+    description: "A composed native select.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -184,6 +201,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "toast",
     type: "registry:ui",
+    description: "A temporary notice.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -199,6 +217,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "badge",
     type: "registry:ui",
+    description: "A compact label for status or category.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -210,6 +229,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "spinner",
     type: "registry:ui",
+    description: "A small loading indicator.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -221,6 +241,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "popover",
     type: "registry:ui",
+    description: "A floating panel with interactive content.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -232,6 +253,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "card",
     type: "registry:ui",
+    description: "A bordered container for related content.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -243,6 +265,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "alert",
     type: "registry:ui",
+    description: "A notice for a status that should be announced.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -254,6 +277,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "aspect-ratio",
     type: "registry:ui",
+    description: "Displays content within a desired ratio.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -265,6 +289,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "attachment",
     type: "registry:ui",
+    description:
+      "A file or image chip with media, metadata, upload state, and actions.",
     dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
     registryDependencies: ["button"],
     files: [
@@ -277,6 +303,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "dialog",
     type: "registry:ui",
+    description: "A modal panel for a focused task.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -292,6 +319,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "drawer",
     type: "registry:ui",
+    description: "A panel that slides in from the edge of the screen.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -307,6 +335,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "chart",
     type: "registry:ui",
+    description: "Themed charts for dashboards and product analytics.",
     dependencies: ["clsx", "recharts", "tailwind-merge"],
     files: [
       {
@@ -318,6 +347,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "accordion",
     type: "registry:ui",
+    description: "A stack of sections that expand and collapse.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -329,6 +359,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "breadcrumb",
     type: "registry:ui",
+    description: "A trail of links for the current page.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -340,6 +371,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "scroll-area",
     type: "registry:ui",
+    description: "A native scroll container with a thin scrollbar.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -351,6 +383,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "slider",
     type: "registry:ui",
+    description: "A native range input for a value between two bounds.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -362,6 +395,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "hover-card",
     type: "registry:ui",
+    description:
+      "A preview that opens when a link or button is hovered or focused.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -373,6 +408,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "marker",
     type: "registry:ui",
+    description: "An inline status, bordered row, or labeled divider.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -384,6 +420,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "input-group",
     type: "registry:ui",
+    description: "A field with icons, text, and actions in one row.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -395,6 +432,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "input-otp",
     type: "registry:ui",
+    description: "A one-time code made of grouped digit slots.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -406,6 +444,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "file-upload",
     type: "registry:ui",
+    description: "A native file picker that also accepts a drag and drop.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -417,6 +456,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "command",
     type: "registry:ui",
+    description: "A searchable list for pages and actions.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -428,6 +468,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "typography",
     type: "registry:ui",
+    description: "Semantic text styles for titles, body, and supporting copy.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -439,6 +480,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "dropdown-menu",
     type: "registry:ui",
+    description: "A menu of actions anchored to a button.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {

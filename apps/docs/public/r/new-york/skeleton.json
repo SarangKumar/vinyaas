@@ -2,6 +2,7 @@
   "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
   "name": "skeleton",
   "type": "registry:ui",
+  "description": "A placeholder shown while content is loading.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {

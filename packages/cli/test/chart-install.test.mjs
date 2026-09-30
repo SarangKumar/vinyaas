@@ -191,7 +191,11 @@ describe("installable chart registry", () => {
         assert.match(source, /recharts/);
         assert.match(utils, /export function cn/);
         assert.match(config, /"style": "new-york"/);
-        assert.doesNotMatch(globalsCss, /--chart-1/);
+        // Chart colors come from `vinyaas init` theme tokens, not from the
+        // chart registry item itself.
+        assert.match(globalsCss, /--chart-1/);
+        assert.equal(items[0].cssVars, undefined);
+        assert.equal(items[0].css, undefined);
         assert.deepEqual(
           Object.keys(packageJson.dependencies).sort(),
           [

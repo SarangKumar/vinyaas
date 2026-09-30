@@ -346,8 +346,12 @@ export function RadialPreview() {
           animationDuration={900}
         />
         <ChartLegend
-          content={<ChartLegendContent nameKey="name" />}
-          className="-translate-y-1 flex-wrap gap-2"
+          content={
+            <ChartLegendContent
+              nameKey="name"
+              className="-translate-y-1 flex-wrap gap-2"
+            />
+          }
         />
       </RadialBarChart>
     </ChartContainer>

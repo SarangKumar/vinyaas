@@ -13,6 +13,8 @@ type RegistryNamespace = (typeof supportedNamespaces)[number];
 
 /** One registry file, interpreted but not yet written. */
 export interface InstallPlanEntry {
+  /** Registry item that owns this file. */
+  itemName: string;
   registryPath: string;
   /** Project-relative path using `/` separators. */
   destinationPath: string;
@@ -30,6 +32,8 @@ export interface InstallPlan {
   devDependencies: string[];
   /** Registry item names in dependency-first order, including the requested item. */
   items: string[];
+  /** Requested components skipped because every destination file already exists. */
+  skipped: string[];
 }
 
 export interface PackageDependencyPlan {
@@ -75,6 +79,7 @@ export async function createInstallPlan({
 
       destinations.add(destinationPath);
       entries.push({
+        itemName: item.name,
         registryPath: file.path,
         destinationPath,
         content: file.content,
@@ -91,6 +96,7 @@ export async function createInstallPlan({
     dependencies: packages.dependencies,
     devDependencies: packages.devDependencies,
     items: items.map((item) => item.name),
+    skipped: [],
   };
 }
 
@@ -133,7 +139,91 @@ export function planPackageDependencies(
 }
 
 /**
+ * Classifies registry items against files already on disk.
+ *
+ * - All destination files exist → skip (unless `--force` and requested).
+ * - No destination files exist → install.
+ * - Some but not all exist → error without `--force`.
+ */
+export async function classifyExistingItems({
+  cwd,
+  plan,
+  force = false,
+  requested,
+}: {
+  cwd: string;
+  plan: InstallPlan;
+  force?: boolean;
+  requested: readonly string[];
+}): Promise<{
+  installItemNames: string[];
+  skipped: string[];
+  overwriteItemNames: string[];
+}> {
+  const byItem = new Map<string, InstallPlanEntry[]>();
+
+  for (const entry of plan.entries) {
+    const group = byItem.get(entry.itemName) ?? [];
+    group.push(entry);
+    byItem.set(entry.itemName, group);
+  }
+
+  const skipped: string[] = [];
+  const installItemNames: string[] = [];
+  const overwriteItemNames: string[] = [];
+  const partialPaths: string[] = [];
+
+  for (const itemName of plan.items) {
+    const entries = byItem.get(itemName) ?? [];
+
+    if (entries.length === 0) {
+      installItemNames.push(itemName);
+      continue;
+    }
+
+    const existingPaths: string[] = [];
+
+    for (const entry of entries) {
+      if (await isFile(path.resolve(cwd, entry.destinationPath))) {
+        existingPaths.push(entry.destinationPath);
+      }
+    }
+
+    if (existingPaths.length === 0) {
+      installItemNames.push(itemName);
+      continue;
+    }
+
+    if (existingPaths.length === entries.length) {
+      if (force && requested.includes(itemName)) {
+        installItemNames.push(itemName);
+        overwriteItemNames.push(itemName);
+        continue;
+      }
+
+      skipped.push(itemName);
+      continue;
+    }
+
+    if (force) {
+      installItemNames.push(itemName);
+      overwriteItemNames.push(itemName);
+      continue;
+    }
+
+    partialPaths.push(...existingPaths);
+  }
+
+  if (partialPaths.length > 0) {
+    throw new CliError(["File already exists:", ...partialPaths].join("\n"));
+  }
+
+  return { installItemNames, skipped, overwriteItemNames };
+}
+
+/**
  * Refuses to replace an existing component file unless `force` is set.
+ * Prefer `classifyExistingItems` for multi-component installs that skip.
  * `force` does not allow a destination outside the project. Those paths
  * are rejected while the plan is built.
  */

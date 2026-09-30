@@ -25,6 +25,8 @@ export interface RegistryCssVars {
 export interface RegistryItem {
   name: string;
   type: RegistryItemType;
+  /** Short user-facing summary for discovery commands. */
+  description?: string;
   /** npm packages required by this item. */
   dependencies?: readonly string[];
   /** npm packages required only for development. */
@@ -51,6 +53,7 @@ export interface RegistryItemPayload {
   $schema: string;
   name: string;
   type: RegistryItemType;
+  description?: string;
   dependencies: string[];
   devDependencies?: string[];
   registryDependencies?: string[];
@@ -59,4 +62,25 @@ export interface RegistryItemPayload {
   css?: Record<string, string>;
   envVars?: Record<string, string>;
   docs?: string;
+}
+
+/**
+ * Lightweight catalog entry written to `public/r/<style>/index.json`.
+ * File contents are omitted so discovery stays cheap.
+ */
+export interface RegistryCatalogItem {
+  name: string;
+  type: RegistryItemType;
+  description?: string;
+  dependencies: string[];
+  devDependencies?: string[];
+  registryDependencies?: string[];
+  files: string[];
+  docs?: string;
+}
+
+/** Style catalog for `vinyaas list` / `vinyaas search`. */
+export interface RegistryCatalog {
+  style: string;
+  items: RegistryCatalogItem[];
 }
