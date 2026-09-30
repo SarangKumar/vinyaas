@@ -45,7 +45,9 @@ describe("CLI docs", () => {
     expect(body).toContain("forms");
     expect(body).toContain("vinyaas add button");
     expect(body).toContain("vinyaas list");
+    expect(body).toContain("vinyaas list --category forms");
     expect(body).toContain("vinyaas search button");
+    expect(body).toContain("vinyaas add --category forms");
     expect(body).toContain("vinyaas info button");
     expect(body).toContain("vinyaas --version");
     expect(body).toContain("v1.2.0");

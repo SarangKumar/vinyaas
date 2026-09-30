@@ -178,7 +178,7 @@ export const themeExamples: ThemeExample[] = [
             <NativeSelect
               aria-label={`${name} role`}
               defaultValue={role}
-              className="w-[5.75rem] shrink-0"
+              className="w-23 shrink-0"
             >
               <NativeSelectOption value="owner">Owner</NativeSelectOption>
               <NativeSelectOption value="editor">Editor</NativeSelectOption>

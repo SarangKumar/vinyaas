@@ -77,9 +77,13 @@ describe("vinyaas", () => {
     assert.match(add.stdout, /--cwd <path>/);
     assert.match(add.stdout, /--force/);
     assert.match(add.stdout, /--dry-run/);
+    assert.match(add.stdout, /--category/);
+    assert.match(list.stdout, /--category/);
+    assert.match(search.stdout, /--category/);
     assert.match(add.stdout, /overwrite existing component files/i);
-    assert.match(add.stdout, /<name\.\.\.>/);
+    assert.match(add.stdout, /\[name\.\.\.\]/);
     assert.match(add.stdout, /vinyaas add button card dialog/);
+    assert.match(add.stdout, /vinyaas add --category forms/);
     assert.match(add.stdout, /already-installed/i);
     assert.equal(list.exitCode, 0);
     assert.match(list.stdout, /--json/);

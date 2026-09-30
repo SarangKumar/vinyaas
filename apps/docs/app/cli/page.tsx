@@ -128,6 +128,15 @@ No issues found.`}
         <CodeBlock language="bash" code="vinyaas add button" />
         <CodeBlock language="bash" code="vinyaas add button card dialog" />
         <CodeBlock language="bash" code="vinyaas add button --force" />
+        <CodeBlock language="bash" code="vinyaas add --category forms" />
+        <CodeBlock language="bash" code="vinyaas add --category forms --yes" />
+        <p className={body}>
+          Pass component names for a precise install. Use{" "}
+          <code>--category</code> to install every component in a registry group
+          (forms, layout, navigation, feedback, data-display, typography,
+          charts, utilities). Category installs prompt for confirmation unless
+          you pass <code>--yes</code>.
+        </p>
       </section>
 
       <section className="flex flex-col gap-4">
@@ -136,11 +145,16 @@ No issues found.`}
         </h2>
         <p className={body}>
           Browse the catalog without writing files. Components include an
-          optional category (forms, layout, navigation, feedback, data-display,
-          typography, charts, utilities) shown in list, search, and info output.
+          optional category shown in list, search, and info output. Filter with{" "}
+          <code>--category</code> when you want one group.
         </p>
         <CodeBlock language="bash" code="vinyaas list" />
+        <CodeBlock language="bash" code="vinyaas list --category forms" />
         <CodeBlock language="bash" code="vinyaas search button" />
+        <CodeBlock
+          language="bash"
+          code="vinyaas search input --category forms"
+        />
         <CodeBlock language="bash" code="vinyaas info button" />
       </section>
 

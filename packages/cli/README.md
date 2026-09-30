@@ -79,19 +79,26 @@ Validates `components.json`, aliases, Tailwind v4, theme tokens, utility depende
 vinyaas add button
 vinyaas add card dialog
 vinyaas add button --force
+vinyaas add --category forms
+vinyaas add --category forms --yes
+vinyaas add button card --dry-run
 ```
 
 Copies registry source into your project. Files stay editable. Registry and npm dependencies resolve automatically. Already-installed components are skipped unless you pass `--force`.
+
+Use component names for a precise install. Use `--category` to discover and install a whole group (prompts for confirmation unless `--yes`).
 
 ### Component discovery
 
 ```bash
 vinyaas list
+vinyaas list --category forms
 vinyaas search button
+vinyaas search input --category forms
 vinyaas info button
 ```
 
-Browse the catalog without writing files. List and info show each component's category. Each command accepts `--json` for scripting.
+Browse the catalog without writing files. List and info show each component's category. Filter with `--category`. Each command accepts `--json` for scripting.
 
 ## Documentation
 

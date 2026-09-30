@@ -156,6 +156,29 @@ export function formatDryRunSummary(input: AddSummaryInput): string {
   return lines.join("\n");
 }
 
+export function formatCategoryInstallPrompt(
+  input: AddSummaryInput & { category: string },
+): string {
+  const installedRequested = requestedInstalled(input);
+  const dependencies = dependencyNames(input.dependencyInstall);
+
+  return [
+    "Category install",
+    "",
+    "Category:",
+    input.category,
+    "",
+    "Components:",
+    ...(installedRequested.length > 0 ? installedRequested : ["none"]),
+    "",
+    "Files:",
+    String(input.plan.entries.length),
+    "",
+    "Dependencies:",
+    ...(dependencies.length > 0 ? dependencies : ["none"]),
+  ].join("\n");
+}
+
 function requestedInstalled(input: AddSummaryInput): string[] {
   return input.requested.filter(
     (component) =>

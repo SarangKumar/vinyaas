@@ -99,7 +99,12 @@ function registryFilePaths(item: RegistryItem | RegistryCatalogItem): string[] {
 
 export function formatRegistryList(
   items: readonly RegistryCatalogItem[],
+  options: { category?: string } = {},
 ): string {
+  if (options.category) {
+    return formatRegistryCategoryList(items, options.category);
+  }
+
   if (items.length === 0) {
     return "No components are available in the registry.";
   }
@@ -123,6 +128,25 @@ export function formatRegistryList(
 
   if (lines.at(-1) === "") {
     lines.pop();
+  }
+
+  return lines.join("\n");
+}
+
+export function formatRegistryCategoryList(
+  items: readonly RegistryCatalogItem[],
+  category: string,
+): string {
+  const label = formatRegistryCategoryLabel(category);
+
+  if (items.length === 0) {
+    return `No components found in category ${category}.`;
+  }
+
+  const lines = [label, ""];
+
+  for (const item of items) {
+    lines.push(`✓ ${item.name}`);
   }
 
   return lines.join("\n");

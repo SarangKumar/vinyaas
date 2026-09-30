@@ -8,7 +8,11 @@ import {
   type ComponentsConfig,
 } from "../../../../config/components.ts";
 
-import { formatAddSummary, formatDryRunSummary } from "../lib/add/format.ts";
+import {
+  formatAddSummary,
+  formatCategoryInstallPrompt,
+  formatDryRunSummary,
+} from "../lib/add/format.ts";
 import { CliError } from "../lib/cli-error.ts";
 import { createCssUpdate } from "../lib/css/plan.ts";
 import type { CssUpdate } from "../lib/css/types.ts";
@@ -30,6 +34,7 @@ import {
 import { findPackageManager } from "../lib/package-manager/detect.ts";
 import { installDependencies } from "../lib/package-manager/install.ts";
 import type { RunPackageManager } from "../lib/package-manager/types.ts";
+import { confirmPrompt, type ConfirmFn } from "../lib/prompt.ts";
 import { resolveProjectRoot } from "../lib/project/cwd.ts";
 import {
   formatRollbackError,
@@ -38,7 +43,10 @@ import {
   type FileSnapshot,
 } from "../lib/transaction/files.ts";
 import { RegistryError } from "../lib/registry/client.ts";
-import { getRegistryCatalog } from "../lib/registry/discover.ts";
+import {
+  getRegistryCatalog,
+  resolveCategoryComponentNames,
+} from "../lib/registry/discover.ts";
 import { resolveRegistryGraph } from "../lib/registry/resolve.ts";
 import { formatUnknownComponentMessage } from "../lib/registry/suggest.ts";
 import type { RegistryItem } from "../lib/registry/types.ts";
@@ -52,7 +60,7 @@ export function registerAddCommand(program: Command): void {
   program
     .command("add")
     .description("Add one or more components from the Vinyaas registry.")
-    .argument("<name...>", "Component names to install")
+    .argument("[name...]", "Component names to install")
     .option("--cwd <path>", "Consumer project directory.")
     .option(
       "--force",
@@ -62,6 +70,11 @@ export function registerAddCommand(program: Command): void {
       "--dry-run",
       "Resolve the install plan and print it without writing files or installing packages.",
     )
+    .option(
+      "--category <category>",
+      "Install every component in a registry category.",
+    )
+    .option("-y, --yes", "Skip confirmation prompts.")
     .addHelpText(
       "after",
       [
@@ -69,24 +82,36 @@ export function registerAddCommand(program: Command): void {
         "Examples:",
         "  $ vinyaas add button",
         "  $ vinyaas add button card dialog",
+        "  $ vinyaas add --category forms",
+        "  $ vinyaas add --category forms --yes",
         "  $ vinyaas add button --force",
         "  $ vinyaas add button card --dry-run",
         "",
+        "Pass component names for a precise install. Use --category to install a group.",
         "Already-installed components are skipped unless --force is set.",
       ].join("\n"),
     )
     .action(
       async (
-        name: string[],
-        options: { cwd?: string; force?: boolean; dryRun?: boolean },
+        name: string[] | undefined,
+        options: {
+          cwd?: string;
+          force?: boolean;
+          dryRun?: boolean;
+          category?: string;
+          yes?: boolean;
+        },
       ) => {
         try {
+          const names = name ?? [];
           const plan = await executeAdd({
-            name: name[0] ?? "",
-            names: name,
+            name: names[0] ?? "",
+            names,
             cwd: options.cwd,
             force: options.force === true,
             dryRun: options.dryRun === true,
+            yes: options.yes === true,
+            ...(options.category ? { category: options.category } : {}),
             env: process.env,
           });
 
@@ -133,22 +158,28 @@ export async function executeAdd({
   cwd,
   force = false,
   dryRun = false,
+  yes = false,
+  category,
   from = process.cwd(),
   env = process.env,
   fetch: fetchImpl,
   runPackageManager,
   mutations,
+  confirm,
 }: {
   name: string;
   names?: readonly string[];
   cwd?: string;
   force?: boolean;
   dryRun?: boolean;
+  yes?: boolean;
+  category?: string;
   from?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
   runPackageManager?: RunPackageManager;
   mutations?: AddMutations;
+  confirm?: ConfirmFn;
 }): Promise<InstallPlan> {
   return runAdd({
     cwd: await resolveProjectRoot(cwd, from),
@@ -156,10 +187,13 @@ export async function executeAdd({
     ...(names ? { names } : {}),
     force,
     dryRun,
+    yes,
+    ...(category ? { category } : {}),
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
     ...(runPackageManager ? { runPackageManager } : {}),
     ...(mutations ? { mutations } : {}),
+    ...(confirm ? { confirm } : {}),
   });
 }
 
@@ -169,25 +203,39 @@ export async function runAdd({
   names,
   force = false,
   dryRun = false,
+  yes = false,
+  category,
   env = process.env,
   fetch: fetchImpl,
   runPackageManager,
   mutations,
+  confirm = confirmPrompt,
 }: {
   cwd: string;
   name: string;
   names?: readonly string[];
   force?: boolean;
   dryRun?: boolean;
+  yes?: boolean;
+  category?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
   runPackageManager?: RunPackageManager;
   mutations?: AddMutations;
+  confirm?: ConfirmFn;
 }): Promise<InstallPlan> {
+  const selection = await resolveAddTargetNames({
+    name,
+    names,
+    category,
+    env,
+    ...(fetchImpl ? { fetch: fetchImpl } : {}),
+  });
+
   const resolved = await resolveAdd({
     cwd,
-    name,
-    ...(names ? { names } : {}),
+    name: selection.names[0] ?? name,
+    names: selection.names,
     force,
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
@@ -215,6 +263,30 @@ export async function runAdd({
       }),
     );
     return resolved.plan;
+  }
+
+  if (selection.categoryInstall && !yes) {
+    console.log(
+      formatCategoryInstallPrompt({
+        plan: resolved.plan,
+        dependencyInstall: resolved.dependencyInstall,
+        requested: resolved.requested,
+        registryDependencies: resolved.registryDependencies,
+        category: selection.categoryInstall,
+      }),
+    );
+    const accepted = await confirm("Continue? (y/N)");
+
+    if (!accepted) {
+      console.log("Cancelled. No changes made.");
+      return {
+        ...resolved.plan,
+        entries: [],
+        items: [],
+        dependencies: [],
+        devDependencies: [],
+      };
+    }
   }
 
   const needsInstall =
@@ -271,6 +343,54 @@ export async function runAdd({
   return resolved.plan;
 }
 
+async function resolveAddTargetNames({
+  name,
+  names,
+  category,
+  env,
+  fetch: fetchImpl,
+}: {
+  name: string;
+  names?: readonly string[];
+  category?: string;
+  env?: Record<string, string | undefined>;
+  fetch?: typeof fetch;
+}): Promise<{ names: string[]; categoryInstall?: string }> {
+  const explicit = uniqueNames(
+    names && names.length > 0 ? names : name.trim() ? [name] : [],
+  );
+
+  if (explicit.length > 0) {
+    if (category) {
+      console.warn(
+        "Ignoring --category because explicit components were provided.",
+      );
+    }
+
+    return { names: explicit };
+  }
+
+  if (!category) {
+    throw new CliError(
+      [
+        "Specify component names or a category.",
+        "",
+        "Examples:",
+        "  $ vinyaas add button",
+        "  $ vinyaas add --category forms",
+      ].join("\n"),
+    );
+  }
+
+  const expanded = await resolveCategoryComponentNames({
+    category,
+    env,
+    ...(fetchImpl ? { fetch: fetchImpl } : {}),
+  });
+
+  return { names: expanded, categoryInstall: category.trim() };
+}
+
 /**
  * Shared resolution used by both real installs and `--dry-run`.
  * Performs registry/network and disk reads only — no writes.
@@ -290,7 +410,16 @@ export async function resolveAdd({
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
 }): Promise<ResolvedAdd> {
-  const requested = uniqueNames(names && names.length > 0 ? names : [name]);
+  const requested = uniqueNames(
+    (names && names.length > 0 ? names : [name]).filter(
+      (entry) => entry.trim() !== "",
+    ),
+  );
+
+  if (requested.length === 0) {
+    throw new CliError("Specify component names or a category.");
+  }
+
   const config = await readComponentsConfig(cwd);
   const resolved = await resolveRegistryGraph({
     style: config.style,
