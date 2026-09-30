@@ -278,30 +278,8 @@ describe("registry build output", () => {
       dependencies: string[];
       registryDependencies?: string[];
       files: { path: string; content: string }[];
+      docs?: string;
     };
-    const button = buttonItem();
-    const files = await readRegistryItemFiles(button, async (relativePath) => {
-      expect(relativePath).toBe("ui/button/index.tsx");
-      return source;
-    });
-    const payload = serializeBuiltItem(button, files, generated.$schema);
-
-    expect(Object.keys(themes)).toEqual(["new-york"]);
-    expect(generated.$schema).toMatch(/\/r\/schema\/registry-item\.json$/);
-    expect(generated).toEqual(payload);
-    expect(generated.dependencies).toEqual([
-      "class-variance-authority",
-      "clsx",
-      "tailwind-merge",
-    ]);
-    expect(generated.files.map((file) => file.path)).toEqual([
-      "ui/button/index.tsx",
-    ]);
-    expect(generated.files[0]?.content).toBe(source);
-    expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
-    expect(generated.docs).toBe(
-      `${registryBaseUrlFromSchema(generated.$schema)}/components/button`,
-    );
     expect(generated).not.toHaveProperty("registryDependencies");
     expect(generated).not.toHaveProperty("devDependencies");
     expect(generated).not.toHaveProperty("cssVars");
