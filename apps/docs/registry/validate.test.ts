@@ -3,14 +3,18 @@ import { describe, expect, it } from "vitest";
 import { withDefaultDocs } from "./docs";
 import { serializeRegistryCatalog } from "./serialize";
 import type { RegistryItem } from "./types";
-import { validateRegistry, validateRegistryItem } from "./validate";
+import {
+  formatRegistryValidationFailure,
+  validateRegistry,
+  validateRegistryItem,
+} from "./validate";
 
 function validItem(
   overrides: Partial<RegistryItem> & Pick<RegistryItem, "name">,
 ): RegistryItem {
   return {
     type: "registry:ui",
-    description: "A reusable example component for tests.",
+    description: "A reusable example component for focused tests.",
     dependencies: ["clsx"],
     files: [{ path: `ui/${overrides.name}/index.tsx`, type: "registry:ui" }],
     ...overrides,
@@ -23,7 +27,7 @@ describe("validateRegistryItem", () => {
       validateRegistryItem(
         validItem({
           name: "button",
-          description: "A reusable button component with variants.",
+          description: "A composable button component with variants and sizes.",
           dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
         }),
       ),
@@ -42,14 +46,21 @@ describe("validateRegistryItem", () => {
       "files",
       "files",
     ]);
+    expect(formatRegistryValidationFailure(issues)).toContain(
+      "Registry validation failed:",
+    );
+    expect(formatRegistryValidationFailure(issues)).toContain("plain:");
+    expect(formatRegistryValidationFailure(issues)).toContain(
+      "- missing description",
+    );
   });
 
-  it("rejects weak descriptions and duplicate dependencies", () => {
+  it("rejects weak descriptions and invalid dependency format", () => {
     const issues = validateRegistryItem(
       validItem({
         name: "card",
         description: "A component.",
-        dependencies: ["clsx", "clsx"],
+        dependencies: ["clsx", "clsx", "NOT VALID"],
         registryDependencies: ["missing"],
       }),
       new Set(["button"]),
@@ -71,11 +82,11 @@ describe("validateRegistry + catalog consistency", () => {
     expect(issues).toEqual([]);
   });
 
-  it("keeps generated catalog metadata aligned with source items", () => {
+  it("keeps generated catalog discovery metadata aligned with source items", () => {
     const items = [
       validItem({
         name: "toast",
-        description: "A temporary notice for feedback.",
+        description: "A temporary notice for success and error feedback.",
         files: [
           { path: "ui/toast/index.tsx", type: "registry:ui" },
           { path: "ui/toast/toast.css", type: "registry:ui" },
@@ -83,7 +94,7 @@ describe("validateRegistry + catalog consistency", () => {
       }),
       validItem({
         name: "button",
-        description: "A reusable button component with variants.",
+        description: "A composable button component with variants and sizes.",
         dependencies: ["clsx"],
         registryDependencies: undefined,
       }),
@@ -93,16 +104,19 @@ describe("validateRegistry + catalog consistency", () => {
 
     expect(catalog.style).toBe("new-york");
     expect(catalog.items.map((item) => item.name)).toEqual(["button", "toast"]);
-    expect(catalog.items[0]).toMatchObject({
+    expect(catalog.items[0]).toEqual({
       name: "button",
-      description: "A reusable button component with variants.",
+      type: "registry:ui",
+      description: "A composable button component with variants and sizes.",
       docs: "https://vinyaas.vercel.app/components/button",
-      files: ["ui/button/index.tsx"],
     });
-    expect(catalog.items[1]).toMatchObject({
+    expect(catalog.items[1]).toEqual({
       name: "toast",
-      files: ["ui/toast/index.tsx", "ui/toast/toast.css"],
+      type: "registry:ui",
+      description: "A temporary notice for success and error feedback.",
       docs: "https://vinyaas.vercel.app/components/toast",
     });
+    expect(catalog.items[0]).not.toHaveProperty("files");
+    expect(catalog.items[0]).not.toHaveProperty("dependencies");
   });
 });

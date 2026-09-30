@@ -66,17 +66,14 @@ export interface RegistryItemPayload {
 
 /**
  * Lightweight catalog entry written to `public/r/<style>/index.json`.
- * File contents are omitted so discovery stays cheap.
+ * Discovery-only: name, type, description, and docs. Full install metadata
+ * lives on each component JSON payload.
  */
 export interface RegistryCatalogItem {
   name: string;
   type: RegistryItemType;
-  description?: string;
-  dependencies: string[];
-  devDependencies?: string[];
-  registryDependencies?: string[];
-  files: string[];
-  docs?: string;
+  description: string;
+  docs: string;
 }
 
 /** Style catalog for `vinyaas list` / `vinyaas search`. */

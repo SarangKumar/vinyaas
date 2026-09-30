@@ -58,19 +58,21 @@ export function serializeRegistryCatalog(
 
 function serializeCatalogItem(item: RegistryItem): RegistryCatalogItem {
   const description = normalizeDocs(item.description);
-  const devDependencies = copyStrings(item.devDependencies);
-  const registryDependencies = copyStrings(item.registryDependencies);
   const docs = normalizeDocs(item.docs);
+
+  if (!description) {
+    throw new Error(`Catalog item "${item.name}" is missing a description`);
+  }
+
+  if (!docs) {
+    throw new Error(`Catalog item "${item.name}" is missing docs`);
+  }
 
   return {
     name: item.name,
     type: item.type,
-    ...(description ? { description } : {}),
-    dependencies: copyStrings(item.dependencies) ?? [],
-    ...(devDependencies ? { devDependencies } : {}),
-    ...(registryDependencies ? { registryDependencies } : {}),
-    files: item.files.map((file) => normalizePath(file.path)),
-    ...(docs ? { docs } : {}),
+    description,
+    docs,
   };
 }
 

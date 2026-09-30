@@ -2,7 +2,7 @@
   "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "switch",
   "type": "registry:ui",
-  "description": "A switch for a binary setting.",
+  "description": "A switch control for binary on and off settings.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {

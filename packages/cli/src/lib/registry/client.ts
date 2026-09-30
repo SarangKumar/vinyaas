@@ -307,11 +307,12 @@ const registryCatalogItemFields = [
   "name",
   "type",
   "description",
+  "docs",
+  // Older catalogs may still ship install metadata. Accept and ignore.
   "dependencies",
   "devDependencies",
   "registryDependencies",
   "files",
-  "docs",
 ] as const;
 
 export function parseRegistryCatalog(input: unknown): RegistryCatalog {
@@ -341,14 +342,14 @@ export function parseRegistryCatalog(input: unknown): RegistryCatalog {
 function parseCatalogItem(input: unknown, label: string): RegistryCatalogItem {
   const item = requireRecord(input, label);
 
-  assertFields(
-    item,
-    registryCatalogItemFields,
-    ["name", "type", "dependencies", "files"],
-    label,
-  );
+  assertFields(item, registryCatalogItemFields, ["name", "type"], label);
 
   const description = optionalString(item.description, `${label}.description`);
+  const docs = optionalString(item.docs, `${label}.docs`);
+  const dependencies = optionalStringArray(
+    item.dependencies,
+    `${label}.dependencies`,
+  );
   const devDependencies = optionalStringArray(
     item.devDependencies,
     `${label}.devDependencies`,
@@ -357,20 +358,17 @@ function parseCatalogItem(input: unknown, label: string): RegistryCatalogItem {
     item.registryDependencies,
     `${label}.registryDependencies`,
   );
-  const docs = optionalString(item.docs, `${label}.docs`);
+  const files = optionalStringArray(item.files, `${label}.files`);
 
   return {
     name: requireString(item.name, `${label}.name`),
     type: requireRegistryType(item.type, `${label}.type`),
     ...(description ? { description } : {}),
-    dependencies: requireStringArray(
-      item.dependencies,
-      `${label}.dependencies`,
-    ),
+    ...(docs ? { docs } : {}),
+    ...(dependencies ? { dependencies } : {}),
     ...(devDependencies ? { devDependencies } : {}),
     ...(registryDependencies ? { registryDependencies } : {}),
-    files: requireStringArray(item.files, `${label}.files`),
-    ...(docs ? { docs } : {}),
+    ...(files ? { files } : {}),
   };
 }
 

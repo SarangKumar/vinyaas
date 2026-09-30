@@ -19,53 +19,45 @@ const catalog = {
       name: "badge",
       type: "registry:ui",
       description: "A compact label for status or category.",
-      dependencies: ["clsx"],
-      files: ["ui/badge/index.tsx"],
+      docs: "https://vinyaas.vercel.app/components/badge",
     },
     {
       name: "button",
       type: "registry:ui",
-      description: "A reusable button component with variants.",
-      dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
-      files: ["ui/button/index.tsx"],
+      description: "A composable button component with variants and sizes.",
+      docs: "https://vinyaas.vercel.app/components/button",
     },
     {
       name: "input",
       type: "registry:ui",
       description: "A text field that passes through native input attributes.",
-      dependencies: ["clsx", "tailwind-merge"],
-      files: ["ui/input/index.tsx"],
+      docs: "https://vinyaas.vercel.app/components/input",
     },
     {
       name: "input-otp",
       type: "registry:ui",
       description: "A one-time code made of grouped digit slots.",
-      dependencies: ["clsx", "tailwind-merge"],
-      files: ["ui/input-otp/index.tsx"],
+      docs: "https://vinyaas.vercel.app/components/input-otp",
     },
     {
       name: "textarea",
       type: "registry:ui",
       description:
         "A multiline text field that passes through native textarea attributes.",
-      dependencies: ["clsx", "tailwind-merge"],
-      files: ["ui/textarea/index.tsx"],
+      docs: "https://vinyaas.vercel.app/components/textarea",
     },
     {
       name: "toast",
       type: "registry:ui",
       description:
         "A temporary notice for success, error, or informational feedback.",
-      dependencies: ["clsx", "tailwind-merge"],
-      files: ["ui/toast/index.tsx", "ui/toast/toast.css"],
+      docs: "https://vinyaas.vercel.app/components/toast",
     },
     {
       name: "attachment",
       type: "registry:ui",
       description: "A file or image chip with media and actions.",
-      dependencies: ["clsx"],
-      registryDependencies: ["button"],
-      files: ["ui/attachment/index.tsx"],
+      docs: "https://vinyaas.vercel.app/components/attachment",
     },
   ],
 };
@@ -74,7 +66,7 @@ const buttonItem = {
   $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
   name: "button",
   type: "registry:ui",
-  description: "A reusable button component with variants.",
+  description: "A composable button component with variants and sizes.",
   dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
   files: [
     {
@@ -214,15 +206,14 @@ describe("registry catalog url", () => {
         {
           name: "toast",
           type: "registry:ui",
-          dependencies: [],
-          files: ["ui/toast/index.tsx"],
+          description: "A temporary notice for feedback messages.",
+          docs: "https://vinyaas.vercel.app/components/toast",
         },
         {
           name: "button",
           type: "registry:ui",
-          description: "A button.",
-          dependencies: ["clsx"],
-          files: ["ui/button/index.tsx"],
+          description: "A composable button component with variants and sizes.",
+          docs: "https://vinyaas.vercel.app/components/button",
         },
       ],
     });
@@ -230,6 +221,10 @@ describe("registry catalog url", () => {
     assert.deepEqual(
       parsed.items.map((item) => item.name),
       ["button", "toast"],
+    );
+    assert.equal(
+      parsed.items[0].docs,
+      "https://vinyaas.vercel.app/components/button",
     );
   });
 });
@@ -279,7 +274,7 @@ describe("vinyaas list", () => {
     assert.match(stdout, /^Components\n/);
     assert.match(stdout, /attachment/);
     assert.match(stdout, /button/);
-    assert.match(stdout, /A reusable button component with variants\./);
+    assert.match(stdout, /A composable button component with variants and sizes\./);
     assert.ok(stdout.indexOf("attachment") < stdout.indexOf("badge"));
     assert.ok(stdout.indexOf("badge") < stdout.indexOf("button"));
   });
@@ -293,12 +288,14 @@ describe("vinyaas list", () => {
       }),
     );
     const parsed = JSON.parse(stdout);
+    const button = parsed.find((item) => item.name === "button");
 
     assert.ok(Array.isArray(parsed));
     assert.equal(parsed[0].name, "attachment");
-    assert.deepEqual(parsed.find((item) => item.name === "button").files, [
-      "ui/button/index.tsx",
-    ]);
+    assert.equal(button.description, "A composable button component with variants and sizes.");
+    assert.equal(button.docs, "https://vinyaas.vercel.app/components/button");
+    assert.equal("files" in button, false);
+    assert.equal("dependencies" in button, false);
     assert.equal(
       JSON.stringify(parsed).includes("export function"),
       false,
@@ -362,7 +359,12 @@ describe("vinyaas search", () => {
 
     assert.equal(parsed.length, 1);
     assert.equal(parsed[0].name, "button");
-    assert.deepEqual(parsed[0].registryDependencies, []);
+    assert.equal(
+      parsed[0].description,
+      "A composable button component with variants and sizes.",
+    );
+    assert.equal(parsed[0].docs, "https://vinyaas.vercel.app/components/button");
+    assert.equal("registryDependencies" in parsed[0], false);
   });
 
   it("fails clearly when the registry catalog cannot be fetched", async () => {
@@ -389,7 +391,10 @@ describe("vinyaas info", () => {
     );
 
     assert.match(stdout, /^Button\n/);
-    assert.match(stdout, /Description:\nA reusable button component with variants\./);
+    assert.match(
+      stdout,
+      /Description:\nA composable button component with variants and sizes\./,
+    );
     assert.match(stdout, /Files:\n✓ components\/ui\/button\/index\.tsx/);
     assert.match(stdout, /Dependencies:\n✓ class-variance-authority/);
     assert.match(stdout, /✓ clsx/);

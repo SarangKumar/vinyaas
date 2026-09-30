@@ -8,6 +8,7 @@ import {
   formatRegistryInfo,
   formatRegistryList,
   formatRegistrySearch,
+  toRegistryDiscoverySummary,
   toRegistryItemSummary,
 } from "./format.ts";
 import { searchRegistryCatalog } from "./search.ts";
@@ -16,8 +17,8 @@ import {
   defaultRegistryStyle,
   type RegistryCatalog,
   type RegistryCatalogItem,
+  type RegistryDiscoverySummary,
   type RegistryItem,
-  type RegistryItemSummary,
 } from "./types.ts";
 
 export async function getRegistryCatalog({
@@ -109,13 +110,14 @@ export async function searchRegistry({
 
 export function listRegistrySummaries(
   catalog: RegistryCatalog,
-): RegistryItemSummary[] {
-  return catalog.items.map((item) => toRegistryItemSummary(item));
+): RegistryDiscoverySummary[] {
+  return catalog.items.map((item) => toRegistryDiscoverySummary(item));
 }
 
 export {
   formatRegistryInfo,
   formatRegistryList,
   formatRegistrySearch,
+  toRegistryDiscoverySummary,
   toRegistryItemSummary,
 };

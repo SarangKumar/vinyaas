@@ -4,7 +4,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "button",
     type: "registry:ui",
-    description: "A reusable button component with variants.",
+    description: "A composable button component with variants and sizes.",
     dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
     files: [
       {
@@ -137,7 +137,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "switch",
     type: "registry:ui",
-    description: "A switch for a binary setting.",
+    description: "A switch control for binary on and off settings.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -231,7 +231,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "spinner",
     type: "registry:ui",
-    description: "A small loading indicator.",
+    description: "A compact loading indicator for inline and button contexts.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -279,7 +279,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "aspect-ratio",
     type: "registry:ui",
-    description: "Displays content within a desired ratio.",
+    description:
+      "A container that preserves a fixed width-to-height aspect ratio.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {

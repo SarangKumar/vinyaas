@@ -2,7 +2,7 @@
   "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "button",
   "type": "registry:ui",
-  "description": "A reusable button component with variants.",
+  "description": "A composable button component with variants and sizes.",
   "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
   "files": [
     {

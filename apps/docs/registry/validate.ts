@@ -1,6 +1,15 @@
 import type { RegistryItem } from "./types";
 
-const WEAK_DESCRIPTIONS = new Set(["a component.", "a component", "component"]);
+const WEAK_DESCRIPTIONS = new Set([
+  "a component.",
+  "a component",
+  "component",
+  "a button component",
+  "a button component.",
+]);
+
+/** npm package name, optionally scoped. */
+const PACKAGE_NAME = /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/i;
 
 export interface RegistryValidationIssue {
   name: string;
@@ -17,13 +26,19 @@ export function validateRegistryItem(
   knownNames: ReadonlySet<string> = new Set(),
 ): RegistryValidationIssue[] {
   const issues: RegistryValidationIssue[] = [];
-  const label = item.name || "(unnamed)";
+  const label = item.name?.trim() || "(unnamed)";
 
   if (!item.name?.trim()) {
     issues.push({
       name: label,
       field: "name",
-      message: "name is required",
+      message: "missing name",
+    });
+  } else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.name)) {
+    issues.push({
+      name: label,
+      field: "name",
+      message: "name must be lowercase kebab-case",
     });
   }
 
@@ -31,7 +46,7 @@ export function validateRegistryItem(
     issues.push({
       name: label,
       field: "type",
-      message: `type must be registry:ui (got ${String(item.type)})`,
+      message: `invalid type (expected registry:ui, got ${String(item.type)})`,
     });
   }
 
@@ -41,37 +56,26 @@ export function validateRegistryItem(
     issues.push({
       name: label,
       field: "description",
-      message: "description is required",
+      message: "missing description",
     });
-  } else if (WEAK_DESCRIPTIONS.has(description.toLowerCase())) {
+  } else if (
+    WEAK_DESCRIPTIONS.has(description.toLowerCase()) ||
+    description.length < 24
+  ) {
     issues.push({
       name: label,
       field: "description",
-      message: "description is too generic",
+      message: "description is too generic or too short",
     });
   }
 
   const dependencies = item.dependencies ?? [];
-  const duplicateDependencies = findDuplicates(dependencies);
-
-  if (duplicateDependencies.length > 0) {
-    issues.push({
-      name: label,
-      field: "dependencies",
-      message: `duplicate packages: ${duplicateDependencies.join(", ")}`,
-    });
-  }
+  issues.push(...validatePackageList(label, "dependencies", dependencies));
 
   const devDependencies = item.devDependencies ?? [];
-  const duplicateDevDependencies = findDuplicates(devDependencies);
-
-  if (duplicateDevDependencies.length > 0) {
-    issues.push({
-      name: label,
-      field: "devDependencies",
-      message: `duplicate packages: ${duplicateDevDependencies.join(", ")}`,
-    });
-  }
+  issues.push(
+    ...validatePackageList(label, "devDependencies", devDependencies),
+  );
 
   for (const dependency of dependencies) {
     if (devDependencies.includes(dependency)) {
@@ -95,6 +99,15 @@ export function validateRegistryItem(
   }
 
   for (const dependency of registryDependencies) {
+    if (!dependency.trim()) {
+      issues.push({
+        name: label,
+        field: "registryDependencies",
+        message: "invalid dependency format: empty name",
+      });
+      continue;
+    }
+
     if (dependency === item.name) {
       issues.push({
         name: label,
@@ -113,11 +126,29 @@ export function validateRegistryItem(
     }
   }
 
+  if (item.docs !== undefined) {
+    const docs = item.docs.trim();
+
+    if (!docs) {
+      issues.push({
+        name: label,
+        field: "docs",
+        message: "docs must be a non-empty URL when set",
+      });
+    } else if (item.name && !docs.endsWith(`/components/${item.name}`)) {
+      issues.push({
+        name: label,
+        field: "docs",
+        message: `docs must end with /components/${item.name}`,
+      });
+    }
+  }
+
   if (!item.files || item.files.length === 0) {
     issues.push({
       name: label,
       field: "files",
-      message: "at least one file is required",
+      message: "missing files",
     });
   } else {
     const entryFiles = item.files.filter((file) => file.path.endsWith(".tsx"));
@@ -195,6 +226,60 @@ export function validateRegistry(
 
     seen.add(item.name);
     issues.push(...validateRegistryItem(item, knownNames));
+  }
+
+  return issues;
+}
+
+/** Groups validation issues for build/CLI error output. */
+export function formatRegistryValidationFailure(
+  issues: readonly RegistryValidationIssue[],
+): string {
+  if (issues.length === 0) {
+    return "Registry validation failed.";
+  }
+
+  const byName = new Map<string, string[]>();
+
+  for (const issue of issues) {
+    const messages = byName.get(issue.name) ?? [];
+    messages.push(issue.message);
+    byName.set(issue.name, messages);
+  }
+
+  const blocks = [...byName.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([name, messages]) =>
+      [`${name}:`, ...messages.map((message) => `- ${message}`)].join("\n"),
+    );
+
+  return ["Registry validation failed:", "", ...blocks].join("\n");
+}
+
+function validatePackageList(
+  itemName: string,
+  field: "dependencies" | "devDependencies",
+  values: readonly string[],
+): RegistryValidationIssue[] {
+  const issues: RegistryValidationIssue[] = [];
+  const duplicates = findDuplicates(values);
+
+  if (duplicates.length > 0) {
+    issues.push({
+      name: itemName,
+      field,
+      message: `duplicate packages: ${duplicates.join(", ")}`,
+    });
+  }
+
+  for (const value of values) {
+    if (!value.trim() || !PACKAGE_NAME.test(value)) {
+      issues.push({
+        name: itemName,
+        field,
+        message: `invalid dependency format: ${value || "(empty)"}`,
+      });
+    }
   }
 
   return issues;

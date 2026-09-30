@@ -1,12 +1,14 @@
 import type {
   RegistryCatalogItem,
+  RegistryDiscoverySummary,
   RegistryItem,
   RegistryItemFile,
   RegistryItemSummary,
 } from "./types.ts";
 
 /**
- * Stable discovery payload. Omits file contents and raw CSS/env maps.
+ * Full install-safe metadata for `vinyaas info --json`.
+ * Omits file contents and raw CSS/env maps.
  */
 export function toRegistryItemSummary(
   item: RegistryItem | RegistryCatalogItem,
@@ -15,7 +17,7 @@ export function toRegistryItemSummary(
     name: item.name,
     type: item.type,
     files: registryFilePaths(item),
-    dependencies: [...item.dependencies],
+    dependencies: [...(item.dependencies ?? [])],
     registryDependencies: [...(item.registryDependencies ?? [])],
   };
 
@@ -52,8 +54,28 @@ export function toRegistryItemSummary(
   return summary;
 }
 
+/** Lightweight catalog JSON for list/search. */
+export function toRegistryDiscoverySummary(
+  item: RegistryCatalogItem,
+): RegistryDiscoverySummary {
+  const summary: RegistryDiscoverySummary = {
+    name: item.name,
+    type: item.type,
+  };
+
+  if (item.description) {
+    summary.description = item.description;
+  }
+
+  if (item.docs) {
+    summary.docs = item.docs;
+  }
+
+  return summary;
+}
+
 function registryFilePaths(item: RegistryItem | RegistryCatalogItem): string[] {
-  if (item.files.length === 0) {
+  if (!item.files || item.files.length === 0) {
     return [];
   }
 

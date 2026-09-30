@@ -14,7 +14,10 @@ import type {
   RegistryCatalog,
   RegistryItemPayload,
 } from "../apps/docs/registry/types";
-import { validateRegistry } from "../apps/docs/registry/validate";
+import {
+  validateRegistry,
+  formatRegistryValidationFailure,
+} from "../apps/docs/registry/validate";
 import { config } from "./config";
 
 const root = process.cwd();
@@ -31,12 +34,7 @@ async function buildRegistry() {
     const issues = validateRegistry(items);
 
     if (issues.length > 0) {
-      const details = issues
-        .map((issue) => `- ${issue.name}.${issue.field}: ${issue.message}`)
-        .join("\n");
-      throw new Error(
-        `Registry metadata incomplete for ${themeName}:\n${details}`,
-      );
+      throw new Error(formatRegistryValidationFailure(issues));
     }
 
     const themeRoot = path.join(registryRoot, themeName);
@@ -44,6 +42,14 @@ async function buildRegistry() {
     const itemsWithDocs = items.map((item) =>
       withDefaultDocs(item, config.registryBaseUrl),
     );
+
+    const docsIssues = validateRegistry(itemsWithDocs).filter(
+      (issue) => issue.field === "docs",
+    );
+
+    if (docsIssues.length > 0) {
+      throw new Error(formatRegistryValidationFailure(docsIssues));
+    }
 
     await fs.mkdir(themeOutputRoot, { recursive: true });
 

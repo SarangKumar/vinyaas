@@ -5,7 +5,7 @@ import { RegistryError } from "../lib/registry/client.ts";
 import {
   formatRegistrySearch,
   searchRegistry,
-  toRegistryItemSummary,
+  toRegistryDiscoverySummary,
 } from "../lib/registry/discover.ts";
 
 export function registerSearchCommand(program: Command): void {
@@ -67,7 +67,7 @@ export async function executeSearch({
   if (json) {
     console.log(
       JSON.stringify(
-        results.map((item) => toRegistryItemSummary(item)),
+        results.map((item) => toRegistryDiscoverySummary(item)),
         null,
         2,
       ),

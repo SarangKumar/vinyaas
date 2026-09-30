@@ -2,7 +2,7 @@
   "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "spinner",
   "type": "registry:ui",
-  "description": "A small loading indicator.",
+  "description": "A compact loading indicator for inline and button contexts.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {

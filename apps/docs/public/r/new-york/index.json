@@ -5,313 +5,234 @@
       "name": "accordion",
       "type": "registry:ui",
       "description": "A stack of sections that expand and collapse.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/accordion/index.tsx"],
       "docs": "http://localhost:3000/components/accordion"
     },
     {
       "name": "alert",
       "type": "registry:ui",
       "description": "A notice for a status that should be announced.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/alert/index.tsx"],
       "docs": "http://localhost:3000/components/alert"
     },
     {
       "name": "aspect-ratio",
       "type": "registry:ui",
-      "description": "Displays content within a desired ratio.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/aspect-ratio/index.tsx"],
+      "description": "A container that preserves a fixed width-to-height aspect ratio.",
       "docs": "http://localhost:3000/components/aspect-ratio"
     },
     {
       "name": "attachment",
       "type": "registry:ui",
       "description": "A file or image chip with media, metadata, upload state, and actions.",
-      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
-      "registryDependencies": ["button"],
-      "files": ["ui/attachment/index.tsx"],
       "docs": "http://localhost:3000/components/attachment"
     },
     {
       "name": "avatar",
       "type": "registry:ui",
       "description": "An image with a fallback for a person or entity.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/avatar/index.tsx"],
       "docs": "http://localhost:3000/components/avatar"
     },
     {
       "name": "badge",
       "type": "registry:ui",
       "description": "A compact label for status or category.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/badge/index.tsx"],
       "docs": "http://localhost:3000/components/badge"
     },
     {
       "name": "breadcrumb",
       "type": "registry:ui",
       "description": "A trail of links for the current page.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/breadcrumb/index.tsx"],
       "docs": "http://localhost:3000/components/breadcrumb"
     },
     {
       "name": "button",
       "type": "registry:ui",
-      "description": "A reusable button component with variants.",
-      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
-      "files": ["ui/button/index.tsx"],
+      "description": "A composable button component with variants and sizes.",
       "docs": "http://localhost:3000/components/button"
     },
     {
       "name": "card",
       "type": "registry:ui",
       "description": "A bordered container for related content.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/card/index.tsx"],
       "docs": "http://localhost:3000/components/card"
     },
     {
       "name": "chart",
       "type": "registry:ui",
       "description": "Themed charts for dashboards and product analytics.",
-      "dependencies": ["clsx", "recharts", "tailwind-merge"],
-      "files": ["ui/chart/index.tsx"],
       "docs": "http://localhost:3000/components/chart"
     },
     {
       "name": "checkbox",
       "type": "registry:ui",
       "description": "A native checkbox for selecting one or more options.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/checkbox/index.tsx"],
       "docs": "http://localhost:3000/components/checkbox"
     },
     {
       "name": "command",
       "type": "registry:ui",
       "description": "A searchable list for pages and actions.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/command/index.tsx"],
       "docs": "http://localhost:3000/components/command"
     },
     {
       "name": "dialog",
       "type": "registry:ui",
       "description": "A composable dialog component for confirmations, forms, and interactive workflows.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/dialog/index.tsx", "ui/dialog/dialog.css"],
       "docs": "http://localhost:3000/components/dialog"
     },
     {
       "name": "drawer",
       "type": "registry:ui",
       "description": "A panel that slides in from the edge of the screen.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/drawer/index.tsx", "ui/drawer/drawer.css"],
       "docs": "http://localhost:3000/components/drawer"
     },
     {
       "name": "dropdown-menu",
       "type": "registry:ui",
       "description": "A menu of actions anchored to a trigger control.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/dropdown-menu/index.tsx"],
       "docs": "http://localhost:3000/components/dropdown-menu"
     },
     {
       "name": "file-upload",
       "type": "registry:ui",
       "description": "A native file picker that also accepts a drag and drop.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/file-upload/index.tsx"],
       "docs": "http://localhost:3000/components/file-upload"
     },
     {
       "name": "hover-card",
       "type": "registry:ui",
       "description": "A preview that opens when a link or button is hovered or focused.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/hover-card/index.tsx"],
       "docs": "http://localhost:3000/components/hover-card"
     },
     {
       "name": "input",
       "type": "registry:ui",
       "description": "A text field that passes through native input attributes.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/input/index.tsx"],
       "docs": "http://localhost:3000/components/input"
     },
     {
       "name": "input-group",
       "type": "registry:ui",
       "description": "A field with icons, text, and actions in one row.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/input-group/index.tsx"],
       "docs": "http://localhost:3000/components/input-group"
     },
     {
       "name": "input-otp",
       "type": "registry:ui",
       "description": "A one-time code made of grouped digit slots.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/input-otp/index.tsx"],
       "docs": "http://localhost:3000/components/input-otp"
     },
     {
       "name": "kbd",
       "type": "registry:ui",
       "description": "A compact label for a keyboard key.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/kbd/index.tsx"],
       "docs": "http://localhost:3000/components/kbd"
     },
     {
       "name": "label",
       "type": "registry:ui",
       "description": "A visible name for a form control.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/label/index.tsx"],
       "docs": "http://localhost:3000/components/label"
     },
     {
       "name": "marker",
       "type": "registry:ui",
       "description": "An inline status, bordered row, or labeled divider.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/marker/index.tsx"],
       "docs": "http://localhost:3000/components/marker"
     },
     {
       "name": "native-select",
       "type": "registry:ui",
       "description": "A styled native select with a chevron and consistent field chrome.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/native-select/index.tsx"],
       "docs": "http://localhost:3000/components/native-select"
     },
     {
       "name": "popover",
       "type": "registry:ui",
       "description": "A floating panel with interactive content.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/popover/index.tsx"],
       "docs": "http://localhost:3000/components/popover"
     },
     {
       "name": "progress",
       "type": "registry:ui",
       "description": "A native progress indicator for a known amount of work.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/progress/index.tsx"],
       "docs": "http://localhost:3000/components/progress"
     },
     {
       "name": "radio-group",
       "type": "registry:ui",
       "description": "A set of mutually exclusive options.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/radio-group/index.tsx"],
       "docs": "http://localhost:3000/components/radio-group"
     },
     {
       "name": "scroll-area",
       "type": "registry:ui",
       "description": "A native scroll container with a thin scrollbar.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/scroll-area/index.tsx"],
       "docs": "http://localhost:3000/components/scroll-area"
     },
     {
       "name": "separator",
       "type": "registry:ui",
       "description": "A horizontal or vertical divider between content.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/separator/index.tsx"],
       "docs": "http://localhost:3000/components/separator"
     },
     {
       "name": "skeleton",
       "type": "registry:ui",
       "description": "A placeholder shown while content is loading.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/skeleton/index.tsx"],
       "docs": "http://localhost:3000/components/skeleton"
     },
     {
       "name": "slider",
       "type": "registry:ui",
       "description": "A native range input for a value between two bounds.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/slider/index.tsx"],
       "docs": "http://localhost:3000/components/slider"
     },
     {
       "name": "spinner",
       "type": "registry:ui",
-      "description": "A small loading indicator.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/spinner/index.tsx"],
+      "description": "A compact loading indicator for inline and button contexts.",
       "docs": "http://localhost:3000/components/spinner"
     },
     {
       "name": "switch",
       "type": "registry:ui",
-      "description": "A switch for a binary setting.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/switch/index.tsx"],
+      "description": "A switch control for binary on and off settings.",
       "docs": "http://localhost:3000/components/switch"
     },
     {
       "name": "table",
       "type": "registry:ui",
       "description": "A semantic table for rows and columns.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/table/index.tsx"],
       "docs": "http://localhost:3000/components/table"
     },
     {
       "name": "tabs",
       "type": "registry:ui",
       "description": "A set of panels that share one visible view at a time.",
-      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
-      "files": ["ui/tabs/index.tsx"],
       "docs": "http://localhost:3000/components/tabs"
     },
     {
       "name": "textarea",
       "type": "registry:ui",
       "description": "A multiline text field that passes through native textarea attributes.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/textarea/index.tsx"],
       "docs": "http://localhost:3000/components/textarea"
     },
     {
       "name": "toast",
       "type": "registry:ui",
       "description": "A temporary notice for success, error, or informational feedback.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/toast/index.tsx", "ui/toast/toast.css"],
       "docs": "http://localhost:3000/components/toast"
     },
     {
       "name": "tooltip",
       "type": "registry:ui",
       "description": "A short floating label shown on hover or focus.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/tooltip/index.tsx", "ui/tooltip/tooltip.css"],
       "docs": "http://localhost:3000/components/tooltip"
     },
     {
       "name": "typography",
       "type": "registry:ui",
       "description": "Semantic text styles for titles, body, and supporting copy.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": ["ui/typography/index.tsx"],
       "docs": "http://localhost:3000/components/typography"
     }
   ]
