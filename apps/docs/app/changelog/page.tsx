@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = pageMetadata({
   title: "Changelog",
   description:
-    "Release notes for Vinyaas v0.1, v1.0.0, and v1.1.0, including the components shipped in each version.",
+    "Release notes for Vinyaas v0.1, v1.0.0, v1.1.0, and v1.2.0, including installation, docs, and catalog updates.",
 });
 
 const heading =
@@ -169,10 +169,9 @@ export default function ChangelogPage() {
           v1.1.0
         </h2>
         <p className="text-foreground text-base leading-7">
-          v{currentVersion} continues the catalog with focused foundation work,
-          CLI project setup, registry discovery, and new components. It adds{" "}
-          {v11.length} component
-          {v11.length === 1 ? "" : "s"}.
+          v1.1.0 continues the catalog with focused foundation work, CLI project
+          setup, registry discovery, and new components. It adds {v11.length}{" "}
+          component{v11.length === 1 ? "" : "s"}.
         </p>
         <h3
           id="v1.1.0-cli"
@@ -291,6 +290,96 @@ export default function ChangelogPage() {
             typography presets; and preview realistic Markdown-style content
             with matching Code dialogs. Typography changes stay scoped to the
             page.
+          </li>
+        </ul>
+      </section>
+      <section className="flex flex-col gap-4">
+        <h2 id="v1.2.0" className={heading}>
+          v1.2.0
+        </h2>
+        <p className="text-foreground text-base leading-7">
+          v{currentVersion} focuses on installation clarity and documentation
+          polish. Framework-specific guides and project-state onboarding replace
+          the single generic install page, and the site catalog presentation is
+          cleaned up for the current release.
+        </p>
+        <h3
+          id="v1.2.0-installation"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Installation
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Framework-specific installation guides for Next.js, React + Vite,
+            and React.
+          </li>
+          <li>
+            An installation landing page that asks you to choose a framework
+            before showing setup steps.
+          </li>
+          <li>
+            Project-state onboarding on each guide: fresh project, existing
+            project, or existing shadcn-style project.
+          </li>
+          <li>
+            Framework-specific create-app commands for fresh Next.js and Vite
+            setups, then a shared <code>vinyaas init</code> →{" "}
+            <code>vinyaas add</code> flow.
+          </li>
+        </ul>
+        <h3
+          id="v1.2.0-docs"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Documentation
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Themes and Typeset playgrounds remain first-class docs routes with
+            scoped previews.
+          </li>
+          <li>
+            Updated navigation: Installation nested under Get Started with
+            framework children, plus Installation in the site header.
+          </li>
+          <li>
+            Component documentation continues with examples, API notes, and
+            install snippets aligned to the current registry layout.
+          </li>
+        </ul>
+        <h3
+          id="v1.2.0-components"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Components
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Catalog presentation no longer highlights temporary “new” markers;
+            the full list is the primary browse surface.
+          </li>
+          <li>
+            Documentation and example polish across existing registry
+            components.
+          </li>
+        </ul>
+        <h3
+          id="v1.2.0-cli"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          CLI
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Published package metadata and README improved for npm
+            discoverability (description, keywords, homepage).
+          </li>
+          <li>
+            CLI package version aligned to v{currentVersion}. Install and
+            discovery commands remain the same: <code>init</code>,{" "}
+            <code>add</code>, <code>list</code>, <code>search</code>, and{" "}
+            <code>info</code>.
           </li>
         </ul>
       </section>

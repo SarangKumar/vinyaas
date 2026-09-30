@@ -5,14 +5,12 @@ import { usePathname } from "next/navigation";
 
 import { docsNav, type DocsNavItem } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
-import { NewIndicator } from "@/components/new-indicator";
 
 function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
   return (
     <Link
       href={item.href}
       aria-current={current ? "page" : undefined}
-      aria-label={item.isNew ? `${item.title}, new` : undefined}
       className={
         current
           ? `bg-muted text-foreground flex min-h-9 cursor-pointer items-center rounded-md px-2 py-2 text-sm font-medium ${focusRing}`
@@ -20,7 +18,6 @@ function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
       }
     >
       <span className="min-w-0 truncate">{item.title}</span>
-      {item.isNew ? <NewIndicator /> : null}
     </Link>
   );
 }

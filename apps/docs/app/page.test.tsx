@@ -30,7 +30,7 @@ describe("homepage", () => {
       "/typeset",
     );
     expect(document.body.textContent).toContain("vinyaas init");
-    expect(document.body.textContent).toContain("v1.1.0");
+    expect(document.body.textContent).toContain("v1.2.0");
 
     const playground = document.querySelector("[data-playground]");
     expect(playground).toBeTruthy();

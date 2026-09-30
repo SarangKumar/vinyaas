@@ -37,13 +37,20 @@ describe("installation docs", () => {
     expect(
       screen.getByRole("link", { name: /Other React projects/i }),
     ).toHaveAttribute("href", "/installation/react");
+    expect(screen.queryByText(/Continue/i)).toBeNull();
+    expect(
+      document.querySelector("[data-docs-article] .grid")?.className,
+    ).toContain("sm:grid-cols-2");
+    expect(
+      document.querySelector("[data-docs-article] .grid")?.className,
+    ).not.toContain("lg:grid-cols-3");
 
     expect(metadata.title).toBe("Install Vinyaas");
     expect(metadata.alternates).toMatchObject({ canonical: "/installation" });
   });
 
-  it("renders framework guides with init, add, and discovery content", () => {
-    const { unmount } = renderWithStore(<NextJsInstallationPage />);
+  it("renders framework guides with project-state setup, add, and discovery", () => {
+    const next = renderWithStore(<NextJsInstallationPage />);
     expect(
       screen.getByRole("heading", {
         level: 1,
@@ -54,7 +61,16 @@ describe("installation docs", () => {
       screen.getByRole("heading", { name: "Prerequisites" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Initialize Vinyaas" }),
+      screen.getByRole("heading", { name: "Choose your setup" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Fresh project" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Existing project" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Existing shadcn-style project" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Add components" }),
@@ -65,6 +81,8 @@ describe("installation docs", () => {
     expect(
       screen.getByRole("heading", { name: "Discover components" }),
     ).toBeInTheDocument();
+    expect(document.body.textContent).toContain("create-next-app@latest");
+    expect(document.body.textContent).toContain("--typescript");
     expect(document.body.textContent).toContain("vinyaas init");
     expect(document.body.textContent).toContain("add button");
     expect(document.body.textContent).toContain(
@@ -72,25 +90,28 @@ describe("installation docs", () => {
     );
     expect(document.body.textContent).toContain("App Router");
     expect(nextMetadata.title).toBe("Install Vinyaas with Next.js");
-    unmount();
+    next.unmount();
 
-    renderWithStore(<ViteInstallationPage />);
+    const vite = renderWithStore(<ViteInstallationPage />);
     expect(
       screen.getByRole("heading", {
         name: "Install Vinyaas with React + Vite",
       }),
     ).toBeInTheDocument();
+    expect(document.body.textContent).toContain("create vite@latest");
+    expect(document.body.textContent).toContain("react-ts");
     expect(document.body.textContent).toContain("src/index.css");
     expect(viteMetadata.alternates).toMatchObject({
       canonical: "/installation/vite",
     });
-    unmount();
+    vite.unmount();
 
     renderWithStore(<ReactInstallationPage />);
     expect(
       screen.getByRole("heading", { name: "Install Vinyaas with React" }),
     ).toBeInTheDocument();
     expect(document.body.textContent).toContain("neither");
+    expect(document.body.textContent).toContain("Choose your setup");
     expect(reactMetadata.description).toMatch(/React projects/i);
   });
 });

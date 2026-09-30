@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  componentIsNew,
-  components,
-  currentVersion,
-  newComponents,
-} from "./component-meta";
+import { components, currentVersion } from "./component-meta";
 
 describe("component metadata", () => {
   it("lists each component once, in alphabetical order", () => {
@@ -57,30 +52,22 @@ describe("component metadata", () => {
     ]);
   });
 
-  it("treats v1.1.0 introductions as new and keeps earlier components out", () => {
-    expect(currentVersion).toBe("1.1.0");
-
-    const slugs = new Set(components.map((component) => component.slug));
-
-    for (const component of newComponents()) {
-      expect(slugs.has(component.slug)).toBe(true);
-      expect(component.introducedIn).toBe(currentVersion);
-      expect(componentIsNew(component)).toBe(true);
-    }
-
-    expect(
-      newComponents()
-        .map((component) => component.slug)
-        .sort(),
-    ).toEqual(["aspect-ratio", "attachment", "chart", "drawer", "tabs"]);
-    expect(newComponents().map((component) => component.slug)).not.toContain(
-      "button",
-    );
+  it("tracks introduction versions without marking a current new set", () => {
+    expect(currentVersion).toBe("1.2.0");
     expect(
       components
         .filter((component) => component.introducedIn === "0.1")
         .map((component) => component.slug),
     ).toEqual(["button"]);
+    expect(
+      components
+        .filter((component) => component.introducedIn === "1.1.0")
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual(["aspect-ratio", "attachment", "chart", "drawer", "tabs"]);
+    expect(
+      components.filter((component) => component.introducedIn === "1.2.0"),
+    ).toHaveLength(0);
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,

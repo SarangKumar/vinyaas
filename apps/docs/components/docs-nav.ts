@@ -1,6 +1,5 @@
 import {
   componentHref,
-  componentIsNew,
   components,
   type ComponentMeta,
 } from "@/components/component-meta";
@@ -28,7 +27,6 @@ export type DocsNavItem = {
   title: string;
   href: string;
   description?: string;
-  isNew?: boolean;
   /** Nested links (e.g. framework installation guides). */
   children?: DocsNavItem[];
 };
@@ -46,7 +44,6 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
   return {
     title: component.name,
     href: componentHref(component.slug),
-    isNew: componentIsNew(component),
   };
 }
 

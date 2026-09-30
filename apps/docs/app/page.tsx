@@ -12,14 +12,14 @@ const creditLink = `text-primary inline underline underline-offset-4 ${focusRing
 export const metadata: Metadata = {
   title: "Vinyaas",
   description:
-    "Composable React components you install as source. The v1.1.0 catalog covers forms, overlays, feedback, and product UI.",
+    "Composable React components you install as source. The v1.2.0 catalog covers forms, overlays, feedback, and product UI.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "Vinyaas",
     description:
-      "Composable React components you install as source. v1.1.0 production catalog.",
+      "Composable React components you install as source. v1.2.0 production catalog.",
     type: "website",
     url: "/",
     images: [
@@ -114,7 +114,7 @@ export default function Home() {
             </a>{" "}
             · 2026
           </p>
-          <p className="text-muted-foreground text-xs">v1.1.0</p>
+          <p className="text-muted-foreground text-xs">v1.2.0</p>
         </footer>
       </div>
     </div>

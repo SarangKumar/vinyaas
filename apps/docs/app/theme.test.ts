@@ -126,12 +126,12 @@ describe("docs theme", () => {
     expect(layout).toContain('import "./globals.css"');
     expect(layout).toContain('import "./docs.css"');
     expect(css).toContain("Docs site only");
-    expect(css).toContain("--new: var(--primary)");
     expect(css).toContain("--sidebar-foreground: var(--muted-foreground)");
-    expect(css).toContain("--color-new: var(--new)");
     expect(css).toContain(
       "--color-sidebar-foreground: var(--sidebar-foreground)",
     );
+    expect(css).not.toContain("--new:");
+    expect(css).not.toContain("--color-new:");
     expect(css).toContain("--playground-gap: 1rem");
     expect(css).toContain("--playground-gap-2xl: 2.5rem");
     expect(css).toContain("--spacing-playground-gap: var(--playground-gap)");

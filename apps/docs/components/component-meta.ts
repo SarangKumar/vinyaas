@@ -7,10 +7,10 @@ export type ComponentCategory =
   | "overlay"
   | "utility";
 
-/** The docs version whose additions count as New Components. */
-export const currentVersion = "1.1.0";
+/** The current docs/website release version. */
+export const currentVersion = "1.2.0";
 
-export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0";
+export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0" | "1.2.0";
 
 export type ComponentMeta = {
   name: string;
@@ -21,8 +21,8 @@ export type ComponentMeta = {
 };
 
 /**
- * Alphabetical catalog. Sidebar, New Components, and All Components read this list.
- * New means introducedIn matches currentVersion. Button is the only v0.1 component.
+ * Alphabetical catalog. Sidebar and the components index read this list.
+ * Button is the only v0.1 component.
  */
 export const components: readonly ComponentMeta[] = [
   {
@@ -319,12 +319,4 @@ export function componentsInCategory(category: ComponentCategory) {
 
 export function componentHref(slug: string) {
   return `/components/${slug}`;
-}
-
-export function componentIsNew(component: ComponentMeta) {
-  return component.introducedIn === currentVersion;
-}
-
-export function newComponents() {
-  return components.filter(componentIsNew);
 }

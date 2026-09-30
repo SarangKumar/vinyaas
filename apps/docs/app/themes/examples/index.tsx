@@ -419,7 +419,7 @@ export const themeExamples: ThemeExample[] = [
         </TabsList>
         <TabsContent value="stable" className="grid gap-3 pt-3">
           <Alert>
-            <AlertTitle>v1.1.0 is current</AlertTitle>
+            <AlertTitle>v1.2.0 is current</AlertTitle>
             <AlertDescription>
               Themes and Typeset ship on the docs site — not as registry items.
             </AlertDescription>

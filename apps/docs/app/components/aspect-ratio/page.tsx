@@ -195,7 +195,7 @@ export function ProductCover() {
           </CardDescription>
         </div>
         <CardAction>
-          <Badge variant="outline">v1.1.0</Badge>
+          <Badge variant="outline">v1.2.0</Badge>
         </CardAction>
       </CardHeader>
       <CardContent className="px-4">
@@ -235,7 +235,7 @@ const inPractice: ComponentInPractice = {
           </CardDescription>
         </div>
         <CardAction>
-          <Badge variant="outline">v1.1.0</Badge>
+          <Badge variant="outline">v1.2.0</Badge>
         </CardAction>
       </CardHeader>
       <CardContent className="px-4">

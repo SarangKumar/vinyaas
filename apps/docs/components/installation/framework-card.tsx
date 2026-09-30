@@ -12,14 +12,10 @@ export function FrameworkCard({
   return (
     <Link
       href={framework.href}
-      className={`border-border bg-card text-card-foreground hover:bg-muted/40 group flex flex-col gap-4 rounded-xl border p-5 transition-colors ${focusRing}`}
+      aria-label={`${framework.name}. ${framework.description}`}
+      className={`border-border bg-card text-card-foreground flex flex-col gap-4 rounded-xl border p-5 shadow-sm transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:shadow-md ${focusRing}`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <FrameworkIconBadge id={framework.id} />
-        <span className="text-muted-foreground group-hover:text-foreground text-sm">
-          Continue →
-        </span>
-      </div>
+      <FrameworkIconBadge id={framework.id} />
       <div className="flex flex-col gap-1.5">
         <h2 className="text-foreground text-lg font-semibold tracking-tight">
           {framework.name}

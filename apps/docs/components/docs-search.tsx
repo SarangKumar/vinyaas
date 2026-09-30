@@ -46,27 +46,27 @@ const pages: SearchPage[] = [
     title: "Install with Next.js",
     href: "/installation/nextjs",
     description:
-      "Initialize Vinyaas in a Next.js App Router project with Tailwind CSS v4.",
+      "Install Vinyaas in a Next.js App Router project with fresh, existing, or shadcn-style setup paths.",
     group: "Getting Started",
   },
   {
     title: "Install with React + Vite",
     href: "/installation/vite",
     description:
-      "Initialize Vinyaas in a Vite + React project with Tailwind CSS v4.",
+      "Install Vinyaas in a Vite + React project with fresh, existing, or shadcn-style setup paths.",
     group: "Getting Started",
   },
   {
     title: "Install with React",
     href: "/installation/react",
     description:
-      "Initialize Vinyaas in other React projects with Tailwind CSS v4.",
+      "Install Vinyaas in other React projects with fresh, existing, or shadcn-style setup paths.",
     group: "Getting Started",
   },
   {
     title: "Changelog",
     href: "/changelog",
-    description: "What shipped in v0.1, v1.0.0, and v1.1.0.",
+    description: "What shipped in v0.1, v1.0.0, v1.1.0, and v1.2.0.",
     group: "Getting Started",
   },
   {
