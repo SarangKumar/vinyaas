@@ -13,11 +13,15 @@ export const metadata: Metadata = {
   title: "Vinyaas",
   description:
     "Composable React components you install as source. The v1.1.0 catalog covers forms, overlays, feedback, and product UI.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Vinyaas",
     description:
       "Composable React components you install as source. v1.1.0 production catalog.",
     type: "website",
+    url: "/",
     images: [
       {
         url: "/og.png",
@@ -40,7 +44,7 @@ export default function Home() {
         <p className="text-muted-foreground text-sm font-medium tracking-[0.16em] uppercase">
           Vinyaas
         </p>
-        <h1 className="text-foreground mt-4 max-w-full text-[min(3rem,calc((100vw-3rem)/22))] leading-[1.15] font-semibold tracking-tight whitespace-nowrap">
+        <h1 className="text-foreground mt-4 max-w-full text-[clamp(1.875rem,8vw,3rem)] leading-[1.15] font-semibold tracking-tight text-balance sm:whitespace-nowrap">
           Build. Ship. Beautifully.
         </h1>
         <p className="text-muted-foreground mt-4 max-w-136 text-sm leading-6 sm:text-base sm:leading-7">
@@ -56,6 +60,17 @@ export default function Home() {
             Components
           </Link>
         </div>
+        <p className="text-muted-foreground mt-5 text-sm">
+          Explore{" "}
+          <Link href="/themes" className={creditLink}>
+            Themes
+          </Link>{" "}
+          and{" "}
+          <Link href="/typeset" className={creditLink}>
+            Typeset
+          </Link>{" "}
+          playgrounds.
+        </p>
       </section>
       <div className="relative min-w-0">
         {/*
@@ -78,12 +93,12 @@ export default function Home() {
           <div
             aria-hidden="true"
             data-playground-side-fade="right"
-            className="from-muted dark:from-background pointer-events-none absolute inset-y-0 right-0 z-[15] hidden w-28 bg-gradient-to-l to-transparent min-[2200px]:block"
+            className="from-muted dark:from-background pointer-events-none absolute inset-y-0 right-0 z-15 hidden w-28 bg-linear-to-l to-transparent min-[2200px]:block"
           />
           <div
             aria-hidden="true"
             data-playground-blur
-            className="from-background via-muted/80 dark:via-background/80 pointer-events-none absolute inset-x-0 bottom-0 z-20 h-48 bg-gradient-to-t to-transparent lg:h-80 xl:h-64"
+            className="from-background via-muted/80 dark:via-background/90 pointer-events-none absolute inset-x-0 bottom-0 z-20 h-54 bg-linear-to-t to-transparent lg:h-80 xl:h-64"
           />
         </div>
         <footer className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center gap-1 px-5 pt-20 pb-10 text-center">

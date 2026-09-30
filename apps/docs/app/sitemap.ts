@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { components } from "@/components/component-meta";
-
-const siteUrl = "https://vinyaas.vercel.app";
+import { siteUrl } from "@/lib/site";
 
 const staticRoutes = [
   "/",
@@ -10,6 +9,8 @@ const staticRoutes = [
   "/installation",
   "/components",
   "/components-json",
+  "/themes",
+  "/typeset",
   "/changelog",
 ] as const;
 
@@ -21,7 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${siteUrl}${path === "/" ? "" : path}`,
       lastModified: now,
       changeFrequency: "weekly" as const,
-      priority: path === "/" ? 1 : 0.8,
+      priority:
+        path === "/"
+          ? 1
+          : path === "/themes" || path === "/typeset"
+            ? 0.9
+            : 0.8,
     })),
     ...components.map((component) => ({
       url: `${siteUrl}/components/${component.slug}`,

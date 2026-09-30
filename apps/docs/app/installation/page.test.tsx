@@ -63,5 +63,9 @@ describe("installation docs", () => {
     expect(screen.getAllByRole("tab", { name: "npm" }).length).toBeGreaterThan(
       0,
     );
+    expect(screen.getByRole("link", { name: "vinyaas" })).toHaveAttribute(
+      "href",
+      "https://www.npmjs.com/package/vinyaas",
+    );
   });
 });

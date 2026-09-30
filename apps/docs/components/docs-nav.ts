@@ -17,6 +17,10 @@ export const componentsPath = "/components";
 
 export const componentsJsonPath = "/components-json";
 
+export const themesPath = "/themes";
+
+export const typesetPath = "/typeset";
+
 export type DocsNavItem = {
   title: string;
   href: string;
@@ -69,6 +73,8 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Introduction", href: introductionPath },
       { title: "Components", href: componentsPath },
       { title: "components.json", href: componentsJsonPath },
+      { title: "Themes", href: themesPath },
+      { title: "Typeset", href: typesetPath },
     ],
   },
   {

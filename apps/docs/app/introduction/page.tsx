@@ -358,6 +358,18 @@ export default function IntroductionPage() {
             Components
           </Link>
           <Link
+            href="/themes"
+            className={`${actionLink} border-border text-foreground hover:bg-accent border`}
+          >
+            Themes
+          </Link>
+          <Link
+            href="/typeset"
+            className={`${actionLink} border-border text-foreground hover:bg-accent border`}
+          >
+            Typeset
+          </Link>
+          <Link
             href="/changelog"
             className={`${actionLink} border-border text-foreground hover:bg-accent border`}
           >

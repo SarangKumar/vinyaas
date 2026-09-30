@@ -30,7 +30,17 @@ export default function InstallationPage() {
         <p className="text-foreground text-base leading-7">
           Vinyaas is a registry-driven component library. The CLI installs
           components as source into your project—not as a runtime package. Add
-          the CLI to a project, or run it without a global install.
+          the CLI to a project, or run it without a global install. The package
+          is published on npm as{" "}
+          <a
+            href="https://www.npmjs.com/package/vinyaas"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline underline-offset-4"
+          >
+            vinyaas
+          </a>
+          .
         </p>
         <InstallCommand commands={packageInstallCommands("vinyaas")} />
       </section>

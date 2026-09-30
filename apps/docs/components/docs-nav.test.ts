@@ -9,6 +9,8 @@ import {
   githubUrl,
   homePath,
   introductionPath,
+  themesPath,
+  typesetPath,
 } from "./docs-nav";
 
 describe("documentation navigation", () => {
@@ -18,6 +20,8 @@ describe("documentation navigation", () => {
     expect(introductionPath).toBe("/introduction");
     expect(componentsPath).toBe("/components");
     expect(componentsJsonPath).toBe("/components-json");
+    expect(themesPath).toBe("/themes");
+    expect(typesetPath).toBe("/typeset");
     expect(cliPath).toBe("/installation#cli");
     expect(docsNav.map((group) => group.title)).toEqual([
       "SECTIONS",
@@ -38,11 +42,15 @@ describe("documentation navigation", () => {
       "Introduction",
       "Components",
       "components.json",
+      "Themes",
+      "Typeset",
     ]);
     expect(docsNav[2]?.items.map((item) => item.href)).toEqual([
       "/introduction",
       "/components",
       "/components-json",
+      "/themes",
+      "/typeset",
     ]);
     expect(docsNav[3]?.items.map((item) => item.title)).toEqual(["Changelog"]);
     expect(docsNav[3]?.items.map((item) => item.href)).toEqual(["/changelog"]);

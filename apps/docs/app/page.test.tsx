@@ -21,6 +21,14 @@ describe("homepage", () => {
       "href",
       "/components",
     );
+    expect(screen.getByRole("link", { name: "Themes" })).toHaveAttribute(
+      "href",
+      "/themes",
+    );
+    expect(screen.getByRole("link", { name: "Typeset" })).toHaveAttribute(
+      "href",
+      "/typeset",
+    );
     expect(document.body.textContent).toContain("vinyaas init");
     expect(document.body.textContent).toContain("v1.1.0");
 

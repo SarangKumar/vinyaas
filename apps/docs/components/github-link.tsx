@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { githubUrl } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 
-export function githubStarsUrl(repositoryUrl: string) {
+export function githubRepoApiUrl(repositoryUrl: string) {
   const match = repositoryUrl.match(
     /^https:\/\/github\.com\/([^/]+)\/([^/#?]+)/,
   );
@@ -19,11 +19,16 @@ export function githubStarsUrl(repositoryUrl: string) {
   return `https://api.github.com/repos/${match[1]}/${repo}`;
 }
 
+/** @deprecated Prefer githubRepoApiUrl — kept for existing imports/tests. */
+export function githubStarsUrl(repositoryUrl: string) {
+  return githubRepoApiUrl(repositoryUrl);
+}
+
 export function GitHubLink() {
   const [stars, setStars] = useState<number | null>(null);
 
   useEffect(() => {
-    const endpoint = githubStarsUrl(githubUrl);
+    const endpoint = githubRepoApiUrl(githubUrl);
 
     if (!endpoint || typeof fetch !== "function") {
       return;

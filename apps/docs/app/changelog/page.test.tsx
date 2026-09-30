@@ -59,6 +59,12 @@ describe("Changelog", () => {
     expect(document.body.textContent).toContain("--json");
     expect(document.body.textContent).toContain("index.tsx");
     expect(document.body.textContent).toContain("Documentation and website");
+    expect(document.body.textContent).toContain("/themes");
+    expect(document.body.textContent).toContain("/typeset");
+    expect(document.body.textContent).toContain("not a registry component");
+    expect(document.body.textContent).toContain("Typeset");
+    expect(document.body.textContent).toContain("curated presets");
+    expect(document.body.textContent).not.toContain("/playground");
     expect(document.body.textContent).toContain("Tabs");
     expect(document.body.textContent).toContain("Drawer");
     expect(document.body.textContent).toContain("Chart");

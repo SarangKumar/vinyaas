@@ -12,9 +12,13 @@ describe("SEO routes", () => {
     expect(urls).toContain("https://vinyaas.vercel.app");
     expect(urls).toContain("https://vinyaas.vercel.app/components");
     expect(urls).toContain("https://vinyaas.vercel.app/installation");
+    expect(urls).toContain("https://vinyaas.vercel.app/themes");
+    expect(urls).toContain("https://vinyaas.vercel.app/typeset");
+    expect(urls).not.toContain("https://vinyaas.vercel.app/playground");
     expect(urls).toContain("https://vinyaas.vercel.app/components/chart");
     expect(urls).toContain("https://vinyaas.vercel.app/components/drawer");
-    expect(urls.length).toBeGreaterThanOrEqual(components.length + 5);
+    expect(urls.length).toBeGreaterThanOrEqual(components.length + 7);
+    expect(new Set(urls).size).toBe(urls.length);
   });
 
   it("allows crawlers and points to the sitemap", () => {
@@ -24,7 +28,11 @@ describe("SEO routes", () => {
     expect(result.host).toBe("https://vinyaas.vercel.app");
     expect(result.rules).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ userAgent: "*", allow: "/" }),
+        expect.objectContaining({
+          userAgent: "*",
+          allow: "/",
+          disallow: ["/og/", "/api/"],
+        }),
       ]),
     );
   });

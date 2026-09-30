@@ -9,7 +9,7 @@ function SelectChevron() {
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
-      className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2"
+      className="text-muted-foreground pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -37,7 +37,7 @@ export function NativeSelect({
         multiple={multiple}
         size={size}
         className={cn(
-          "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background h-auto w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background h-auto w-full min-w-0 rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
         {...props}
@@ -45,16 +45,15 @@ export function NativeSelect({
     );
   }
 
+  // Width / sizing classes belong on the wrapper so the chevron stays inside
+  // the control at narrow widths (className used to land only on <select>).
   return (
-    <div className="relative w-full min-w-0">
+    <div className={cn("relative w-full min-w-0", className)}>
       <select
         ref={ref}
         multiple={multiple}
         size={size}
-        className={cn(
-          "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background h-9 w-full appearance-none rounded-md border py-0 pr-10 pl-3 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
-          className,
-        )}
+        className="border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background h-9 w-full min-w-0 appearance-none rounded-md border py-0 pr-9 pl-3 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         {...props}
       />
       <SelectChevron />

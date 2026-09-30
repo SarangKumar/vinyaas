@@ -275,6 +275,23 @@ export default function ChangelogPage() {
             Installation docs cover init, multi-component add, skip/force
             behavior, and discovery commands.
           </li>
+          <li>
+            <strong>Themes</strong> (<code>/themes</code>) is a website
+            playground — not a registry component. Switch curated presets
+            (Default, Yellow, Rose, Orange, Olive, Violet, Blue), adjust border
+            radius, preview themes across real Vinyaas UI compositions, and open
+            Code dialogs to inspect and copy each example&apos;s source. Theme
+            selection stays scoped to the playground and does not change the
+            docs site chrome.
+          </li>
+          <li>
+            <strong>Typeset</strong> (<code>/typeset</code>) is a typography
+            playground — not a registry component. Tune measure,
+            heading/body/mono fonts, size, leading, and flow; shuffle curated
+            typography presets; and preview realistic Markdown-style content
+            with matching Code dialogs. Typography changes stay scoped to the
+            page.
+          </li>
         </ul>
       </section>
     </DocsArticle>

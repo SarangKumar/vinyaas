@@ -54,6 +54,20 @@ const pages: SearchPage[] = [
     description: "Local project config for style, aliases, and Tailwind paths.",
     group: "Getting Started",
   },
+  {
+    title: "Themes",
+    href: "/themes",
+    description:
+      "Visual theme playground: curated presets, radius, and real UI compositions.",
+    group: "Getting Started",
+  },
+  {
+    title: "Typeset",
+    href: "/typeset",
+    description:
+      "Typography playground: measure, fonts, size, leading, and flow for Markdown-style content.",
+    group: "Getting Started",
+  },
   ...components.map((component) => ({
     title: component.name,
     href: componentHref(component.slug),

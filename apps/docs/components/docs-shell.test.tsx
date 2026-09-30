@@ -96,6 +96,13 @@ describe("DocsShell", () => {
     expect(
       within(start).getByRole("link", { name: "Components" }),
     ).toHaveAttribute("href", "/components");
+    expect(within(start).getByRole("link", { name: "Themes" })).toHaveAttribute(
+      "href",
+      "/themes",
+    );
+    expect(
+      within(start).getByRole("link", { name: "Typeset" }),
+    ).toHaveAttribute("href", "/typeset");
     expect(
       within(start).queryByRole("button", { name: "Search documentation" }),
     ).toBeNull();

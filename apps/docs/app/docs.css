@@ -69,7 +69,7 @@
   background: var(--muted);
   padding: 0.125rem 0.375rem;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.875em;
+  font-size: calc(0.875em - 2px);
   color: var(--foreground);
 }
 
@@ -159,6 +159,57 @@ code[data-language] .hljs-operator {
   border-radius: var(--radius-sm);
   background: var(--muted);
   padding: 0.125rem 0.375rem;
-  font-size: 0.875em;
+  font-size: calc(0.875em - 2px);
   color: var(--foreground);
+}
+
+/*
+ * Print: the docs shell uses nested overflow + fixed viewport heights so
+ * screen pages scroll in-place. Browsers then clip print output to the
+ * visible scrollport. Unlock overflow and let content flow as a document.
+ * Interactive chrome is hidden via print:hidden on the components.
+ */
+@media print {
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  body > div,
+  [data-docs-frame],
+  [data-docs-frame] > div,
+  #docs-content {
+    display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    position: static !important;
+  }
+
+  [data-playground-grid] {
+    columns: 1 !important;
+    column-fill: auto !important;
+  }
+
+  [data-playground-block] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+    width: 100% !important;
+  }
+
+  [data-theme-playground],
+  [data-typeset-playground] {
+    overflow: visible !important;
+  }
+
+  /*
+   * Start print at the current scroll position inside #docs-content.
+   * --print-scroll-offset is set from beforeprint (usePrintFromScroll).
+   */
+  #docs-content[data-print-from-scroll="true"] > * {
+    transform: translateY(var(--print-scroll-offset, 0));
+  }
 }

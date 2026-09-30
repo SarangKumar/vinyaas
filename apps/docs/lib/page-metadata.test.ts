@@ -18,11 +18,31 @@ describe("page metadata", () => {
     expect(meta.openGraph).toMatchObject({
       title: "Installation · Vinyaas",
       description: "Install the CLI.",
+      siteName: "Vinyaas",
+      locale: "en_US",
       images: [siteOgImage],
+    });
+    expect(meta.robots).toMatchObject({
+      index: true,
+      follow: true,
     });
     expect(meta.twitter).toMatchObject({
       card: "summary_large_image",
       images: [siteOgImage.url],
+    });
+  });
+
+  it("adds canonical and Open Graph URLs when a path is provided", () => {
+    const meta = pageMetadata({
+      title: "Themes",
+      description: "Theme playground.",
+      path: "/themes",
+    }) as Metadata;
+
+    expect(meta.alternates).toMatchObject({ canonical: "/themes" });
+    expect(meta.openGraph).toMatchObject({
+      url: "/themes",
+      title: "Themes · Vinyaas",
     });
   });
 
@@ -43,6 +63,10 @@ describe("page metadata", () => {
           alt: "Button — Vinyaas",
         },
       ],
+      url: "/components/button",
+    });
+    expect(meta.alternates).toMatchObject({
+      canonical: "/components/button",
     });
     expect(findComponent("button")?.name).toBe("Button");
   });

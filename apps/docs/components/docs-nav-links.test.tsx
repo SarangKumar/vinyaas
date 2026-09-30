@@ -27,10 +27,12 @@ describe("DocsNavLinks", () => {
     expect(titles[0]).toBe("Installation");
     expect(titles[1]).toBe("CLI");
     expect(titles.slice(2, 2 + componentNames.length)).toEqual(componentNames);
-    expect(titles.slice(-4)).toEqual([
+    expect(titles.slice(-6)).toEqual([
       "Introduction",
       "Components",
       "components.json",
+      "Themes",
+      "Typeset",
       "Changelog",
     ]);
     expect(within(nav).getByText("SECTIONS")).toBeInTheDocument();
@@ -40,6 +42,14 @@ describe("DocsNavLinks", () => {
     expect(
       within(nav).getByRole("link", { name: "Changelog" }),
     ).toHaveAttribute("href", "/changelog");
+    expect(within(nav).getByRole("link", { name: "Themes" })).toHaveAttribute(
+      "href",
+      "/themes",
+    );
+    expect(within(nav).getByRole("link", { name: "Typeset" })).toHaveAttribute(
+      "href",
+      "/typeset",
+    );
     expect(
       within(nav).getByRole("link", { name: "Components" }),
     ).toHaveAttribute("href", "/components");

@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from ".";
 
 describe("NativeSelect", () => {
-  it("renders a native select, options, and an optgroup", () => {
+  it("renders a native select with the chevron inside a sized wrapper", () => {
     render(
       <NativeSelect aria-label="Region" defaultValue="in" className="max-w-sm">
         <NativeSelectOptGroup label="Asia">
@@ -15,16 +15,48 @@ describe("NativeSelect", () => {
     );
 
     const select = screen.getByRole("combobox", { name: "Region" });
+    const wrapper = select.parentElement;
 
     expect(select.tagName).toBe("SELECT");
     expect(select).toHaveValue("in");
-    expect(select).toHaveClass("h-9", "text-sm", "max-w-sm", "pl-3", "pr-10");
+    expect(select).toHaveClass(
+      "h-9",
+      "w-full",
+      "min-w-0",
+      "text-sm",
+      "pl-3",
+      "pr-9",
+    );
     expect(select).toHaveClass("appearance-none");
-    expect(select.parentElement?.querySelector("svg")).toBeTruthy();
-    expect(select.parentElement?.querySelector("svg")).toHaveClass("right-3");
+    expect(select).not.toHaveClass("max-w-sm");
+    expect(wrapper).toHaveClass("relative", "w-full", "min-w-0", "max-w-sm");
+    expect(wrapper?.querySelector("svg")).toBeTruthy();
+    expect(wrapper?.querySelector("svg")).toHaveClass("right-2.5");
     expect(document.querySelector("optgroup")).toHaveAttribute("label", "Asia");
     expect(screen.getByRole("option", { name: "India" }).tagName).toBe(
       "OPTION",
+    );
+  });
+
+  it("keeps the chevron within a narrow width constraint", () => {
+    render(
+      <div className="w-40">
+        <NativeSelect aria-label="Role" defaultValue="owner" className="w-28">
+          <NativeSelectOption value="owner">Owner</NativeSelectOption>
+          <NativeSelectOption value="member">Member</NativeSelectOption>
+        </NativeSelect>
+      </div>,
+    );
+
+    const select = screen.getByRole("combobox", { name: "Role" });
+    const wrapper = select.parentElement;
+
+    expect(wrapper).toHaveClass("w-28");
+    expect(select).toHaveClass("w-full", "pr-9");
+    expect(wrapper?.querySelector("svg")).toHaveClass(
+      "absolute",
+      "right-2.5",
+      "pointer-events-none",
     );
   });
 
@@ -75,7 +107,7 @@ describe("NativeSelect", () => {
     expect(select).toHaveAttribute("multiple");
     expect(select).toHaveClass("h-auto", "px-3");
     expect(select).not.toHaveClass("h-9");
-    expect(select).not.toHaveClass("pr-10");
+    expect(select).not.toHaveClass("pr-9");
     expect(select).not.toHaveClass("appearance-none");
     expect(onChange).toHaveBeenCalled();
   });
