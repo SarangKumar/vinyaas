@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
 
-import { components, currentVersion } from "./component-meta";
+import {
+  registryCategories,
+  registryCategoryLabels,
+  registryComponentCategories,
+} from "@/registry/categories";
+
+import {
+  categoryOrder,
+  components,
+  componentsInCategory,
+  currentVersion,
+} from "./component-meta";
 
 describe("component metadata", () => {
   it("lists each component once, in alphabetical order", () => {
@@ -72,5 +83,23 @@ describe("component metadata", () => {
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
     ).toBe(components.length - 6);
+  });
+
+  it("derives docs categories from the registry category map", () => {
+    for (const component of components) {
+      expect(component.category).toBe(
+        registryComponentCategories[component.slug],
+      );
+    }
+
+    expect(categoryOrder).toEqual(
+      registryCategories.map((id) => [id, registryCategoryLabels[id]] as const),
+    );
+    expect(componentsInCategory("forms").map((c) => c.slug)).toContain(
+      "button",
+    );
+    expect(componentsInCategory("charts").map((c) => c.slug)).toEqual([
+      "chart",
+    ]);
   });
 });

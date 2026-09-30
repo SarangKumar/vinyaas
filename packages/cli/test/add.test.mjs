@@ -198,7 +198,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     );
 
     assert.equal(written, buttonContent);
-    assert.match(stdout, /^Added button\./);
+    assert.match(stdout, /✓ Added components/);
     assert.match(stdout, /components\/ui\/button\/index\.tsx/);
     assert.match(stdout, /class-variance-authority/);
     assert.match(stdout, /clsx/);
@@ -252,9 +252,9 @@ describe("vinyaas add", { concurrency: false }, () => {
 
     assert.deepEqual(plan.skipped, ["button"]);
     assert.equal(plan.entries.length, 0);
-    assert.match(stdout, /Skipped:/);
-    assert.match(stdout, /- button/);
-    assert.match(stdout, /Nothing new to install/);
+    assert.match(stdout, /Skipped/);
+    assert.match(stdout, /• button \(already exists\)/);
+    assert.match(stdout, /Use --force to overwrite/);
     assert.equal(
       await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
       existing,
@@ -524,8 +524,8 @@ describe("vinyaas add", { concurrency: false }, () => {
         },
       ),
     );
-    assert.match(stdout, /Skipped:/);
-    assert.match(stdout, /Nothing new to install/);
+    assert.match(stdout, /Skipped/);
+    assert.match(stdout, /Use --force to overwrite/);
     assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
   });
 
@@ -818,7 +818,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       console.log = original;
     }
 
-    assert.match(logs.join("\n"), /Skipped:/);
+    assert.match(logs.join("\n"), /Skipped/);
     assert.equal(logs.join("\n").includes("Documentation:"), false);
   });
 
@@ -1099,7 +1099,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     );
     assert.match(
       stdout,
-      /Installed devDependencies:\n {2}vitest\n {2}prettier/,
+      /Dependencies\n✓ clsx\n✓ prettier\n✓ vitest/,
     );
     assert.match(stdout, /OPENAI_API_KEY — OpenAI API key/);
     assert.equal(
@@ -1251,8 +1251,9 @@ describe("vinyaas add", { concurrency: false }, () => {
       calls.map((call) => call.args),
       [["add", "tailwind-merge", "class-variance-authority"]],
     );
-    assert.match(stdout, /clsx already configured/);
-    assert.match(stdout, /prettier already configured as a devDependency/);
+    assert.match(stdout, /Dependencies/);
+    assert.match(stdout, /✓ clsx/);
+    assert.match(stdout, /✓ prettier/);
     assert.doesNotMatch(stdout, /\^2\.1\.0/);
     assert.doesNotMatch(stdout, /\^3\.0\.0/);
     assert.equal(await readFile(join(cwd, "package.json"), "utf8"), manifest);
@@ -1460,7 +1461,7 @@ describe("vinyaas add", { concurrency: false }, () => {
     assert.deepEqual(plan.skipped, ["button"]);
     assert.equal(plan.entries.length, 0);
     assert.equal(calls.length, 0);
-    assert.match(stdout, /Nothing new to install/);
+    assert.match(stdout, /Use --force to overwrite/);
   });
 
   it("fails when the consumer project has no lockfile", async () => {
@@ -1632,7 +1633,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       );
 
       assert.equal(first.exitCode, 0);
-      assert.match(first.stdout, /Added button\./);
+      assert.match(first.stdout, /✓ Added components/);
       assert.match(first.stdout, /OPENAI_API_KEY already configured/);
       assert.doesNotMatch(first.stdout, /secret-a/);
       assert.doesNotMatch(first.stdout, /secret-b/);
@@ -1756,8 +1757,8 @@ describe("vinyaas add", { concurrency: false }, () => {
       const blocked = await runCli(cwd, ["add", "button"], env);
 
       assert.equal(blocked.exitCode, 0);
-      assert.match(blocked.stdout, /Skipped:/);
-      assert.match(blocked.stdout, /Nothing new to install/);
+      assert.match(blocked.stdout, /Skipped/);
+      assert.match(blocked.stdout, /Use --force to overwrite/);
       assert.equal(
         await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
         "// local modification\n",
@@ -1811,7 +1812,7 @@ describe("vinyaas add", { concurrency: false }, () => {
       });
 
       assert.equal(result.exitCode, 0);
-      assert.match(result.stdout, /Added button\./);
+      assert.match(result.stdout, /✓ Added components/);
       assert.equal(
         await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
         buttonContent,
@@ -1830,9 +1831,9 @@ describe("vinyaas add", { concurrency: false }, () => {
       });
 
       assert.equal(again.exitCode, 0);
-      assert.match(again.stdout, /Skipped:/);
-      assert.match(again.stdout, /- button/);
-      assert.match(again.stdout, /Nothing new to install/);
+      assert.match(again.stdout, /Skipped/);
+      assert.match(again.stdout, /• button \(already exists\)/);
+      assert.match(again.stdout, /Use --force to overwrite/);
       assert.equal(
         await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
         buttonContent,

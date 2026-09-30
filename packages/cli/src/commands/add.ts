@@ -8,17 +8,19 @@ import {
   type ComponentsConfig,
 } from "../../../../config/components.ts";
 
+import { formatAddSummary, formatDryRunSummary } from "../lib/add/format.ts";
 import { CliError } from "../lib/cli-error.ts";
 import { createCssUpdate } from "../lib/css/plan.ts";
 import type { CssUpdate } from "../lib/css/types.ts";
 import {
   classifyDependencies,
-  formatDeclaredDependencies,
   readDeclaredDependencies,
   type DependencyInstallPlan,
 } from "../lib/dependencies/classify.ts";
 import { createDocsPlan, formatDocsPlan } from "../lib/docs/plan.ts";
+import type { DocsPlan } from "../lib/docs/types.ts";
 import { createEnvPlan, formatEnvPlan } from "../lib/env/plan.ts";
+import type { EnvInstallPlan } from "../lib/env/types.ts";
 import {
   classifyExistingItems,
   createInstallPlan,
@@ -56,6 +58,10 @@ export function registerAddCommand(program: Command): void {
       "--force",
       "Overwrite existing component files instead of skipping them.",
     )
+    .option(
+      "--dry-run",
+      "Resolve the install plan and print it without writing files or installing packages.",
+    )
     .addHelpText(
       "after",
       [
@@ -64,18 +70,23 @@ export function registerAddCommand(program: Command): void {
         "  $ vinyaas add button",
         "  $ vinyaas add button card dialog",
         "  $ vinyaas add button --force",
+        "  $ vinyaas add button card --dry-run",
         "",
         "Already-installed components are skipped unless --force is set.",
       ].join("\n"),
     )
     .action(
-      async (name: string[], options: { cwd?: string; force?: boolean }) => {
+      async (
+        name: string[],
+        options: { cwd?: string; force?: boolean; dryRun?: boolean },
+      ) => {
         try {
           const plan = await executeAdd({
             name: name[0] ?? "",
             names: name,
             cwd: options.cwd,
             force: options.force === true,
+            dryRun: options.dryRun === true,
             env: process.env,
           });
 
@@ -105,11 +116,23 @@ interface AddMutations {
   writeCss?: (cwd: string, update: CssUpdate) => Promise<void>;
 }
 
+interface ResolvedAdd {
+  plan: InstallPlan;
+  itemsToInstall: readonly RegistryItem[];
+  dependencyInstall: DependencyInstallPlan;
+  cssUpdate: CssUpdate;
+  envPlan: EnvInstallPlan;
+  docsPlan: DocsPlan;
+  requested: readonly string[];
+  registryDependencies: readonly string[];
+}
+
 export async function executeAdd({
   name,
   names,
   cwd,
   force = false,
+  dryRun = false,
   from = process.cwd(),
   env = process.env,
   fetch: fetchImpl,
@@ -120,6 +143,7 @@ export async function executeAdd({
   names?: readonly string[];
   cwd?: string;
   force?: boolean;
+  dryRun?: boolean;
   from?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
@@ -131,6 +155,7 @@ export async function executeAdd({
     name,
     ...(names ? { names } : {}),
     force,
+    dryRun,
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
     ...(runPackageManager ? { runPackageManager } : {}),
@@ -143,6 +168,7 @@ export async function runAdd({
   name,
   names,
   force = false,
+  dryRun = false,
   env = process.env,
   fetch: fetchImpl,
   runPackageManager,
@@ -152,11 +178,118 @@ export async function runAdd({
   name: string;
   names?: readonly string[];
   force?: boolean;
+  dryRun?: boolean;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
   runPackageManager?: RunPackageManager;
   mutations?: AddMutations;
 }): Promise<InstallPlan> {
+  const resolved = await resolveAdd({
+    cwd,
+    name,
+    ...(names ? { names } : {}),
+    force,
+    env,
+    ...(fetchImpl ? { fetch: fetchImpl } : {}),
+  });
+
+  if (dryRun) {
+    console.log(
+      formatDryRunSummary({
+        plan: resolved.plan,
+        dependencyInstall: resolved.dependencyInstall,
+        requested: resolved.requested,
+        registryDependencies: resolved.registryDependencies,
+      }),
+    );
+    return resolved.plan;
+  }
+
+  if (resolved.plan.entries.length === 0) {
+    console.log(
+      formatAddSummary({
+        plan: resolved.plan,
+        dependencyInstall: resolved.dependencyInstall,
+        requested: resolved.requested,
+        registryDependencies: resolved.registryDependencies,
+      }),
+    );
+    return resolved.plan;
+  }
+
+  const needsInstall =
+    resolved.dependencyInstall.installDependencies.length > 0 ||
+    resolved.dependencyInstall.installDevDependencies.length > 0;
+  const detected = needsInstall ? await findPackageManager(cwd) : undefined;
+  const snapshot = await (mutations?.snapshotFiles ?? snapshotFiles)(cwd, [
+    ...(detected ? ["package.json", detected.lockfile] : []),
+    ...resolved.plan.entries.map((entry) => entry.destinationPath),
+    ...(resolved.cssUpdate.changed ? [resolved.cssUpdate.relativePath] : []),
+  ]);
+
+  try {
+    if (detected) {
+      await installDependencies({
+        cwd,
+        manager: detected.manager,
+        dependencies: resolved.dependencyInstall.installDependencies,
+        devDependencies: resolved.dependencyInstall.installDevDependencies,
+        env,
+        ...(runPackageManager ? { run: runPackageManager } : {}),
+      });
+    }
+
+    await (mutations?.writeComponents ?? writeInstallPlan)(cwd, resolved.plan);
+    await (mutations?.writeCss ?? writeCssUpdate)(cwd, resolved.cssUpdate);
+  } catch (error) {
+    await rollbackMutation(cwd, snapshot, error, mutations?.restoreFiles);
+  }
+
+  console.log(
+    formatAddSummary({
+      plan: resolved.plan,
+      dependencyInstall: resolved.dependencyInstall,
+      requested: resolved.requested,
+      registryDependencies: resolved.registryDependencies,
+    }),
+  );
+
+  const envReport = formatEnvPlan(resolved.envPlan);
+
+  if (envReport) {
+    console.log("");
+    console.log(envReport);
+  }
+
+  const docsReport = formatDocsPlan(resolved.docsPlan);
+
+  if (docsReport) {
+    console.log("");
+    console.log(docsReport);
+  }
+
+  return resolved.plan;
+}
+
+/**
+ * Shared resolution used by both real installs and `--dry-run`.
+ * Performs registry/network and disk reads only — no writes.
+ */
+export async function resolveAdd({
+  cwd,
+  name,
+  names,
+  force = false,
+  env = process.env,
+  fetch: fetchImpl,
+}: {
+  cwd: string;
+  name: string;
+  names?: readonly string[];
+  force?: boolean;
+  env?: Record<string, string | undefined>;
+  fetch?: typeof fetch;
+}): Promise<ResolvedAdd> {
   const requested = uniqueNames(names && names.length > 0 ? names : [name]);
   const config = await readComponentsConfig(cwd);
   const resolved = await resolveRegistryGraph({
@@ -224,57 +357,21 @@ export async function runAdd({
     plan,
     await readDeclaredDependencies(cwd),
   );
+  const requestedSet = new Set(requested);
+  const registryDependencies = plan.items.filter(
+    (itemName) => !requestedSet.has(itemName),
+  );
 
-  if (plan.entries.length === 0) {
-    console.log(formatAdded(plan, dependencyInstall, requested));
-    return plan;
-  }
-
-  const needsInstall =
-    dependencyInstall.installDependencies.length > 0 ||
-    dependencyInstall.installDevDependencies.length > 0;
-  const detected = needsInstall ? await findPackageManager(cwd) : undefined;
-  const snapshot = await (mutations?.snapshotFiles ?? snapshotFiles)(cwd, [
-    ...(detected ? ["package.json", detected.lockfile] : []),
-    ...plan.entries.map((entry) => entry.destinationPath),
-    ...(cssUpdate.changed ? [cssUpdate.relativePath] : []),
-  ]);
-
-  try {
-    if (detected) {
-      await installDependencies({
-        cwd,
-        manager: detected.manager,
-        dependencies: dependencyInstall.installDependencies,
-        devDependencies: dependencyInstall.installDevDependencies,
-        env,
-        ...(runPackageManager ? { run: runPackageManager } : {}),
-      });
-    }
-
-    await (mutations?.writeComponents ?? writeInstallPlan)(cwd, plan);
-    await (mutations?.writeCss ?? writeCssUpdate)(cwd, cssUpdate);
-  } catch (error) {
-    await rollbackMutation(cwd, snapshot, error, mutations?.restoreFiles);
-  }
-
-  console.log(formatAdded(plan, dependencyInstall, requested));
-
-  const envReport = formatEnvPlan(envPlan);
-
-  if (envReport) {
-    console.log("");
-    console.log(envReport);
-  }
-
-  const docsReport = formatDocsPlan(docsPlan);
-
-  if (docsReport) {
-    console.log("");
-    console.log(docsReport);
-  }
-
-  return plan;
+  return {
+    plan,
+    itemsToInstall,
+    dependencyInstall,
+    cssUpdate,
+    envPlan,
+    docsPlan,
+    requested,
+    registryDependencies,
+  };
 }
 
 /**
@@ -377,104 +474,6 @@ async function writeCssUpdate(cwd: string, update: CssUpdate): Promise<void> {
   }
 
   await writeFile(path.resolve(cwd, update.relativePath), update.next, "utf8");
-}
-
-function formatAdded(
-  plan: InstallPlan,
-  dependencyInstall: DependencyInstallPlan,
-  requested: readonly string[],
-): string {
-  const installedRequested = requested.filter(
-    (component) =>
-      !plan.skipped.includes(component) && !plan.failed.includes(component),
-  );
-  const lines: string[] = [];
-
-  if (installedRequested.length > 0) {
-    if (
-      installedRequested.length === 1 &&
-      plan.skipped.length === 0 &&
-      plan.failed.length === 0
-    ) {
-      lines.push(`Added ${installedRequested[0]}.`);
-    } else {
-      lines.push(
-        "Installed:",
-        ...installedRequested.map((name) => `- ${name}`),
-      );
-    }
-  }
-
-  if (plan.skipped.length > 0) {
-    if (lines.length > 0) {
-      lines.push("");
-    }
-
-    lines.push(
-      "Skipped:",
-      ...plan.skipped.map((name) => `- ${name} — already installed`),
-    );
-  }
-
-  if (plan.failed.length > 0) {
-    if (lines.length > 0) {
-      lines.push("");
-    }
-
-    lines.push(
-      "Failed:",
-      ...plan.failed.map((name) => `- ${name} — not found`),
-    );
-  }
-
-  if (
-    installedRequested.length === 0 &&
-    plan.entries.length === 0 &&
-    plan.skipped.length > 0 &&
-    plan.failed.length === 0
-  ) {
-    if (lines.length > 0) {
-      lines.push("");
-    }
-
-    lines.push("Nothing new to install.");
-  }
-
-  if (plan.entries.length > 0) {
-    lines.push(
-      "",
-      "Files:",
-      ...plan.entries.map((entry) => `  ${entry.destinationPath}`),
-    );
-  }
-
-  if (dependencyInstall.installDependencies.length > 0) {
-    lines.push(
-      "",
-      "Installed dependencies:",
-      ...dependencyInstall.installDependencies.map(
-        (dependency) => `  ${dependency}`,
-      ),
-    );
-  }
-
-  if (dependencyInstall.installDevDependencies.length > 0) {
-    lines.push(
-      "",
-      "Installed devDependencies:",
-      ...dependencyInstall.installDevDependencies.map(
-        (dependency) => `  ${dependency}`,
-      ),
-    );
-  }
-
-  const declared = formatDeclaredDependencies(dependencyInstall.present);
-
-  if (declared) {
-    lines.push("", declared);
-  }
-
-  return lines.join("\n");
 }
 
 async function unknownComponentsWithSuggestions(

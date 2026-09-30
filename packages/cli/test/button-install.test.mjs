@@ -181,7 +181,7 @@ describe("installable button registry", () => {
           await readFile(join(cwd, "package.json"), "utf8"),
         );
 
-        assert.match(output, /Added button/);
+        assert.match(output, /✓ Added components/);
         assert.match(button, /from "@\/lib\/utils"/);
         assert.match(utils, /export function cn/);
         assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
