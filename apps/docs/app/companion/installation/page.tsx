@@ -35,7 +35,7 @@ export default function CompanionInstallationPage() {
         <p className={body}>
           Companion installation through the CLI is{" "}
           <strong>not available yet</strong>. Built-in companions such as Ember,
-          Soul, and Skeleton are showcased in the docs today. Use the{" "}
+          Soul, and Moss are showcased in the docs today. Use the{" "}
           <Link href={companionPath} className={linkClass}>
             Companions
           </Link>{" "}

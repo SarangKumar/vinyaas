@@ -40,7 +40,8 @@ describe("homepage", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Ember" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Soul" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Skeleton" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Moss" })).toBeInTheDocument();
+    expect(screen.queryByRole("img", { name: "Skeleton" })).toBeNull();
     expect(document.querySelector("[data-companion-showcase]")).toBeTruthy();
 
     const playground = document.querySelector("[data-playground]");

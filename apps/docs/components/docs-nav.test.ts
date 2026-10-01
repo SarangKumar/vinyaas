@@ -70,20 +70,21 @@ describe("documentation navigation", () => {
     );
     expect(sections?.every((item) => !item.children?.length)).toBe(true);
 
-    const companion = docsNav[1]?.items;
-    expect(companion?.map((item) => item.title)).toEqual([
+    const companion = docsNav[1];
+    expect(companion?.items[0]?.indicator).toBe("beta");
+    expect(companion?.items.map((item) => item.title)).toEqual([
       "Introduction",
       "Installation",
       "companion.json",
       "Custom Companion",
     ]);
-    expect(companion?.map((item) => item.href)).toEqual([
+    expect(companion?.items.map((item) => item.href)).toEqual([
       "/companion",
       "/companion/installation",
       "/companion/configuration",
       "/companion/custom",
     ]);
-    expect(companion?.every((item) => !item.children?.length)).toBe(true);
+    expect(companion?.items.every((item) => !item.children?.length)).toBe(true);
 
     const getStarted = docsNav[3]?.items;
     expect(getStarted?.map((item) => item.title)).toEqual([

@@ -13,7 +13,7 @@ function renderWithStore(ui: React.ReactElement) {
 }
 
 describe("Companion landing page", () => {
-  it("showcases Ember, Soul, and Skeleton as a product feature area", () => {
+  it("showcases Ember, Soul, and Moss as a product feature area", () => {
     renderWithStore(<CompanionPage />);
 
     expect(
@@ -24,14 +24,16 @@ describe("Companion landing page", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Ember" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Soul" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Skeleton" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Moss" })).toBeInTheDocument();
+    expect(screen.queryByRole("img", { name: "Skeleton" })).toBeNull();
     expect(
       screen.getByRole("heading", { name: "Ember" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Soul" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Skeleton" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Moss" })).toBeInTheDocument();
+    expect(document.querySelector("[data-companion-card-grid]")?.className).toContain(
+      "sm:grid-cols-2",
+    );
     expect(
       screen.getByRole("link", { name: "Installation" }),
     ).toHaveAttribute("href", "/companion/installation");

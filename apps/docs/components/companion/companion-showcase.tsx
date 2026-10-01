@@ -32,14 +32,12 @@ export function CompanionShowcase() {
         Tiny customizable companions that bring your workspace to life.
       </p>
 
-      <div className="mt-8 grid w-full max-w-3xl gap-4 sm:grid-cols-3">
+      <div
+        data-companion-card-grid
+        className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-2 sm:grid-cols-2"
+      >
         {companionCatalog.map((entry) => (
-          <CompanionCard
-            key={entry.meta.id}
-            meta={entry.meta}
-            src={entry.idle}
-            size={96}
-          />
+          <CompanionCard key={entry.meta.id} entry={entry} size={112} />
         ))}
       </div>
 

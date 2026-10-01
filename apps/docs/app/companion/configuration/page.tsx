@@ -63,11 +63,13 @@ export default function CompanionConfigurationPage() {
           </li>
           <li>
             <code>interactions</code> — metadata for possible behaviors (idle,
-            wave, sleep, and more). Descriptions only; no runtime yet.
+            fall, wave, sleep, and more).
           </li>
           <li>
-            <code>assets</code> / <code>animations</code> — relative paths to
-            sprite files and frame sequences.
+            <code>assets</code> / <code>animations</code> — sprite paths and
+            clips such as <code>idle</code> / <code>fall</code> with{" "}
+            <code>frames</code> (and optional <code>fps</code>). Idle plays
+            automatically; fall plays while dropping.
           </li>
         </ul>
       </section>

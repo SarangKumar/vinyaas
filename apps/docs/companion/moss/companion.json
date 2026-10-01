@@ -1,0 +1,54 @@
+{
+  "id": "moss",
+  "name": "Moss",
+  "type": "frog",
+  "description": "A tiny leafy frog buddy.",
+  "personalityTraits": ["chill", "curious", "loyal"],
+  "capabilities": {
+    "floating": false,
+    "followCursor": false,
+    "reactToClick": true
+  },
+  "interactions": [
+    { "id": "idle", "description": "Breathes and blinks softly" },
+    { "id": "blink", "description": "Blinks big froggy eyes" },
+    { "id": "wave", "description": "Waves a tiny arm" },
+    { "id": "jump", "description": "Hops with a happy bounce" },
+    { "id": "dance", "description": "Does a silly hop-dance" },
+    { "id": "spin", "description": "Spins with a dizzy grin" },
+    { "id": "sleep", "description": "Naps in a little curl" },
+    { "id": "wake", "description": "Wakes with a stretch" },
+    { "id": "celebrate", "description": "Hops higher in delight" },
+    { "id": "follow-cursor", "description": "Can trail the cursor later" },
+    { "id": "hide", "description": "Tucks into a leaf ball" },
+    { "id": "peek", "description": "Peeks out from hiding" },
+    { "id": "shake", "description": "Shivers with a giggle" },
+    { "id": "glow", "description": "Cheeks glow softly" },
+    { "id": "react-click", "description": "Reacts when clicked" },
+    { "id": "surprise", "description": "Jumps in surprise" },
+    { "id": "fall", "description": "Falls after being dropped" }
+  ],
+  "assets": {
+    "idle": "assets/idle.png"
+  },
+  "animations": {
+    "idle": {
+      "frames": [
+        "animations/idle/1.png",
+        "animations/idle/2.png",
+        "animations/idle/3.png"
+      ],
+      "fps": 5
+    },
+    "happy": {
+      "frames": ["animations/happy/1.png", "animations/happy/2.png"]
+    },
+    "sleep": {
+      "frames": ["animations/sleep/1.png", "animations/sleep/2.png"]
+    },
+    "fall": {
+      "frames": ["animations/fall/1.png", "animations/fall/2.png"],
+      "fps": 8
+    }
+  }
+}

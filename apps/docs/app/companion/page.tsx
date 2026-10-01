@@ -40,14 +40,12 @@ export default function CompanionPage() {
           interaction definitions. The runtime and install CLI are still ahead —
           this page is the product showcase.
         </p>
-        <div className="mt-2 grid gap-4 sm:grid-cols-2">
+        <div
+          data-companion-card-grid
+          className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2"
+        >
           {companionCatalog.map((entry) => (
-            <CompanionCard
-              key={entry.meta.id}
-              meta={entry.meta}
-              src={entry.idle}
-              size={100}
-            />
+            <CompanionCard key={entry.meta.id} entry={entry} size={128} />
           ))}
         </div>
       </section>

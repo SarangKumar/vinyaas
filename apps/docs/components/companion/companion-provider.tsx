@@ -11,17 +11,28 @@ import {
 import { CompanionHost } from "@/components/companion/companion-host";
 import { companionCatalog } from "@/components/companion/catalog";
 
+export type CompanionPosition = {
+  /** Distance from the left viewport edge in CSS pixels. */
+  x: number;
+  /** Distance from the top viewport edge in CSS pixels. */
+  y: number;
+};
+
 export type CompanionInstanceState = {
   /** Stable id for this website session instance. */
   instanceId: string;
   companionId: string;
-  /** Placeholder for a future free-positioned companion. */
-  position: { x: number | null; y: number | null };
+  /**
+   * Absolute fixed position. `null` uses the default bottom-right placement
+   * until the user drags the companion.
+   */
+  position: CompanionPosition | null;
 };
 
 type CompanionContextValue = {
   instance: CompanionInstanceState;
   setCompanionId: (companionId: string) => void;
+  setPosition: (position: CompanionPosition) => void;
 };
 
 const CompanionContext = createContext<CompanionContextValue | null>(null);
@@ -42,7 +53,7 @@ export function CompanionProvider({ children }: { children: ReactNode }) {
   const [instance, setInstance] = useState<CompanionInstanceState>(() => ({
     instanceId: createInstanceId(),
     companionId: companionCatalog[0]?.meta.id ?? "ember",
-    position: { x: null, y: null },
+    position: null,
   }));
 
   const value = useMemo<CompanionContextValue>(
@@ -54,6 +65,9 @@ export function CompanionProvider({ children }: { children: ReactNode }) {
             ? current
             : { ...current, companionId },
         );
+      },
+      setPosition: (position: CompanionPosition) => {
+        setInstance((current) => ({ ...current, position }));
       },
     }),
     [instance],
@@ -71,7 +85,9 @@ export function useCompanionInstance(): CompanionContextValue {
   const context = useContext(CompanionContext);
 
   if (!context) {
-    throw new Error("useCompanionInstance must be used within CompanionProvider.");
+    throw new Error(
+      "useCompanionInstance must be used within CompanionProvider.",
+    );
   }
 
   return context;

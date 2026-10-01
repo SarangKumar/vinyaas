@@ -74,7 +74,7 @@ const pages: SearchPage[] = [
     title: "Companions",
     href: "/companion",
     description:
-      "Meet Ember, Soul, and Skeleton — tiny Vinyaas companions separate from UI components.",
+      "Meet Ember, Soul, and Moss — tiny Vinyaas companions separate from UI components.",
     group: "Getting Started",
   },
   {

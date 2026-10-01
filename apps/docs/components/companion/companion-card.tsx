@@ -1,52 +1,38 @@
-import { CompanionPreview } from "@/components/companion/companion-preview";
-import {
-  summarizeCapabilities,
-  type CompanionMeta,
-} from "@/components/companion/catalog";
-import type { StaticImageData } from "next/image";
+"use client";
+
+import { CompanionSprite } from "@/components/companion/companion-sprite";
+import type { CompanionCatalogEntry } from "@/components/companion/catalog";
 
 type CompanionCardProps = {
-  meta: CompanionMeta;
-  src: StaticImageData;
+  entry: CompanionCatalogEntry;
   size?: number;
 };
 
 /**
- * Showcase card for one companion species.
- * Presentational only — reads metadata, does not run companion logic.
+ * Minimal character-select showcase for one companion species.
  */
-export function CompanionCard({ meta, src, size = 120 }: CompanionCardProps) {
-  const capabilities = summarizeCapabilities(meta.capabilities);
-  const interactionCount = meta.interactions?.length ?? 0;
+export function CompanionCard({ entry, size = 128 }: CompanionCardProps) {
+  const interactionCount = entry.meta.interactions?.length ?? 0;
 
   return (
     <article
-      data-companion-card={meta.id}
-      className="border-border bg-muted/30 flex flex-col items-center gap-2 rounded-[var(--radius)] border px-6 py-8 text-center"
+      data-companion-card={entry.meta.id}
+      className="hover:bg-muted/40 flex flex-col items-center gap-4 rounded-[var(--radius)] px-6 py-10 text-center transition-colors"
     >
-      <CompanionPreview name={meta.name} src={src} size={size} />
-      <div className="flex flex-col gap-2">
+      <CompanionSprite
+        name={entry.meta.name}
+        frames={entry.clips.idle.frames}
+        fps={entry.clips.idle.fps}
+        size={size}
+      />
+      <div className="flex flex-col gap-1">
         <h3 className="text-foreground text-lg font-medium tracking-tight">
-          {meta.name}
+          {entry.meta.name}
         </h3>
-        <p className="text-muted-foreground text-sm leading-6">
-          {meta.description}
+        <p className="text-muted-foreground text-sm leading-5">
+          {interactionCount} interactions
         </p>
       </div>
-      <ul className="text-muted-foreground flex flex-wrap justify-center gap-2 text-xs">
-        {meta.personalityTraits.map((trait) => (
-          <li
-            key={trait}
-            className="border-border bg-background rounded-md border px-2 py-1"
-          >
-            {trait}
-          </li>
-        ))}
-      </ul>
-      <p className="text-muted-foreground text-xs leading-5">
-        {interactionCount} interactions
-        {capabilities.length > 0 ? ` · ${capabilities.join(" · ")}` : ""}
-      </p>
     </article>
   );
 }

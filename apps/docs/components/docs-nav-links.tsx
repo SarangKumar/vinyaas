@@ -6,6 +6,17 @@ import { usePathname } from "next/navigation";
 import { docsNav, type DocsNavItem } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 
+function BetaDot() {
+  return (
+    <span
+      data-nav-indicator="beta"
+      className="bg-muted-foreground size-1.5 shrink-0 rounded-full"
+      aria-label="Beta"
+      title="Beta"
+    />
+  );
+}
+
 function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
   return (
     <Link
@@ -13,11 +24,12 @@ function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
       aria-current={current ? "page" : undefined}
       className={
         current
-          ? `bg-muted text-foreground flex min-h-9 cursor-pointer items-center rounded-md px-2 py-2 text-sm font-medium ${focusRing}`
-          : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex min-h-9 cursor-pointer items-center rounded-md px-2 py-2 text-sm ${focusRing}`
+          ? `bg-muted text-foreground flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 text-sm font-medium ${focusRing}`
+          : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 text-sm ${focusRing}`
       }
     >
       <span className="min-w-0 truncate">{item.title}</span>
+      {item.indicator === "beta" ? <BetaDot /> : null}
     </Link>
   );
 }

@@ -100,6 +100,11 @@ describe("DocsShell", () => {
       within(start).getByRole("link", { name: "Companion" }),
     ).toHaveAttribute("href", "/companion");
     expect(
+      within(start)
+        .getByRole("link", { name: "Companion" })
+        .querySelector('[data-nav-indicator="beta"]'),
+    ).toBeNull();
+    expect(
       within(start).getByRole("link", { name: "Installation" }),
     ).toHaveAttribute("href", "/installation");
     expect(within(start).getByRole("link", { name: "Themes" })).toHaveAttribute(

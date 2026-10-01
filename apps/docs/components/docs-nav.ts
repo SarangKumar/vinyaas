@@ -52,6 +52,8 @@ export type DocsNavItem = {
   title: string;
   href: string;
   description?: string;
+  /** Subtle status mark (e.g. beta). */
+  indicator?: "beta";
   /** Nested links. Prefer flat items — avoid third-level nesting. */
   children?: DocsNavItem[];
 };
@@ -90,7 +92,7 @@ export const docsNav: DocsNavGroup[] = [
     title: "COMPANION",
     label: true,
     items: [
-      { title: "Introduction", href: companionPath },
+      { title: "Introduction", href: companionPath, indicator: "beta" },
       { title: "Installation", href: companionInstallationPath },
       { title: "companion.json", href: companionJsonPath },
       { title: "Custom Companion", href: companionCustomPath },

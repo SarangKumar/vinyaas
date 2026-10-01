@@ -63,8 +63,13 @@ describe("DocsMobileNav", () => {
       screen.getByRole("link", { name: "Custom Companion" }),
     ).toHaveAttribute("href", "/companion/custom");
     expect(
-      screen.getAllByRole("link", { name: "Introduction" })[1],
+      screen.getAllByRole("link", { name: /Introduction/i })[1],
     ).toHaveAttribute("href", "/companion");
+    expect(
+      screen
+        .getAllByRole("link", { name: /Introduction/i })[1]
+        ?.querySelector('[data-nav-indicator="beta"]'),
+    ).toBeTruthy();
     expect(screen.getByRole("link", { name: "Changelog" })).toHaveAttribute(
       "href",
       "/changelog",

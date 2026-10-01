@@ -25,14 +25,30 @@
     { "id": "shake", "description": "Shivers with excitement" },
     { "id": "glow", "description": "Glows warmer for a moment" },
     { "id": "react-click", "description": "Reacts when clicked" },
-    { "id": "surprise", "description": "Pops up in surprise" }
+    { "id": "surprise", "description": "Pops up in surprise" },
+    { "id": "fall", "description": "Falls after being dropped" }
   ],
   "assets": {
     "idle": "assets/idle.png"
   },
   "animations": {
-    "idle": ["animations/idle/1.png", "animations/idle/2.png", "animations/idle/3.png"],
-    "happy": ["animations/happy/1.png", "animations/happy/2.png"],
-    "sleep": ["animations/sleep/1.png", "animations/sleep/2.png"]
+    "idle": {
+      "frames": [
+        "animations/idle/1.png",
+        "animations/idle/2.png",
+        "animations/idle/3.png"
+      ],
+      "fps": 5
+    },
+    "happy": {
+      "frames": ["animations/happy/1.png", "animations/happy/2.png"]
+    },
+    "sleep": {
+      "frames": ["animations/sleep/1.png", "animations/sleep/2.png"]
+    },
+    "fall": {
+      "frames": ["animations/fall/1.png", "animations/fall/2.png"],
+      "fps": 8
+    }
   }
 }

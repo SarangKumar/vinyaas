@@ -48,8 +48,18 @@ describe("DocsNavLinks", () => {
       "Custom Companion",
     ]);
     expect(
-      within(nav).getAllByRole("link", { name: "Introduction" })[1],
+      within(nav).getAllByRole("link", { name: /Introduction/i })[1],
     ).toHaveAttribute("href", "/companion");
+    expect(
+      within(nav)
+        .getAllByRole("link", { name: /Introduction/i })[1]
+        ?.querySelector('[data-nav-indicator="beta"]'),
+    ).toBeTruthy();
+    expect(
+      within(nav).getByText("COMPANION").querySelector(
+        '[data-nav-indicator="beta"]',
+      ),
+    ).toBeNull();
     expect(
       within(nav).getAllByRole("link", { name: "Installation" })[1],
     ).toHaveAttribute("href", "/companion/installation");

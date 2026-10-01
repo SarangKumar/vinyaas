@@ -4,8 +4,10 @@ type CompanionPreviewProps = {
   name: string;
   src: StaticImageData;
   alt?: string;
-  /** Display size in CSS pixels. Source sprites stay 32×32. */
+  /** Display size in CSS pixels. Source sprites stay pixel-art (50×50+). */
   size?: number;
+  /** Soft float used in showcase cards; off for the live host. */
+  floating?: boolean;
   className?: string;
 };
 
@@ -18,6 +20,7 @@ export function CompanionPreview({
   src,
   alt,
   size = 96,
+  floating = true,
   className,
 }: CompanionPreviewProps) {
   return (
@@ -28,7 +31,12 @@ export function CompanionPreview({
         .join(" ")}
     >
       <div
-        className="vinyaas-companion-float flex items-center justify-center"
+        className={[
+          "flex items-center justify-center",
+          floating ? "vinyaas-companion-float" : undefined,
+        ]
+          .filter(Boolean)
+          .join(" ")}
         style={{ width: size, height: size }}
       >
         <Image
