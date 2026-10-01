@@ -103,7 +103,7 @@ try {
     join(fixture, "components.json"),
     `${JSON.stringify(
       {
-        $schema: `${baseUrl}/schema/components.json`,
+        $schema: `${baseUrl}/r/schema/components.json`,
         style: "new-york",
         tsx: true,
         tailwind: {

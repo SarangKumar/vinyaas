@@ -1,5 +1,5 @@
 {
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "checkbox",
   "type": "registry:ui",
   "description": "A native checkbox for selecting one or more options.",
@@ -10,5 +10,7 @@
       "content": "\"use client\";\n\nimport React, { useEffect, useRef } from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type CheckboxProps = React.ComponentProps<\"input\"> & {\n  indeterminate?: boolean;\n};\n\nexport function Checkbox({\n  className,\n  ref,\n  indeterminate,\n  ...props\n}: CheckboxProps) {\n  const inputRef = useRef<HTMLInputElement>(null);\n\n  useEffect(() => {\n    if (inputRef.current) {\n      inputRef.current.indeterminate = Boolean(indeterminate);\n    }\n  }, [indeterminate]);\n\n  return (\n    <span className=\"relative inline-flex size-4 shrink-0\">\n      <input\n        {...props}\n        ref={(node) => {\n          inputRef.current = node;\n\n          if (typeof ref === \"function\") {\n            ref(node);\n          } else if (ref) {\n            ref.current = node;\n          }\n        }}\n        type=\"checkbox\"\n        className={cn(\n          \"peer border-input bg-background accent-primary checked:border-primary checked:bg-primary indeterminate:border-primary indeterminate:bg-primary focus-visible:border-primary focus-visible:ring-ring focus-visible:ring-offset-background size-4 cursor-pointer appearance-none rounded-lg border focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50\",\n          className,\n        )}\n      />\n      <svg\n        viewBox=\"0 0 16 16\"\n        aria-hidden=\"true\"\n        className=\"text-primary-foreground pointer-events-none absolute inset-0 opacity-0 peer-checked:opacity-100 peer-indeterminate:opacity-0\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2\"\n      >\n        <path d=\"M3.5 8.5 6.5 11.5 12.5 4.5\" />\n      </svg>\n      <span\n        aria-hidden=\"true\"\n        className=\"bg-primary-foreground pointer-events-none absolute top-1/2 left-1/2 h-px w-2 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-indeterminate:opacity-100\"\n      />\n    </span>\n  );\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/checkbox",
+  "category": "forms"
 }

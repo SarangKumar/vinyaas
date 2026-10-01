@@ -5,22 +5,31 @@ import { usePathname } from "next/navigation";
 
 import { docsNav, type DocsNavItem } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
-import { NewIndicator } from "@/components/new-indicator";
+
+function BetaDot() {
+  return (
+    <span
+      data-nav-indicator="beta"
+      className="bg-muted-foreground size-1.5 shrink-0 rounded-full"
+      aria-label="Beta"
+      title="Beta"
+    />
+  );
+}
 
 function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
   return (
     <Link
       href={item.href}
       aria-current={current ? "page" : undefined}
-      aria-label={item.isNew ? `${item.title}, new` : undefined}
       className={
         current
-          ? `bg-muted text-foreground flex min-h-9 cursor-pointer items-center rounded-md px-2 py-2 text-sm font-medium ${focusRing}`
-          : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex min-h-9 cursor-pointer items-center rounded-md px-2 py-2 text-sm ${focusRing}`
+          ? `bg-muted text-foreground flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 text-sm font-medium ${focusRing}`
+          : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 text-sm ${focusRing}`
       }
     >
       <span className="min-w-0 truncate">{item.title}</span>
-      {item.isNew ? <NewIndicator /> : null}
+      {item.indicator === "beta" ? <BetaDot /> : null}
     </Link>
   );
 }
@@ -63,6 +72,18 @@ export function DocsNavLinks({ className }: { className?: string }) {
                 className={group.label ? "pl-2" : undefined}
               >
                 <NavLink item={item} current={isCurrent(pathname, item.href)} />
+                {item.children && item.children.length > 0 ? (
+                  <ul className="border-border mt-0.5 ml-2 flex flex-col gap-0.5 border-l pl-2">
+                    {item.children.map((child) => (
+                      <li key={child.href}>
+                        <NavLink
+                          item={child}
+                          current={isCurrent(pathname, child.href)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </li>
             ))}
           </ul>

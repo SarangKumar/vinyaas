@@ -115,6 +115,7 @@ async function add(cwd, names, { fetch, force = false, runPackageManager }) {
       name: names[0],
       names,
       force,
+      yes: true,
       env: { REGISTRY_BASE_URL: "http://localhost:3000" },
       fetch,
       runPackageManager:
@@ -145,7 +146,7 @@ describe("vinyaas add multiple components", () => {
     const registry = fetchCatalog(catalog);
     const { stdout, plan } = await add(cwd, ["button"], registry);
 
-    assert.match(stdout, /^Added button\./);
+    assert.match(stdout, /✓ Added components/);
     assert.doesNotMatch(stdout, /Installed \d+ components/);
     assert.equal(plan.name, "button");
     assert.deepEqual(plan.items, ["card", "button"]);
@@ -161,9 +162,9 @@ describe("vinyaas add multiple components", () => {
     const registry = fetchCatalog(catalog);
     const { stdout, plan } = await add(cwd, ["button", "badge"], registry);
 
-    assert.match(stdout, /Installed:/);
-    assert.match(stdout, /- button/);
-    assert.match(stdout, /- badge/);
+    assert.match(stdout, /Installed/);
+    assert.match(stdout, /✓ button/);
+    assert.match(stdout, /✓ badge/);
     assert.ok(
       plan.entries.some((entry) => entry.destinationPath.includes("badge")),
     );
@@ -180,10 +181,10 @@ describe("vinyaas add multiple components", () => {
       registry,
     );
 
-    assert.match(stdout, /Installed:/);
-    assert.match(stdout, /- button/);
-    assert.match(stdout, /- card/);
-    assert.match(stdout, /- badge/);
+    assert.match(stdout, /Installed/);
+    assert.match(stdout, /✓ button/);
+    assert.match(stdout, /✓ card/);
+    assert.match(stdout, /✓ badge/);
     assert.deepEqual(
       plan.items
         .filter((name) => ["button", "card", "badge"].includes(name))
@@ -228,11 +229,11 @@ describe("vinyaas add multiple components", () => {
       registry,
     );
 
-    assert.match(stdout, /Installed:/);
-    assert.match(stdout, /- button/);
-    assert.match(stdout, /- card/);
-    assert.match(stdout, /Failed:/);
-    assert.match(stdout, /- does-not-exist — not found/);
+    assert.match(stdout, /Installed/);
+    assert.match(stdout, /✓ button/);
+    assert.match(stdout, /✓ card/);
+    assert.match(stdout, /Failed/);
+    assert.match(stdout, /• does-not-exist \(not found\)/);
     assert.deepEqual(plan.failed, ["does-not-exist"]);
     await access(join(cwd, "components/ui/button/index.tsx"));
     await access(join(cwd, "components/ui/card/index.tsx"));
@@ -245,10 +246,10 @@ describe("vinyaas add multiple components", () => {
     const registry = fetchCatalog(catalog);
     const { stdout, plan, calls } = await add(cwd, ["button", "card"], registry);
 
-    assert.match(stdout, /Installed:/);
-    assert.match(stdout, /- card/);
-    assert.match(stdout, /Skipped:/);
-    assert.match(stdout, /- button — already installed/);
+    assert.match(stdout, /Installed/);
+    assert.match(stdout, /✓ card/);
+    assert.match(stdout, /Skipped/);
+    assert.match(stdout, /• button \(already exists\)/);
     assert.deepEqual(plan.skipped, ["button"]);
     assert.equal(
       await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),
@@ -290,13 +291,13 @@ describe("vinyaas add multiple components", () => {
       registry,
     );
 
-    assert.match(stdout, /Skipped:/);
-    assert.match(stdout, /- button — already installed/);
-    assert.match(stdout, /- card — already installed/);
-    assert.match(stdout, /- badge — already installed/);
-    assert.match(stdout, /Installed:/);
-    assert.match(stdout, /- textarea/);
-    assert.match(stdout, /- spinner/);
+    assert.match(stdout, /Skipped/);
+    assert.match(stdout, /• button \(already exists\)/);
+    assert.match(stdout, /• card \(already exists\)/);
+    assert.match(stdout, /• badge \(already exists\)/);
+    assert.match(stdout, /Installed/);
+    assert.match(stdout, /✓ textarea/);
+    assert.match(stdout, /✓ spinner/);
     assert.deepEqual(plan.skipped, ["button", "card", "badge"]);
     assert.equal(
       await readFile(join(cwd, "components/ui/button/index.tsx"), "utf8"),

@@ -24,6 +24,7 @@ export function serializeRegistryItem(
   const css = copyRecord(item.css);
   const envVars = copyRecord(item.envVars);
   const docs = normalizeDocs(item.docs);
+  const category = item.category;
 
   return {
     $schema: schemaUrl,
@@ -38,6 +39,7 @@ export function serializeRegistryItem(
     ...(css ? { css } : {}),
     ...(envVars ? { envVars } : {}),
     ...(docs ? { docs } : {}),
+    ...(category ? { category } : {}),
   };
 }
 
@@ -58,19 +60,22 @@ export function serializeRegistryCatalog(
 
 function serializeCatalogItem(item: RegistryItem): RegistryCatalogItem {
   const description = normalizeDocs(item.description);
-  const devDependencies = copyStrings(item.devDependencies);
-  const registryDependencies = copyStrings(item.registryDependencies);
   const docs = normalizeDocs(item.docs);
+
+  if (!description) {
+    throw new Error(`Catalog item "${item.name}" is missing a description`);
+  }
+
+  if (!docs) {
+    throw new Error(`Catalog item "${item.name}" is missing docs`);
+  }
 
   return {
     name: item.name,
     type: item.type,
-    ...(description ? { description } : {}),
-    dependencies: copyStrings(item.dependencies) ?? [],
-    ...(devDependencies ? { devDependencies } : {}),
-    ...(registryDependencies ? { registryDependencies } : {}),
-    files: item.files.map((file) => normalizePath(file.path)),
-    ...(docs ? { docs } : {}),
+    description,
+    docs,
+    ...(item.category ? { category: item.category } : {}),
   };
 }
 

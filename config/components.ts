@@ -2,9 +2,9 @@
  * Consumer `components.json` contract.
  *
  * Registry items describe what Vinyaas can install. This file describes how a
- * consumer project wants those items installed. The JSON schema is served at
- * `/schema/components.json`; build its URL from the same base as registry
- * item schemas.
+ * consumer project wants those items installed. The JSON schema is served under
+ * the registry base path at `schema/components.json`; build its URL from
+ * `getRegistryBasePath()` in `config/registry.ts`.
  *
  * Required, because the CLI cannot guess them:
  * style, tailwind.css, aliases.components, aliases.ui, and aliases.utils.
@@ -13,9 +13,21 @@
  * tailwind.cssVariables true.
  *
  * Optional, with no assumed path: $schema, aliases.lib, and aliases.hooks.
- * Init writes $schema from REGISTRY_BASE_URL. lib and hooks are used only
+ * Init writes $schema from REGISTRY_BASE_PATH. lib and hooks are used only
  * when the consumer sets them.
  */
+export {
+  componentsSchemaPath,
+  componentsSchemaUrl,
+  defaultRegistryBasePath,
+  defaultRegistryBaseUrl,
+  getRegistryBasePath,
+  getRegistryOrigin,
+  registryBaseUrlFromEnv,
+  registryItemSchemaUrl,
+  RegistryBasePathError,
+} from "./registry.ts";
+
 export const componentStyles = ["new-york"] as const;
 
 /** Add a style here and in the components schema enum together. */
@@ -61,23 +73,6 @@ export const componentsAliasRequiredFields = [
   "utils",
 ] as const;
 
-export const componentsSchemaPath = "/schema/components.json";
-
-/** Used when REGISTRY_BASE_URL is not set. */
-export const defaultRegistryBaseUrl = "https://vinyaas.vercel.app";
-
-export function registryBaseUrlFromEnv(
-  env: Record<string, string | undefined>,
-): string {
-  const configured = env.REGISTRY_BASE_URL?.trim();
-
-  if (configured) {
-    return configured;
-  }
-
-  return defaultRegistryBaseUrl;
-}
-
 export interface ComponentsAliases {
   /** Import specifier for installed components, such as `@/components`. */
   components: string;
@@ -101,7 +96,7 @@ export interface ComponentsTailwindConfig {
 }
 
 export interface ComponentsConfig {
-  /** Editor schema URL. Init writes this from REGISTRY_BASE_URL. */
+  /** Editor schema URL. Init writes this from REGISTRY_BASE_PATH. */
   $schema?: string;
   style: ComponentStyle;
   /** Emit TypeScript components when true. Defaults to true when omitted. */
@@ -115,18 +110,6 @@ export class ComponentsConfigError extends Error {
     super(message);
     this.name = "ComponentsConfigError";
   }
-}
-
-export function componentsSchemaUrl(registryBaseUrl: string): string {
-  const base = registryBaseUrl.trim().replace(/\/$/, "");
-
-  if (!base) {
-    throw new ComponentsConfigError(
-      "A registry base URL is required to build the components.json schema URL",
-    );
-  }
-
-  return `${base}${componentsSchemaPath}`;
 }
 
 export function parseComponentsConfig(input: unknown): ComponentsConfig {

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "progress",
   "type": "registry:ui",
   "description": "A native progress indicator for a known amount of work.",
@@ -10,5 +10,7 @@
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport type ProgressProps = React.ComponentProps<\"progress\">;\n\nexport function Progress({ className, ref, ...props }: ProgressProps) {\n  return (\n    <progress\n      ref={ref}\n      className={cn(\n        \"bg-muted h-2 w-full appearance-none overflow-hidden rounded-full\",\n        \"[&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-bar]:rounded-full\",\n        \"[&::-webkit-progress-value]:bg-foreground [&::-webkit-progress-value]:rounded-full\",\n        \"[&::-moz-progress-bar]:bg-foreground\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/progress",
+  "category": "feedback"
 }

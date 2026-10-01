@@ -9,88 +9,105 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("DocsNavLinks", () => {
-  it("follows the documentation hierarchy without navigation icons", () => {
+  it("follows the flat documentation hierarchy without framework nesting", () => {
     render(<DocsNavLinks />);
 
     const nav = screen.getByRole("navigation", { name: "Documentation" });
     const links = within(nav).getAllByRole("link");
-    const titles = links.map((link) =>
-      (link.getAttribute("aria-label") ?? link.textContent ?? "").replace(
-        /, new$/,
-        "",
-      ),
-    );
+    const titles = links.map((link) => link.textContent ?? "");
     const componentNames = [...components]
       .map((component) => component.name)
       .sort((a, b) => a.localeCompare(b));
 
-    expect(titles[0]).toBe("Installation");
-    expect(titles[1]).toBe("CLI");
-    expect(titles.slice(2, 2 + componentNames.length)).toEqual(componentNames);
-    expect(titles.slice(-6)).toEqual([
+    expect(within(nav).getByText("SECTIONS")).toBeInTheDocument();
+    expect(within(nav).getByText("COMPANION")).toBeInTheDocument();
+    expect(within(nav).getByText("COMPONENTS")).toBeInTheDocument();
+    expect(within(nav).getByText("GET STARTED")).toBeInTheDocument();
+    expect(within(nav).queryByText("RESOURCES")).toBeNull();
+    expect(within(nav).queryByRole("link", { name: "Next.js" })).toBeNull();
+    expect(
+      within(nav).queryByRole("link", { name: "React + Vite" }),
+    ).toBeNull();
+
+    const sectionsStart = titles.indexOf("Introduction");
+    expect(titles.slice(sectionsStart, sectionsStart + 7)).toEqual([
       "Introduction",
       "Components",
-      "components.json",
-      "Themes",
+      "Installation",
+      "CLI",
+      "Theming",
       "Typeset",
       "Changelog",
     ]);
-    expect(within(nav).getByText("SECTIONS")).toBeInTheDocument();
-    expect(within(nav).getByText("COMPONENTS")).toBeInTheDocument();
-    expect(within(nav).getByText("GET STARTED")).toBeInTheDocument();
-    expect(within(nav).getByText("RESOURCES")).toBeInTheDocument();
+
+    const companionStart = titles.indexOf("Changelog") + 1;
+    expect(titles.slice(companionStart, companionStart + 4)).toEqual([
+      "Introduction",
+      "Installation",
+      "companion.json",
+      "Custom Companion",
+    ]);
     expect(
-      within(nav).getByRole("link", { name: "Changelog" }),
-    ).toHaveAttribute("href", "/changelog");
-    expect(within(nav).getByRole("link", { name: "Themes" })).toHaveAttribute(
+      within(nav).getAllByRole("link", { name: /Introduction/i })[1],
+    ).toHaveAttribute("href", "/companion");
+    expect(
+      within(nav)
+        .getAllByRole("link", { name: /Introduction/i })[1]
+        ?.querySelector('[data-nav-indicator="beta"]'),
+    ).toBeTruthy();
+    expect(
+      within(nav).getByText("COMPANION").querySelector(
+        '[data-nav-indicator="beta"]',
+      ),
+    ).toBeNull();
+    expect(
+      within(nav).getAllByRole("link", { name: "Installation" })[1],
+    ).toHaveAttribute("href", "/companion/installation");
+    expect(
+      within(nav).getByRole("link", { name: "companion.json" }),
+    ).toHaveAttribute("href", "/companion/configuration");
+    expect(
+      within(nav).getByRole("link", { name: "Custom Companion" }),
+    ).toHaveAttribute("href", "/companion/custom");
+
+    const componentsStart = titles.indexOf(componentNames[0]!);
+    expect(
+      titles.slice(componentsStart, componentsStart + componentNames.length),
+    ).toEqual(componentNames);
+
+    expect(
+      within(nav).getAllByRole("link", { name: "Installation" })[0],
+    ).toHaveAttribute("href", "/installation");
+    expect(
+      within(nav).getAllByRole("link", { name: "CLI" })[0],
+    ).toHaveAttribute("href", "/cli");
+    expect(
+      within(nav).getAllByRole("link", { name: "Theming" })[0],
+    ).toHaveAttribute("href", "/theming");
+    expect(
+      within(nav).getAllByRole("link", { name: "Typeset" })[0],
+    ).toHaveAttribute("href", "/typeset");
+    expect(
+      within(nav).getByRole("link", { name: "Dark Mode" }),
+    ).toHaveAttribute("href", "/dark-mode");
+    expect(
+      within(nav).getByRole("link", { name: "Package Import" }),
+    ).toHaveAttribute("href", "/package-import");
+    expect(
+      within(nav).getByRole("link", { name: "Typography" }),
+    ).toHaveAttribute("href", "/components/typography");
+    expect(within(nav).getByRole("link", { name: "Tabs" })).toHaveAttribute(
       "href",
-      "/themes",
+      "/components/tabs",
     );
-    expect(within(nav).getByRole("link", { name: "Typeset" })).toHaveAttribute(
-      "href",
-      "/typeset",
-    );
-    expect(
-      within(nav).getByRole("link", { name: "Components" }),
-    ).toHaveAttribute("href", "/components");
-    expect(within(nav).queryByText("Forms")).toBeNull();
-    expect(within(nav).queryByText("Feedback")).toBeNull();
-    expect(within(nav).queryByText("Data Display")).toBeNull();
-    expect(nav.querySelector("svg")).toBeNull();
-    expect(
-      within(nav).getByText("COMPONENTS").parentElement?.querySelector("ul"),
-    ).toHaveClass(
-      "grid",
-      "grid-cols-1",
-      "@[22rem]:grid-cols-2",
-      "@[40rem]:grid-cols-3",
-    );
+    expect(within(nav).queryByText(", new")).toBeNull();
+    expect(nav.querySelector(".bg-primary")).toBeNull();
     expect(within(nav).getByRole("link", { name: "Input" })).toHaveAttribute(
       "aria-current",
       "page",
     );
     expect(
-      within(nav).getByRole("link", { name: "Tabs, new" }),
-    ).toHaveAttribute("href", "/components/tabs");
-    expect(
-      within(nav)
-        .getByRole("link", { name: "Tabs, new" })
-        .querySelector(".bg-primary"),
-    ).toBeTruthy();
-    expect(
-      within(nav).getByRole("link", { name: "Attachment, new" }),
-    ).toHaveAttribute("href", "/components/attachment");
-    expect(
-      within(nav).getByRole("link", { name: "Aspect Ratio, new" }),
-    ).toHaveAttribute("href", "/components/aspect-ratio");
-    expect(
       within(nav).getByRole("link", { name: "Button" }),
     ).not.toHaveAttribute("aria-current");
-    expect(within(nav).queryByRole("link", { name: "Input, new" })).toBeNull();
-    expect(
-      within(nav)
-        .getByRole("link", { name: "Button" })
-        .querySelector(".bg-primary"),
-    ).toBeNull();
   });
 });

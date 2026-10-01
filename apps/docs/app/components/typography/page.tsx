@@ -87,6 +87,68 @@ export function InstallingComponents() {
 
 const examples: ComponentExample[] = [
   {
+    id: "semantic",
+    title: "Semantic text",
+    description:
+      "Headings, paragraph, muted copy, inline code, a link, a list, and a blockquote — the Typography component system, not the Typeset playground.",
+    preview: (
+      <Typography className="max-w-md text-left">
+        <TypographyH1>Taxing traffic</TypographyH1>
+        <TypographyH2>The joke tax</TypographyH2>
+        <TypographyH3>Ignoring style guides</TypographyH3>
+        <TypographyH4>People hated taxes</TypographyH4>
+        <TypographyP>
+          The king, seeing how much happier his subjects were, realized the
+          error of his ways and repealed the joke tax. Inline{" "}
+          <code>vinyaas add typography</code> installs these elements as source.
+        </TypographyP>
+        <TypographyMuted>
+          Muted text for captions and secondary detail.
+        </TypographyMuted>
+        <TypographyP>
+          Prefer the{" "}
+          <a
+            href="/components/typography"
+            className="text-primary font-medium underline underline-offset-4"
+          >
+            Typography
+          </a>{" "}
+          components for UI copy. Use Typeset when styling rendered Markdown
+          documents.
+        </TypographyP>
+        <TypographyList>
+          <li>1st level of puns: 5 gold coins</li>
+          <li>2nd level of jokes: 10 gold coins</li>
+          <li>3rd level of one-liners: 20 gold coins</li>
+        </TypographyList>
+        <TypographyBlockquote>
+          After all, he thought, everyone enjoys a good joke, so it&apos;s only
+          fair that they should pay for the privilege.
+        </TypographyBlockquote>
+      </Typography>
+    ),
+    code: `<Typography>
+  <TypographyH1>Taxing traffic</TypographyH1>
+  <TypographyH2>The joke tax</TypographyH2>
+  <TypographyH3>Ignoring style guides</TypographyH3>
+  <TypographyH4>People hated taxes</TypographyH4>
+  <TypographyP>
+    Inline <code>vinyaas add typography</code> installs these elements as source.
+  </TypographyP>
+  <TypographyMuted>Muted text for captions and secondary detail.</TypographyMuted>
+  <TypographyP>
+    Prefer <a href="/components/typography">Typography</a> for UI copy.
+  </TypographyP>
+  <TypographyList>
+    <li>1st level of puns: 5 gold coins</li>
+    <li>2nd level of jokes: 10 gold coins</li>
+  </TypographyList>
+  <TypographyBlockquote>
+    Everyone enjoys a good joke.
+  </TypographyBlockquote>
+</Typography>`,
+  },
+  {
     id: "article",
     title: "Article",
     description: "A short article uses a title, a lead, body, and a list.",
@@ -266,9 +328,11 @@ export default async function TypographyPage() {
       description="Semantic text styles for titles, body, and supporting copy."
       overview={
         <p>
-          Typography is a set of elements. <code>Typography</code> groups them
-          with a consistent gap. Headings, paragraphs, lists, and quotes keep
-          their native tags so the document outline stays intact.
+          Typography is a reusable component system for semantic text: headings,
+          paragraphs, lists, inline code, blockquotes, and links.{" "}
+          <code>Typography</code> groups them with a consistent gap. Native tags
+          keep the document outline intact. It is not Typeset — Typeset is the
+          separate Markdown / content typography docs at <code>/typeset</code>.
         </p>
       }
       install="vinyaas add typography"

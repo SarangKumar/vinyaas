@@ -1,10 +1,11 @@
+import { registryComponentCategories } from "../categories";
 import type { RegistryItem } from "../types";
 
-export const registry: readonly RegistryItem[] = [
+const items: readonly RegistryItem[] = [
   {
     name: "button",
     type: "registry:ui",
-    description: "A button with variant and size styles.",
+    description: "A composable button component with variants and sizes.",
     dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
     files: [
       {
@@ -137,7 +138,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "switch",
     type: "registry:ui",
-    description: "A switch for a binary setting.",
+    description: "A switch control for binary on and off settings.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -173,7 +174,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "tooltip",
     type: "registry:ui",
-    description: "A short label for a control.",
+    description: "A short floating label shown on hover or focus.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -189,7 +190,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "native-select",
     type: "registry:ui",
-    description: "A composed native select.",
+    description:
+      "A styled native select with a chevron and consistent field chrome.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -201,7 +203,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "toast",
     type: "registry:ui",
-    description: "A temporary notice.",
+    description:
+      "A temporary notice for success, error, or informational feedback.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -229,7 +232,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "spinner",
     type: "registry:ui",
-    description: "A small loading indicator.",
+    description: "A compact loading indicator for inline and button contexts.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -277,7 +280,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "aspect-ratio",
     type: "registry:ui",
-    description: "Displays content within a desired ratio.",
+    description:
+      "A container that preserves a fixed width-to-height aspect ratio.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -303,7 +307,8 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "dialog",
     type: "registry:ui",
-    description: "A modal panel for a focused task.",
+    description:
+      "A composable dialog component for confirmations, forms, and interactive workflows.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -480,7 +485,7 @@ export const registry: readonly RegistryItem[] = [
   {
     name: "dropdown-menu",
     type: "registry:ui",
-    description: "A menu of actions anchored to a button.",
+    description: "A menu of actions anchored to a trigger control.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {
@@ -490,3 +495,13 @@ export const registry: readonly RegistryItem[] = [
     ],
   },
 ];
+
+export const registry: readonly RegistryItem[] = items.map((item) => {
+  const category = registryComponentCategories[item.name];
+
+  if (!category) {
+    throw new Error(`Missing registry category for "${item.name}"`);
+  }
+
+  return { ...item, category };
+});

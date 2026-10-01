@@ -42,6 +42,7 @@ export interface RegistryItem {
   css?: Record<string, string>;
   envVars?: Record<string, string>;
   docs?: string;
+  category?: string;
 }
 
 /** Lightweight catalog entry from `/r/<style>/index.json`. */
@@ -49,12 +50,16 @@ export interface RegistryCatalogItem {
   name: string;
   type: RegistryItemType;
   description?: string;
-  dependencies: string[];
-  devDependencies?: string[];
-  registryDependencies?: string[];
-  /** Registry-relative file paths, such as `ui/button/index.tsx`. */
-  files: string[];
   docs?: string;
+  category?: string;
+  /** @deprecated Present only on older catalogs. Prefer full item payloads. */
+  dependencies?: string[];
+  /** @deprecated Present only on older catalogs. */
+  devDependencies?: string[];
+  /** @deprecated Present only on older catalogs. */
+  registryDependencies?: string[];
+  /** @deprecated Present only on older catalogs. Prefer full item payloads. */
+  files?: string[];
 }
 
 /** Style catalog for list and search. */
@@ -64,7 +69,19 @@ export interface RegistryCatalog {
 }
 
 /**
- * Stable discovery JSON for list/search/info.
+ * Stable discovery JSON for list/search.
+ * Catalog entries are intentionally lightweight.
+ */
+export interface RegistryDiscoverySummary {
+  name: string;
+  type: RegistryItemType;
+  description?: string;
+  docs?: string;
+  category?: string;
+}
+
+/**
+ * Stable discovery JSON for `vinyaas info --json`.
  * Omits file contents and other install-only payloads.
  */
 export interface RegistryItemSummary {
@@ -76,6 +93,7 @@ export interface RegistryItemSummary {
   devDependencies?: string[];
   registryDependencies: string[];
   docs?: string;
+  category?: string;
   cssVars?: boolean;
   css?: boolean;
   envVars?: string[];

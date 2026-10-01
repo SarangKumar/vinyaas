@@ -54,16 +54,18 @@ describe("Themes playground page", () => {
     expect(screen.queryByText("June 2025")).not.toBeInTheDocument();
     expect(screen.queryByText("Total Revenue")).not.toBeInTheDocument();
     expect(document.querySelector("[data-playground-content]")).toBeTruthy();
+    expect(document.querySelector("[data-playground-grid]")).toHaveAttribute(
+      "data-playground-columns",
+    );
     expect(
-      document.querySelector("[data-playground-grid]")?.className,
-    ).toContain("min-[1900px]:columns-5!");
-    expect(
-      document.querySelector("[data-playground-grid]")?.className,
-    ).toContain("md:columns-2");
+      document.querySelectorAll("[data-playground-column]").length,
+    ).toBeGreaterThanOrEqual(1);
     expect(screen.getByRole("button", { name: "Yellow" })).toHaveAttribute(
       "aria-label",
       "Yellow",
     );
+    expect(screen.getByRole("button", { name: "Green" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Lavender" })).toBeNull();
   });
 
   it("scopes preset selection to the playground wrapper", () => {

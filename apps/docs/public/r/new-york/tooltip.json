@@ -1,8 +1,8 @@
 {
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "tooltip",
   "type": "registry:ui",
-  "description": "A short label for a control.",
+  "description": "A short floating label shown on hover or focus.",
   "dependencies": ["clsx", "tailwind-merge"],
   "files": [
     {
@@ -15,5 +15,7 @@
       "content": "@keyframes vinyaas-tooltip-in {\n  from {\n    opacity: 0;\n    transform: scale(0.96) translateY(4px);\n  }\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n@keyframes vinyaas-tooltip-in-bottom {\n  from {\n    opacity: 0;\n    transform: scale(0.96) translateY(-4px);\n  }\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n@keyframes vinyaas-tooltip-in-left {\n  from {\n    opacity: 0;\n    transform: scale(0.96) translateX(4px);\n  }\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n@keyframes vinyaas-tooltip-in-right {\n  from {\n    opacity: 0;\n    transform: scale(0.96) translateX(-4px);\n  }\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n.vinyaas-tooltip-in {\n  animation: vinyaas-tooltip-in 160ms cubic-bezier(0.22, 1.25, 0.36, 1);\n  transform-origin: center bottom;\n}\n\n.vinyaas-tooltip-in[data-side=\"bottom\"] {\n  animation-name: vinyaas-tooltip-in-bottom;\n  transform-origin: center top;\n}\n\n.vinyaas-tooltip-in[data-side=\"left\"] {\n  animation-name: vinyaas-tooltip-in-left;\n  transform-origin: right center;\n}\n\n.vinyaas-tooltip-in[data-side=\"right\"] {\n  animation-name: vinyaas-tooltip-in-right;\n  transform-origin: left center;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .vinyaas-tooltip-in {\n    animation: none;\n  }\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/tooltip",
+  "category": "feedback"
 }

@@ -178,7 +178,7 @@ export const themeExamples: ThemeExample[] = [
             <NativeSelect
               aria-label={`${name} role`}
               defaultValue={role}
-              className="w-[5.75rem] shrink-0"
+              className="w-23 shrink-0"
             >
               <NativeSelectOption value="owner">Owner</NativeSelectOption>
               <NativeSelectOption value="editor">Editor</NativeSelectOption>
@@ -419,7 +419,7 @@ export const themeExamples: ThemeExample[] = [
         </TabsList>
         <TabsContent value="stable" className="grid gap-3 pt-3">
           <Alert>
-            <AlertTitle>v1.1.0 is current</AlertTitle>
+            <AlertTitle>v1.2.0 is current</AlertTitle>
             <AlertDescription>
               Themes and Typeset ship on the docs site — not as registry items.
             </AlertDescription>

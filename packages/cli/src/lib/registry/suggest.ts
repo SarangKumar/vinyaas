@@ -52,9 +52,9 @@ export function formatUnknownComponentMessage(
   const lines: string[] = [];
 
   if (unique.length === 1) {
-    lines.push(`Unknown component: ${unique[0]}`);
+    lines.push(`Component "${unique[0]}" not found.`);
   } else {
-    lines.push("Unknown component(s):", ...unique.map((name) => `- ${name}`));
+    lines.push("Components not found:", ...unique.map((name) => `- ${name}`));
   }
 
   const suggestions = [
@@ -64,7 +64,7 @@ export function formatUnknownComponentMessage(
   ].sort((left, right) => left.localeCompare(right));
 
   if (suggestions.length > 0) {
-    lines.push("", "Did you mean:", ...suggestions.map((name) => `  ${name}`));
+    lines.push("", "Did you mean:", ...suggestions.map((name) => `- ${name}`));
   }
 
   return lines.join("\n");

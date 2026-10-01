@@ -1,5 +1,5 @@
 {
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "breadcrumb",
   "type": "registry:ui",
   "description": "A trail of links for the current page.",
@@ -10,5 +10,7 @@
       "content": "import React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport function Breadcrumb({\n  className,\n  ...props\n}: React.ComponentProps<\"nav\">) {\n  return (\n    <nav\n      aria-label=\"breadcrumb\"\n      className={cn(\"w-full min-w-0\", className)}\n      {...props}\n    />\n  );\n}\n\nexport function BreadcrumbList({\n  className,\n  ...props\n}: React.ComponentProps<\"ol\">) {\n  return (\n    <ol\n      className={cn(\n        \"text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function BreadcrumbItem({\n  className,\n  ...props\n}: React.ComponentProps<\"li\">) {\n  return (\n    <li\n      className={cn(\"inline-flex min-w-0 items-center gap-1.5\", className)}\n      {...props}\n    />\n  );\n}\n\nexport function BreadcrumbLink({\n  className,\n  ...props\n}: React.ComponentProps<\"a\">) {\n  return (\n    <a\n      className={cn(\n        \"text-muted-foreground hover:text-foreground rounded-sm no-underline transition-colors\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function BreadcrumbPage({\n  className,\n  ...props\n}: React.ComponentProps<\"span\">) {\n  return (\n    <span\n      aria-current=\"page\"\n      className={cn(\"text-foreground font-medium\", className)}\n      {...props}\n    />\n  );\n}\n\nexport function BreadcrumbSeparator({\n  className,\n  children,\n  ...props\n}: React.ComponentProps<\"li\">) {\n  return (\n    <li\n      role=\"presentation\"\n      aria-hidden=\"true\"\n      className={cn(\"text-muted-foreground\", className)}\n      {...props}\n    >\n      {children ?? \"/\"}\n    </li>\n  );\n}\n\nexport function BreadcrumbEllipsis({\n  className,\n  ...props\n}: React.ComponentProps<\"span\">) {\n  return (\n    <span className={cn(\"inline-flex items-center\", className)} {...props}>\n      <span aria-hidden=\"true\">…</span>\n      <span className=\"sr-only\">More</span>\n    </span>\n  );\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/breadcrumb",
+  "category": "navigation"
 }

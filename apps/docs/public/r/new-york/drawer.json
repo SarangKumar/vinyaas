@@ -1,5 +1,5 @@
 {
-  "$schema": "https://vinyaas.vercel.app/schema/registry-item.json",
+  "$schema": "http://localhost:3000/r/schema/registry-item.json",
   "name": "drawer",
   "type": "registry:ui",
   "description": "A panel that slides in from the edge of the screen.",
@@ -15,5 +15,7 @@
       "content": "@keyframes vinyaas-drawer-in-right {\n  from {\n    transform: translateX(100%);\n  }\n  to {\n    transform: none;\n  }\n}\n\n@keyframes vinyaas-drawer-out-right {\n  from {\n    transform: none;\n  }\n  to {\n    transform: translateX(100%);\n  }\n}\n\n@keyframes vinyaas-drawer-in-left {\n  from {\n    transform: translateX(-100%);\n  }\n  to {\n    transform: none;\n  }\n}\n\n@keyframes vinyaas-drawer-out-left {\n  from {\n    transform: none;\n  }\n  to {\n    transform: translateX(-100%);\n  }\n}\n\n@keyframes vinyaas-drawer-in-top {\n  from {\n    transform: translateY(-100%);\n  }\n  to {\n    transform: none;\n  }\n}\n\n@keyframes vinyaas-drawer-out-top {\n  from {\n    transform: none;\n  }\n  to {\n    transform: translateY(-100%);\n  }\n}\n\n@keyframes vinyaas-drawer-in-bottom {\n  from {\n    transform: translateY(100%);\n  }\n  to {\n    transform: none;\n  }\n}\n\n@keyframes vinyaas-drawer-out-bottom {\n  from {\n    transform: none;\n  }\n  to {\n    transform: translateY(100%);\n  }\n}\n\n@keyframes vinyaas-drawer-overlay-in {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n@keyframes vinyaas-drawer-overlay-out {\n  from {\n    opacity: 1;\n  }\n  to {\n    opacity: 0;\n  }\n}\n\n.vinyaas-drawer-overlay-in {\n  animation: vinyaas-drawer-overlay-in 160ms ease-out;\n}\n\n.vinyaas-drawer-overlay-out {\n  animation: vinyaas-drawer-overlay-out 160ms ease-in forwards;\n}\n\n.vinyaas-drawer-in-right {\n  animation: vinyaas-drawer-in-right 200ms ease-out;\n}\n\n.vinyaas-drawer-out-right {\n  animation: vinyaas-drawer-out-right 200ms ease-in forwards;\n}\n\n.vinyaas-drawer-in-left {\n  animation: vinyaas-drawer-in-left 200ms ease-out;\n}\n\n.vinyaas-drawer-out-left {\n  animation: vinyaas-drawer-out-left 200ms ease-in forwards;\n}\n\n.vinyaas-drawer-in-top {\n  animation: vinyaas-drawer-in-top 200ms ease-out;\n}\n\n.vinyaas-drawer-out-top {\n  animation: vinyaas-drawer-out-top 200ms ease-in forwards;\n}\n\n.vinyaas-drawer-in-bottom {\n  animation: vinyaas-drawer-in-bottom 200ms ease-out;\n}\n\n.vinyaas-drawer-out-bottom {\n  animation: vinyaas-drawer-out-bottom 200ms ease-in forwards;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .vinyaas-drawer-overlay-in,\n  .vinyaas-drawer-overlay-out,\n  .vinyaas-drawer-in-right,\n  .vinyaas-drawer-out-right,\n  .vinyaas-drawer-in-left,\n  .vinyaas-drawer-out-left,\n  .vinyaas-drawer-in-top,\n  .vinyaas-drawer-out-top,\n  .vinyaas-drawer-in-bottom,\n  .vinyaas-drawer-out-bottom {\n    animation: none;\n  }\n}\n",
       "type": "registry:ui"
     }
-  ]
+  ],
+  "docs": "http://localhost:3000/components/drawer",
+  "category": "feedback"
 }

@@ -46,6 +46,24 @@ describe("docs print styles", () => {
     );
 
     unmount();
+    navigation.pathname = "/typeset/playground";
+
+    render(
+      <DocsShell>
+        <article data-page="typeset-playground">
+          <h1>Typeset</h1>
+        </article>
+      </DocsShell>,
+    );
+
+    expect(document.querySelector("[data-docs-frame]")).toHaveAttribute(
+      "data-docs-frame",
+      "typeset",
+    );
+    expect(document.querySelector("[data-docs-sidebar]")).toBeNull();
+  });
+
+  it("keeps the typeset documentation page in the docs frame", () => {
     navigation.pathname = "/typeset";
 
     render(
@@ -58,8 +76,8 @@ describe("docs print styles", () => {
 
     expect(document.querySelector("[data-docs-frame]")).toHaveAttribute(
       "data-docs-frame",
-      "typeset",
+      "docs",
     );
-    expect(document.querySelector("[data-docs-sidebar]")).toBeNull();
+    expect(document.querySelector("[data-docs-sidebar]")).not.toBeNull();
   });
 });

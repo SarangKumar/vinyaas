@@ -7,9 +7,6 @@ import { focusRing } from "@/components/focus-ring";
 import { InstallCommand } from "@/components/install-command";
 import { cliCommands } from "@/components/package-managers";
 import { pageMetadata } from "@/lib/page-metadata";
-import { Button } from "@/registry/new-york/ui/button";
-import { Input } from "@/registry/new-york/ui/input";
-import { Label } from "@/registry/new-york/ui/label";
 
 export const metadata: Metadata = pageMetadata({
   title: "Introduction",
@@ -159,7 +156,7 @@ export default function IntroductionPage() {
         <h2 id="philosophy" className={sectionHeading}>
           Core philosophy
         </h2>
-        <ul className="border-border divide-border grid gap-0 divide-y rounded-md border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+        <div className="grid gap-4 sm:grid-cols-2">
           {[
             {
               title: "Own the source",
@@ -178,16 +175,20 @@ export default function IntroductionPage() {
               body: "Add one component or several in a single CLI call. Unused primitives are never pulled in.",
             },
           ].map((item) => (
-            <li key={item.title} className="flex flex-col gap-2 p-5">
+            <div
+              key={item.title}
+              data-philosophy-card
+              className="border-border bg-muted/30 rounded-[var(--radius)] border p-6"
+            >
               <h3 className="text-foreground text-base font-medium">
                 {item.title}
               </h3>
-              <p className="text-muted-foreground text-sm leading-6">
+              <p className="text-muted-foreground mt-2 text-sm leading-6">
                 {item.body}
               </p>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </section>
 
       <section className="flex flex-col gap-4">
@@ -200,17 +201,6 @@ export default function IntroductionPage() {
           element. Composition is ordinary JSX: labels wrap fields, buttons sit
           in forms, dialogs host other primitives.
         </p>
-        <div className="border-border bg-card flex min-w-0 flex-col gap-4 overflow-hidden rounded-md border p-5">
-          <div className="grid max-w-sm gap-3">
-            <div className="grid gap-2">
-              <Label htmlFor="intro-name">Name</Label>
-              <Input id="intro-name" defaultValue="Ada Lovelace" />
-            </div>
-            <Button type="button" size="sm">
-              Save
-            </Button>
-          </div>
-        </div>
         <CodeBlock source={usageExample} />
       </section>
 
@@ -226,15 +216,16 @@ export default function IntroductionPage() {
           <li>
             Run <code>vinyaas init</code> to configure theme CSS, aliases,{" "}
             <code>components.json</code>, and utilities. Init is idempotent.
+            Optionally run <code>vinyaas doctor</code> to validate the setup.
           </li>
           <li>
             Discover components with <code>vinyaas list</code>,{" "}
             <code>search</code>, and <code>info</code> when you need the catalog
-            from the terminal.
+            from the terminal. Filter by <code>--category</code> when useful.
           </li>
           <li>
-            Install one or more components with <code>vinyaas add …</code>.
-            Files land at{" "}
+            Install one or more components with <code>vinyaas add …</code>, or a
+            category with <code>vinyaas add --category …</code>. Files land at{" "}
             <code className="font-mono">
               components/ui/&lt;name&gt;/index.tsx
             </code>
@@ -257,7 +248,14 @@ export default function IntroductionPage() {
             Installation
           </Link>{" "}
           page, including multi-component adds, skip/force behavior, discovery
-          commands, and framework notes.
+          commands, categories, and doctor. The{" "}
+          <Link
+            href="/cli"
+            className={`text-foreground rounded-sm underline ${focusRing}`}
+          >
+            CLI
+          </Link>{" "}
+          page is the detailed command reference.
         </p>
       </section>
 
@@ -293,12 +291,12 @@ export default function IntroductionPage() {
           </Link>{" "}
           and the{" "}
           <Link
-            href="/installation#cli"
+            href="/cli"
             className={`text-foreground rounded-sm underline ${focusRing}`}
           >
             CLI
           </Link>{" "}
-          section for details.
+          docs for details.
         </p>
       </section>
 

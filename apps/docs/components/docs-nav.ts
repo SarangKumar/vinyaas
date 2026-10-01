@@ -1,6 +1,5 @@
 import {
   componentHref,
-  componentIsNew,
   components,
   type ComponentMeta,
 } from "@/components/component-meta";
@@ -17,15 +16,46 @@ export const componentsPath = "/components";
 
 export const componentsJsonPath = "/components-json";
 
+export const installationPath = "/installation";
+
+export const cliPath = "/cli";
+
+/** Companion feature area (separate from registry UI components). */
+export const companionPath = "/companion";
+
+export const companionInstallationPath = "/companion/installation";
+
+/** Docs page for companion.json configuration. */
+export const companionJsonPath = "/companion/configuration";
+
+export const companionCustomPath = "/companion/custom";
+
+/** Theme system documentation (tokens, CSS variables, customization). */
+export const themingPath = "/theming";
+
+/** Visual theme playground / showcase. */
 export const themesPath = "/themes";
 
+/** Typeset documentation (content rhythm and Markdown presentation). */
 export const typesetPath = "/typeset";
+
+/** Typeset playground / showcase. */
+export const typesetPlaygroundPath = "/typeset/playground";
+
+export const packageImportPath = "/package-import";
+
+export const darkModePath = "/dark-mode";
+
+export const changelogPath = "/changelog";
 
 export type DocsNavItem = {
   title: string;
   href: string;
   description?: string;
-  isNew?: boolean;
+  /** Subtle status mark (e.g. beta). */
+  indicator?: "beta";
+  /** Nested links. Prefer flat items — avoid third-level nesting. */
+  children?: DocsNavItem[];
 };
 
 export type DocsNavGroup = {
@@ -41,21 +71,31 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
   return {
     title: component.name,
     href: componentHref(component.slug),
-    isNew: componentIsNew(component),
   };
 }
-
-export const cliPath = "/installation#cli";
-
-export const changelogPath = "/changelog";
 
 export const docsNav: DocsNavGroup[] = [
   {
     title: "SECTIONS",
     label: true,
     items: [
-      { title: "Installation", href: "/installation" },
+      { title: "Introduction", href: introductionPath },
+      { title: "Components", href: componentsPath },
+      { title: "Installation", href: installationPath },
       { title: "CLI", href: cliPath },
+      { title: "Theming", href: themingPath },
+      { title: "Typeset", href: typesetPath },
+      { title: "Changelog", href: changelogPath },
+    ],
+  },
+  {
+    title: "COMPANION",
+    label: true,
+    items: [
+      { title: "Introduction", href: companionPath, indicator: "beta" },
+      { title: "Installation", href: companionInstallationPath },
+      { title: "companion.json", href: companionJsonPath },
+      { title: "Custom Companion", href: companionCustomPath },
     ],
   },
   {
@@ -70,16 +110,13 @@ export const docsNav: DocsNavGroup[] = [
     title: "GET STARTED",
     label: true,
     items: [
-      { title: "Introduction", href: introductionPath },
-      { title: "Components", href: componentsPath },
+      { title: "Installation", href: installationPath },
       { title: "components.json", href: componentsJsonPath },
-      { title: "Themes", href: themesPath },
+      { title: "Theming", href: themingPath },
       { title: "Typeset", href: typesetPath },
+      { title: "Package Import", href: packageImportPath },
+      { title: "Dark Mode", href: darkModePath },
+      { title: "CLI", href: cliPath },
     ],
-  },
-  {
-    title: "RESOURCES",
-    label: true,
-    items: [{ title: "Changelog", href: changelogPath }],
   },
 ];

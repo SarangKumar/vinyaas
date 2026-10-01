@@ -1,5 +1,9 @@
 import { CliError } from "../cli-error.ts";
 import {
+  filterItemsByCategory,
+  requireRegistryCategory,
+} from "./categories.ts";
+import {
   RegistryError,
   fetchRegistryCatalog,
   fetchRegistryItem,
@@ -8,6 +12,7 @@ import {
   formatRegistryInfo,
   formatRegistryList,
   formatRegistrySearch,
+  toRegistryDiscoverySummary,
   toRegistryItemSummary,
 } from "./format.ts";
 import { searchRegistryCatalog } from "./search.ts";
@@ -16,8 +21,8 @@ import {
   defaultRegistryStyle,
   type RegistryCatalog,
   type RegistryCatalogItem,
+  type RegistryDiscoverySummary,
   type RegistryItem,
-  type RegistryItemSummary,
 } from "./types.ts";
 
 export async function getRegistryCatalog({
@@ -89,11 +94,13 @@ export async function getRegistryItem({
 
 export async function searchRegistry({
   query,
+  category,
   style = defaultRegistryStyle,
   env = process.env,
   fetch: fetchImpl,
 }: {
   query: string;
+  category?: string;
   style?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
@@ -103,19 +110,56 @@ export async function searchRegistry({
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
   });
+  const items = category
+    ? filterItemsByCategory(catalog.items, category)
+    : catalog.items;
 
-  return searchRegistryCatalog(catalog.items, query);
+  return searchRegistryCatalog(items, query);
 }
 
 export function listRegistrySummaries(
   catalog: RegistryCatalog,
-): RegistryItemSummary[] {
-  return catalog.items.map((item) => toRegistryItemSummary(item));
+  options: { category?: string } = {},
+): RegistryDiscoverySummary[] {
+  const items = options.category
+    ? filterItemsByCategory(catalog.items, options.category)
+    : catalog.items;
+
+  return items.map((item) => toRegistryDiscoverySummary(item));
+}
+
+export async function resolveCategoryComponentNames({
+  category,
+  style = defaultRegistryStyle,
+  env = process.env,
+  fetch: fetchImpl,
+}: {
+  category: string;
+  style?: string;
+  env?: Record<string, string | undefined>;
+  fetch?: typeof fetch;
+}): Promise<string[]> {
+  const known = requireRegistryCategory(category);
+  const catalog = await getRegistryCatalog({
+    style,
+    env,
+    ...(fetchImpl ? { fetch: fetchImpl } : {}),
+  });
+  const names = filterItemsByCategory(catalog.items, known)
+    .map((item) => item.name)
+    .sort((left, right) => left.localeCompare(right));
+
+  if (names.length === 0) {
+    throw new CliError(`No components found in category ${known}.`);
+  }
+
+  return names;
 }
 
 export {
   formatRegistryInfo,
   formatRegistryList,
   formatRegistrySearch,
+  toRegistryDiscoverySummary,
   toRegistryItemSummary,
 };

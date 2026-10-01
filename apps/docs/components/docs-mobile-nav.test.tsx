@@ -49,14 +49,27 @@ describe("DocsMobileNav", () => {
     expect(screen.getAllByRole("link", { name: "CLI" }).length).toBeGreaterThan(
       0,
     );
-    expect(screen.getByText("SECTIONS")).toBeInTheDocument();
     expect(screen.getByText("COMPONENTS")).toBeInTheDocument();
+    expect(screen.getByText("COMPANION")).toBeInTheDocument();
     expect(screen.getByText("GET STARTED")).toBeInTheDocument();
-    expect(screen.getByText("RESOURCES")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Introduction" })).toHaveAttribute(
+    expect(screen.getByText("SECTIONS")).toBeInTheDocument();
+    expect(screen.queryByText("RESOURCES")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Next.js" })).toBeNull();
+    expect(screen.getAllByRole("link", { name: "CLI" })[0]).toHaveAttribute(
       "href",
-      "/introduction",
+      "/cli",
     );
+    expect(
+      screen.getByRole("link", { name: "Custom Companion" }),
+    ).toHaveAttribute("href", "/companion/custom");
+    expect(
+      screen.getAllByRole("link", { name: /Introduction/i })[1],
+    ).toHaveAttribute("href", "/companion");
+    expect(
+      screen
+        .getAllByRole("link", { name: /Introduction/i })[1]
+        ?.querySelector('[data-nav-indicator="beta"]'),
+    ).toBeTruthy();
     expect(screen.getByRole("link", { name: "Changelog" })).toHaveAttribute(
       "href",
       "/changelog",

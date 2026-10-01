@@ -1,64 +1,111 @@
 import { describe, expect, it } from "vitest";
 
-import { components, newComponents } from "./component-meta";
+import { components } from "./component-meta";
 import {
+  changelogPath,
   cliPath,
+  companionCustomPath,
+  companionInstallationPath,
+  companionJsonPath,
+  companionPath,
   componentsJsonPath,
   componentsPath,
+  darkModePath,
   docsNav,
   githubUrl,
   homePath,
+  installationPath,
   introductionPath,
+  packageImportPath,
   themesPath,
+  themingPath,
   typesetPath,
+  typesetPlaygroundPath,
 } from "./docs-nav";
 
 describe("documentation navigation", () => {
-  it("lists sections, components, then get started", () => {
+  it("keeps a flat sidebar with docs routes separate from playgrounds", () => {
     expect(githubUrl).toBe("https://github.com/SarangKumar/vinyaas");
     expect(homePath).toBe("/");
     expect(introductionPath).toBe("/introduction");
     expect(componentsPath).toBe("/components");
     expect(componentsJsonPath).toBe("/components-json");
+    expect(installationPath).toBe("/installation");
+    expect(cliPath).toBe("/cli");
+    expect(companionPath).toBe("/companion");
+    expect(companionInstallationPath).toBe("/companion/installation");
+    expect(companionJsonPath).toBe("/companion/configuration");
+    expect(companionCustomPath).toBe("/companion/custom");
+    expect(themingPath).toBe("/theming");
     expect(themesPath).toBe("/themes");
     expect(typesetPath).toBe("/typeset");
-    expect(cliPath).toBe("/installation#cli");
+    expect(typesetPlaygroundPath).toBe("/typeset/playground");
+    expect(packageImportPath).toBe("/package-import");
+    expect(darkModePath).toBe("/dark-mode");
+    expect(changelogPath).toBe("/changelog");
     expect(docsNav.map((group) => group.title)).toEqual([
       "SECTIONS",
+      "COMPANION",
       "COMPONENTS",
       "GET STARTED",
-      "RESOURCES",
     ]);
-    expect(docsNav[0]?.items.map((item) => item.title)).toEqual([
-      "Installation",
-      "CLI",
-    ]);
-    expect(docsNav[0]?.items.map((item) => item.href)).toEqual([
-      "/installation",
-      "/installation#cli",
-    ]);
-    expect(docsNav[1]?.layout).toBe("names");
-    expect(docsNav[2]?.items.map((item) => item.title)).toEqual([
+    expect(docsNav[2]?.layout).toBe("names");
+
+    const sections = docsNav[0]?.items;
+    expect(sections?.map((item) => item.title)).toEqual([
       "Introduction",
       "Components",
-      "components.json",
-      "Themes",
+      "Installation",
+      "CLI",
+      "Theming",
       "Typeset",
+      "Changelog",
     ]);
-    expect(docsNav[2]?.items.map((item) => item.href)).toEqual([
-      "/introduction",
-      "/components",
-      "/components-json",
-      "/themes",
+    expect(sections?.at(-1)?.title).toBe("Changelog");
+    expect(sections?.find((item) => item.title === "Theming")?.href).toBe(
+      "/theming",
+    );
+    expect(sections?.find((item) => item.title === "Typeset")?.href).toBe(
       "/typeset",
+    );
+    expect(sections?.every((item) => !item.children?.length)).toBe(true);
+
+    const companion = docsNav[1];
+    expect(companion?.items[0]?.indicator).toBe("beta");
+    expect(companion?.items.map((item) => item.title)).toEqual([
+      "Introduction",
+      "Installation",
+      "companion.json",
+      "Custom Companion",
     ]);
-    expect(docsNav[3]?.items.map((item) => item.title)).toEqual(["Changelog"]);
-    expect(docsNav[3]?.items.map((item) => item.href)).toEqual(["/changelog"]);
-    expect(docsNav.some((group) => group.title === "Forms")).toBe(false);
+    expect(companion?.items.map((item) => item.href)).toEqual([
+      "/companion",
+      "/companion/installation",
+      "/companion/configuration",
+      "/companion/custom",
+    ]);
+    expect(companion?.items.every((item) => !item.children?.length)).toBe(true);
+
+    const getStarted = docsNav[3]?.items;
+    expect(getStarted?.map((item) => item.title)).toEqual([
+      "Installation",
+      "components.json",
+      "Theming",
+      "Typeset",
+      "Package Import",
+      "Dark Mode",
+      "CLI",
+    ]);
+    expect(getStarted?.every((item) => !item.children?.length)).toBe(true);
+
+    expect(JSON.stringify(docsNav)).not.toContain("/installation/nextjs");
+    expect(JSON.stringify(docsNav)).not.toContain("/themes");
+    expect(JSON.stringify(docsNav)).not.toContain("/typeset/playground");
+    expect(JSON.stringify(docsNav)).not.toContain('"isNew"');
     expect(JSON.stringify(docsNav)).not.toContain('"icon"');
   });
 
-  it("builds one alphabetical component list", () => {
+  it("builds one alphabetical component list including Typography", () => {
     const items = docsNav.find((group) => group.title === "COMPONENTS")?.items;
 
     expect(items?.map((item) => item.title)).toEqual(
@@ -66,9 +113,7 @@ describe("documentation navigation", () => {
         .map((component) => component.name)
         .sort((a, b) => a.localeCompare(b)),
     );
-    expect(items?.some((item) => item.description)).toBe(false);
-    expect(
-      newComponents().some((component) => component.name === "Button"),
-    ).toBe(false);
+    expect(items?.some((item) => item.title === "Typography")).toBe(true);
+    expect(items?.every((item) => !("isNew" in item))).toBe(true);
   });
 });

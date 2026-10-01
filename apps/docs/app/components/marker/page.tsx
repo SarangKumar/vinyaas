@@ -84,7 +84,7 @@ export function DeployStatus() {
           <MarkerIcon>
             <CheckIcon />
           </MarkerIcon>
-          <MarkerContent>Live on v1.1.0</MarkerContent>
+          <MarkerContent>Live on v1.2.0</MarkerContent>
         </Marker>
         <Button variant="outline" className="self-start">
           View logs
@@ -263,7 +263,7 @@ const inPractice: ComponentInPractice = {
           <MarkerIcon>
             <CheckIcon />
           </MarkerIcon>
-          <MarkerContent>Live on v1.1.0</MarkerContent>
+          <MarkerContent>Live on v1.2.0</MarkerContent>
         </Marker>
         <Button variant="outline" className="self-start">
           View logs

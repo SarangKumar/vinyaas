@@ -1,7 +1,7 @@
 {
   "name": "vinyaas",
-  "version": "1.1.0",
-  "description": "Command-line interface for installing Vinyaas components.",
+  "version": "1.2.0",
+  "description": "Registry-driven React component CLI that installs customizable Tailwind CSS v4 UI as source into your project.",
   "license": "MIT",
   "type": "module",
   "bin": {
@@ -18,7 +18,7 @@
   "engines": {
     "node": ">=20"
   },
-  "homepage": "https://www.npmjs.com/package/vinyaas",
+  "homepage": "https://vinyaas.vercel.app",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SarangKumar/vinyaas.git",
@@ -29,19 +29,25 @@
   },
   "keywords": [
     "vinyaas",
-    "cli",
     "react",
-    "tailwindcss",
     "components",
+    "react-components",
+    "tailwind",
+    "tailwindcss",
+    "tailwind-v4",
+    "shadcn",
+    "ui-library",
+    "design-system",
+    "cli",
     "registry",
-    "ui"
+    "typescript"
   ],
   "author": {
     "name": "Sarang Kumar",
     "url": "https://github.com/SarangKumar"
   },
   "scripts": {
-    "build": "rm -rf dist && esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js --packages=external --sourcemap",
+    "build": "rm -rf dist && pnpm exec tsx ./scripts/build.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "test": "pnpm build && node --test test",
     "start": "node dist/index.js"

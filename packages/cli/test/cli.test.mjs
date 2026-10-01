@@ -60,6 +60,8 @@ describe("vinyaas", () => {
     assert.match(result.stdout, /\blist\b/);
     assert.match(result.stdout, /\bsearch\b/);
     assert.match(result.stdout, /\binfo\b/);
+    assert.match(result.stdout, /\bstatus\b/);
+    assert.match(result.stdout, /\bdoctor\b/);
   });
 
   it("shows --cwd on init and add", async () => {
@@ -68,15 +70,23 @@ describe("vinyaas", () => {
     const list = await run(["list", "--help"]);
     const search = await run(["search", "--help"]);
     const info = await run(["info", "--help"]);
+    const status = await run(["status", "--help"]);
+    const doctor = await run(["doctor", "--help"]);
 
     assert.equal(init.exitCode, 0);
     assert.match(init.stdout, /--cwd <path>/);
     assert.equal(add.exitCode, 0);
     assert.match(add.stdout, /--cwd <path>/);
     assert.match(add.stdout, /--force/);
+    assert.match(add.stdout, /--dry-run/);
+    assert.match(add.stdout, /--category/);
+    assert.match(list.stdout, /--category/);
+    assert.match(search.stdout, /--category/);
     assert.match(add.stdout, /overwrite existing component files/i);
-    assert.match(add.stdout, /<name\.\.\.>/);
-    assert.match(add.stdout, /vinyaas add button card dialog/);
+    assert.match(add.stdout, /\[name\.\.\.\]/);
+    assert.match(add.stdout, /vinyaas add button card/);
+    assert.match(add.stdout, /vinyaas add button --yes/);
+    assert.match(add.stdout, /vinyaas add --category forms/);
     assert.match(add.stdout, /already-installed/i);
     assert.equal(list.exitCode, 0);
     assert.match(list.stdout, /--json/);
@@ -86,6 +96,13 @@ describe("vinyaas", () => {
     assert.equal(info.exitCode, 0);
     assert.match(info.stdout, /<component>/);
     assert.match(info.stdout, /--json/);
+    assert.equal(status.exitCode, 0);
+    assert.match(status.stdout, /--json/);
+    assert.match(status.stdout, /--cwd <path>/);
+    assert.match(status.stdout, /tracks installed components/i);
+    assert.equal(doctor.exitCode, 0);
+    assert.match(doctor.stdout, /--json/);
+    assert.match(doctor.stdout, /--cwd <path>/);
   });
 
   it("rejects --force on init", async () => {

@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Vinyaas components.json",
+  "description": "Consumer project configuration for installing Vinyaas components. The canonical document is served at /schema/components.json on the registry base URL.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["style", "tailwind", "aliases"],
+  "properties": {
+    "$schema": {
+      "description": "URL of this schema. Init writes it from REGISTRY_BASE_URL. Optional for install behavior.",
+      "type": "string",
+      "minLength": 1
+    },
+    "style": {
+      "description": "Vinyaas style to install. Required.",
+      "type": "string",
+      "enum": ["new-york"]
+    },
+    "tsx": {
+      "description": "Emit TypeScript components when true, and JavaScript when false. Defaults to true.",
+      "type": "boolean",
+      "default": true
+    },
+    "tailwind": {
+      "description": "Styling configuration for the consumer project.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["css"],
+      "properties": {
+        "css": {
+          "description": "Global CSS file, relative to the consumer project root. Required.",
+          "type": "string",
+          "minLength": 1
+        },
+        "baseColor": {
+          "description": "Base palette name. Defaults to neutral.",
+          "type": "string",
+          "enum": ["neutral"],
+          "default": "neutral"
+        },
+        "cssVariables": {
+          "description": "Install colors as CSS variables when true. Defaults to true.",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "aliases": {
+      "description": "Import aliases the CLI uses when writing installed files.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["components", "ui", "utils"],
+      "properties": {
+        "components": {
+          "description": "Import specifier for installed components, such as @/components.",
+          "type": "string",
+          "minLength": 1
+        },
+        "ui": {
+          "description": "Import specifier for UI components, such as @/components/ui.",
+          "type": "string",
+          "minLength": 1
+        },
+        "lib": {
+          "description": "Import specifier for shared library files. Optional.",
+          "type": "string",
+          "minLength": 1
+        },
+        "utils": {
+          "description": "Import specifier for the cn helper, such as @/lib/utils.",
+          "type": "string",
+          "minLength": 1
+        },
+        "hooks": {
+          "description": "Import specifier for hooks. Optional.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

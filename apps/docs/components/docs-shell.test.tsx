@@ -96,13 +96,24 @@ describe("DocsShell", () => {
     expect(
       within(start).getByRole("link", { name: "Components" }),
     ).toHaveAttribute("href", "/components");
+    expect(
+      within(start).getByRole("link", { name: "Companion" }),
+    ).toHaveAttribute("href", "/companion");
+    expect(
+      within(start)
+        .getByRole("link", { name: "Companion" })
+        .querySelector('[data-nav-indicator="beta"]'),
+    ).toBeNull();
+    expect(
+      within(start).getByRole("link", { name: "Installation" }),
+    ).toHaveAttribute("href", "/installation");
     expect(within(start).getByRole("link", { name: "Themes" })).toHaveAttribute(
       "href",
       "/themes",
     );
     expect(
       within(start).getByRole("link", { name: "Typeset" }),
-    ).toHaveAttribute("href", "/typeset");
+    ).toHaveAttribute("href", "/typeset/playground");
     expect(
       within(start).queryByRole("button", { name: "Search documentation" }),
     ).toBeNull();

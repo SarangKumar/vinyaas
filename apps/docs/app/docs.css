@@ -4,8 +4,6 @@
  */
 
 :root {
-  /* New-component marker follows primary so dots match the theme accent. */
-  --new: var(--primary);
   --sidebar-foreground: var(--muted-foreground);
 
   /*
@@ -36,7 +34,6 @@
 }
 
 .dark {
-  --new: var(--primary);
   --sidebar-foreground: var(--muted-foreground);
 
   --syntax-plain: oklch(0.92 0.02 286);
@@ -50,7 +47,6 @@
 }
 
 @theme inline {
-  --color-new: var(--new);
   --color-sidebar-foreground: var(--sidebar-foreground);
 
   --spacing-playground-gap: var(--playground-gap);

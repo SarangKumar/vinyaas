@@ -1,10 +1,16 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  componentIsNew,
+  registryCategories,
+  registryCategoryLabels,
+  registryComponentCategories,
+} from "@/registry/categories";
+
+import {
+  categoryOrder,
   components,
+  componentsInCategory,
   currentVersion,
-  newComponents,
 } from "./component-meta";
 
 describe("component metadata", () => {
@@ -57,33 +63,43 @@ describe("component metadata", () => {
     ]);
   });
 
-  it("treats v1.1.0 introductions as new and keeps earlier components out", () => {
-    expect(currentVersion).toBe("1.1.0");
-
-    const slugs = new Set(components.map((component) => component.slug));
-
-    for (const component of newComponents()) {
-      expect(slugs.has(component.slug)).toBe(true);
-      expect(component.introducedIn).toBe(currentVersion);
-      expect(componentIsNew(component)).toBe(true);
-    }
-
-    expect(
-      newComponents()
-        .map((component) => component.slug)
-        .sort(),
-    ).toEqual(["aspect-ratio", "attachment", "chart", "drawer", "tabs"]);
-    expect(newComponents().map((component) => component.slug)).not.toContain(
-      "button",
-    );
+  it("tracks introduction versions without marking a current new set", () => {
+    expect(currentVersion).toBe("1.2.0");
     expect(
       components
         .filter((component) => component.introducedIn === "0.1")
         .map((component) => component.slug),
     ).toEqual(["button"]);
     expect(
+      components
+        .filter((component) => component.introducedIn === "1.1.0")
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual(["aspect-ratio", "attachment", "chart", "drawer", "tabs"]);
+    expect(
+      components.filter((component) => component.introducedIn === "1.2.0"),
+    ).toHaveLength(0);
+    expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
     ).toBe(components.length - 6);
+  });
+
+  it("derives docs categories from the registry category map", () => {
+    for (const component of components) {
+      expect(component.category).toBe(
+        registryComponentCategories[component.slug],
+      );
+    }
+
+    expect(categoryOrder).toEqual(
+      registryCategories.map((id) => [id, registryCategoryLabels[id]] as const),
+    );
+    expect(componentsInCategory("forms").map((c) => c.slug)).toContain(
+      "button",
+    );
+    expect(componentsInCategory("charts").map((c) => c.slug)).toEqual([
+      "chart",
+    ]);
   });
 });

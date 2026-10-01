@@ -86,7 +86,7 @@ describe("installable button registry", () => {
           ["button"],
         );
         assert.equal(items[0].registryDependencies, undefined);
-        assert.equal(items[0].docs, undefined);
+        assert.match(items[0].docs ?? "", /\/components\/button$/);
         assert.equal(items[0].envVars, undefined);
         assert.equal(items[0].css, undefined);
         assert.equal(items[0].cssVars, undefined);
@@ -181,11 +181,12 @@ describe("installable button registry", () => {
           await readFile(join(cwd, "package.json"), "utf8"),
         );
 
-        assert.match(output, /Added button/);
+        assert.match(output, /✓ Added components/);
         assert.match(button, /from "@\/lib\/utils"/);
         assert.match(utils, /export function cn/);
         assert.equal(await readFile(join(cwd, "app/globals.css"), "utf8"), css);
-        assert.doesNotMatch(output, /Documentation:/);
+        assert.match(output, /Documentation:/);
+        assert.match(output, /button — .+\/components\/button/);
         assert.doesNotMatch(output, /Environment variables required:/);
         assert.deepEqual(packageJson.dependencies, {
           react: "19.2.8",

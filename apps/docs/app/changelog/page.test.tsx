@@ -25,20 +25,24 @@ describe("Changelog", () => {
     expect(screen.getByRole("heading", { name: "v0.1" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "v1.0.0" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "v1.1.0" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "v1.2.0" })).toBeInTheDocument();
     expect(
       screen.getAllByRole("heading", { name: "Component catalog" }),
     ).toHaveLength(2);
     expect(
-      screen.getByRole("heading", { name: "Documentation" }),
-    ).toBeInTheDocument();
+      screen.getAllByRole("heading", { name: "Documentation" }).length,
+    ).toBeGreaterThanOrEqual(2);
     expect(
       screen.getAllByRole("heading", { name: "CLI" }).length,
-    ).toBeGreaterThanOrEqual(2);
+    ).toBeGreaterThanOrEqual(3);
     expect(
       screen.getByRole("heading", { name: "Released" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Planned" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Installation" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(`npx vinyaas add button card badge`),
@@ -49,22 +53,38 @@ describe("Changelog", () => {
     expect(document.body.textContent).toContain(
       `the other ${v10.length} were introduced in v1.0.0`,
     );
+    expect(document.body.textContent).toContain("v1.1.0 continues the catalog");
     expect(document.body.textContent).toContain(
-      `v${currentVersion} continues the catalog`,
+      `v${currentVersion} focuses on installation clarity`,
     );
+    expect(screen.getByRole("heading", { name: "Companions" })).toBeInTheDocument();
+    expect(document.body.textContent).toContain("interaction system v0.1");
+    expect(document.body.textContent).toContain("companion.json");
+    expect(document.body.textContent).toContain("Ember, Soul, and Moss");
+    expect(document.body.textContent).toContain("Framework-specific");
+    expect(document.body.textContent).toContain("project-state onboarding");
+    expect(document.body.textContent).toContain("create-app commands");
     expect(document.body.textContent).toContain("vinyaas init");
+    expect(document.body.textContent).toContain("doctor");
     expect(document.body.textContent).toContain("vinyaas list");
     expect(document.body.textContent).toContain("vinyaas search");
     expect(document.body.textContent).toContain("vinyaas info");
+    expect(document.body.textContent).toContain("vinyaas status");
+    expect(document.body.textContent).toContain("--category");
+    expect(document.body.textContent).toContain("--dry-run");
+    expect(document.body.textContent).toContain(".vinyaas/manifest.json");
     expect(document.body.textContent).toContain("--json");
+    expect(document.body.textContent).not.toContain("dist/index.js vinyaas");
     expect(document.body.textContent).toContain("index.tsx");
     expect(document.body.textContent).toContain("Documentation and website");
     expect(document.body.textContent).toContain("/themes");
+    expect(document.body.textContent).toContain("/theming");
     expect(document.body.textContent).toContain("/typeset");
+    expect(document.body.textContent).toContain("/typeset/playground");
     expect(document.body.textContent).toContain("not a registry component");
     expect(document.body.textContent).toContain("Typeset");
     expect(document.body.textContent).toContain("curated presets");
-    expect(document.body.textContent).not.toContain("/playground");
+    expect(document.body.textContent).not.toContain("`/playground`");
     expect(document.body.textContent).toContain("Tabs");
     expect(document.body.textContent).toContain("Drawer");
     expect(document.body.textContent).toContain("Chart");

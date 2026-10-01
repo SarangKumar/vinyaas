@@ -4,6 +4,8 @@
  * Installable JSON is produced by the registry build. Keep these item types
  * aligned with `apps/docs/public/schema/registry-item.json`.
  */
+import type { RegistryCategory } from "./categories";
+
 export const registryItemTypes = ["registry:ui"] as const;
 
 export type RegistryItemType = (typeof registryItemTypes)[number];
@@ -41,6 +43,8 @@ export interface RegistryItem {
   envVars?: Record<string, string>;
   /** Optional documentation for this item. */
   docs?: string;
+  /** Optional discovery category from the controlled registry list. */
+  category?: RegistryCategory;
 }
 
 /** A registry file after its source contents have been read. */
@@ -62,21 +66,20 @@ export interface RegistryItemPayload {
   css?: Record<string, string>;
   envVars?: Record<string, string>;
   docs?: string;
+  category?: RegistryCategory;
 }
 
 /**
  * Lightweight catalog entry written to `public/r/<style>/index.json`.
- * File contents are omitted so discovery stays cheap.
+ * Discovery-only: name, type, description, docs, and optional category.
+ * Full install metadata lives on each component JSON payload.
  */
 export interface RegistryCatalogItem {
   name: string;
   type: RegistryItemType;
-  description?: string;
-  dependencies: string[];
-  devDependencies?: string[];
-  registryDependencies?: string[];
-  files: string[];
-  docs?: string;
+  description: string;
+  docs: string;
+  category?: RegistryCategory;
 }
 
 /** Style catalog for `vinyaas list` / `vinyaas search`. */

@@ -39,23 +39,81 @@ const pages: SearchPage[] = [
     title: "Installation",
     href: "/installation",
     description:
-      "Install the CLI, run init, discover components, and add them as source.",
+      "Choose Next.js, React + Vite, or React, then install Vinyaas as source.",
     group: "Getting Started",
   },
   {
-    title: "Changelog",
-    href: "/changelog",
-    description: "What shipped in v0.1, v1.0.0, and v1.1.0.",
+    title: "Install with Next.js",
+    href: "/installation/nextjs",
+    description:
+      "Install Vinyaas in a Next.js App Router project with fresh, existing, or shadcn-style setup paths.",
+    group: "Getting Started",
+  },
+  {
+    title: "Install with React + Vite",
+    href: "/installation/vite",
+    description:
+      "Install Vinyaas in a Vite + React project with fresh, existing, or shadcn-style setup paths.",
+    group: "Getting Started",
+  },
+  {
+    title: "Install with React",
+    href: "/installation/react",
+    description:
+      "Install Vinyaas in other React projects with fresh, existing, or shadcn-style setup paths.",
+    group: "Getting Started",
+  },
+  {
+    title: "CLI",
+    href: "/cli",
+    description:
+      "init, doctor, add, categories, status, list, search, and info for source installs.",
+    group: "Getting Started",
+  },
+  {
+    title: "Companions",
+    href: "/companion",
+    description:
+      "Meet Ember, Soul, and Moss — tiny Vinyaas companions separate from UI components.",
+    group: "Getting Started",
+  },
+  {
+    title: "Companion Installation",
+    href: "/companion/installation",
+    description:
+      "How companions will be installed. CLI companion commands are planned, not available yet.",
+    group: "Getting Started",
+  },
+  {
+    title: "companion.json",
+    href: "/companion/configuration",
+    description:
+      "Companion identity, animations, personality, capabilities, and interaction metadata.",
+    group: "Getting Started",
+  },
+  {
+    title: "Custom Companion",
+    href: "/companion/custom",
+    description:
+      "Planned workflow for creating custom companions with assets and companion.json.",
     group: "Getting Started",
   },
   {
     title: "components.json",
     href: "/components-json",
-    description: "Local project config for style, aliases, and Tailwind paths.",
+    description:
+      "Local project config for style, aliases, and Tailwind paths used by vinyaas init and add.",
     group: "Getting Started",
   },
   {
-    title: "Themes",
+    title: "Theming",
+    href: "/theming",
+    description:
+      "CSS variables, semantic colors, radius, dark mode, and theme customization.",
+    group: "Getting Started",
+  },
+  {
+    title: "Themes playground",
     href: "/themes",
     description:
       "Visual theme playground: curated presets, radius, and real UI compositions.",
@@ -65,7 +123,52 @@ const pages: SearchPage[] = [
     title: "Typeset",
     href: "/typeset",
     description:
-      "Typography playground: measure, fonts, size, leading, and flow for Markdown-style content.",
+      "Markdown-first content typography docs. Distinct from the Typography component.",
+    group: "Getting Started",
+  },
+  {
+    title: "Typeset playground",
+    href: "/typeset/playground",
+    description:
+      "Experiment with measure, fonts, size, leading, and flow on Markdown-style content.",
+    group: "Getting Started",
+  },
+  {
+    title: "Package Import",
+    href: "/package-import",
+    description:
+      "Import installed Vinyaas components via project aliases and local source paths.",
+    group: "Getting Started",
+  },
+  {
+    title: "Dark Mode",
+    href: "/dark-mode",
+    description:
+      "Choose a framework, then enable light and dark themes with the class strategy.",
+    group: "Getting Started",
+  },
+  {
+    title: "Dark Mode with Next.js",
+    href: "/dark-mode/nextjs",
+    description: "Wire Vinyaas dark class tokens in a Next.js App Router app.",
+    group: "Getting Started",
+  },
+  {
+    title: "Dark Mode with React + Vite",
+    href: "/dark-mode/vite",
+    description: "Wire Vinyaas dark class tokens in a Vite + React app.",
+    group: "Getting Started",
+  },
+  {
+    title: "Dark Mode with React",
+    href: "/dark-mode/react",
+    description: "Wire Vinyaas dark class tokens in a generic React app.",
+    group: "Getting Started",
+  },
+  {
+    title: "Changelog",
+    href: "/changelog",
+    description: "What shipped in v0.1, v1.0.0, v1.1.0, and v1.2.0.",
     group: "Getting Started",
   },
   ...components.map((component) => ({

@@ -1,12 +1,15 @@
+import { formatRegistryCategoryLabel } from "./categories.ts";
 import type {
   RegistryCatalogItem,
+  RegistryDiscoverySummary,
   RegistryItem,
   RegistryItemFile,
   RegistryItemSummary,
 } from "./types.ts";
 
 /**
- * Stable discovery payload. Omits file contents and raw CSS/env maps.
+ * Full install-safe metadata for `vinyaas info --json`.
+ * Omits file contents and raw CSS/env maps.
  */
 export function toRegistryItemSummary(
   item: RegistryItem | RegistryCatalogItem,
@@ -15,7 +18,7 @@ export function toRegistryItemSummary(
     name: item.name,
     type: item.type,
     files: registryFilePaths(item),
-    dependencies: [...item.dependencies],
+    dependencies: [...(item.dependencies ?? [])],
     registryDependencies: [...(item.registryDependencies ?? [])],
   };
 
@@ -29,6 +32,10 @@ export function toRegistryItemSummary(
 
   if (item.docs) {
     summary.docs = item.docs;
+  }
+
+  if (item.category) {
+    summary.category = item.category;
   }
 
   if ("cssVars" in item && item.cssVars) {
@@ -52,8 +59,32 @@ export function toRegistryItemSummary(
   return summary;
 }
 
+/** Lightweight catalog JSON for list/search. */
+export function toRegistryDiscoverySummary(
+  item: RegistryCatalogItem,
+): RegistryDiscoverySummary {
+  const summary: RegistryDiscoverySummary = {
+    name: item.name,
+    type: item.type,
+  };
+
+  if (item.description) {
+    summary.description = item.description;
+  }
+
+  if (item.docs) {
+    summary.docs = item.docs;
+  }
+
+  if (item.category) {
+    summary.category = item.category;
+  }
+
+  return summary;
+}
+
 function registryFilePaths(item: RegistryItem | RegistryCatalogItem): string[] {
-  if (item.files.length === 0) {
+  if (!item.files || item.files.length === 0) {
     return [];
   }
 
@@ -68,21 +99,54 @@ function registryFilePaths(item: RegistryItem | RegistryCatalogItem): string[] {
 
 export function formatRegistryList(
   items: readonly RegistryCatalogItem[],
+  options: { category?: string } = {},
 ): string {
+  if (options.category) {
+    return formatRegistryCategoryList(items, options.category);
+  }
+
   if (items.length === 0) {
     return "No components are available in the registry.";
   }
 
-  const nameWidth = Math.max(...items.map((item) => item.name.length));
   const lines = ["Components", ""];
 
   for (const item of items) {
+    lines.push(item.name);
+
+    if (item.category) {
+      lines.push(`  ${formatRegistryCategoryLabel(item.category)}`);
+    }
+
     const description = item.description?.trim();
-    lines.push(
-      description
-        ? `${item.name.padEnd(nameWidth)}  ${description}`
-        : item.name,
-    );
+    if (description) {
+      lines.push(`  ${description}`);
+    }
+
+    lines.push("");
+  }
+
+  if (lines.at(-1) === "") {
+    lines.pop();
+  }
+
+  return lines.join("\n");
+}
+
+export function formatRegistryCategoryList(
+  items: readonly RegistryCatalogItem[],
+  category: string,
+): string {
+  const label = formatRegistryCategoryLabel(category);
+
+  if (items.length === 0) {
+    return `No components found in category ${category}.`;
+  }
+
+  const lines = [label, ""];
+
+  for (const item of items) {
+    lines.push(`✓ ${item.name}`);
   }
 
   return lines.join("\n");
@@ -101,12 +165,27 @@ export function formatRegistrySearch(
   for (const item of items) {
     lines.push(`  ${item.name}`);
 
+    if (item.category) {
+      lines.push(`    ${formatRegistryCategoryLabel(item.category)}`);
+    }
+
     if (item.description) {
       lines.push(`    ${item.description}`);
     }
   }
 
   return lines.join("\n");
+}
+
+/** Maps registry file paths to the default consumer install layout. */
+export function formatConsumerFilePath(registryPath: string): string {
+  const normalized = registryPath.replaceAll("\\", "/");
+
+  if (normalized.startsWith("components/")) {
+    return normalized;
+  }
+
+  return `components/${normalized}`;
 }
 
 export function formatRegistryInfo(item: RegistryItem): string {
@@ -116,58 +195,49 @@ export function formatRegistryInfo(item: RegistryItem): string {
     .join(" ");
   const lines: string[] = [title];
 
-  if (item.description) {
-    lines.push("", item.description);
+  if (item.category) {
+    lines.push("", "Category:", formatRegistryCategoryLabel(item.category));
   }
-
-  lines.push("", "Type", `  ${item.type}`);
-  lines.push("", "Files", ...item.files.map((file) => `  ${file.path}`));
 
   lines.push(
     "",
-    "Dependencies",
+    "Description:",
+    item.description?.trim() || "No description available.",
+  );
+
+  lines.push(
+    "",
+    "Files:",
+    ...(item.files.length > 0
+      ? item.files.map((file) => `✓ ${formatConsumerFilePath(file.path)}`)
+      : ["none"]),
+  );
+
+  lines.push(
+    "",
+    "Dependencies:",
     ...(item.dependencies.length > 0
-      ? item.dependencies.map((dependency) => `  ${dependency}`)
-      : ["  none"]),
+      ? item.dependencies.map((dependency) => `✓ ${dependency}`)
+      : ["none"]),
   );
 
   if (item.devDependencies && item.devDependencies.length > 0) {
     lines.push(
       "",
-      "Dev dependencies",
-      ...item.devDependencies.map((dependency) => `  ${dependency}`),
+      "Dev dependencies:",
+      ...item.devDependencies.map((dependency) => `✓ ${dependency}`),
     );
   }
 
   lines.push(
     "",
-    "Registry dependencies",
+    "Registry dependencies:",
     ...((item.registryDependencies?.length ?? 0) > 0
-      ? (item.registryDependencies ?? []).map((dependency) => `  ${dependency}`)
-      : ["  none"]),
+      ? (item.registryDependencies ?? []).map((dependency) => `✓ ${dependency}`)
+      : ["none"]),
   );
 
-  if (item.docs) {
-    lines.push("", "Documentation", `  ${item.docs}`);
-  }
-
-  if (item.cssVars) {
-    lines.push("", "CSS variables", "  yes");
-  }
-
-  if (item.css && Object.keys(item.css).length > 0) {
-    lines.push("", "CSS rules", "  yes");
-  }
-
-  if (item.envVars && Object.keys(item.envVars).length > 0) {
-    lines.push(
-      "",
-      "Environment variables",
-      ...Object.keys(item.envVars)
-        .sort((left, right) => left.localeCompare(right))
-        .map((name) => `  ${name}`),
-    );
-  }
+  lines.push("", "Documentation:", item.docs?.trim() || "none");
 
   return lines.join("\n");
 }

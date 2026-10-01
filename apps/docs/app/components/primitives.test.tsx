@@ -389,15 +389,21 @@ describe("composed examples", () => {
 
     renderDocs(await NativeSelectPage());
     const selects = document.querySelectorAll("select");
-    expect([...selects].some((node) => node.className.includes("pr-10"))).toBe(
+    expect([...selects].some((node) => node.className.includes("pr-9"))).toBe(
       true,
     );
     expect(
-      [...document.querySelectorAll("svg")].some((node) =>
-        node.className.baseVal
-          ? node.className.baseVal.includes("right-3")
-          : String(node.getAttribute("class") ?? "").includes("right-3"),
+      [...document.querySelectorAll("[data-slot='native-select-icon']")].some(
+        (node) => node.className.includes("pointer-events-none"),
       ),
+    ).toBe(true);
+    expect(
+      [...document.querySelectorAll("svg")].some((node) => {
+        const className = node.className.baseVal
+          ? node.className.baseVal
+          : String(node.getAttribute("class") ?? "");
+        return className.includes("size-4");
+      }),
     ).toBe(true);
   });
 
@@ -421,7 +427,7 @@ describe("composed examples", () => {
     unmountRadio();
 
     renderDocs(await MarkerPage());
-    expect(screen.getAllByText("Live on v1.1.0").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Live on v1.2.0").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Checks passed on main").length).toBeGreaterThan(
       0,
     );

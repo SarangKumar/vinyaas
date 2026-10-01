@@ -1,7 +1,11 @@
 import type { ReactElement } from "react";
 import { ImageResponse } from "next/og";
 
-import { type ComponentMeta, components } from "@/components/component-meta";
+import {
+  formatRegistryCategoryLabel,
+  type ComponentMeta,
+  components,
+} from "@/components/component-meta";
 
 export const ogSize = { width: 1200, height: 630 } as const;
 export const ogContentType = "image/png";
@@ -95,7 +99,7 @@ function componentOgElement(component: ComponentMeta): ReactElement {
             textTransform: "capitalize",
           }}
         >
-          {component.category}
+          {formatRegistryCategoryLabel(component.category)}
         </div>
       </div>
 

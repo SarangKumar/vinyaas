@@ -1,4 +1,7 @@
-import { registryBaseUrlFromEnv } from "../../../../../config/components.ts";
+import {
+  getRegistryBasePath,
+  normalizeRegistryBasePath,
+} from "../../../../../config/registry.ts";
 
 import {
   registryItemTypes,
@@ -23,6 +26,7 @@ const registryItemFields = [
   "css",
   "envVars",
   "docs",
+  "category",
 ] as const;
 
 const registryItemRequiredFields = [
@@ -44,27 +48,68 @@ export class RegistryError extends Error {
   }
 }
 
+const registryUnavailableMessage = [
+  "Unable to load Vinyaas registry.",
+  "",
+  "Possible causes:",
+  "- network unavailable",
+  "- registry unavailable",
+  "- invalid style configuration",
+  "",
+  "Try again later.",
+].join("\n");
+
+function registryUnavailableError(
+  details: string,
+  options?: { cause?: unknown; env?: Record<string, string | undefined> },
+): RegistryError {
+  const env = options?.env ?? process.env;
+  const debug =
+    env.VINYAAS_DEBUG === "1" ||
+    env.VINYAAS_DEBUG === "true" ||
+    env.DEBUG === "vinyaas";
+
+  if (debug) {
+    return new RegistryError(
+      `${registryUnavailableMessage}\n\nDetails:\n${details}`,
+      options?.cause ? { cause: options.cause } : undefined,
+    );
+  }
+
+  return new RegistryError(
+    registryUnavailableMessage,
+    options?.cause ? { cause: options.cause } : undefined,
+  );
+}
+
 export function buildRegistryItemUrl({
   baseUrl,
+  basePath,
   style,
   name,
 }: {
-  baseUrl: string;
+  /** @deprecated Prefer basePath (registry root ending with `/r`). */
+  baseUrl?: string;
+  basePath?: string;
   style: string;
   name: string;
 }): string {
   assertPathSegment(style, "style");
   assertPathSegment(name, "name");
 
+  const registryPath = resolveRegistryBasePath({ basePath, baseUrl });
+
   let url: URL;
 
   try {
-    url = new URL(baseUrl);
+    url = new URL(
+      `${encodeURIComponent(style)}/${encodeURIComponent(name)}.json`,
+      `${registryPath}/`,
+    );
   } catch (error) {
     throw new RegistryError("Registry base URL is invalid.", { cause: error });
   }
 
-  url.pathname = `/r/${encodeURIComponent(style)}/${encodeURIComponent(name)}.json`;
   url.search = "";
   url.hash = "";
 
@@ -73,22 +118,29 @@ export function buildRegistryItemUrl({
 
 export function buildRegistryCatalogUrl({
   baseUrl,
+  basePath,
   style,
 }: {
-  baseUrl: string;
+  /** @deprecated Prefer basePath (registry root ending with `/r`). */
+  baseUrl?: string;
+  basePath?: string;
   style: string;
 }): string {
   assertPathSegment(style, "style");
 
+  const registryPath = resolveRegistryBasePath({ basePath, baseUrl });
+
   let url: URL;
 
   try {
-    url = new URL(baseUrl);
+    url = new URL(
+      `${encodeURIComponent(style)}/index.json`,
+      `${registryPath}/`,
+    );
   } catch (error) {
     throw new RegistryError("Registry base URL is invalid.", { cause: error });
   }
 
-  url.pathname = `/r/${encodeURIComponent(style)}/index.json`;
   url.search = "";
   url.hash = "";
 
@@ -99,17 +151,21 @@ export async function fetchRegistryItem({
   style,
   name,
   baseUrl,
+  basePath,
   env = process.env,
   fetch: fetchImpl = fetch,
 }: {
   style: string;
   name: string;
+  /** @deprecated Prefer basePath. */
   baseUrl?: string;
+  basePath?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
 }): Promise<RegistryItem> {
   const url = buildRegistryItemUrl({
-    baseUrl: baseUrl ?? registryBaseUrlFromEnv(env),
+    basePath: basePath ?? (baseUrl ? undefined : getRegistryBasePath(env)),
+    ...(baseUrl ? { baseUrl } : {}),
     style,
     name,
   });
@@ -119,8 +175,9 @@ export async function fetchRegistryItem({
   try {
     response = await fetchImpl(url, { method: "GET" });
   } catch (error) {
-    throw new RegistryError("The registry could not be reached.", {
+    throw registryUnavailableError(`Could not reach ${url}`, {
       cause: error,
+      env,
     });
   }
 
@@ -129,8 +186,9 @@ export async function fetchRegistryItem({
   }
 
   if (!response.ok) {
-    throw new RegistryError(
-      `Failed to fetch registry item.\nHTTP status: ${response.status}`,
+    throw registryUnavailableError(
+      `Failed to fetch registry item ${url} (HTTP ${response.status}).`,
+      { env },
     );
   }
 
@@ -150,16 +208,20 @@ export async function fetchRegistryItem({
 export async function fetchRegistryCatalog({
   style,
   baseUrl,
+  basePath,
   env = process.env,
   fetch: fetchImpl = fetch,
 }: {
   style: string;
+  /** @deprecated Prefer basePath. */
   baseUrl?: string;
+  basePath?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
 }): Promise<RegistryCatalog> {
   const url = buildRegistryCatalogUrl({
-    baseUrl: baseUrl ?? registryBaseUrlFromEnv(env),
+    basePath: basePath ?? (baseUrl ? undefined : getRegistryBasePath(env)),
+    ...(baseUrl ? { baseUrl } : {}),
     style,
   });
 
@@ -168,18 +230,22 @@ export async function fetchRegistryCatalog({
   try {
     response = await fetchImpl(url, { method: "GET" });
   } catch (error) {
-    throw new RegistryError("The registry could not be reached.", {
+    throw registryUnavailableError(`Could not reach ${url}`, {
       cause: error,
+      env,
     });
   }
 
   if (response.status === 404) {
-    throw new RegistryError(`Registry catalog not found:\n${url}`);
+    throw registryUnavailableError(`Registry catalog not found: ${url}`, {
+      env,
+    });
   }
 
   if (!response.ok) {
-    throw new RegistryError(
-      `Failed to fetch registry catalog.\nHTTP status: ${response.status}`,
+    throw registryUnavailableError(
+      `Failed to fetch registry catalog ${url} (HTTP ${response.status}).`,
+      { env },
     );
   }
 
@@ -219,6 +285,7 @@ export function parseRegistryItem(input: unknown): RegistryItem {
   const css = optionalStringRecord(item.css, "css");
   const envVars = optionalStringRecord(item.envVars, "envVars");
   const docs = optionalString(item.docs, "docs");
+  const category = optionalString(item.category, "category");
 
   return {
     $schema: requireString(item.$schema, "$schema"),
@@ -233,6 +300,7 @@ export function parseRegistryItem(input: unknown): RegistryItem {
     ...(css ? { css } : {}),
     ...(envVars ? { envVars } : {}),
     ...(docs ? { docs } : {}),
+    ...(category ? { category } : {}),
   };
 }
 
@@ -242,11 +310,13 @@ const registryCatalogItemFields = [
   "name",
   "type",
   "description",
+  "docs",
+  "category",
+  // Older catalogs may still ship install metadata. Accept and ignore.
   "dependencies",
   "devDependencies",
   "registryDependencies",
   "files",
-  "docs",
 ] as const;
 
 export function parseRegistryCatalog(input: unknown): RegistryCatalog {
@@ -276,14 +346,15 @@ export function parseRegistryCatalog(input: unknown): RegistryCatalog {
 function parseCatalogItem(input: unknown, label: string): RegistryCatalogItem {
   const item = requireRecord(input, label);
 
-  assertFields(
-    item,
-    registryCatalogItemFields,
-    ["name", "type", "dependencies", "files"],
-    label,
-  );
+  assertFields(item, registryCatalogItemFields, ["name", "type"], label);
 
   const description = optionalString(item.description, `${label}.description`);
+  const docs = optionalString(item.docs, `${label}.docs`);
+  const category = optionalString(item.category, `${label}.category`);
+  const dependencies = optionalStringArray(
+    item.dependencies,
+    `${label}.dependencies`,
+  );
   const devDependencies = optionalStringArray(
     item.devDependencies,
     `${label}.devDependencies`,
@@ -292,20 +363,18 @@ function parseCatalogItem(input: unknown, label: string): RegistryCatalogItem {
     item.registryDependencies,
     `${label}.registryDependencies`,
   );
-  const docs = optionalString(item.docs, `${label}.docs`);
+  const files = optionalStringArray(item.files, `${label}.files`);
 
   return {
     name: requireString(item.name, `${label}.name`),
     type: requireRegistryType(item.type, `${label}.type`),
     ...(description ? { description } : {}),
-    dependencies: requireStringArray(
-      item.dependencies,
-      `${label}.dependencies`,
-    ),
+    ...(docs ? { docs } : {}),
+    ...(category ? { category } : {}),
+    ...(dependencies ? { dependencies } : {}),
     ...(devDependencies ? { devDependencies } : {}),
     ...(registryDependencies ? { registryDependencies } : {}),
-    files: requireStringArray(item.files, `${label}.files`),
-    ...(docs ? { docs } : {}),
+    ...(files ? { files } : {}),
   };
 }
 
@@ -313,6 +382,24 @@ function sortCatalogItems(
   items: readonly RegistryCatalogItem[],
 ): RegistryCatalogItem[] {
   return [...items].sort((left, right) => left.name.localeCompare(right.name));
+}
+
+function resolveRegistryBasePath({
+  basePath,
+  baseUrl,
+}: {
+  basePath?: string;
+  baseUrl?: string;
+}): string {
+  if (basePath?.trim()) {
+    return normalizeRegistryBasePath(basePath);
+  }
+
+  if (baseUrl?.trim()) {
+    return normalizeRegistryBasePath(baseUrl);
+  }
+
+  throw new RegistryError("Registry base path is required.");
 }
 
 function assertPathSegment(value: string, label: string): void {

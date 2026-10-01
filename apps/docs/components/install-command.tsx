@@ -12,6 +12,8 @@ import {
 
 export {
   cliCommands,
+  createNextAppCommands,
+  createViteAppCommands,
   packageInstallCommands,
   packageManagers,
   type PackageManager,
