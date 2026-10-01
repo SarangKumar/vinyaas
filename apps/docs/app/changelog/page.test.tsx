@@ -65,6 +65,10 @@ describe("Changelog", () => {
     expect(document.body.textContent).toContain("vinyaas list");
     expect(document.body.textContent).toContain("vinyaas search");
     expect(document.body.textContent).toContain("vinyaas info");
+    expect(document.body.textContent).toContain("vinyaas status");
+    expect(document.body.textContent).toContain("--category");
+    expect(document.body.textContent).toContain("--dry-run");
+    expect(document.body.textContent).toContain(".vinyaas/manifest.json");
     expect(document.body.textContent).toContain("--json");
     expect(document.body.textContent).not.toContain("dist/index.js vinyaas");
     expect(document.body.textContent).toContain("index.tsx");

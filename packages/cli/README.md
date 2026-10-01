@@ -1,24 +1,14 @@
 # vinyaas
 
-**Vinyaas** is a registry-driven React component library. The CLI installs UI components as **source** into your project — the same style of workflow as shadcn-style registries — built for **Tailwind CSS v4**.
+**Vinyaas** is a registry-driven React UI toolkit for **Tailwind CSS v4**. The CLI copies component source into your project so you can edit it. Components are not imported from a locked runtime package.
 
-Components land in your tree so you can edit them. They are not imported from a locked runtime package.
+Docs: [https://vinyaas.vercel.app](https://vinyaas.vercel.app) · CLI guide: [https://vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli) · npm: [https://www.npmjs.com/package/vinyaas](https://www.npmjs.com/package/vinyaas)
 
-Docs: [https://vinyaas.vercel.app](https://vinyaas.vercel.app) · npm: [https://www.npmjs.com/package/vinyaas](https://www.npmjs.com/package/vinyaas)
+Requires Node.js 20+.
 
 ## Installation
 
-Global:
-
-```bash
-npm install -g vinyaas
-# or
-pnpm add -g vinyaas
-yarn global add vinyaas
-bun add -g vinyaas
-```
-
-Project-local (recommended for apps):
+Project-local (recommended):
 
 ```bash
 npm install vinyaas
@@ -27,7 +17,16 @@ yarn add vinyaas
 bun add vinyaas
 ```
 
-Or run without installing:
+Global:
+
+```bash
+npm install -g vinyaas
+pnpm add -g vinyaas
+yarn global add vinyaas
+bun add -g vinyaas
+```
+
+One-off (no install):
 
 ```bash
 npx vinyaas --help
@@ -36,86 +35,126 @@ yarn dlx vinyaas --help
 bunx vinyaas --help
 ```
 
-Requires Node.js 20+.
-
 ## Quick start
 
 ```bash
 vinyaas init
+vinyaas doctor
 vinyaas add button
 ```
 
-`init` prepares a React, Next.js, or Vite project (theme tokens, aliases, `components.json`, utils). `add` copies components into `components/ui/` and installs missing npm dependencies.
+`init` prepares a React, Next.js, or Vite project. `doctor` validates the setup without writing files. `add` copies registry source into `components/ui/` and installs missing npm dependencies.
 
-## Features
+## What the CLI does
 
-- Source-based components you own and edit
-- Tailwind CSS v4 theme tokens and setup
-- Registry architecture with installable JSON items
-- Customizable UI after install — no locked design package
-- Discovery commands (`list`, `search`, `info`) before you add files
+- Reads consumer configuration from `components.json`
+- Fetches component metadata and source from the Vinyaas registry
+- Resolves registry and npm dependencies
+- Writes editable source under your project aliases
+- Tracks successful installs in `.vinyaas/manifest.json`
 
 ## Commands
 
-### Project setup
+### Setup
 
 ```bash
 vinyaas init
-```
-
-Creates `components.json`, configures Tailwind v4 theme tokens and aliases, and installs required utilities when needed. Safe to re-run; does not overwrite an existing `components.json` or utils file.
-
-### Project health
-
-```bash
+vinyaas init --yes
 vinyaas doctor
+vinyaas doctor --json
 ```
 
-Validates `components.json`, aliases, Tailwind v4, theme tokens, utility dependencies, and registry reachability without writing files. Use `--json` for scripting.
+`init` detects the project when possible, finds a CSS entry, and creates `components.json`, theme tokens, aliases, and `lib/utils` when missing. It does not overwrite an existing `components.json` or utils file. `--yes` skips prompts and uses safe defaults.
 
-### Component installation
+`doctor` reports grouped checks (Project, Styling, Dependencies, Registry) and suggests fixes. It does not mutate the project.
+
+### Install components
 
 ```bash
 vinyaas add button
-vinyaas add button card
-vinyaas add button --yes
-vinyaas add button --dry-run
+vinyaas add button card badge
 vinyaas add button --force
-vinyaas add --category forms
-vinyaas add --category forms --yes
-vinyaas add button card --dry-run
+vinyaas add button --dry-run
+vinyaas add button card --yes
 ```
 
-Copies registry source into your project. Files stay editable. Registry and npm dependencies resolve automatically. Already-installed components are skipped unless you pass `--force`.
+- One or more component names install in a single run.
+- Already-installed components are skipped unless `--force` is set.
+- `--dry-run` prints the install plan without writing files or installing packages.
+- Multi-component installs prompt for confirmation unless `--yes` is set.
+- Registry dependencies resolve automatically; only missing npm packages are installed.
 
-Use component names for a precise install. Use `--category` to discover and install a whole group. Multi-component and category installs prompt for confirmation unless you pass `--yes`. Dry-run resolves the plan without writing files.
+### Category installation
 
-Successful installs record components in `.vinyaas/manifest.json`.
+```bash
+vinyaas add --category forms
+vinyaas add --category forms --yes
+vinyaas add --category forms --dry-run
+```
 
-### Installation status
+Categories are registry metadata used for discovery and group install. They are **not** component collections or packages. Expansion uses the same install pipeline as named components.
+
+Current categories: `forms`, `layout`, `navigation`, `feedback`, `data-display`, `typography`, `charts`, `utilities`.
+
+Unknown categories fail with the available list. If you pass explicit component names together with `--category`, the names win and `--category` is ignored.
+
+### Status
 
 ```bash
 vinyaas status
 vinyaas status --json
 ```
 
-Shows components Vinyaas installed in this project. Vinyaas tracks installed components locally to support future update/remove workflows.
+Lists components recorded in `.vinyaas/manifest.json` after successful installs. Useful for future update/remove workflows. Dry-run does not write the manifest.
 
-### Component discovery
+### Discover
 
 ```bash
 vinyaas list
 vinyaas list --category forms
-vinyaas search button
+vinyaas list --json
+vinyaas search input
 vinyaas search input --category forms
+vinyaas search input --json
 vinyaas info button
+vinyaas info button --json
 ```
 
-Browse the catalog without writing files. List and info show each component's category. Filter with `--category`. Each command accepts `--json` for scripting.
+- `list` — browse the catalog
+- `search` — find by name or description
+- `info` — inspect one component (files, dependencies, docs) before installing
+
+Human output includes category, description, and docs when present. `--json` is for scripting.
+
+### Shared options
+
+Most project commands accept `--cwd <path>` to target another directory.
+
+## components.json
+
+`components.json` is local project configuration (style, aliases, Tailwind CSS path). The registry publishes component metadata and source separately.
+
+See [components.json](https://vinyaas.vercel.app/components-json) for fields and examples.
+
+## Registry
+
+Published installs use the Vinyaas registry. Override the registry root with:
+
+```bash
+REGISTRY_BASE_PATH=https://vinyaas.vercel.app/r vinyaas list
+```
+
+`REGISTRY_BASE_URL` (site origin) is accepted as a legacy alias and normalized to `/r`.
+
+Each registry item can include `name`, `type`, `description`, `category`, `files`, `dependencies`, `registryDependencies`, and `docs`.
+
+## Framework setup
+
+For Next.js, React + Vite, or React (fresh, existing, or shadcn-style projects), follow the [Installation](https://vinyaas.vercel.app/installation) guides. Framework-specific create-app steps live there; the shared CLI flow is `vinyaas init` → `vinyaas add`.
 
 ## Documentation
 
-- Site: [https://vinyaas.vercel.app](https://vinyaas.vercel.app)
+- CLI: [https://vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli)
 - Installation: [https://vinyaas.vercel.app/installation](https://vinyaas.vercel.app/installation)
 - Components: [https://vinyaas.vercel.app/components](https://vinyaas.vercel.app/components)
 - Source: [https://github.com/SarangKumar/vinyaas](https://github.com/SarangKumar/vinyaas)

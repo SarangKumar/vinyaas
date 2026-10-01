@@ -2,12 +2,12 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
-v1.0.0 is the major production-focused catalog release. v0.1 contains Button. v1.0.0 contains every other catalog component: forms, feedback, layout, navigation, data display, overlays, and utilities. Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` stays the documentation introduction.
+**v1.2.0** is the current release. The catalog covers forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities. Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
 
 ## Prerequisites
 
 - Node.js 20 or newer
-- An existing Next.js project with React, Tailwind CSS, a global stylesheet at `app/globals.css` or `src/app/globals.css`, and an `@/*` path alias in `tsconfig.json` or `jsconfig.json`
+- An existing React, Next.js, or Vite project with Tailwind CSS v4, a global stylesheet, and an `@/*` path alias in `tsconfig.json` or `jsconfig.json`
 - One of pnpm, npm, yarn, or bun
 
 Vinyaas detects the package manager from the project lockfile: `pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `bun.lock`, or `bun.lockb`. It does not fall back to npm when no lockfile is present. If a component needs packages that are not already declared, the install fails until the project has exactly one of those lockfiles.
@@ -43,9 +43,12 @@ From the project root:
 
 ```bash
 vinyaas init
+vinyaas doctor
 ```
 
-`init` detects the project and creates `components.json` and `lib/utils.ts`. It does not overwrite an existing `components.json`. If `lib/utils.ts` already exists, that file is left unchanged. `lib/utils.ts` is project infrastructure, not a registry component. It exports `cn` for class names.
+`init` detects the project and creates `components.json` and `lib/utils.ts` when missing. It does not overwrite an existing `components.json`. If `lib/utils.ts` already exists, that file is left unchanged. `lib/utils.ts` is project infrastructure, not a registry component. It exports `cn` for class names.
+
+`doctor` validates Project, Styling, Dependencies, and Registry setup without writing files.
 
 A TypeScript Next.js app with `app/globals.css` gets:
 
@@ -85,29 +88,30 @@ Install multiple components in one call. Shared packages install once:
 vinyaas add button card badge
 ```
 
-Already-installed components are skipped. Missing ones still install:
+Install by registry category (metadata groups — not collections/packages):
 
 ```bash
-vinyaas add button card badge textarea spinner
+vinyaas add --category forms
+vinyaas add --category forms --yes
 ```
 
-Example output when some components already exist:
+Preview without writing files:
 
-```text
-Installed:
-- textarea
-- spinner
-
-Skipped:
-- button — already installed
-- card — already installed
-- badge — already installed
+```bash
+vinyaas add button --dry-run
+vinyaas add --category forms --dry-run
 ```
 
-Overwrite an existing component only with `--force`:
+Already-installed components are skipped. Missing ones still install. Overwrite only with `--force`:
 
 ```bash
 vinyaas add button --force
+```
+
+Check what Vinyaas recorded locally:
+
+```bash
+vinyaas status
 ```
 
 For each component, Vinyaas:
@@ -129,15 +133,16 @@ Browse the registry without installing anything:
 
 ```bash
 vinyaas list
+vinyaas list --category forms
 vinyaas search input
 vinyaas info button
 ```
 
-- `vinyaas list` prints every installable component and a short description.
-- `vinyaas search <query>` matches component names and descriptions. It is case-insensitive.
+- `vinyaas list` prints installable components (optionally filtered by `--category`).
+- `vinyaas search <query>` matches component names and descriptions.
 - `vinyaas info <component>` shows files, dependencies, registry dependencies, and documentation before you run `add`.
 
-Each discovery command accepts `--json` for machine-readable stdout (errors still go to stderr):
+Each discovery command accepts `--json` for machine-readable stdout:
 
 ```bash
 vinyaas list --json
@@ -179,13 +184,15 @@ A registry item can declare environment variables it requires. Vinyaas reports w
 
 ## Registry
 
-The CLI uses `https://vinyaas.vercel.app` when `REGISTRY_BASE_URL` is unset. Leave it unset for the default registry.
+Prefer `REGISTRY_BASE_PATH` (registry root ending in `/r`). Published CLI builds default to the Vinyaas registry. Leave the variable unset for that default.
 
-To use another registry, set the variable for that command:
+To use another registry:
 
 ```bash
-REGISTRY_BASE_URL=http://localhost:3000 vinyaas add button
+REGISTRY_BASE_PATH=https://vinyaas.vercel.app/r vinyaas add button
 ```
+
+`REGISTRY_BASE_URL` (site origin) is accepted as a legacy alias and normalized to `/r`.
 
 ## Example
 
@@ -212,7 +219,7 @@ The current Button item does not declare CSS, environment variables, or a docume
 
 ## Component conventions
 
-v1.1.0 components follow the existing Button.
+Registry components follow the Button layout conventions:
 
 - Registry name and folder use the same lowercase name; the entry file is `index.tsx`: `button` → `ui/button/index.tsx`.
 - `vinyaas add button` installs that file under the `ui` alias, by default `components/ui/button/index.tsx`.

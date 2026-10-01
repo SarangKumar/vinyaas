@@ -216,15 +216,16 @@ export default function IntroductionPage() {
           <li>
             Run <code>vinyaas init</code> to configure theme CSS, aliases,{" "}
             <code>components.json</code>, and utilities. Init is idempotent.
+            Optionally run <code>vinyaas doctor</code> to validate the setup.
           </li>
           <li>
             Discover components with <code>vinyaas list</code>,{" "}
             <code>search</code>, and <code>info</code> when you need the catalog
-            from the terminal.
+            from the terminal. Filter by <code>--category</code> when useful.
           </li>
           <li>
-            Install one or more components with <code>vinyaas add …</code>.
-            Files land at{" "}
+            Install one or more components with <code>vinyaas add …</code>, or a
+            category with <code>vinyaas add --category …</code>. Files land at{" "}
             <code className="font-mono">
               components/ui/&lt;name&gt;/index.tsx
             </code>
@@ -247,7 +248,14 @@ export default function IntroductionPage() {
             Installation
           </Link>{" "}
           page, including multi-component adds, skip/force behavior, discovery
-          commands, and framework notes.
+          commands, categories, and doctor. The{" "}
+          <Link
+            href="/cli"
+            className={`text-foreground rounded-sm underline ${focusRing}`}
+          >
+            CLI
+          </Link>{" "}
+          page is the detailed command reference.
         </p>
       </section>
 

@@ -48,6 +48,7 @@ describe("installation docs", () => {
     expect(screen.queryByText(/Continue/i)).toBeNull();
     expect(screen.queryByText(/React framework with App Router/i)).toBeNull();
     expect(document.body.textContent).toContain("vinyaas init");
+    expect(document.body.textContent).toContain("vinyaas doctor");
     expect(document.body.textContent).toContain("add button");
     expect(document.body.textContent).not.toContain("dist/index.js vinyaas");
     expect(
@@ -108,6 +109,7 @@ describe("installation docs", () => {
     expect(document.body.textContent).toContain("--typescript");
     expect(document.body.textContent).toContain("vinyaas init");
     expect(document.body.textContent).toContain("add button");
+    expect(document.body.textContent).toContain("--category forms");
     expect(document.body.textContent).toContain(
       "components/ui/button/index.tsx",
     );

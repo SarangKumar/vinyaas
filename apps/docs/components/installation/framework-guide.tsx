@@ -137,10 +137,17 @@ export function FrameworkGuide({
           <code className="font-mono">components/ui/&lt;name&gt;/</code>. Files
           stay editable. Registry dependencies resolve automatically and only
           missing npm packages are installed. Pass multiple names to install
-          together; use <code>--force</code> to overwrite existing files.
+          together; use <code>--force</code> to overwrite existing files. Use{" "}
+          <code>--dry-run</code> to preview, or <code>--category</code> to
+          install a registry category group. See the{" "}
+          <a href="/cli" className="text-primary underline underline-offset-4">
+            CLI guide
+          </a>{" "}
+          for confirmation, status, and discovery commands.
         </p>
         <InstallCommand commands={cliCommands("add button")} />
         <InstallCommand commands={cliCommands("add button card dialog")} />
+        <InstallCommand commands={cliCommands("add --category forms --yes")} />
       </section>
 
       <section className="flex flex-col gap-4">

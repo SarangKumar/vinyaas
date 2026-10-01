@@ -111,18 +111,30 @@ export default function ComponentsJsonPage() {
           source of truth for the component file and its npm dependencies.{" "}
           <code>components.json</code> is local project configuration. It does
           not list every component and it is not published with the registry.
+          Installed component state is tracked separately in{" "}
+          <code>.vinyaas/manifest.json</code> after a successful{" "}
+          <code>vinyaas add</code>.
+        </p>
+        <p className="text-foreground text-base leading-7">
+          Flow: <code>components.json</code> (consumer config) →{" "}
+          <code>vinyaas init</code> / <code>vinyaas add</code> → registry
+          catalog and items → source files in your project.
         </p>
       </section>
       <section className="flex flex-col gap-4">
         <h2 id="init" className={sectionHeading}>
-          How init uses it
+          How init and add use it
         </h2>
         <p className="text-foreground text-base leading-7">
           <code>vinyaas init</code> creates <code>components.json</code> when
           the file is missing. A later init does not overwrite an existing file.{" "}
           <code>vinyaas add</code> reads the aliases and style from that file.
-          Init also prepares the configured CSS path, aliases, and utilities;
-          <code>components.json</code> remains local project configuration.
+          Init also prepares the configured CSS path, aliases, and utilities.
+          See the{" "}
+          <a href="/cli" className="text-primary underline underline-offset-4">
+            CLI guide
+          </a>{" "}
+          for commands and flags.
         </p>
       </section>
     </DocsArticle>

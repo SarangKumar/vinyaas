@@ -81,10 +81,9 @@ describe("introduction", () => {
     expect(
       screen.getByRole("link", { name: "components.json" }),
     ).toHaveAttribute("href", "/components-json");
-    expect(screen.getByRole("link", { name: "CLI" })).toHaveAttribute(
-      "href",
-      "/cli",
-    );
+    for (const link of screen.getAllByRole("link", { name: "CLI" })) {
+      expect(link).toHaveAttribute("href", "/cli");
+    }
     expect(screen.getByRole("link", { name: "Components" })).toHaveAttribute(
       "href",
       "/components",

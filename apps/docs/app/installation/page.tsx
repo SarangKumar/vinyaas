@@ -44,7 +44,18 @@ export default function InstallationPage() {
           </li>
           <li>Installs required utility dependencies when needed.</li>
           <li>
-            Then use <code>vinyaas add</code> to install components.
+            Run <code>vinyaas doctor</code> to validate the setup without
+            writing files.
+          </li>
+          <li>
+            Then use <code>vinyaas add</code> to install components (or see the{" "}
+            <a
+              href="/cli"
+              className="text-primary underline underline-offset-4"
+            >
+              CLI guide
+            </a>
+            ).
           </li>
         </ul>
       </section>

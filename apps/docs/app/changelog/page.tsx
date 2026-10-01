@@ -384,8 +384,20 @@ export default function ChangelogPage() {
           <li>
             CLI package version aligned to v{currentVersion}. Commands:{" "}
             <code>init</code>, <code>doctor</code>, <code>add</code>,{" "}
-            <code>list</code>, <code>search</code>, <code>info</code>, and{" "}
-            <code>--version</code>.
+            <code>list</code>, <code>search</code>, <code>info</code>,{" "}
+            <code>status</code>, and <code>--version</code>.
+          </li>
+          <li>
+            Category discovery and install: <code>vinyaas list --category</code>
+            , <code>vinyaas search … --category</code>, and{" "}
+            <code>vinyaas add --category</code>. Categories are registry
+            metadata, not component collections.
+          </li>
+          <li>
+            <code>vinyaas add --dry-run</code>, confirmation for multi-component
+            and category installs (<code>--yes</code> to skip), and local
+            install tracking in <code>.vinyaas/manifest.json</code> with{" "}
+            <code>vinyaas status</code>.
           </li>
         </ul>
       </section>

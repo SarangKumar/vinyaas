@@ -67,13 +67,14 @@ const pages: SearchPage[] = [
     title: "CLI",
     href: "/cli",
     description:
-      "Initialize projects, run doctor, add components as source, and discover the catalog by category.",
+      "init, doctor, add, categories, status, list, search, and info for source installs.",
     group: "Getting Started",
   },
   {
     title: "components.json",
     href: "/components-json",
-    description: "Local project config for style, aliases, and Tailwind paths.",
+    description:
+      "Local project config for style, aliases, and Tailwind paths used by vinyaas init and add.",
     group: "Getting Started",
   },
   {

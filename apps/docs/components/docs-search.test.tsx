@@ -101,6 +101,49 @@ describe("documentation search", () => {
     ).toBeInTheDocument();
   });
 
+  it("finds the CLI guide for categories and status", async () => {
+    render(<Search />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Search documentation" }),
+    );
+
+    const input = await screen.findByRole("combobox", {
+      name: "Search documentation",
+    });
+
+    fireEvent.change(input, { target: { value: "categories" } });
+    expect(
+      screen.getByRole("option", {
+        name: (name) => name.startsWith("CLI"),
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.change(input, { target: { value: "status" } });
+    expect(
+      screen.getByRole("option", {
+        name: (name) => name.startsWith("CLI"),
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("finds components.json when searching for aliases", async () => {
+    render(<Search />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Search documentation" }),
+    );
+
+    const input = await screen.findByRole("combobox", {
+      name: "Search documentation",
+    });
+
+    fireEvent.change(input, { target: { value: "aliases" } });
+    expect(
+      screen.getByRole("option", {
+        name: (name) => name.startsWith("components.json"),
+      }),
+    ).toBeInTheDocument();
+  });
+
   it("opens from the keyboard shortcut and focuses the field", async () => {
     render(<Search />);
 
