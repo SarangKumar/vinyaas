@@ -126,6 +126,24 @@ describe("documentation search", () => {
     ).toBeInTheDocument();
   });
 
+  it("finds companion docs when searching for Ember", async () => {
+    render(<Search />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Search documentation" }),
+    );
+
+    const input = await screen.findByRole("combobox", {
+      name: "Search documentation",
+    });
+
+    fireEvent.change(input, { target: { value: "ember" } });
+    expect(
+      screen.getByRole("option", {
+        name: (name) => name.startsWith("Companions"),
+      }),
+    ).toBeInTheDocument();
+  });
+
   it("finds components.json when searching for aliases", async () => {
     render(<Search />);
     fireEvent.click(

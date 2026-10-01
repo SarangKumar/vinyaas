@@ -21,6 +21,9 @@ describe("homepage", () => {
       "href",
       "/components",
     );
+    expect(
+      screen.getAllByRole("link", { name: "Companions" })[0],
+    ).toHaveAttribute("href", "/companion");
     expect(screen.getByRole("link", { name: "Themes" })).toHaveAttribute(
       "href",
       "/themes",
@@ -31,6 +34,14 @@ describe("homepage", () => {
     );
     expect(document.body.textContent).toContain("vinyaas init");
     expect(document.body.textContent).toContain("v1.2.0");
+
+    expect(
+      screen.getByRole("heading", { name: "Meet Vinyaas Companions" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Ember" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Soul" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Skeleton" })).toBeInTheDocument();
+    expect(document.querySelector("[data-companion-showcase]")).toBeTruthy();
 
     const playground = document.querySelector("[data-playground]");
     expect(playground).toBeTruthy();

@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Playground } from "@/app/home/playground";
 import { PlaygroundSideRails } from "@/app/home/playground-side-skeletons";
+import { CompanionShowcase } from "@/components/companion/companion-showcase";
 import { focusRing } from "@/components/focus-ring";
 
 const primaryLink = `bg-primary text-primary-foreground inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium no-underline ${focusRing}`;
@@ -62,16 +63,21 @@ export default function Home() {
         </div>
         <p className="text-muted-foreground mt-5 text-sm">
           Explore{" "}
+          <Link href="/companion" className={creditLink}>
+            Companions
+          </Link>
+          ,{" "}
           <Link href="/themes" className={creditLink}>
             Themes
-          </Link>{" "}
-          and{" "}
+          </Link>
+          , and{" "}
           <Link href="/typeset" className={creditLink}>
             Typeset
           </Link>{" "}
           playgrounds.
         </p>
       </section>
+      <CompanionShowcase />
       <div className="relative min-w-0">
         {/*
           Full-bleed showcase. Side rails are absolute outside the 1900px

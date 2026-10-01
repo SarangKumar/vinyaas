@@ -97,3 +97,24 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 }
+
+/* Companion showcase: gentle float for pixel sprites (docs only). */
+@keyframes vinyaas-companion-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.4rem);
+  }
+}
+
+.vinyaas-companion-float {
+  animation: vinyaas-companion-float 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyaas-companion-float {
+    animation: none;
+  }
+}

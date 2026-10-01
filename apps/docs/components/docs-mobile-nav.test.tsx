@@ -50,6 +50,7 @@ describe("DocsMobileNav", () => {
       0,
     );
     expect(screen.getByText("COMPONENTS")).toBeInTheDocument();
+    expect(screen.getByText("COMPANION")).toBeInTheDocument();
     expect(screen.getByText("GET STARTED")).toBeInTheDocument();
     expect(screen.getByText("SECTIONS")).toBeInTheDocument();
     expect(screen.queryByText("RESOURCES")).toBeNull();
@@ -58,6 +59,12 @@ describe("DocsMobileNav", () => {
       "href",
       "/cli",
     );
+    expect(
+      screen.getByRole("link", { name: "Custom Companion" }),
+    ).toHaveAttribute("href", "/companion/custom");
+    expect(
+      screen.getAllByRole("link", { name: "Introduction" })[1],
+    ).toHaveAttribute("href", "/companion");
     expect(screen.getByRole("link", { name: "Changelog" })).toHaveAttribute(
       "href",
       "/changelog",

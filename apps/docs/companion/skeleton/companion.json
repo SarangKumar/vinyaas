@@ -1,0 +1,38 @@
+{
+  "id": "skeleton",
+  "name": "Skeleton",
+  "type": "skeleton",
+  "description": "A spooky but friendly skeleton.",
+  "personalityTraits": ["witty", "brave", "friendly"],
+  "capabilities": {
+    "floating": false,
+    "followCursor": false,
+    "reactToClick": true
+  },
+  "interactions": [
+    { "id": "idle", "description": "Stands ready with a grin" },
+    { "id": "blink", "description": "Blinks empty-socket eyes" },
+    { "id": "wave", "description": "Waves a bony hand" },
+    { "id": "jump", "description": "Hops with rattling bones" },
+    { "id": "dance", "description": "Does a silly bone dance" },
+    { "id": "spin", "description": "Spins like a dizzy skeleton" },
+    { "id": "sleep", "description": "Slumps into a nap" },
+    { "id": "wake", "description": "Snaps awake with a clack" },
+    { "id": "celebrate", "description": "Cheers with raised arms" },
+    { "id": "follow-cursor", "description": "Can trail the cursor later" },
+    { "id": "hide", "description": "Curls up out of view" },
+    { "id": "peek", "description": "Peeks from hiding" },
+    { "id": "shake", "description": "Rattles with laughter" },
+    { "id": "glow", "description": "Bones shimmer faintly" },
+    { "id": "react-click", "description": "Reacts when clicked" },
+    { "id": "surprise", "description": "Jumps in surprise" }
+  ],
+  "assets": {
+    "idle": "assets/idle.png"
+  },
+  "animations": {
+    "idle": ["animations/idle/1.png", "animations/idle/2.png", "animations/idle/3.png"],
+    "happy": ["animations/happy/1.png", "animations/happy/2.png"],
+    "sleep": ["animations/sleep/1.png", "animations/sleep/2.png"]
+  }
+}

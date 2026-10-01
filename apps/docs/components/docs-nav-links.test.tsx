@@ -20,6 +20,7 @@ describe("DocsNavLinks", () => {
       .sort((a, b) => a.localeCompare(b));
 
     expect(within(nav).getByText("SECTIONS")).toBeInTheDocument();
+    expect(within(nav).getByText("COMPANION")).toBeInTheDocument();
     expect(within(nav).getByText("COMPONENTS")).toBeInTheDocument();
     expect(within(nav).getByText("GET STARTED")).toBeInTheDocument();
     expect(within(nav).queryByText("RESOURCES")).toBeNull();
@@ -38,6 +39,26 @@ describe("DocsNavLinks", () => {
       "Typeset",
       "Changelog",
     ]);
+
+    const companionStart = titles.indexOf("Changelog") + 1;
+    expect(titles.slice(companionStart, companionStart + 4)).toEqual([
+      "Introduction",
+      "Installation",
+      "companion.json",
+      "Custom Companion",
+    ]);
+    expect(
+      within(nav).getAllByRole("link", { name: "Introduction" })[1],
+    ).toHaveAttribute("href", "/companion");
+    expect(
+      within(nav).getAllByRole("link", { name: "Installation" })[1],
+    ).toHaveAttribute("href", "/companion/installation");
+    expect(
+      within(nav).getByRole("link", { name: "companion.json" }),
+    ).toHaveAttribute("href", "/companion/configuration");
+    expect(
+      within(nav).getByRole("link", { name: "Custom Companion" }),
+    ).toHaveAttribute("href", "/companion/custom");
 
     const componentsStart = titles.indexOf(componentNames[0]!);
     expect(

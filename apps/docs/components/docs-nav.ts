@@ -20,6 +20,16 @@ export const installationPath = "/installation";
 
 export const cliPath = "/cli";
 
+/** Companion feature area (separate from registry UI components). */
+export const companionPath = "/companion";
+
+export const companionInstallationPath = "/companion/installation";
+
+/** Docs page for companion.json configuration. */
+export const companionJsonPath = "/companion/configuration";
+
+export const companionCustomPath = "/companion/custom";
+
 /** Theme system documentation (tokens, CSS variables, customization). */
 export const themingPath = "/theming";
 
@@ -74,6 +84,16 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Theming", href: themingPath },
       { title: "Typeset", href: typesetPath },
       { title: "Changelog", href: changelogPath },
+    ],
+  },
+  {
+    title: "COMPANION",
+    label: true,
+    items: [
+      { title: "Introduction", href: companionPath },
+      { title: "Installation", href: companionInstallationPath },
+      { title: "companion.json", href: companionJsonPath },
+      { title: "Custom Companion", href: companionCustomPath },
     ],
   },
   {

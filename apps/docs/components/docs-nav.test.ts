@@ -4,6 +4,10 @@ import { components } from "./component-meta";
 import {
   changelogPath,
   cliPath,
+  companionCustomPath,
+  companionInstallationPath,
+  companionJsonPath,
+  companionPath,
   componentsJsonPath,
   componentsPath,
   darkModePath,
@@ -28,6 +32,10 @@ describe("documentation navigation", () => {
     expect(componentsJsonPath).toBe("/components-json");
     expect(installationPath).toBe("/installation");
     expect(cliPath).toBe("/cli");
+    expect(companionPath).toBe("/companion");
+    expect(companionInstallationPath).toBe("/companion/installation");
+    expect(companionJsonPath).toBe("/companion/configuration");
+    expect(companionCustomPath).toBe("/companion/custom");
     expect(themingPath).toBe("/theming");
     expect(themesPath).toBe("/themes");
     expect(typesetPath).toBe("/typeset");
@@ -37,10 +45,11 @@ describe("documentation navigation", () => {
     expect(changelogPath).toBe("/changelog");
     expect(docsNav.map((group) => group.title)).toEqual([
       "SECTIONS",
+      "COMPANION",
       "COMPONENTS",
       "GET STARTED",
     ]);
-    expect(docsNav[1]?.layout).toBe("names");
+    expect(docsNav[2]?.layout).toBe("names");
 
     const sections = docsNav[0]?.items;
     expect(sections?.map((item) => item.title)).toEqual([
@@ -61,7 +70,22 @@ describe("documentation navigation", () => {
     );
     expect(sections?.every((item) => !item.children?.length)).toBe(true);
 
-    const getStarted = docsNav[2]?.items;
+    const companion = docsNav[1]?.items;
+    expect(companion?.map((item) => item.title)).toEqual([
+      "Introduction",
+      "Installation",
+      "companion.json",
+      "Custom Companion",
+    ]);
+    expect(companion?.map((item) => item.href)).toEqual([
+      "/companion",
+      "/companion/installation",
+      "/companion/configuration",
+      "/companion/custom",
+    ]);
+    expect(companion?.every((item) => !item.children?.length)).toBe(true);
+
+    const getStarted = docsNav[3]?.items;
     expect(getStarted?.map((item) => item.title)).toEqual([
       "Installation",
       "components.json",

@@ -1,0 +1,38 @@
+{
+  "id": "ember",
+  "name": "Ember",
+  "type": "flame",
+  "description": "A tiny playful flame spirit.",
+  "personalityTraits": ["playful", "curious", "energetic"],
+  "capabilities": {
+    "floating": true,
+    "followCursor": false,
+    "reactToClick": true
+  },
+  "interactions": [
+    { "id": "idle", "description": "Softly flickers while waiting" },
+    { "id": "blink", "description": "Blinks with bright ember eyes" },
+    { "id": "wave", "description": "Waves a little flame tip" },
+    { "id": "jump", "description": "Bounces upward with heat" },
+    { "id": "dance", "description": "Dances happily on command" },
+    { "id": "spin", "description": "Spins like a tiny spark" },
+    { "id": "sleep", "description": "Dims and dozes off" },
+    { "id": "wake", "description": "Flare-wakes from a nap" },
+    { "id": "celebrate", "description": "Bursts brighter in joy" },
+    { "id": "follow-cursor", "description": "Can trail the cursor later" },
+    { "id": "hide", "description": "Shrinks into a spark" },
+    { "id": "peek", "description": "Peeks out from hiding" },
+    { "id": "shake", "description": "Shivers with excitement" },
+    { "id": "glow", "description": "Glows warmer for a moment" },
+    { "id": "react-click", "description": "Reacts when clicked" },
+    { "id": "surprise", "description": "Pops up in surprise" }
+  ],
+  "assets": {
+    "idle": "assets/idle.png"
+  },
+  "animations": {
+    "idle": ["animations/idle/1.png", "animations/idle/2.png", "animations/idle/3.png"],
+    "happy": ["animations/happy/1.png", "animations/happy/2.png"],
+    "sleep": ["animations/sleep/1.png", "animations/sleep/2.png"]
+  }
+}

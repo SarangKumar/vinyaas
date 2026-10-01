@@ -1,0 +1,38 @@
+{
+  "id": "soul",
+  "name": "Soul",
+  "type": "ghost",
+  "description": "A gentle floating ghost friend.",
+  "personalityTraits": ["calm", "gentle", "mysterious"],
+  "capabilities": {
+    "floating": true,
+    "followCursor": false,
+    "reactToClick": true
+  },
+  "interactions": [
+    { "id": "idle", "description": "Hovers with a soft glow" },
+    { "id": "blink", "description": "Blinks slowly and kindly" },
+    { "id": "wave", "description": "Waves a ghostly hand" },
+    { "id": "jump", "description": "Floats up a little higher" },
+    { "id": "dance", "description": "Sways in a gentle dance" },
+    { "id": "spin", "description": "Twinkles while spinning" },
+    { "id": "sleep", "description": "Drifts into a quiet nap" },
+    { "id": "wake", "description": "Wakes with a soft shimmer" },
+    { "id": "celebrate", "description": "Glows brighter in delight" },
+    { "id": "follow-cursor", "description": "Can trail the cursor later" },
+    { "id": "hide", "description": "Fades almost out of sight" },
+    { "id": "peek", "description": "Peeks back into view" },
+    { "id": "shake", "description": "Shivers with a giggle" },
+    { "id": "glow", "description": "Aura brightens briefly" },
+    { "id": "react-click", "description": "Reacts when clicked" },
+    { "id": "surprise", "description": "Pops with mild surprise" }
+  ],
+  "assets": {
+    "idle": "assets/idle.png"
+  },
+  "animations": {
+    "idle": ["animations/idle/1.png", "animations/idle/2.png", "animations/idle/3.png"],
+    "happy": ["animations/happy/1.png", "animations/happy/2.png"],
+    "sleep": ["animations/sleep/1.png", "animations/sleep/2.png"]
+  }
+}

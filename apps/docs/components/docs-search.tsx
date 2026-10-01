@@ -71,6 +71,34 @@ const pages: SearchPage[] = [
     group: "Getting Started",
   },
   {
+    title: "Companions",
+    href: "/companion",
+    description:
+      "Meet Ember, Soul, and Skeleton — tiny Vinyaas companions separate from UI components.",
+    group: "Getting Started",
+  },
+  {
+    title: "Companion Installation",
+    href: "/companion/installation",
+    description:
+      "How companions will be installed. CLI companion commands are planned, not available yet.",
+    group: "Getting Started",
+  },
+  {
+    title: "companion.json",
+    href: "/companion/configuration",
+    description:
+      "Companion identity, animations, personality, capabilities, and interaction metadata.",
+    group: "Getting Started",
+  },
+  {
+    title: "Custom Companion",
+    href: "/companion/custom",
+    description:
+      "Planned workflow for creating custom companions with assets and companion.json.",
+    group: "Getting Started",
+  },
+  {
     title: "components.json",
     href: "/components-json",
     description:
