@@ -122,6 +122,7 @@ describe("CompanionHost in DocsShell", () => {
     fireEvent.pointerUp(window, { pointerId: 1 });
 
     expect(host).toHaveAttribute("data-companion-motion", "falling");
+    expect(host).toHaveAttribute("data-companion-role", "fall");
     expect(document.body.scrollHeight).toBe(beforeHeight);
     expect(
       document.querySelector("[data-companion-layer]")?.className,

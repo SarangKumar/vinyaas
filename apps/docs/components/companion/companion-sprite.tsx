@@ -3,10 +3,8 @@
 import Image, { type StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
 
-import {
-  frameIntervalMs,
-  nextAnimationFrameIndex,
-} from "@/components/companion/companion-runtime";
+import { frameIntervalMs } from "@/components/companion/runtime/animation";
+import { nextAnimationFrameIndex } from "@/components/companion/companion-runtime";
 
 type CompanionSpriteProps = {
   name: string;
@@ -14,12 +12,15 @@ type CompanionSpriteProps = {
   fps?: number;
   size?: number;
   playing?: boolean;
+  /** Controlled frame index from the runtime animation controller. */
+  frameIndex?: number;
   className?: string;
   alt?: string;
 };
 
 /**
- * Generic pixel-art sprite that cycles animation frames from companion metadata.
+ * Generic pixel-art sprite renderer.
+ * Can self-tick (showcase) or display a controlled frame from the runtime engine.
  */
 export function CompanionSprite({
   name,
@@ -27,18 +28,23 @@ export function CompanionSprite({
   fps = 5,
   size = 72,
   playing = true,
+  frameIndex: controlledFrame,
   className,
   alt,
 }: CompanionSpriteProps) {
   const [frameIndex, setFrameIndex] = useState(0);
   const activeFrames = frames.length > 0 ? frames : [];
+  const controlled = controlledFrame !== undefined;
 
   useEffect(() => {
+    if (controlled) {
+      return;
+    }
     setFrameIndex(0);
-  }, [frames]);
+  }, [frames, controlled]);
 
   useEffect(() => {
-    if (!playing || activeFrames.length <= 1) {
+    if (controlled || !playing || activeFrames.length <= 1) {
       return;
     }
 
@@ -49,9 +55,12 @@ export function CompanionSprite({
     }, frameIntervalMs(fps));
 
     return () => window.clearInterval(id);
-  }, [activeFrames.length, fps, playing]);
+  }, [activeFrames.length, controlled, fps, playing]);
 
-  const src = activeFrames[frameIndex] ?? activeFrames[0];
+  const index = controlled
+    ? Math.min(controlledFrame, Math.max(0, activeFrames.length - 1))
+    : frameIndex;
+  const src = activeFrames[index] ?? activeFrames[0];
 
   if (!src) {
     return null;
@@ -60,7 +69,7 @@ export function CompanionSprite({
   return (
     <div
       data-companion-sprite={name.toLowerCase()}
-      data-companion-frame={frameIndex}
+      data-companion-frame={index}
       className={["inline-flex items-center justify-center", className]
         .filter(Boolean)
         .join(" ")}

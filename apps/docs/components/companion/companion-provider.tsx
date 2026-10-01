@@ -10,13 +10,10 @@ import {
 
 import { CompanionHost } from "@/components/companion/companion-host";
 import { companionCatalog } from "@/components/companion/catalog";
+import type { CompanionRuntimeState } from "@/components/companion/runtime/state-machine";
+import type { CompanionVec2 } from "@/components/companion/runtime/physics";
 
-export type CompanionPosition = {
-  /** Distance from the left viewport edge in CSS pixels. */
-  x: number;
-  /** Distance from the top viewport edge in CSS pixels. */
-  y: number;
-};
+export type CompanionPosition = CompanionVec2;
 
 export type CompanionInstanceState = {
   /** Stable id for this website session instance. */
@@ -27,12 +24,20 @@ export type CompanionInstanceState = {
    * until the user drags the companion.
    */
   position: CompanionPosition | null;
+  /** Persisted runtime state machine value. */
+  runtimeState: CompanionRuntimeState;
 };
 
 type CompanionContextValue = {
   instance: CompanionInstanceState;
   setCompanionId: (companionId: string) => void;
   setPosition: (position: CompanionPosition) => void;
+  setRuntimeState: (runtimeState: CompanionRuntimeState) => void;
+  patchInstance: (
+    patch: Partial<
+      Pick<CompanionInstanceState, "position" | "runtimeState" | "companionId">
+    >,
+  ) => void;
 };
 
 const CompanionContext = createContext<CompanionContextValue | null>(null);
@@ -48,12 +53,14 @@ function createInstanceId(): string {
 /**
  * Keeps one companion instance alive for the docs shell lifetime.
  * In-memory only — no localStorage or sync.
+ * Preserves companion id, position, and runtime state across navigations.
  */
 export function CompanionProvider({ children }: { children: ReactNode }) {
   const [instance, setInstance] = useState<CompanionInstanceState>(() => ({
     instanceId: createInstanceId(),
     companionId: companionCatalog[0]?.meta.id ?? "ember",
     position: null,
+    runtimeState: "idle",
   }));
 
   const value = useMemo<CompanionContextValue>(
@@ -63,11 +70,21 @@ export function CompanionProvider({ children }: { children: ReactNode }) {
         setInstance((current) =>
           current.companionId === companionId
             ? current
-            : { ...current, companionId },
+            : { ...current, companionId, runtimeState: "idle" },
         );
       },
       setPosition: (position: CompanionPosition) => {
         setInstance((current) => ({ ...current, position }));
+      },
+      setRuntimeState: (runtimeState: CompanionRuntimeState) => {
+        setInstance((current) =>
+          current.runtimeState === runtimeState
+            ? current
+            : { ...current, runtimeState },
+        );
+      },
+      patchInstance: (patch) => {
+        setInstance((current) => ({ ...current, ...patch }));
       },
     }),
     [instance],

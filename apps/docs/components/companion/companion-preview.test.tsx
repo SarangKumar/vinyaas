@@ -11,6 +11,8 @@ import {
 } from "./catalog";
 import {
   companionFloorY,
+  findPerchLandingY,
+  pickAmbientRole,
   shouldFallOnDrop,
   stepCompanionFall,
 } from "./companion-runtime";
@@ -96,6 +98,8 @@ describe("companion catalog", () => {
         true,
       );
       expect(entry.clips.idle.frames.length).toBeGreaterThanOrEqual(2);
+      expect(entry.clips.happy.frames.length).toBeGreaterThanOrEqual(2);
+      expect(entry.clips.sleep.frames.length).toBeGreaterThanOrEqual(2);
       expect(entry.clips.fall.frames.length).toBeGreaterThanOrEqual(2);
 
       const idle = normalizeAnimationClip(entry.meta.animations.idle);
@@ -146,5 +150,22 @@ describe("companion runtime physics", () => {
 
     expect(landed).toBe(true);
     expect(y).toBe(floorY);
+  });
+
+  it("lands on a component top edge when falling past it", () => {
+    const perch = findPerchLandingY(
+      100,
+      40,
+      200,
+      [{ top: 160, left: 80, right: 400, bottom: 400 }],
+      72,
+    );
+    expect(perch).toBe(88);
+  });
+
+  it("cycles ambient roles away from idle", () => {
+    expect(pickAmbientRole("idle", () => 0.7)).toBe("happy");
+    expect(pickAmbientRole("idle", () => 0.9)).toBe("sleep");
+    expect(pickAmbientRole("happy", () => 0.1)).toBe("idle");
   });
 });

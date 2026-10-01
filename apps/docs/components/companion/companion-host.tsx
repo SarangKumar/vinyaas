@@ -2,72 +2,239 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { companionCatalog } from "@/components/companion/catalog";
+import {
+  getCatalogEntry,
+  type CompanionAnimationRole,
+} from "@/components/companion/catalog";
 import { useCompanionInstance } from "@/components/companion/companion-provider";
 import { CompanionSprite } from "@/components/companion/companion-sprite";
 import {
-  clampCompanionPosition,
-  companionFloorY,
+  createCompanionEngine,
+  engineEndDrag,
+  engineMoveDrag,
+  engineStartDrag,
+  engineTick,
+  engineTriggerClick,
+  type CompanionEngineSnapshot,
+} from "@/components/companion/runtime/engine";
+import {
   COMPANION_FLOOR_INSET,
   COMPANION_SIZE,
-  shouldFallOnDrop,
-  stepCompanionFall,
-  type CompanionMotionState,
-} from "@/components/companion/companion-runtime";
+  type LandingSurface,
+} from "@/components/companion/runtime/physics";
+
+function isCompanionChrome(el: Element) {
+  return Boolean(
+    el.closest(
+      "[data-companion-layer], [data-companion-host], [data-companion-sprite]",
+    ),
+  );
+}
+
+function collectLandingSurfaces(sampleX: number): LandingSurface[] {
+  if (typeof document === "undefined") {
+    return [];
+  }
+
+  const surfaces: LandingSurface[] = [];
+  const seen = new Set<Element>();
+  const step = 10;
+
+  for (let y = 0; y < window.innerHeight; y += step) {
+    const stack =
+      typeof document.elementsFromPoint === "function"
+        ? document.elementsFromPoint(sampleX, y)
+        : [];
+
+    for (const el of stack) {
+      if (!(el instanceof Element) || seen.has(el) || isCompanionChrome(el)) {
+        continue;
+      }
+
+      const style = getComputedStyle(el);
+      if (
+        style.display === "none" ||
+        style.visibility === "hidden" ||
+        style.pointerEvents === "none"
+      ) {
+        continue;
+      }
+
+      const rect = el.getBoundingClientRect();
+      if (rect.width < 48 || rect.height < 12) {
+        continue;
+      }
+
+      if (
+        rect.width >= window.innerWidth - 8 &&
+        rect.height >= window.innerHeight - 8
+      ) {
+        continue;
+      }
+
+      if (Number.parseFloat(style.opacity || "1") < 0.15) {
+        continue;
+      }
+
+      seen.add(el);
+      surfaces.push({
+        top: rect.top,
+        left: rect.left,
+        right: rect.right,
+        bottom: rect.bottom,
+      });
+    }
+  }
+
+  return surfaces;
+}
 
 /**
- * Global floating companion layer for the docs site.
- * Mounted once under CompanionProvider — not inside route pages.
- * Plays idle frames, supports drag, and falls with simple gravity on drop.
+ * Global companion host — thin React adapter over the runtime engine.
+ * Navigation preserves companion id, position, and runtime state via the provider.
  */
 export function CompanionHost() {
-  const { instance, setPosition } = useCompanionInstance();
-  const entry =
-    companionCatalog.find((item) => item.meta.id === instance.companionId) ??
-    companionCatalog[0];
+  const { instance, patchInstance } = useCompanionInstance();
+  const entry = getCatalogEntry(instance.companionId);
   const dragOffset = useRef<{ x: number; y: number } | null>(null);
-  const positionRef = useRef(instance.position);
-  const velocityRef = useRef(0);
-  const [motion, setMotion] = useState<CompanionMotionState>("idle");
+  const dragMovedRef = useRef(false);
+  const engineRef = useRef<CompanionEngineSnapshot | null>(null);
+  const patchRef = useRef(patchInstance);
+  const instanceRef = useRef(instance);
+  const [snapshot, setSnapshot] = useState<CompanionEngineSnapshot | null>(
+    null,
+  );
+
+  patchRef.current = patchInstance;
+  instanceRef.current = instance;
+
+  // Create / rehydrate engine when companion species changes.
+  useEffect(() => {
+    if (!entry) {
+      return;
+    }
+
+    const engine = createCompanionEngine({
+      config: entry.meta,
+      position: instanceRef.current.position,
+      state: instanceRef.current.runtimeState,
+    });
+    engineRef.current = engine;
+    setSnapshot(engine);
+  }, [entry]);
+
+  // Keep a live engine ticking for animation + physics.
+  useEffect(() => {
+    if (!entry) {
+      return;
+    }
+
+    let frame = 0;
+    let last = performance.now();
+    let active = true;
+
+    function tick(now: number) {
+      if (!active || !engineRef.current || !entry) {
+        return;
+      }
+
+      const dtMs = Math.min(48, now - last);
+      last = now;
+      const sampleX =
+        engineRef.current.physics.position.x + COMPANION_SIZE / 2;
+      const surfaces =
+        engineRef.current.state === "falling"
+          ? collectLandingSurfaces(sampleX)
+          : [];
+
+      const next = engineTick(
+        engineRef.current,
+        entry.meta,
+        dtMs,
+        { width: window.innerWidth, height: window.innerHeight },
+        surfaces,
+      );
+
+      engineRef.current = next;
+      setSnapshot(next);
+
+      const current = instanceRef.current;
+      if (
+        next.placed &&
+        (current.position?.x !== next.physics.position.x ||
+          current.position?.y !== next.physics.position.y ||
+          current.runtimeState !== next.state)
+      ) {
+        patchRef.current({
+          position: next.physics.position,
+          runtimeState: next.state,
+        });
+      }
+
+      frame = window.requestAnimationFrame(tick);
+    }
+
+    frame = window.requestAnimationFrame(tick);
+    return () => {
+      active = false;
+      window.cancelAnimationFrame(frame);
+    };
+  }, [entry]);
 
   useEffect(() => {
-    positionRef.current = instance.position;
-  }, [instance.position]);
-
-  useEffect(() => {
-    if (motion !== "dragging") {
+    if (!snapshot || snapshot.state !== "dragging") {
       return;
     }
 
     function onPointerMove(event: PointerEvent) {
-      if (!dragOffset.current) {
+      if (!dragOffset.current || !engineRef.current || !entry) {
         return;
       }
 
-      const next = clampCompanionPosition(
-        event.clientX - dragOffset.current.x,
-        event.clientY - dragOffset.current.y,
-        window.innerWidth,
-        window.innerHeight,
-      );
-      setPosition(next);
+      const nextPos = {
+        x: event.clientX - dragOffset.current.x,
+        y: event.clientY - dragOffset.current.y,
+      };
+      const previous = engineRef.current.physics.position;
+      if (
+        Math.abs(previous.x - nextPos.x) > 3 ||
+        Math.abs(previous.y - nextPos.y) > 3
+      ) {
+        dragMovedRef.current = true;
+      }
+
+      const moved = engineMoveDrag(engineRef.current, nextPos, {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+      engineRef.current = moved;
+      setSnapshot(moved);
+      patchRef.current({
+        position: moved.physics.position,
+        runtimeState: moved.state,
+      });
     }
 
     function onPointerUp() {
-      dragOffset.current = null;
-      const current = positionRef.current;
-      if (!current) {
-        setMotion("idle");
+      if (!engineRef.current || !entry) {
         return;
       }
 
-      const floorY = companionFloorY(window.innerHeight);
-      if (shouldFallOnDrop(current.y, floorY)) {
-        velocityRef.current = 0;
-        setMotion("falling");
-      } else {
-        setMotion("idle");
-      }
+      dragOffset.current = null;
+      const sampleX =
+        engineRef.current.physics.position.x + COMPANION_SIZE / 2;
+      const ended = engineEndDrag(
+        engineRef.current,
+        entry.meta,
+        { width: window.innerWidth, height: window.innerHeight },
+        collectLandingSurfaces(sampleX),
+      );
+      engineRef.current = ended;
+      setSnapshot(ended);
+      patchRef.current({
+        position: ended.physics.position,
+        runtimeState: ended.state,
+      });
     }
 
     window.addEventListener("pointermove", onPointerMove);
@@ -79,70 +246,18 @@ export function CompanionHost() {
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", onPointerUp);
     };
-  }, [motion, setPosition]);
+  }, [entry, snapshot?.state]);
 
-  useEffect(() => {
-    if (motion !== "falling") {
-      return;
-    }
-
-    let frame = 0;
-    let last = performance.now();
-    let active = true;
-
-    function tick(now: number) {
-      if (!active) {
-        return;
-      }
-
-      const dt = Math.min(2.5, (now - last) / (1000 / 60));
-      last = now;
-
-      const current = positionRef.current;
-      if (!current) {
-        setMotion("idle");
-        return;
-      }
-
-      const floorY = companionFloorY(window.innerHeight);
-      const stepped = stepCompanionFall(
-        current.y,
-        velocityRef.current,
-        floorY,
-        dt,
-      );
-      velocityRef.current = stepped.vy;
-      const next = clampCompanionPosition(
-        current.x,
-        stepped.y,
-        window.innerWidth,
-        window.innerHeight,
-      );
-      setPosition(next);
-
-      if (stepped.landed) {
-        velocityRef.current = 0;
-        setMotion("idle");
-        return;
-      }
-
-      frame = window.requestAnimationFrame(tick);
-    }
-
-    frame = window.requestAnimationFrame(tick);
-    return () => {
-      active = false;
-      window.cancelAnimationFrame(frame);
-    };
-  }, [motion, setPosition]);
-
-  if (!entry) {
+  if (!entry || !snapshot) {
     return null;
   }
 
-  const placed = instance.position !== null;
-  const clip = motion === "falling" ? entry.clips.fall : entry.clips.idle;
-  const dragging = motion === "dragging";
+  const clipKey = (snapshot.animation.clipId in entry.clips
+    ? snapshot.animation.clipId
+    : "idle") as CompanionAnimationRole;
+  const clip = entry.clips[clipKey] ?? entry.clips.idle;
+  const dragging = snapshot.state === "dragging";
+  const placed = snapshot.placed;
 
   return (
     <div
@@ -154,14 +269,15 @@ export function CompanionHost() {
         data-companion-host
         data-companion-instance={instance.instanceId}
         data-companion-id={entry.meta.id}
-        data-companion-motion={motion}
+        data-companion-motion={snapshot.state}
+        data-companion-role={snapshot.animation.clipId}
         data-companion-dragging={dragging ? "true" : "false"}
         className="pointer-events-auto absolute touch-none select-none"
         style={
           placed
             ? {
-                left: instance.position!.x,
-                top: instance.position!.y,
+                left: snapshot.physics.position.x,
+                top: snapshot.physics.position.y,
                 right: "auto",
                 bottom: "auto",
                 width: COMPANION_SIZE,
@@ -177,7 +293,7 @@ export function CompanionHost() {
               }
         }
         onPointerDown={(event) => {
-          if (event.button !== 0) {
+          if (event.button !== 0 || !engineRef.current || !entry) {
             return;
           }
 
@@ -187,18 +303,42 @@ export function CompanionHost() {
             x: event.clientX - rect.left,
             y: event.clientY - rect.top,
           };
-          velocityRef.current = 0;
-          setPosition({ x: rect.left, y: rect.top });
-          setMotion("dragging");
+          dragMovedRef.current = false;
+          const started = engineStartDrag(engineRef.current, entry.meta, {
+            x: rect.left,
+            y: rect.top,
+          });
+          engineRef.current = started;
+          setSnapshot(started);
+          patchRef.current({
+            position: started.physics.position,
+            runtimeState: started.state,
+          });
           event.currentTarget.setPointerCapture?.(event.pointerId);
+        }}
+        onClick={() => {
+          if (
+            !engineRef.current ||
+            !entry ||
+            dragMovedRef.current ||
+            (snapshot.state !== "idle" && snapshot.state !== "sleeping")
+          ) {
+            return;
+          }
+
+          const clicked = engineTriggerClick(engineRef.current, entry.meta);
+          engineRef.current = clicked;
+          setSnapshot(clicked);
+          patchRef.current({ runtimeState: clicked.state });
         }}
       >
         <CompanionSprite
           name={entry.meta.name}
           frames={clip.frames}
           fps={clip.fps}
+          frameIndex={snapshot.animation.frameIndex}
           size={COMPANION_SIZE}
-          playing
+          playing={false}
           className="pointer-events-none"
         />
       </div>
