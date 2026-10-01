@@ -20,6 +20,11 @@ export type CompanionInstanceState = {
   instanceId: string;
   companionId: string;
   /**
+   * Optional personality instance profile id from companion.json `instances`.
+   * Base species assets stay the same; only display/behavior overrides apply.
+   */
+  instanceProfileId: string | null;
+  /**
    * Absolute fixed position. `null` uses the default bottom-right placement
    * until the user drags the companion.
    */
@@ -31,11 +36,15 @@ export type CompanionInstanceState = {
 type CompanionContextValue = {
   instance: CompanionInstanceState;
   setCompanionId: (companionId: string) => void;
+  setInstanceProfileId: (instanceProfileId: string | null) => void;
   setPosition: (position: CompanionPosition) => void;
   setRuntimeState: (runtimeState: CompanionRuntimeState) => void;
   patchInstance: (
     patch: Partial<
-      Pick<CompanionInstanceState, "position" | "runtimeState" | "companionId">
+      Pick<
+        CompanionInstanceState,
+        "position" | "runtimeState" | "companionId" | "instanceProfileId"
+      >
     >,
   ) => void;
 };
@@ -59,6 +68,7 @@ export function CompanionProvider({ children }: { children: ReactNode }) {
   const [instance, setInstance] = useState<CompanionInstanceState>(() => ({
     instanceId: createInstanceId(),
     companionId: companionCatalog[0]?.meta.id ?? "ember",
+    instanceProfileId: null,
     position: null,
     runtimeState: "idle",
   }));
@@ -70,7 +80,19 @@ export function CompanionProvider({ children }: { children: ReactNode }) {
         setInstance((current) =>
           current.companionId === companionId
             ? current
-            : { ...current, companionId, runtimeState: "idle" },
+            : {
+                ...current,
+                companionId,
+                instanceProfileId: null,
+                runtimeState: "idle",
+              },
+        );
+      },
+      setInstanceProfileId: (instanceProfileId: string | null) => {
+        setInstance((current) =>
+          current.instanceProfileId === instanceProfileId
+            ? current
+            : { ...current, instanceProfileId },
         );
       },
       setPosition: (position: CompanionPosition) => {

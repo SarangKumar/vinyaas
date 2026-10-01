@@ -8,17 +8,24 @@ import {
 } from "@/components/companion/runtime/animation";
 import {
   createCompanionEngine,
+  engineDispatchTrigger,
   engineEndDrag,
   engineMoveDrag,
+  engineSetInstanceProfile,
   engineStartDrag,
   engineTick,
   engineTriggerClick,
 } from "@/components/companion/runtime/engine";
 import {
   clearInteractionHandlers,
+  executeTriggeredInteraction,
   installDefaultInteractionHandlers,
   resolveInteraction,
 } from "@/components/companion/runtime/interactions";
+import {
+  deriveCompanionMood,
+  resolveCompanionPersonality,
+} from "@/components/companion/runtime/personality";
 import {
   companionFloorY,
   findPerchLandingY,
@@ -36,6 +43,23 @@ import {
 } from "@/components/companion/runtime/state-machine";
 import emberMeta from "@/companion/ember/companion.json";
 
+const baseValid = {
+  id: "x",
+  name: "X",
+  description: "desc",
+  personalityTraits: ["a"],
+  capabilities: {
+    floating: true,
+    followCursor: false,
+    reactToClick: true,
+  },
+  interactions: [] as unknown[],
+  assets: { idle: "a.png" },
+  animations: {
+    idle: { frames: ["idle/1.png"], fps: 5 },
+  },
+};
+
 describe("companion schema", () => {
   it("parses a valid companion.json config", () => {
     const result = parseCompanionConfig(emberMeta);
@@ -43,6 +67,8 @@ describe("companion schema", () => {
     if (result.ok) {
       expect(result.config.id).toBe("ember");
       expect(result.config.animations.idle).toBeTruthy();
+      expect(result.config.instances?.spark?.name).toBe("Spark");
+      expect(result.config.interactions[0]?.trigger).toBe("click");
     }
   });
 
@@ -74,6 +100,57 @@ describe("companion schema", () => {
       }).ok,
     ).toBe(false);
     expect(() => assertCompanionConfig({ id: "bad" })).toThrow(/Invalid companion/);
+  });
+
+  it("rejects invalid interaction schema", () => {
+    const badTrigger = parseCompanionConfig({
+      ...baseValid,
+      interactions: [
+        {
+          id: "bad",
+          trigger: "telepathy",
+          action: "play_animation",
+          animation: "happy",
+        },
+      ],
+    });
+    expect(badTrigger.ok).toBe(false);
+    if (!badTrigger.ok) {
+      expect(badTrigger.path).toBe("interactions[0].trigger");
+    }
+
+    const badAction = parseCompanionConfig({
+      ...baseValid,
+      interactions: [
+        {
+          id: "bad",
+          trigger: "click",
+          action: "explode",
+          animation: "happy",
+        },
+      ],
+    });
+    expect(badAction.ok).toBe(false);
+    if (!badAction.ok) {
+      expect(badAction.path).toBe("interactions[0].action");
+    }
+
+    const badCooldown = parseCompanionConfig({
+      ...baseValid,
+      interactions: [
+        {
+          id: "bad",
+          trigger: "click",
+          action: "play_animation",
+          animation: "happy",
+          cooldown: -1,
+        },
+      ],
+    });
+    expect(badCooldown.ok).toBe(false);
+    if (!badCooldown.ok) {
+      expect(badCooldown.path).toBe("interactions[0].cooldown");
+    }
   });
 });
 
@@ -174,6 +251,150 @@ describe("interaction registry", () => {
         request: { interactionId: "not-declared", trigger: "click" },
       }),
     ).toBeNull();
+  });
+});
+
+describe("interaction system v0.1", () => {
+  it("handles click interaction", () => {
+    const config = assertCompanionConfig(emberMeta);
+    let engine = createCompanionEngine({
+      config,
+      position: { x: 10, y: 10 },
+    });
+
+    engine = engineTriggerClick(engine, config);
+    expect(engine.state).toBe("interacting");
+    expect(engine.animation.clipId).toBe("happy");
+    expect(engine.mood).toBe("happy");
+  });
+
+  it("enforces cooldown handling", () => {
+    const config = assertCompanionConfig(emberMeta);
+    const first = executeTriggeredInteraction({
+      config,
+      currentState: "idle",
+      request: { trigger: "click" },
+      cooldowns: {},
+      nowMs: 1_000,
+    });
+    expect(first).not.toBeNull();
+    expect(first?.effect.interactionId).toBe("react-click");
+
+    const blocked = executeTriggeredInteraction({
+      config,
+      currentState: "idle",
+      request: { trigger: "click" },
+      cooldowns: first!.cooldowns,
+      nowMs: 1_100,
+    });
+    expect(blocked).toBeNull();
+
+    const readyAgain = executeTriggeredInteraction({
+      config,
+      currentState: "idle",
+      request: { trigger: "click" },
+      cooldowns: first!.cooldowns,
+      nowMs: 2_000,
+    });
+    expect(readyAgain).not.toBeNull();
+  });
+
+  it("fires idle timeout through the engine", () => {
+    const config = assertCompanionConfig(emberMeta);
+    let engine = createCompanionEngine({
+      config,
+      position: { x: 10, y: 10 },
+      instanceProfileId: "ash",
+    });
+
+    expect(engine.personality.idleTimeoutMs).toBe(4800);
+    expect(engine.mood).toBe("sleepy");
+
+    engine = engineTick(
+      engine,
+      config,
+      engine.personality.idleTimeoutMs + 1,
+      { width: 1000, height: 800 },
+    );
+
+    expect(engine.state).toBe("sleeping");
+    expect(engine.animation.clipId).toBe("sleep");
+  });
+
+  it("handles drop trigger after drag end", () => {
+    const config = assertCompanionConfig(emberMeta);
+    let engine = createCompanionEngine({
+      config,
+      position: { x: 100, y: 40 },
+    });
+
+    engine = engineStartDrag(engine, config, { x: 100, y: 40 });
+    engine = engineMoveDrag(
+      engine,
+      { x: 120, y: 20 },
+      { width: 1000, height: 800 },
+    );
+    engine = engineEndDrag(engine, config, { width: 1000, height: 800 }, []);
+
+    expect(engine.state).toBe("falling");
+    expect(engine.animation.clipId).toBe("fall");
+  });
+
+  it("applies personality override for named instances", () => {
+    const config = assertCompanionConfig(emberMeta);
+    const spark = resolveCompanionPersonality(config, "spark");
+    const ash = resolveCompanionPersonality(config, "ash");
+
+    expect(spark.displayName).toBe("Spark");
+    expect(spark.energy).toBe("high");
+    expect(spark.idleTimeoutMs).toBe(2000);
+    expect(deriveCompanionMood("idle", spark)).toBe("excited");
+
+    expect(ash.displayName).toBe("Ash");
+    expect(ash.energy).toBe("calm");
+    expect(ash.idleTimeoutMs).toBe(4800);
+    expect(deriveCompanionMood("idle", ash)).toBe("sleepy");
+
+    let engine = createCompanionEngine({
+      config,
+      position: { x: 0, y: 0 },
+      instanceProfileId: "spark",
+    });
+    expect(engine.displayName).toBe("Spark");
+    expect(engine.mood).toBe("excited");
+
+    engine = engineSetInstanceProfile(engine, config, "ash");
+    expect(engine.displayName).toBe("Ash");
+    expect(engine.mood).toBe("sleepy");
+    expect(engine.instanceProfileId).toBe("ash");
+  });
+
+  it("dispatches page_navigation and cursor_nearby generically", () => {
+    const config = assertCompanionConfig(emberMeta);
+    let engine = createCompanionEngine({
+      config,
+      position: { x: 40, y: 40 },
+    });
+
+    engine = engineDispatchTrigger(engine, config, {
+      trigger: "page_navigation",
+      payload: { pathname: "/introduction" },
+    });
+    expect(engine.state).toBe("interacting");
+    expect(engine.animation.clipId).toBe("happy");
+
+    engine = createCompanionEngine({
+      config,
+      position: { x: 40, y: 40 },
+    });
+    engine = engineDispatchTrigger(engine, config, {
+      trigger: "cursor_nearby",
+      payload: {
+        cursorDistance: 40,
+        cursorNearbyRadius: engine.personality.cursorNearbyRadius,
+      },
+    });
+    expect(engine.state).toBe("interacting");
   });
 });
 

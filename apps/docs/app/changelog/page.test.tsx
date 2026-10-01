@@ -57,6 +57,10 @@ describe("Changelog", () => {
     expect(document.body.textContent).toContain(
       `v${currentVersion} focuses on installation clarity`,
     );
+    expect(screen.getByRole("heading", { name: "Companions" })).toBeInTheDocument();
+    expect(document.body.textContent).toContain("interaction system v0.1");
+    expect(document.body.textContent).toContain("companion.json");
+    expect(document.body.textContent).toContain("Ember, Soul, and Moss");
     expect(document.body.textContent).toContain("Framework-specific");
     expect(document.body.textContent).toContain("project-state onboarding");
     expect(document.body.textContent).toContain("create-app commands");

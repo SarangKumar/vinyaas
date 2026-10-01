@@ -1,8 +1,7 @@
-"use client";
-
 import { AccountSettingsBlock } from "@/app/home/blocks/account-settings-block";
 import { ChartBlock } from "@/app/home/blocks/chart-block";
 import { ChatBlock } from "@/app/home/blocks/chat-block";
+import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { FilterBlock } from "@/app/home/blocks/filter-block";
 import { InvoiceBlock } from "@/app/home/blocks/invoice-block";
 import { LoginBlock } from "@/app/home/blocks/login-block";
@@ -35,6 +34,7 @@ export function Playground() {
     >
       <ChartBlock />
       <LoginBlock />
+      <CompanionBlock />
       <MediaControlsBlock />
       <ChatBlock />
       <UploadBlock />

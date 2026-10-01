@@ -1,102 +1,187 @@
 /**
- * Generic interaction registry.
- * Handlers key off interaction ids from companion.json — never companion ids.
+ * Interaction executor: trigger → cooldown check → action → effect.
+ * Generic for all companions.
  */
 
-import type { CompanionConfig } from "@/components/companion/runtime/schema";
+import { executeInteractionAction, type ActionResult } from "@/components/companion/runtime/actions";
+import {
+  moodPreferredIdleInteractionId,
+  type ResolvedCompanionPersonality,
+} from "@/components/companion/runtime/personality";
+import type {
+  CompanionConfig,
+  CompanionInteractionDefinition,
+  CompanionMood,
+} from "@/components/companion/runtime/schema";
 import type { CompanionRuntimeState } from "@/components/companion/runtime/state-machine";
+import {
+  resolveTriggerInteraction,
+  type TriggerEvent,
+} from "@/components/companion/runtime/triggers";
 
-export type InteractionTrigger =
-  | "click"
-  | "drop"
-  | "ambient"
-  | "land"
-  | "manual";
+export type InteractionTrigger = TriggerEvent["trigger"];
 
 export type InteractionRequest = {
-  /** Interaction id from companion.json (e.g. react-click, sleep, fall). */
-  interactionId: string;
+  interactionId?: string;
   trigger: InteractionTrigger;
+  payload?: TriggerEvent["payload"];
 };
 
-export type InteractionEffect = {
-  nextState: CompanionRuntimeState;
-  clipId: string;
+export type InteractionEffect = ActionResult & {
+  interactionId: string;
+  cooldownMs: number;
 };
 
-export type InteractionHandler = (args: {
+export type CooldownMap = Record<string, number>;
+
+export function isInteractionReady(
+  interaction: CompanionInteractionDefinition,
+  cooldowns: CooldownMap,
+  nowMs: number,
+): boolean {
+  const readyAt = cooldowns[interaction.id] ?? 0;
+  return nowMs >= readyAt;
+}
+
+export function markInteractionCooldown(
+  cooldowns: CooldownMap,
+  interaction: CompanionInteractionDefinition,
+  nowMs: number,
+): CooldownMap {
+  const cooldownMs = interaction.cooldown ?? 0;
+  if (cooldownMs <= 0) {
+    return cooldowns;
+  }
+  return {
+    ...cooldowns,
+    [interaction.id]: nowMs + cooldownMs,
+  };
+}
+
+/**
+ * Resolve + execute an interaction for a trigger event.
+ */
+export function executeTriggeredInteraction(args: {
   config: CompanionConfig;
   currentState: CompanionRuntimeState;
   request: InteractionRequest;
-}) => InteractionEffect | null;
+  cooldowns: CooldownMap;
+  nowMs: number;
+  personality?: ResolvedCompanionPersonality;
+  mood?: CompanionMood;
+}): { effect: InteractionEffect; cooldowns: CooldownMap } | null {
+  const ready = (interaction: CompanionInteractionDefinition) =>
+    isInteractionReady(interaction, args.cooldowns, args.nowMs);
 
-const handlers = new Map<string, InteractionHandler>();
+  let interaction: CompanionInteractionDefinition | null = null;
 
-function register(id: string, handler: InteractionHandler) {
-  handlers.set(id, handler);
-}
+  if (args.request.interactionId) {
+    const found = args.config.interactions.find(
+      (item) => item.id === args.request.interactionId,
+    );
+    if (found && ready(found)) {
+      interaction = found;
+    }
+  } else {
+    const payload = { ...args.request.payload };
+    if (
+      args.request.trigger === "cursor_nearby" &&
+      args.personality &&
+      payload.cursorNearbyRadius === undefined
+    ) {
+      payload.cursorNearbyRadius = args.personality.cursorNearbyRadius;
+    }
 
-/** Built-in generic handlers shared by all companions. */
-export function installDefaultInteractionHandlers() {
-  if (handlers.size > 0) {
-    return;
+    interaction = resolveTriggerInteraction(
+      args.config,
+      {
+        trigger: args.request.trigger,
+        payload,
+      },
+      ready,
+    );
+
+    // Mood can prefer a specific idle_timeout interaction when multiple match.
+    if (
+      args.request.trigger === "idle_timeout" &&
+      args.mood &&
+      interaction
+    ) {
+      const preferredId = moodPreferredIdleInteractionId(args.mood);
+      if (preferredId) {
+        const preferred = args.config.interactions.find(
+          (item) =>
+            item.id === preferredId &&
+            item.trigger === "idle_timeout" &&
+            ready(item),
+        );
+        if (preferred) {
+          interaction = preferred;
+        }
+      }
+    }
   }
 
-  register("react-click", () => ({
-    nextState: "interacting",
-    clipId: "happy",
-  }));
+  if (!interaction) {
+    return null;
+  }
 
-  register("celebrate", () => ({
-    nextState: "interacting",
-    clipId: "happy",
-  }));
+  // Capability gate for click-like reactions.
+  if (
+    (interaction.trigger === "click" ||
+      interaction.trigger === "double_click") &&
+    !args.config.capabilities.reactToClick
+  ) {
+    return null;
+  }
 
-  register("surprise", () => ({
-    nextState: "interacting",
-    clipId: "happy",
-  }));
+  const actionResult = executeInteractionAction(
+    interaction,
+    args.currentState,
+  );
+  if (!actionResult) {
+    return null;
+  }
 
-  register("sleep", () => ({
-    nextState: "sleeping",
-    clipId: "sleep",
-  }));
+  const effect: InteractionEffect = {
+    ...actionResult,
+    interactionId: interaction.id,
+    cooldownMs: interaction.cooldown ?? 0,
+  };
 
-  register("wake", () => ({
-    nextState: "idle",
-    clipId: "idle",
-  }));
-
-  register("fall", () => ({
-    nextState: "falling",
-    clipId: "fall",
-  }));
-
-  register("idle", () => ({
-    nextState: "idle",
-    clipId: "idle",
-  }));
-
-  register("dance", () => ({
-    nextState: "interacting",
-    clipId: "happy",
-  }));
-
-  register("jump", () => ({
-    nextState: "interacting",
-    clipId: "happy",
-  }));
+  return {
+    effect,
+    cooldowns: markInteractionCooldown(
+      args.cooldowns,
+      interaction,
+      args.nowMs,
+    ),
+  };
 }
 
-export function clearInteractionHandlers() {
-  handlers.clear();
-}
-
-export function registerInteractionHandler(
-  id: string,
-  handler: InteractionHandler,
-) {
-  handlers.set(id, handler);
+/** @deprecated Prefer executeTriggeredInteraction. */
+export function resolveInteraction(args: {
+  config: CompanionConfig;
+  currentState: CompanionRuntimeState;
+  request: { interactionId: string; trigger: InteractionTrigger };
+}): { nextState: CompanionRuntimeState; clipId: string } | null {
+  const result = executeTriggeredInteraction({
+    config: args.config,
+    currentState: args.currentState,
+    request: {
+      interactionId: args.request.interactionId,
+      trigger: args.request.trigger,
+    },
+    cooldowns: {},
+    nowMs: Date.now(),
+  });
+  if (!result) {
+    return null;
+  }
+  return {
+    nextState: result.effect.nextState,
+    clipId: result.effect.clipId,
+  };
 }
 
 export function hasInteraction(
@@ -106,63 +191,28 @@ export function hasInteraction(
   return config.interactions.some((item) => item.id === interactionId);
 }
 
-/**
- * Resolve an interaction against the companion's declared interactions
- * and the generic handler registry.
- */
-export function resolveInteraction(args: {
-  config: CompanionConfig;
-  currentState: CompanionRuntimeState;
-  request: InteractionRequest;
-}): InteractionEffect | null {
-  installDefaultInteractionHandlers();
-
-  if (!hasInteraction(args.config, args.request.interactionId)) {
-    return null;
-  }
-
-  const handler = handlers.get(args.request.interactionId);
-  if (!handler) {
-    return null;
-  }
-
-  return handler(args);
-}
-
-/**
- * Pick a click interaction declared by the companion, preferring react-click.
- */
 export function pickClickInteractionId(config: CompanionConfig): string | null {
   if (!config.capabilities.reactToClick) {
     return null;
   }
-
-  const preferred = ["react-click", "celebrate", "surprise", "dance", "jump"];
-  for (const id of preferred) {
-    if (hasInteraction(config, id)) {
-      return id;
-    }
-  }
-
-  return null;
+  const click = config.interactions.find((item) => item.trigger === "click");
+  return click?.id ?? null;
 }
 
-/**
- * Ambient interaction candidates while resting.
- */
 export function pickAmbientInteractionId(
   config: CompanionConfig,
-  random = Math.random,
+  _random = Math.random,
 ): string {
-  const roll = random();
-  if (roll < 0.55) {
-    return "idle";
-  }
-  if (roll < 0.8 && hasInteraction(config, "celebrate")) {
-    return "celebrate";
-  }
-  if (hasInteraction(config, "sleep")) {
-    return "sleep";
-  }
-  return "idle";
+  const idle = config.interactions.find(
+    (item) => item.trigger === "idle_timeout",
+  );
+  return idle?.id ?? "idle";
 }
+
+/** No-ops kept for older tests that reset handler registries. */
+export function clearInteractionHandlers() {}
+export function installDefaultInteractionHandlers() {}
+export function registerInteractionHandler(
+  _id: string,
+  _handler: unknown,
+) {}

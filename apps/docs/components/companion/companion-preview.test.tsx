@@ -2,8 +2,8 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { CompanionPreview } from "./companion-preview";
-import { CompanionShowcase } from "./companion-showcase";
 import { CompanionCard } from "./companion-card";
+import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { CompanionSprite } from "./companion-sprite";
 import {
   companionCatalog,
@@ -59,24 +59,20 @@ describe("CompanionCard", () => {
   });
 });
 
-describe("CompanionShowcase", () => {
-  it("showcases Ember, Soul, and Moss in a 2-column grid", () => {
-    render(<CompanionShowcase />);
+describe("CompanionBlock", () => {
+  it("shows one companion preview inside a playground card", () => {
+    render(<CompanionBlock />);
 
     expect(
-      screen.getByRole("heading", { name: "Meet Vinyaas Companions" }),
+      screen.getByRole("heading", { name: "Companion" }),
     ).toBeInTheDocument();
+    expect(document.querySelector("[data-companion-home-preview]")).toBeTruthy();
+    expect(document.querySelector("[data-play-block]")).toBeTruthy();
     expect(screen.getByRole("img", { name: "Ember" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Soul" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Moss" })).toBeInTheDocument();
-    expect(screen.queryByRole("img", { name: "Skeleton" })).toBeNull();
-    expect(document.querySelector("[data-companion-card-grid]")?.className).toContain(
-      "sm:grid-cols-2",
-    );
-    expect(document.querySelector("[data-companion-card-grid]")?.className).toContain(
-      "grid-cols-1",
-    );
-    expect(screen.getByRole("link", { name: "Companions" })).toHaveAttribute(
+    expect(screen.queryByRole("img", { name: "Soul" })).toBeNull();
+    expect(screen.queryByRole("img", { name: "Moss" })).toBeNull();
+    expect(document.body.textContent).toContain("A tiny playful flame spirit.");
+    expect(screen.getByRole("link", { name: "Meet companions" })).toHaveAttribute(
       "href",
       "/companion",
     );

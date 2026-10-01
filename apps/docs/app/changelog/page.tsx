@@ -298,10 +298,11 @@ export default function ChangelogPage() {
           v1.2.0
         </h2>
         <p className="text-foreground text-base leading-7">
-          v{currentVersion} focuses on installation clarity and documentation
-          polish. Framework-specific guides and project-state onboarding replace
-          the single generic install page, and the site catalog presentation is
-          cleaned up for the current release.
+          v{currentVersion} focuses on installation clarity, documentation
+          polish, and Companions as a new docs feature. Framework-specific
+          guides and project-state onboarding replace the single generic install
+          page, and the site catalog presentation is cleaned up for the current
+          release.
         </p>
         <h3
           id="v1.2.0-installation"
@@ -326,6 +327,38 @@ export default function ChangelogPage() {
             Framework-specific create-app commands for fresh Next.js and Vite
             setups, then a shared <code>vinyaas init</code> →{" "}
             <code>vinyaas add</code> flow.
+          </li>
+        </ul>
+        <h3
+          id="v1.2.0-companions"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Companions
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Companions land as a first-class docs feature: Ember, Soul, and Moss
+            with <code>companion.json</code> metadata, pixel assets, and a
+            global host that persists across navigation.
+          </li>
+          <li>
+            Runtime interaction system v0.1: metadata-driven triggers (
+            <code>click</code>, <code>double_click</code>,{" "}
+            <code>idle_timeout</code>, drag/drop, <code>cursor_nearby</code>,{" "}
+            <code>page_navigation</code>) and reusable actions (
+            <code>play_animation</code>, <code>change_state</code>,{" "}
+            <code>jump</code>, <code>sleep</code>, <code>move</code>).
+          </li>
+          <li>
+            Personality instances and deterministic moods (
+            <code>happy</code>, <code>neutral</code>, <code>sleepy</code>,{" "}
+            <code>excited</code>) without AI. Instance profiles can override
+            name, traits, and behavior preferences while sharing species assets.
+          </li>
+          <li>
+            Docs for installation, <code>companion.json</code>, and custom
+            companions. The homepage masonry includes one companion preview
+            card; the full card grid lives on <code>/companion</code>.
           </li>
         </ul>
         <h3

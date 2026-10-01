@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { Playground } from "@/app/home/playground";
 import { PlaygroundSideRails } from "@/app/home/playground-side-skeletons";
-import { CompanionShowcase } from "@/components/companion/companion-showcase";
 import { focusRing } from "@/components/focus-ring";
 
 const primaryLink = `bg-primary text-primary-foreground inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium no-underline ${focusRing}`;
@@ -77,7 +76,6 @@ export default function Home() {
           playgrounds.
         </p>
       </section>
-      <CompanionShowcase />
       <div className="relative min-w-0">
         {/*
           Full-bleed showcase. Side rails are absolute outside the 1900px

@@ -31,9 +31,31 @@ describe("Companion docs pages", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: "companion.json" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Architecture" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Schema" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Animations" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Interactions" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Personality" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Capabilities" }),
+    ).toBeInTheDocument();
     expect(document.body.textContent).toContain("personalityTraits");
     expect(document.body.textContent).toContain("capabilities");
     expect(document.body.textContent).toContain("interactions");
+    expect(document.body.textContent).toContain("trigger resolver");
+    expect(document.body.textContent).toContain("idle_timeout");
+    expect(document.body.textContent).toContain("play_animation");
+    expect(document.body.textContent).toContain("moodBias");
     expect(document.body.textContent).toContain('"id": "ember"');
   });
 

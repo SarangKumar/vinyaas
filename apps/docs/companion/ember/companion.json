@@ -9,24 +9,170 @@
     "followCursor": false,
     "reactToClick": true
   },
+  "instances": {
+    "spark": {
+      "name": "Spark",
+      "personalityTraits": ["energetic", "bold", "bright"],
+      "moodBias": "excited",
+      "behavior": {
+        "energy": "high",
+        "idleTimeoutMs": 2000,
+        "cursorNearbyRadius": 140
+      }
+    },
+    "ash": {
+      "name": "Ash",
+      "personalityTraits": ["calm", "gentle", "warm"],
+      "moodBias": "sleepy",
+      "behavior": {
+        "energy": "calm",
+        "idleTimeoutMs": 4800,
+        "cursorNearbyRadius": 90
+      }
+    }
+  },
   "interactions": [
-    { "id": "idle", "description": "Softly flickers while waiting" },
-    { "id": "blink", "description": "Blinks with bright ember eyes" },
-    { "id": "wave", "description": "Waves a little flame tip" },
-    { "id": "jump", "description": "Bounces upward with heat" },
-    { "id": "dance", "description": "Dances happily on command" },
-    { "id": "spin", "description": "Spins like a tiny spark" },
-    { "id": "sleep", "description": "Dims and dozes off" },
-    { "id": "wake", "description": "Flare-wakes from a nap" },
-    { "id": "celebrate", "description": "Bursts brighter in joy" },
-    { "id": "follow-cursor", "description": "Can trail the cursor later" },
-    { "id": "hide", "description": "Shrinks into a spark" },
-    { "id": "peek", "description": "Peeks out from hiding" },
-    { "id": "shake", "description": "Shivers with excitement" },
-    { "id": "glow", "description": "Glows warmer for a moment" },
-    { "id": "react-click", "description": "Reacts when clicked" },
-    { "id": "surprise", "description": "Pops up in surprise" },
-    { "id": "fall", "description": "Falls after being dropped" }
+    {
+      "id": "react-click",
+      "description": "Reacts when clicked",
+      "trigger": "click",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 900,
+      "duration": 1800
+    },
+    {
+      "id": "jump",
+      "description": "Bounces upward with heat",
+      "trigger": "double_click",
+      "action": "jump",
+      "animation": "happy",
+      "cooldown": 1200,
+      "duration": 1400
+    },
+    {
+      "id": "sleep",
+      "description": "Dims and dozes off",
+      "trigger": "idle_timeout",
+      "action": "sleep",
+      "animation": "sleep",
+      "cooldown": 6000,
+      "duration": 4200
+    },
+    {
+      "id": "idle",
+      "description": "Softly flickers while waiting",
+      "trigger": "idle_timeout",
+      "action": "play_animation",
+      "animation": "idle",
+      "cooldown": 0,
+      "duration": 2800
+    },
+    {
+      "id": "fall",
+      "description": "Falls after being dropped",
+      "trigger": "drop",
+      "action": "change_state",
+      "state": "falling",
+      "animation": "fall",
+      "cooldown": 0
+    },
+    {
+      "id": "drag-start",
+      "description": "Settles when picked up",
+      "trigger": "drag_start",
+      "action": "play_animation",
+      "animation": "idle",
+      "cooldown": 0
+    },
+    {
+      "id": "nearby",
+      "description": "Notices a nearby cursor",
+      "trigger": "cursor_nearby",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 2500,
+      "duration": 1200
+    },
+    {
+      "id": "page-hello",
+      "description": "Greets after navigation",
+      "trigger": "page_navigation",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 4000,
+      "duration": 1400
+    },
+    {
+      "id": "celebrate",
+      "description": "Bursts brighter in joy",
+      "trigger": "click",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 1200,
+      "duration": 1800
+    },
+    {
+      "id": "wake",
+      "description": "Flare-wakes from a nap",
+      "trigger": "click",
+      "action": "change_state",
+      "state": "idle",
+      "animation": "idle",
+      "cooldown": 400
+    },
+    {
+      "id": "blink",
+      "description": "Blinks with bright ember eyes",
+      "trigger": "manual",
+      "action": "play_animation",
+      "animation": "idle"
+    },
+    {
+      "id": "wave",
+      "description": "Waves a little flame tip",
+      "trigger": "manual",
+      "action": "play_animation",
+      "animation": "happy"
+    },
+    {
+      "id": "dance",
+      "description": "Dances happily on command",
+      "trigger": "manual",
+      "action": "play_animation",
+      "animation": "happy",
+      "duration": 1800
+    },
+    {
+      "id": "spin",
+      "description": "Spins like a tiny spark",
+      "trigger": "manual",
+      "action": "play_animation",
+      "animation": "happy"
+    },
+    {
+      "id": "surprise",
+      "description": "Pops up in surprise",
+      "trigger": "manual",
+      "action": "jump",
+      "animation": "happy"
+    },
+    {
+      "id": "glow",
+      "description": "Glows warmer for a moment",
+      "trigger": "manual",
+      "action": "play_animation",
+      "animation": "happy"
+    },
+    {
+      "id": "follow-cursor",
+      "description": "Can trail the cursor later",
+      "trigger": "cursor_nearby",
+      "action": "move",
+      "animation": "idle",
+      "cooldown": 3000,
+      "duration": 1000
+    }
   ],
   "assets": {
     "idle": "assets/idle.png"
@@ -38,17 +184,23 @@
         "animations/idle/2.png",
         "animations/idle/3.png"
       ],
-      "fps": 5
+      "fps": 5,
+      "loop": true
     },
     "happy": {
-      "frames": ["animations/happy/1.png", "animations/happy/2.png"]
+      "frames": ["animations/happy/1.png", "animations/happy/2.png"],
+      "fps": 6,
+      "loop": false
     },
     "sleep": {
-      "frames": ["animations/sleep/1.png", "animations/sleep/2.png"]
+      "frames": ["animations/sleep/1.png", "animations/sleep/2.png"],
+      "fps": 3,
+      "loop": true
     },
     "fall": {
       "frames": ["animations/fall/1.png", "animations/fall/2.png"],
-      "fps": 8
+      "fps": 8,
+      "loop": true
     }
   }
 }

@@ -9,9 +9,55 @@ export type CompanionCapabilities = {
   reactToClick: boolean;
 };
 
+export type CompanionInteractionTrigger =
+  | "click"
+  | "double_click"
+  | "idle_timeout"
+  | "drag_start"
+  | "drag_end"
+  | "drop"
+  | "cursor_nearby"
+  | "page_navigation"
+  | "manual";
+
+export type CompanionInteractionAction =
+  | "play_animation"
+  | "change_state"
+  | "jump"
+  | "sleep"
+  | "move";
+
+export type CompanionMood = "happy" | "neutral" | "sleepy" | "excited";
+
+export type CompanionEnergyPreference = "high" | "calm" | "balanced";
+
 export type CompanionInteractionDefinition = {
   id: string;
-  description: string;
+  description?: string;
+  trigger: CompanionInteractionTrigger;
+  action: CompanionInteractionAction;
+  /** Animation clip id to play (from animations map). */
+  animation?: string;
+  /** Optional runtime state target for change_state. */
+  state?: string;
+  /** Milliseconds before this interaction can fire again. */
+  cooldown?: number;
+  /** How long the resulting behavior should last (ms). */
+  duration?: number;
+};
+
+export type CompanionInstanceBehavior = {
+  energy?: CompanionEnergyPreference;
+  idleTimeoutMs?: number;
+  cursorNearbyRadius?: number;
+};
+
+export type CompanionInstanceProfile = {
+  name?: string;
+  personalityTraits?: string[];
+  /** Preferred resting mood bias. */
+  moodBias?: CompanionMood;
+  behavior?: CompanionInstanceBehavior;
 };
 
 export type CompanionAnimationClipDefinition = {
@@ -34,6 +80,8 @@ export type CompanionConfig = {
   personalityTraits: string[];
   capabilities: CompanionCapabilities;
   interactions: CompanionInteractionDefinition[];
+  /** Optional named instances that override display/behavior (assets unchanged). */
+  instances?: Record<string, CompanionInstanceProfile>;
   assets: { idle: string };
   animations: CompanionAnimationsDefinition;
 };
@@ -52,6 +100,33 @@ export type CompanionConfigSuccess = {
 export type CompanionConfigResult = CompanionConfigError | CompanionConfigSuccess;
 
 const DEFAULT_FPS = 5;
+
+const TRIGGERS = new Set<CompanionInteractionTrigger>([
+  "click",
+  "double_click",
+  "idle_timeout",
+  "drag_start",
+  "drag_end",
+  "drop",
+  "cursor_nearby",
+  "page_navigation",
+  "manual",
+]);
+
+const ACTIONS = new Set<CompanionInteractionAction>([
+  "play_animation",
+  "change_state",
+  "jump",
+  "sleep",
+  "move",
+]);
+
+const MOODS = new Set<CompanionMood>([
+  "happy",
+  "neutral",
+  "sleepy",
+  "excited",
+]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -85,7 +160,11 @@ function normalizeClip(
   }
 
   const frames = value.frames;
-  if (!Array.isArray(frames) || frames.length === 0 || !frames.every(isNonEmptyString)) {
+  if (
+    !Array.isArray(frames) ||
+    frames.length === 0 ||
+    !frames.every(isNonEmptyString)
+  ) {
     return {
       ok: false,
       error: "Animation clip.frames must be a non-empty string array.",
@@ -120,6 +199,285 @@ function normalizeClip(
     frames,
     fps,
     loop: value.loop as boolean | undefined,
+  };
+}
+
+/** Infer rich interaction fields from legacy { id, description } entries. */
+export function inferLegacyInteraction(
+  id: string,
+  description?: string,
+): CompanionInteractionDefinition {
+  const base = { id, description };
+
+  switch (id) {
+    case "react-click":
+    case "celebrate":
+    case "surprise":
+    case "dance":
+      return {
+        ...base,
+        trigger: "click",
+        action: "play_animation",
+        animation: "happy",
+        cooldown: 900,
+        duration: 1800,
+      };
+    case "jump":
+      return {
+        ...base,
+        trigger: "double_click",
+        action: "jump",
+        animation: "happy",
+        cooldown: 1200,
+        duration: 1400,
+      };
+    case "sleep":
+      return {
+        ...base,
+        trigger: "idle_timeout",
+        action: "sleep",
+        animation: "sleep",
+        cooldown: 6000,
+        duration: 4200,
+      };
+    case "wake":
+      return {
+        ...base,
+        trigger: "click",
+        action: "change_state",
+        state: "idle",
+        animation: "idle",
+        cooldown: 400,
+      };
+    case "fall":
+      return {
+        ...base,
+        trigger: "drop",
+        action: "change_state",
+        state: "falling",
+        animation: "fall",
+        cooldown: 0,
+      };
+    case "idle":
+      return {
+        ...base,
+        trigger: "idle_timeout",
+        action: "play_animation",
+        animation: "idle",
+        cooldown: 0,
+        duration: 2800,
+      };
+    case "follow-cursor":
+      return {
+        ...base,
+        trigger: "cursor_nearby",
+        action: "play_animation",
+        animation: "happy",
+        cooldown: 2500,
+        duration: 1200,
+      };
+    default:
+      return {
+        ...base,
+        trigger: "manual",
+        action: "play_animation",
+        animation: "idle",
+        cooldown: 0,
+      };
+  }
+}
+
+function parseInteraction(
+  item: unknown,
+  path: string,
+): CompanionInteractionDefinition | CompanionConfigError {
+  if (!isRecord(item) || !isNonEmptyString(item.id)) {
+    return {
+      ok: false,
+      error: "Each interaction needs a string id.",
+      path,
+    };
+  }
+
+  const description = isNonEmptyString(item.description)
+    ? item.description
+    : undefined;
+
+  // Legacy shape: only id (+ optional description).
+  if (item.trigger === undefined && item.action === undefined) {
+    if (description === undefined) {
+      return {
+        ok: false,
+        error: "Legacy interactions need a description string.",
+        path,
+      };
+    }
+    return inferLegacyInteraction(item.id, description);
+  }
+
+  if (!isNonEmptyString(item.trigger) || !TRIGGERS.has(item.trigger as CompanionInteractionTrigger)) {
+    return {
+      ok: false,
+      error:
+        "interaction.trigger must be one of click, double_click, idle_timeout, drag_start, drag_end, drop, cursor_nearby, page_navigation, manual.",
+      path: `${path}.trigger`,
+    };
+  }
+
+  if (!isNonEmptyString(item.action) || !ACTIONS.has(item.action as CompanionInteractionAction)) {
+    return {
+      ok: false,
+      error:
+        "interaction.action must be one of play_animation, change_state, jump, sleep, move.",
+      path: `${path}.action`,
+    };
+  }
+
+  if (item.animation !== undefined && !isNonEmptyString(item.animation)) {
+    return {
+      ok: false,
+      error: "interaction.animation must be a string when provided.",
+      path: `${path}.animation`,
+    };
+  }
+
+  if (item.state !== undefined && !isNonEmptyString(item.state)) {
+    return {
+      ok: false,
+      error: "interaction.state must be a string when provided.",
+      path: `${path}.state`,
+    };
+  }
+
+  if (
+    item.cooldown !== undefined &&
+    (typeof item.cooldown !== "number" || item.cooldown < 0)
+  ) {
+    return {
+      ok: false,
+      error: "interaction.cooldown must be a non-negative number.",
+      path: `${path}.cooldown`,
+    };
+  }
+
+  if (
+    item.duration !== undefined &&
+    (typeof item.duration !== "number" || item.duration < 0)
+  ) {
+    return {
+      ok: false,
+      error: "interaction.duration must be a non-negative number.",
+      path: `${path}.duration`,
+    };
+  }
+
+  return {
+    id: item.id,
+    description,
+    trigger: item.trigger as CompanionInteractionTrigger,
+    action: item.action as CompanionInteractionAction,
+    animation: item.animation as string | undefined,
+    state: item.state as string | undefined,
+    cooldown: item.cooldown as number | undefined,
+    duration: item.duration as number | undefined,
+  };
+}
+
+function parseInstanceProfile(
+  item: unknown,
+  path: string,
+): CompanionInstanceProfile | CompanionConfigError {
+  if (!isRecord(item)) {
+    return { ok: false, error: "Instance profile must be an object.", path };
+  }
+
+  if (item.name !== undefined && !isNonEmptyString(item.name)) {
+    return {
+      ok: false,
+      error: "instance.name must be a string.",
+      path: `${path}.name`,
+    };
+  }
+
+  if (
+    item.personalityTraits !== undefined &&
+    (!Array.isArray(item.personalityTraits) ||
+      !item.personalityTraits.every(isNonEmptyString))
+  ) {
+    return {
+      ok: false,
+      error: "instance.personalityTraits must be a string array.",
+      path: `${path}.personalityTraits`,
+    };
+  }
+
+  if (
+    item.moodBias !== undefined &&
+    (!isNonEmptyString(item.moodBias) || !MOODS.has(item.moodBias as CompanionMood))
+  ) {
+    return {
+      ok: false,
+      error: "instance.moodBias must be happy, neutral, sleepy, or excited.",
+      path: `${path}.moodBias`,
+    };
+  }
+
+  let behavior: CompanionInstanceBehavior | undefined;
+  if (item.behavior !== undefined) {
+    if (!isRecord(item.behavior)) {
+      return {
+        ok: false,
+        error: "instance.behavior must be an object.",
+        path: `${path}.behavior`,
+      };
+    }
+    const energy = item.behavior.energy;
+    if (
+      energy !== undefined &&
+      energy !== "high" &&
+      energy !== "calm" &&
+      energy !== "balanced"
+    ) {
+      return {
+        ok: false,
+        error: "instance.behavior.energy must be high, calm, or balanced.",
+        path: `${path}.behavior.energy`,
+      };
+    }
+    if (
+      item.behavior.idleTimeoutMs !== undefined &&
+      (typeof item.behavior.idleTimeoutMs !== "number" ||
+        item.behavior.idleTimeoutMs <= 0)
+    ) {
+      return {
+        ok: false,
+        error: "instance.behavior.idleTimeoutMs must be a positive number.",
+        path: `${path}.behavior.idleTimeoutMs`,
+      };
+    }
+    if (
+      item.behavior.cursorNearbyRadius !== undefined &&
+      (typeof item.behavior.cursorNearbyRadius !== "number" ||
+        item.behavior.cursorNearbyRadius <= 0)
+    ) {
+      return {
+        ok: false,
+        error: "instance.behavior.cursorNearbyRadius must be a positive number.",
+        path: `${path}.behavior.cursorNearbyRadius`,
+      };
+    }
+    behavior = {
+      energy: energy as CompanionEnergyPreference | undefined,
+      idleTimeoutMs: item.behavior.idleTimeoutMs as number | undefined,
+      cursorNearbyRadius: item.behavior.cursorNearbyRadius as number | undefined,
+    };
+  }
+
+  return {
+    name: item.name as string | undefined,
+    personalityTraits: item.personalityTraits as string[] | undefined,
+    moodBias: item.moodBias as CompanionMood | undefined,
+    behavior,
   };
 }
 
@@ -210,15 +568,33 @@ export function parseCompanionConfig(raw: unknown): CompanionConfigResult {
 
   const interactions: CompanionInteractionDefinition[] = [];
   for (let i = 0; i < raw.interactions.length; i++) {
-    const item = raw.interactions[i];
-    if (!isRecord(item) || !isNonEmptyString(item.id) || !isNonEmptyString(item.description)) {
+    const parsed = parseInteraction(
+      raw.interactions[i],
+      `interactions[${i}]`,
+    );
+    if ("ok" in parsed && parsed.ok === false) {
+      return parsed;
+    }
+    interactions.push(parsed as CompanionInteractionDefinition);
+  }
+
+  let instances: Record<string, CompanionInstanceProfile> | undefined;
+  if (raw.instances !== undefined) {
+    if (!isRecord(raw.instances)) {
       return {
         ok: false,
-        error: "Each interaction needs id and description strings.",
-        path: `interactions[${i}]`,
+        error: "instances must be an object map.",
+        path: "instances",
       };
     }
-    interactions.push({ id: item.id, description: item.description });
+    instances = {};
+    for (const [key, value] of Object.entries(raw.instances)) {
+      const profile = parseInstanceProfile(value, `instances.${key}`);
+      if ("ok" in profile && profile.ok === false) {
+        return profile;
+      }
+      instances[key] = profile as CompanionInstanceProfile;
+    }
   }
 
   if (!isRecord(raw.assets) || !isNonEmptyString(raw.assets.idle)) {
@@ -264,6 +640,7 @@ export function parseCompanionConfig(raw: unknown): CompanionConfigResult {
       personalityTraits: raw.personalityTraits as string[],
       capabilities,
       interactions,
+      instances,
       assets: { idle: raw.assets.idle as string },
       animations,
     },
