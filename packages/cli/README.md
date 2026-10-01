@@ -138,7 +138,7 @@ See [components.json](https://vinyaas.vercel.app/components-json) for fields and
 
 ## Registry
 
-Published installs use the Vinyaas registry. Override the registry root with:
+Published installs use the Vinyaas registry rooted at `https://vinyaas.vercel.app/r`. Override with:
 
 ```bash
 REGISTRY_BASE_PATH=https://vinyaas.vercel.app/r vinyaas list
@@ -148,7 +148,44 @@ REGISTRY_BASE_PATH=https://vinyaas.vercel.app/r vinyaas list
 
 Each registry item can include `name`, `type`, `description`, `category`, `files`, `dependencies`, `registryDependencies`, and `docs`.
 
-## Framework setup
+## Development builds
+
+From the monorepo root:
+
+```bash
+# Local CLI bundle (embeds http://localhost:3000/r by default)
+pnpm --filter vinyaas build
+
+# Or point at a custom registry while developing
+REGISTRY_BASE_PATH=http://localhost:3000/r pnpm --filter vinyaas build
+```
+
+## Release builds
+
+Production releases rebuild registry artifacts and the CLI bundle with the production registry path embedded:
+
+```bash
+pnpm cli:release-build
+pnpm cli:release-check
+```
+
+`cli:release-build` fails if `http://localhost:3000/r` remains in `packages/cli/dist/index.js`.
+
+`cli:release-check` packs the package, installs the tarball into a temp prefix, and smoke-tests `vinyaas --version`, `--help`, and `info button`. It does **not** publish.
+
+Publish order:
+
+1. `pnpm cli:release-build`
+2. Deploy the docs site so `https://vinyaas.vercel.app/r` serves the rebuilt registry
+3. `pnpm cli:release-check` (expects `info button` docs to be `https://vinyaas.vercel.app/components/button`)
+4. Publish manually:
+
+```bash
+cd packages/cli
+npm publish --access public
+```
+
+## Documentation
 
 For Next.js, React + Vite, or React (fresh, existing, or shadcn-style projects), follow the [Installation](https://vinyaas.vercel.app/installation) guides. Framework-specific create-app steps live there; the shared CLI flow is `vinyaas init` → `vinyaas add`.
 

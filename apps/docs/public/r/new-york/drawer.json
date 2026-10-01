@@ -1,5 +1,5 @@
 {
-  "$schema": "http://localhost:3000/r/schema/registry-item.json",
+  "$schema": "https://vinyaas.vercel.app/r/schema/registry-item.json",
   "name": "drawer",
   "type": "registry:ui",
   "description": "A panel that slides in from the edge of the screen.",
@@ -16,6 +16,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/drawer",
+  "docs": "https://vinyaas.vercel.app/components/drawer",
   "category": "feedback"
 }

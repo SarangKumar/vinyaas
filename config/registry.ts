@@ -11,23 +11,41 @@
  * legacy alias and normalized to a path by appending `/r`.
  */
 
-/** Local development fallback when the env var is unset. */
-export const defaultRegistryBasePath = "http://localhost:3000/r";
+/**
+ * Optional build-time default injected by the CLI esbuild bundle.
+ * `typeof` is safe when the identifier is not defined in Node scripts.
+ */
+declare const __VINYAAS_REGISTRY_BASE_PATH__: string | undefined;
+
+function readBuildTimeRegistryBasePath(): string | undefined {
+  if (typeof __VINYAAS_REGISTRY_BASE_PATH__ !== "string") {
+    return undefined;
+  }
+
+  const trimmed = __VINYAAS_REGISTRY_BASE_PATH__.trim();
+  return trimmed || undefined;
+}
+
+/**
+ * Default registry root when env is unset.
+ *
+ * Keep this as a direct ternary on `__VINYAAS_REGISTRY_BASE_PATH__` (no method
+ * calls in the condition) so release esbuild builds constant-fold away the
+ * localhost fallback after the production path is baked in.
+ */
+export const defaultRegistryBasePath =
+  typeof __VINYAAS_REGISTRY_BASE_PATH__ === "string"
+    ? __VINYAAS_REGISTRY_BASE_PATH__
+    : "http://localhost:3000/r";
 
 /** @deprecated Prefer defaultRegistryBasePath. Site origin for the local fallback. */
-export const defaultRegistryBaseUrl = "http://localhost:3000";
+export const defaultRegistryBaseUrl = defaultRegistryBasePath.replace(/\/r$/, "");
 
 export const registryItemSchemaRelativePath = "schema/registry-item.json";
 export const componentsSchemaRelativePath = "schema/components.json";
 
 /** Kept for callers that still concatenate against a site origin. */
 export const componentsSchemaPath = `/${componentsSchemaRelativePath}`;
-
-/**
- * Optional build-time default injected by the CLI esbuild bundle.
- * `typeof` is safe when the identifier is not defined in Node scripts.
- */
-declare const __VINYAAS_REGISTRY_BASE_PATH__: string | undefined;
 
 export class RegistryBasePathError extends Error {
   constructor(message: string) {
@@ -162,15 +180,6 @@ export function normalizeRegistryBasePath(value: string): string {
       `or a site origin (legacy REGISTRY_BASE_URL). Received: ${value}`,
     ].join(" "),
   );
-}
-
-function readBuildTimeRegistryBasePath(): string | undefined {
-  if (typeof __VINYAAS_REGISTRY_BASE_PATH__ !== "string") {
-    return undefined;
-  }
-
-  const trimmed = __VINYAAS_REGISTRY_BASE_PATH__.trim();
-  return trimmed || undefined;
 }
 
 function joinRegistryPath(basePath: string, relativePath: string): string {

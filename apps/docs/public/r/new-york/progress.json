@@ -1,5 +1,5 @@
 {
-  "$schema": "http://localhost:3000/r/schema/registry-item.json",
+  "$schema": "https://vinyaas.vercel.app/r/schema/registry-item.json",
   "name": "progress",
   "type": "registry:ui",
   "description": "A native progress indicator for a known amount of work.",
@@ -11,6 +11,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/progress",
+  "docs": "https://vinyaas.vercel.app/components/progress",
   "category": "feedback"
 }

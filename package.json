@@ -18,6 +18,8 @@
     "format:check": "prettier --check .",
     "registry:build": "tsx scripts/build-registry.ts",
     "registry:integration": "node packages/cli/integration/registry.mjs",
+    "cli:release-build": "node scripts/cli-release-build.mjs",
+    "cli:release-check": "node scripts/cli-release-check.mjs",
     "prepare": "husky"
   },
   "packageManager": "pnpm@10.33.4",

@@ -1,5 +1,5 @@
 {
-  "$schema": "http://localhost:3000/r/schema/registry-item.json",
+  "$schema": "https://vinyaas.vercel.app/r/schema/registry-item.json",
   "name": "marker",
   "type": "registry:ui",
   "description": "An inline status, bordered row, or labeled divider.",
@@ -11,6 +11,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/marker",
+  "docs": "https://vinyaas.vercel.app/components/marker",
   "category": "utilities"
 }

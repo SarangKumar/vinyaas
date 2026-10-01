@@ -1,5 +1,5 @@
 {
-  "$schema": "http://localhost:3000/r/schema/registry-item.json",
+  "$schema": "https://vinyaas.vercel.app/r/schema/registry-item.json",
   "name": "label",
   "type": "registry:ui",
   "description": "A visible name for a form control.",
@@ -11,6 +11,6 @@
       "type": "registry:ui"
     }
   ],
-  "docs": "http://localhost:3000/components/label",
+  "docs": "https://vinyaas.vercel.app/components/label",
   "category": "forms"
 }

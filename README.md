@@ -269,3 +269,30 @@ pnpm --filter vinyaas build
 pnpm --filter vinyaas test
 pnpm test
 ```
+
+### CLI release preparation
+
+Development builds embed `http://localhost:3000/r` by default:
+
+```bash
+pnpm --filter vinyaas build
+```
+
+Production release builds (registry + CLI, no publish):
+
+```bash
+pnpm cli:release-build
+```
+
+Deploy the docs site so `https://vinyaas.vercel.app/r` serves the rebuilt registry, then:
+
+```bash
+pnpm cli:release-check
+```
+
+Publish manually when ready:
+
+```bash
+cd packages/cli
+npm publish --access public
+```
