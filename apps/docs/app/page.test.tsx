@@ -34,6 +34,8 @@ describe("homepage", () => {
     );
     expect(document.body.textContent).toContain("vinyaas init");
     expect(document.body.textContent).toContain("v1.2.0");
+    expect(document.querySelector("[data-home-brand]")).toBeTruthy();
+    expect(screen.getByRole("img", { name: "Vinyaas" })).toBeInTheDocument();
 
     expect(document.querySelector("[data-companion-showcase]")).toBeNull();
     expect(document.querySelector("[data-companion-home-preview]")).toBeTruthy();
