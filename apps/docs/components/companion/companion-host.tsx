@@ -403,7 +403,7 @@ export function CompanionHost() {
   return (
     <div
       data-companion-layer
-      className="pointer-events-none fixed inset-0 z-50 print:hidden"
+      className="pointer-events-none fixed inset-0 z-40 print:hidden"
       aria-hidden="true"
     >
       <div

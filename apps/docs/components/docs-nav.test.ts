@@ -4,8 +4,12 @@ import { components } from "./component-meta";
 import {
   changelogPath,
   cliPath,
+  companionAnimationsPath,
   companionCustomPath,
+  companionExamplesPath,
+  companionGalleryPath,
   companionInstallationPath,
+  companionInteractionsPath,
   companionJsonPath,
   companionPath,
   componentsJsonPath,
@@ -36,6 +40,10 @@ describe("documentation navigation", () => {
     expect(companionInstallationPath).toBe("/companion/installation");
     expect(companionJsonPath).toBe("/companion/configuration");
     expect(companionCustomPath).toBe("/companion/custom");
+    expect(companionAnimationsPath).toBe("/companion/animations");
+    expect(companionInteractionsPath).toBe("/companion/interactions");
+    expect(companionExamplesPath).toBe("/companion/examples");
+    expect(companionGalleryPath).toBe("/companion/gallery");
     expect(themingPath).toBe("/theming");
     expect(themesPath).toBe("/themes");
     expect(typesetPath).toBe("/typeset");
@@ -53,6 +61,7 @@ describe("documentation navigation", () => {
 
     const sections = docsNav[0]?.items;
     expect(sections?.map((item) => item.title)).toEqual([
+      "Home",
       "Introduction",
       "Components",
       "Installation",
@@ -61,6 +70,7 @@ describe("documentation navigation", () => {
       "Typeset",
       "Changelog",
     ]);
+    expect(sections?.[0]?.href).toBe("/");
     expect(sections?.at(-1)?.title).toBe("Changelog");
     expect(sections?.find((item) => item.title === "Theming")?.href).toBe(
       "/theming",
@@ -76,13 +86,21 @@ describe("documentation navigation", () => {
       "Introduction",
       "Installation",
       "companion.json",
+      "Animations",
+      "Interactions",
       "Custom Companion",
+      "Examples",
+      "Gallery",
     ]);
     expect(companion?.items.map((item) => item.href)).toEqual([
       "/companion",
       "/companion/installation",
       "/companion/configuration",
+      "/companion/animations",
+      "/companion/interactions",
       "/companion/custom",
+      "/companion/examples",
+      "/companion/gallery",
     ]);
     expect(companion?.items.every((item) => !item.children?.length)).toBe(true);
 

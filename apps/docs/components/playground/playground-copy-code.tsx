@@ -39,7 +39,7 @@ export function PlaygroundCopyCodeButton({
           size="sm"
           aria-label="Copy code"
           className={cn(
-            "size-8 shrink-0 px-0 sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3",
+            "size-11 shrink-0 px-0 sm:size-8 sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3",
             className,
           )}
         >

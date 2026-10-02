@@ -117,4 +117,32 @@
   .vinyaas-companion-float {
     animation: none;
   }
+
+  [data-docs-mobile-panel] {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  [data-home-marquee-track],
+  [data-playground-block] .vinyaas-companion-float {
+    animation: none !important;
+  }
 }
+
+/* Mobile docs: no accidental page-level horizontal scroll */
+#docs-content {
+  overflow-x: clip;
+}
+
+#docs-content [data-docs-article],
+#docs-content [data-component-reference] {
+  overflow-wrap: anywhere;
+}
+
+#docs-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+

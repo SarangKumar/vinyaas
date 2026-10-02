@@ -276,10 +276,10 @@ export function DocsSearchIcon() {
     <button
       type="button"
       aria-label="Search documentation"
-      className={`text-muted-foreground hover:bg-muted hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-md md:hidden ${focusRing}`}
+      className={`text-muted-foreground hover:bg-muted hover:text-foreground inline-flex size-12 cursor-pointer items-center justify-center rounded-md md:hidden ${focusRing}`}
       onClick={() => setOpen(true)}
     >
-      <SearchIcon className="size-4" />
+      <SearchIcon className="size-5" />
     </button>
   );
 }

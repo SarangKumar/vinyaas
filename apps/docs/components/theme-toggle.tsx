@@ -30,7 +30,7 @@ export function ThemeToggle() {
       type="button"
       aria-label={label}
       title={label}
-      className={`text-sidebar-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-md p-1.5 ${focusRing}`}
+      className={`text-sidebar-foreground hover:bg-muted hover:text-foreground flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-md sm:size-9 ${focusRing}`}
       onClick={() => {
         const next: ThemeName = document.documentElement.classList.contains(
           "dark",
@@ -54,7 +54,7 @@ function SunIcon() {
       viewBox="0 0 24 24"
       aria-hidden="true"
       data-theme-icon="sun"
-      className="block h-4 w-4 dark:hidden"
+      className="block size-5 sm:size-4 dark:hidden"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -73,7 +73,7 @@ function MoonIcon() {
       viewBox="0 0 24 24"
       aria-hidden="true"
       data-theme-icon="moon"
-      className="hidden h-4 w-4 dark:block"
+      className="hidden size-5 sm:size-4 dark:block"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"

@@ -29,8 +29,9 @@ describe("DocsNavLinks", () => {
       within(nav).queryByRole("link", { name: "React + Vite" }),
     ).toBeNull();
 
-    const sectionsStart = titles.indexOf("Introduction");
-    expect(titles.slice(sectionsStart, sectionsStart + 7)).toEqual([
+    const sectionsStart = titles.indexOf("Home");
+    expect(titles.slice(sectionsStart, sectionsStart + 8)).toEqual([
+      "Home",
       "Introduction",
       "Components",
       "Installation",
@@ -39,13 +40,21 @@ describe("DocsNavLinks", () => {
       "Typeset",
       "Changelog",
     ]);
+    expect(within(nav).getByRole("link", { name: "Home" })).toHaveAttribute(
+      "href",
+      "/",
+    );
 
     const companionStart = titles.indexOf("Changelog") + 1;
-    expect(titles.slice(companionStart, companionStart + 4)).toEqual([
+    expect(titles.slice(companionStart, companionStart + 8)).toEqual([
       "Introduction",
       "Installation",
       "companion.json",
+      "Animations",
+      "Interactions",
       "Custom Companion",
+      "Examples",
+      "Gallery",
     ]);
     expect(
       within(nav).getAllByRole("link", { name: /Introduction/i })[1],
@@ -67,8 +76,20 @@ describe("DocsNavLinks", () => {
       within(nav).getByRole("link", { name: "companion.json" }),
     ).toHaveAttribute("href", "/companion/configuration");
     expect(
+      within(nav).getByRole("link", { name: "Animations" }),
+    ).toHaveAttribute("href", "/companion/animations");
+    expect(
+      within(nav).getByRole("link", { name: "Interactions" }),
+    ).toHaveAttribute("href", "/companion/interactions");
+    expect(
       within(nav).getByRole("link", { name: "Custom Companion" }),
     ).toHaveAttribute("href", "/companion/custom");
+    expect(
+      within(nav).getByRole("link", { name: "Examples" }),
+    ).toHaveAttribute("href", "/companion/examples");
+    expect(
+      within(nav).getByRole("link", { name: "Gallery" }),
+    ).toHaveAttribute("href", "/companion/gallery");
 
     const componentsStart = titles.indexOf(componentNames[0]!);
     expect(

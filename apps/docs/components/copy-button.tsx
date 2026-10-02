@@ -18,7 +18,7 @@ export function CopyButton({ value }: { value: string }) {
   return (
     <button
       type="button"
-      className={`text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-md p-1.5 ${focusRing}`}
+      className={`text-muted-foreground hover:bg-muted hover:text-foreground inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-md sm:size-8 ${focusRing}`}
       aria-label={labels[status]}
       aria-live="polite"
       onClick={() => {
@@ -52,7 +52,7 @@ function CopyIcon() {
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
-      className="h-4 w-4"
+      className="size-5 sm:size-4"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -70,7 +70,7 @@ function CheckIcon() {
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
-      className="h-4 w-4"
+      className="size-5 sm:size-4"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"

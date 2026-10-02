@@ -89,6 +89,11 @@ describe("DocsShell", () => {
       "aria-expanded",
       "false",
     );
+    expect(
+      within(start).getByRole("button", { name: "Menu" }).querySelector(
+        "[data-menu-icon]",
+      ),
+    ).toHaveAttribute("data-state", "closed");
     expect(within(start).getByRole("link", { name: "Docs" })).toHaveAttribute(
       "href",
       "/introduction",
@@ -133,20 +138,26 @@ describe("DocsShell", () => {
       ),
     ).toBeInTheDocument();
 
-    const github = within(end).getByRole("link", { name: "GitHub" });
+    expect(
+      document.querySelector('[data-github-link="compact"]'),
+    ).toBeTruthy();
+    expect(
+      document.querySelector('[data-github-link="default"]'),
+    ).toBeTruthy();
+
+    const github = within(end).getAllByRole("link", { name: /GitHub/i })[0]!;
 
     expect(github).toHaveAttribute(
       "href",
       "https://github.com/SarangKumar/vinyaas",
     );
     expect(github).toHaveAttribute("title", "GitHub");
-    expect(github).not.toHaveTextContent("GitHub");
     expect(github.querySelector("svg")).toBeInTheDocument();
     expect(end.className).toContain("lg:gap-4");
     expect(document.querySelector("header")).toHaveClass(
       "h-12",
       "relative",
-      "z-30",
+      "z-[60]",
     );
     expect(document.querySelector("header")).not.toHaveClass("sticky");
     expect(document.querySelector("[data-docs-sidebar]")).toHaveClass(
@@ -216,10 +227,10 @@ describe("DocsShell", () => {
 
     const github = within(
       document.querySelector("[data-header-section='end']") as HTMLElement,
-    ).getByRole("link", { name: "GitHub" });
+    ).getAllByRole("link", { name: /GitHub/i })[0]!;
 
     expect(await screen.findAllByText("12")).not.toHaveLength(0);
-    expect(github).toHaveAccessibleName("GitHub");
+    expect(github).toHaveAccessibleName(/GitHub/);
     expect(github.querySelector("svg")).toBeInTheDocument();
   });
 
@@ -232,14 +243,22 @@ describe("DocsShell", () => {
       </DocsShell>,
     );
 
-    const github = within(
-      document.querySelector("[data-header-section='end']") as HTMLElement,
-    ).getByRole("link", { name: "GitHub" });
+    const end = document.querySelector(
+      "[data-header-section='end']",
+    ) as HTMLElement;
+    const githubLinks = within(end).getAllByRole("link", {
+      name: "GitHub",
+      hidden: false,
+    });
+    expect(githubLinks.length).toBeGreaterThanOrEqual(1);
 
     await vi.waitFor(() => {
       expect(fetch).toHaveBeenCalled();
     });
-    expect(github.querySelector("span")).toBeNull();
+    const defaultLink = document.querySelector('[data-github-link="default"]');
+    const compactLink = document.querySelector('[data-github-link="compact"]');
+    expect(defaultLink?.querySelector("span")).toBeNull();
+    expect(compactLink?.querySelector("span")).toBeNull();
   });
 });
 

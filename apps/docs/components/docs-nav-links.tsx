@@ -17,15 +17,28 @@ function BetaDot() {
   );
 }
 
-function NavLink({ item, current }: { item: DocsNavItem; current: boolean }) {
+function NavLink({
+  item,
+  current,
+  density,
+}: {
+  item: DocsNavItem;
+  current: boolean;
+  density: "default" | "comfortable";
+}) {
+  const comfortable = density === "comfortable";
+  const base = comfortable
+    ? "flex min-h-12 cursor-pointer items-center gap-2 rounded-md px-3 py-3 text-base"
+    : "flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 text-sm";
+
   return (
     <Link
       href={item.href}
       aria-current={current ? "page" : undefined}
       className={
         current
-          ? `bg-muted text-foreground flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 text-sm font-medium ${focusRing}`
-          : `text-sidebar-foreground hover:bg-muted hover:text-foreground flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 text-sm ${focusRing}`
+          ? `bg-muted text-foreground font-medium ${base} ${focusRing}`
+          : `text-sidebar-foreground hover:bg-muted hover:text-foreground ${base} ${focusRing}`
       }
     >
       <span className="min-w-0 truncate">{item.title}</span>
@@ -40,8 +53,16 @@ function isCurrent(pathname: string, href: string) {
   return pathname === path && !href.includes("#");
 }
 
-export function DocsNavLinks({ className }: { className?: string }) {
+export function DocsNavLinks({
+  className,
+  density = "default",
+}: {
+  className?: string;
+  /** Larger type + tap targets for the mobile navigation sheet. */
+  density?: "default" | "comfortable";
+}) {
   const pathname = usePathname();
+  const comfortable = density === "comfortable";
 
   return (
     <nav className={className} aria-label="Documentation">
@@ -51,34 +72,57 @@ export function DocsNavLinks({ className }: { className?: string }) {
           className={
             group.layout === "names"
               ? "@container flex flex-col gap-1"
-              : "flex flex-col gap-1"
+              : comfortable
+                ? "flex flex-col gap-1.5"
+                : "flex flex-col gap-1"
           }
         >
           {group.label ? (
-            <p className="text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium">
+            <p
+              className={
+                comfortable
+                  ? "text-muted-foreground px-3 pt-1 pb-2 text-sm font-medium tracking-[0.12em] uppercase"
+                  : "text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium"
+              }
+            >
               {group.title}
             </p>
           ) : null}
           <ul
             className={
               group.layout === "names"
-                ? "grid grid-cols-1 gap-0.5 @[22rem]:grid-cols-2 @[40rem]:grid-cols-3"
-                : "flex flex-col gap-0.5"
+                ? comfortable
+                  ? "grid grid-cols-1 gap-1"
+                  : "grid grid-cols-1 gap-0.5 @[22rem]:grid-cols-2 @[40rem]:grid-cols-3"
+                : comfortable
+                  ? "flex flex-col gap-1"
+                  : "flex flex-col gap-0.5"
             }
           >
             {group.items.map((item) => (
               <li
                 key={`${group.title}-${item.href}`}
-                className={group.label ? "pl-2" : undefined}
+                className={group.label ? (comfortable ? "pl-1" : "pl-2") : undefined}
               >
-                <NavLink item={item} current={isCurrent(pathname, item.href)} />
+                <NavLink
+                  item={item}
+                  current={isCurrent(pathname, item.href)}
+                  density={density}
+                />
                 {item.children && item.children.length > 0 ? (
-                  <ul className="border-border mt-0.5 ml-2 flex flex-col gap-0.5 border-l pl-2">
+                  <ul
+                    className={
+                      comfortable
+                        ? "border-border mt-1 ml-3 flex flex-col gap-1 border-l pl-3"
+                        : "border-border mt-0.5 ml-2 flex flex-col gap-0.5 border-l pl-2"
+                    }
+                  >
                     {item.children.map((child) => (
                       <li key={child.href}>
                         <NavLink
                           item={child}
                           current={isCurrent(pathname, child.href)}
+                          density={density}
                         />
                       </li>
                     ))}

@@ -49,18 +49,27 @@ export function PlaygroundBlock({
 }
 
 /**
- * Column count mirrors the previous CSS columns breakpoints:
- * 1 · md:2 · lg:3 · min-1400:4 · min-1900:5
- *
- * Items are distributed round-robin into explicit flex columns so every
- * column starts on the same top edge (no CSS-columns balance shifts).
+ * Column breakpoints:
+ * - `showcase` (homepage): 1 · md:2 · lg:3 · 1400:4 · 1900:5
+ * - `playground` (themes/typeset): 1 · md:2 · xl:5
  */
-function usePlaygroundColumnCount() {
+function usePlaygroundColumnCount(mode: "showcase" | "playground") {
   const [count, setCount] = useState(1);
 
   useEffect(() => {
     function update() {
       const width = window.innerWidth;
+
+      if (mode === "playground") {
+        if (width >= 1280) {
+          setCount(5);
+        } else if (width >= 768) {
+          setCount(2);
+        } else {
+          setCount(1);
+        }
+        return;
+      }
 
       if (width >= 1900) {
         setCount(5);
@@ -79,13 +88,20 @@ function usePlaygroundColumnCount() {
     window.addEventListener("resize", update);
 
     return () => window.removeEventListener("resize", update);
-  }, []);
+  }, [mode]);
 
   return count;
 }
 
-export function PlaygroundGrid({ children }: { children: ReactNode }) {
-  const columnCount = usePlaygroundColumnCount();
+export function PlaygroundGrid({
+  children,
+  mode = "playground",
+}: {
+  children: ReactNode;
+  /** Homepage dense band vs themes/typeset 1→2→5. */
+  mode?: "showcase" | "playground";
+}) {
+  const columnCount = usePlaygroundColumnCount(mode);
   const items = Children.toArray(children);
   const columns = Array.from({ length: columnCount }, () => [] as ReactNode[]);
 
@@ -97,7 +113,8 @@ export function PlaygroundGrid({ children }: { children: ReactNode }) {
     <div
       data-playground-grid
       data-playground-columns={columnCount}
-      className="relative z-10 flex w-full items-start gap-(--gap)"
+      data-playground-mode={mode}
+      className="relative z-10 flex w-full min-w-0 items-start gap-(--gap)"
     >
       {columns.map((column, index) => (
         <div

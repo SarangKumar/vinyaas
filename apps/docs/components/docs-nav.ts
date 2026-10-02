@@ -30,6 +30,14 @@ export const companionJsonPath = "/companion/configuration";
 
 export const companionCustomPath = "/companion/custom";
 
+export const companionAnimationsPath = "/companion/animations";
+
+export const companionInteractionsPath = "/companion/interactions";
+
+export const companionExamplesPath = "/companion/examples";
+
+export const companionGalleryPath = "/companion/gallery";
+
 /** Theme system documentation (tokens, CSS variables, customization). */
 export const themingPath = "/theming";
 
@@ -79,6 +87,7 @@ export const docsNav: DocsNavGroup[] = [
     title: "SECTIONS",
     label: true,
     items: [
+      { title: "Home", href: homePath },
       { title: "Introduction", href: introductionPath },
       { title: "Components", href: componentsPath },
       { title: "Installation", href: installationPath },
@@ -95,7 +104,11 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Introduction", href: companionPath, indicator: "beta" },
       { title: "Installation", href: companionInstallationPath },
       { title: "companion.json", href: companionJsonPath },
+      { title: "Animations", href: companionAnimationsPath },
+      { title: "Interactions", href: companionInteractionsPath },
       { title: "Custom Companion", href: companionCustomPath },
+      { title: "Examples", href: companionExamplesPath },
+      { title: "Gallery", href: companionGalleryPath },
     ],
   },
   {

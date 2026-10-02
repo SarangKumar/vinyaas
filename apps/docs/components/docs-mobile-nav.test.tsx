@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { DocsMobileNav } from "./docs-mobile-nav";
@@ -19,27 +19,50 @@ describe("DocsMobileNav", () => {
     document.body.style.overflow = "";
   });
 
-  it("opens a navigation drawer and closes it with Escape", async () => {
+  it("opens a full-height sheet below the navbar and closes with Escape", async () => {
     render(<DocsMobileNav />);
     await settle();
 
     const menu = screen.getByRole("button", { name: "Menu" });
 
     expect(menu).toHaveAttribute("aria-expanded", "false");
+    expect(menu.className).toContain("size-12");
+    expect(menu.querySelector("[data-menu-icon]")).toHaveAttribute(
+      "data-state",
+      "closed",
+    );
     expect(screen.queryByRole("dialog", { name: "Navigation" })).toBeNull();
 
     fireEvent.click(menu);
     await settle();
 
     expect(menu).toHaveAttribute("aria-expanded", "true");
-    expect(
-      screen.getByRole("dialog", { name: "Navigation" }),
-    ).toBeInTheDocument();
+    expect(menu.querySelector("[data-menu-icon]")).toHaveAttribute(
+      "data-state",
+      "open",
+    );
+    const dialog = screen.getByRole("dialog", { name: "Navigation" });
+    expect(dialog).toBeInTheDocument();
     expect(document.body.style.overflow).toBe("hidden");
+
+    const shell = document.querySelector("[data-docs-mobile-nav]");
+    expect(shell).toBeTruthy();
+    expect(shell?.className).toContain("top-12");
+    expect(shell?.className).toContain("z-50");
+    const panel = document.querySelector("[data-docs-mobile-panel]");
+    expect(panel).toBeTruthy();
+    const backdrop = document.querySelector("[data-docs-mobile-backdrop]");
+    expect(backdrop).toBeTruthy();
+    expect(backdrop?.className).toContain("bg-white/5");
+    expect(backdrop?.className).toContain("backdrop-blur-2xl");
+
     expect(screen.getByRole("link", { name: "Docs" })).toHaveAttribute(
       "href",
       "/introduction",
     );
+    expect(
+      within(dialog).getByRole("link", { name: "Home" }),
+    ).toHaveAttribute("href", "/");
     expect(
       screen.getAllByRole("link", { name: "Components" })[0],
     ).toHaveAttribute("href", "/components");
@@ -75,6 +98,18 @@ describe("DocsMobileNav", () => {
       "/changelog",
     );
 
+    const github = within(dialog).getByRole("link", { name: /GitHub/i });
+    expect(github).toHaveAttribute(
+      "href",
+      "https://github.com/SarangKumar/vinyaas",
+    );
+    expect(github).toHaveAttribute("data-github-link", "mobile");
+    expect(within(dialog).getByText("View on GitHub")).toBeInTheDocument();
+
+    const docsLink = screen.getByRole("link", { name: "Docs" });
+    expect(docsLink.className).toContain("text-base");
+    expect(docsLink.className).toContain("min-h-12");
+
     fireEvent.keyDown(document, { key: "Escape" });
     await settle();
 
@@ -82,11 +117,15 @@ describe("DocsMobileNav", () => {
       "aria-expanded",
       "false",
     );
-    expect(screen.queryByRole("dialog", { name: "Navigation" })).toBeNull();
     expect(document.body.style.overflow).toBe("");
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 220));
+    });
+    expect(screen.queryByRole("dialog", { name: "Navigation" })).toBeNull();
   });
 
-  it("closes when a navigation link is clicked or the overlay is used", async () => {
+  it("closes when a navigation link is clicked or the menu is toggled", async () => {
     render(<DocsMobileNav />);
     await settle();
 
@@ -95,13 +134,29 @@ describe("DocsMobileNav", () => {
     fireEvent.click(screen.getByRole("link", { name: "Changelog" }));
     await settle();
 
+    expect(screen.getByRole("button", { name: "Menu" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 220));
+    });
     expect(screen.queryByRole("dialog", { name: "Navigation" })).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "Menu" }));
     await settle();
-    fireEvent.click(screen.getAllByRole("button", { name: "Close menu" })[0]!);
+    fireEvent.click(screen.getByRole("button", { name: "Menu" }));
     await settle();
 
+    expect(screen.getByRole("button", { name: "Menu" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 220));
+    });
     expect(screen.queryByRole("dialog", { name: "Navigation" })).toBeNull();
   });
 });
