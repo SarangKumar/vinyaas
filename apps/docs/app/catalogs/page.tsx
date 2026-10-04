@@ -51,8 +51,11 @@ export default function CatalogsPage() {
         </p>
         <CodeBlock language="bash" code="vinyaas catalog list" />
         <CodeBlock language="bash" code="vinyaas catalog info form" />
-        <CodeBlock language="bash" code="vinyaas add form" />
-        <CodeBlock language="bash" code="vinyaas add dashboard --dry-run" />
+        <CodeBlock language="bash" code="vinyaas add --catalog form" />
+        <CodeBlock
+          language="bash"
+          code="vinyaas add --catalog dashboard --dry-run"
+        />
       </section>
 
       <section className="flex flex-col gap-4">

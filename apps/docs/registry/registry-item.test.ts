@@ -657,7 +657,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).rejects.toThrow();
     expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(39);
+    expect(newYork).toHaveLength(40);
   });
 
   it("matches the json schema item types", () => {

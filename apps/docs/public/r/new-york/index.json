@@ -191,6 +191,13 @@
       "category": "forms"
     },
     {
+      "name": "resizable",
+      "type": "registry:ui",
+      "description": "Resizable panel layouts with accessible drag handles for dashboards.",
+      "docs": "https://vinyaas.vercel.app/components/resizable",
+      "category": "layout"
+    },
+    {
       "name": "scroll-area",
       "type": "registry:ui",
       "description": "A native scroll container with a thin scrollbar.",

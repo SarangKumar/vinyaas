@@ -54,6 +54,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "table",
       "scroll-area",
       "separator",
+      "resizable",
     ],
   },
   {
@@ -90,6 +91,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "card",
       "badge",
       "breadcrumb",
+      "resizable",
     ],
   },
 ] as const;
@@ -110,14 +112,14 @@ export function listComponentCatalogIds(): string[] {
  * Do not invent fake registry items for these.
  *
  * form: select, form
- * dashboard: resizable, sidebar, data-table
+ * dashboard: sidebar, data-table
  * navigation: sidebar, navigation-menu, pagination
  * feedback: alert-dialog, sheet, empty-state
  * application: sidebar, data-table, pagination
  */
 export const plannedCatalogGaps: Readonly<Record<string, readonly string[]>> = {
   form: ["select", "form"],
-  dashboard: ["resizable", "sidebar", "data-table"],
+  dashboard: ["sidebar", "data-table"],
   navigation: ["sidebar", "navigation-menu", "pagination"],
   feedback: ["alert-dialog", "sheet", "empty-state"],
   application: ["sidebar", "data-table", "pagination"],

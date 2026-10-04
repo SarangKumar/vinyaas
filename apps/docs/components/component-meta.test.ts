@@ -48,6 +48,7 @@ describe("component metadata", () => {
       "Popover",
       "Progress",
       "Radio Group",
+      "Resizable",
       "Scroll Area",
       "Separator",
       "Skeleton",
@@ -80,9 +81,14 @@ describe("component metadata", () => {
       components.filter((component) => component.introducedIn === "1.2.0"),
     ).toHaveLength(0);
     expect(
+      components
+        .filter((component) => component.introducedIn === "1.3.0")
+        .map((component) => component.slug),
+    ).toEqual(["resizable"]);
+    expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 6);
+    ).toBe(components.length - 7);
   });
 
   it("derives docs categories from the registry category map", () => {

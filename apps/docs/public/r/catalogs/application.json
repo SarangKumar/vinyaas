@@ -14,7 +14,8 @@
         "tabs",
         "card",
         "badge",
-        "breadcrumb"
+        "breadcrumb",
+        "resizable"
       ]
     }
   ]

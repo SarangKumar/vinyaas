@@ -62,7 +62,11 @@ describe("component catalogs", () => {
 
   it("documents planned gaps separately from installable membership", () => {
     expect(plannedCatalogGaps.form).toContain("select");
-    expect(plannedCatalogGaps.dashboard).toContain("resizable");
+    expect(plannedCatalogGaps.dashboard).toContain("sidebar");
+    expect(getComponentCatalog("dashboard")?.components).toContain("resizable");
+    expect(getComponentCatalog("application")?.components).toContain(
+      "resizable",
+    );
 
     for (const [catalogId, gaps] of Object.entries(plannedCatalogGaps)) {
       const catalog = getComponentCatalog(catalogId);

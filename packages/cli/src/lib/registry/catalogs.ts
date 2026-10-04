@@ -198,6 +198,9 @@ export function formatCatalogInstallPrompt({
   return [
     `Vinyaas catalog: ${catalog.id}`,
     "",
+    "Description:",
+    catalog.description,
+    "",
     "The following components will be installed:",
     "",
     ...components,

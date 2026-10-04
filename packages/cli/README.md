@@ -76,12 +76,12 @@ vinyaas add button card badge
 vinyaas add button --force
 vinyaas add button --dry-run
 vinyaas add button card --yes
-vinyaas add form
-vinyaas add dashboard --dry-run
+vinyaas add --catalog form
+vinyaas add --catalog dashboard --dry-run
 ```
 
 - One or more component names install in a single run.
-- A single catalog name (for example `form`) expands to that catalog’s installable components and confirms with `[Y/n]` (default Yes) unless `--yes` is set.
+- Catalog installs require `--catalog <id>` and confirm with `[Y/n]` (default Yes) unless `--yes` is set. Bare names never expand to catalogs.
 - Already-installed components are skipped unless `--force` is set.
 - `--dry-run` prints components, files, npm dependencies, and registry dependencies without writing files or installing packages.
 - Multi-component installs prompt for confirmation unless `--yes` is set.
@@ -92,10 +92,10 @@ vinyaas add dashboard --dry-run
 ```bash
 vinyaas catalog list
 vinyaas catalog info form
-vinyaas add form
+vinyaas add --catalog form
 ```
 
-Named catalogs are owned by the registry (`/r/catalogs/`), not hardcoded in the CLI. Current catalogs: `form`, `dashboard`, `navigation`, `feedback`, `application`. Membership lists only currently installable component IDs.
+Named catalogs are owned by the registry (`/r/catalogs/`), not hardcoded in the CLI. Current catalogs: `form`, `dashboard`, `navigation`, `feedback`, `application`. Membership lists only currently installable component IDs. Discovery commands do not install.
 
 ### Category installation
 

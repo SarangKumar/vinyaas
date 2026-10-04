@@ -352,8 +352,13 @@ export default function ChangelogPage() {
             <code>vinyaas catalog info &lt;catalog&gt;</code>.
           </li>
           <li>
-            <code>vinyaas add &lt;catalog&gt;</code> expands a catalog after
-            confirmation (default Yes).
+            <code>vinyaas add --catalog &lt;catalog&gt;</code> expands a catalog
+            after confirmation (default Yes). Bare names never install catalogs.
+          </li>
+          <li>
+            <strong>Resizable</strong> — dashboard panel layouts via{" "}
+            <code>react-resizable-panels</code>, with keyboard-accessible
+            handles.
           </li>
           <li>
             <code>--dry-run</code> prints components, files, dependencies, and
@@ -378,7 +383,7 @@ export default function ChangelogPage() {
           </li>
         </ul>
         <p className="text-foreground text-base leading-7">
-          Not in this foundation increment: Resizable, Drag &amp; Drop, sidebar,
+          Remaining for later v1.3 increments: Drag &amp; Drop, sidebar,
           data-table, and the rest of the planned dashboard component set.
         </p>
       </section>

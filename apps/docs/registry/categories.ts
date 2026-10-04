@@ -57,6 +57,7 @@ export const registryComponentCategories: Readonly<
   popover: "feedback",
   progress: "feedback",
   "radio-group": "forms",
+  resizable: "layout",
   "scroll-area": "layout",
   separator: "layout",
   skeleton: "data-display",

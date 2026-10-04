@@ -15,7 +15,8 @@
         "skeleton",
         "table",
         "scroll-area",
-        "separator"
+        "separator",
+        "resizable"
       ]
     }
   ]

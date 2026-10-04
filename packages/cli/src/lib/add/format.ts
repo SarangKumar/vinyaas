@@ -7,6 +7,11 @@ export interface AddSummaryInput {
   requested: readonly string[];
   /** Registry items installed only because something requested depended on them. */
   registryDependencies: readonly string[];
+  /** Present for `vinyaas add --catalog` dry runs. */
+  catalog?: {
+    id: string;
+    description: string;
+  };
 }
 
 export function formatAddSummary(input: AddSummaryInput): string {
@@ -91,6 +96,11 @@ export function formatAddSummary(input: AddSummaryInput): string {
 export function formatDryRunSummary(input: AddSummaryInput): string {
   const installedRequested = requestedInstalled(input);
   const lines = ["Vinyaas dry run", ""];
+
+  if (input.catalog) {
+    lines.push("Catalog", input.catalog.id, "");
+    lines.push("Description", input.catalog.description, "");
+  }
 
   if (installedRequested.length > 0 || input.plan.entries.length > 0) {
     lines.push("Would install:", "");

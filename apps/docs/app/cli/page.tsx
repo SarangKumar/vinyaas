@@ -167,7 +167,6 @@ No issues found.`}
         <CodeBlock language="bash" code="vinyaas add button" />
         <CodeBlock language="bash" code="vinyaas add button card badge" />
         <CodeBlock language="bash" code="vinyaas add button card --yes" />
-        <CodeBlock language="bash" code="vinyaas add form" />
 
         <h3
           id="catalog-install"
@@ -176,9 +175,8 @@ No issues found.`}
           Catalog installation
         </h3>
         <p className={body}>
-          A single argument that matches a registry catalog id expands to that
-          catalog&apos;s installable components. Catalogs are owned by the
-          registry (see{" "}
+          Catalog installs require an explicit <code>--catalog</code> option.
+          Catalogs are owned by the registry (see{" "}
           <Link
             href="/catalogs"
             className={`text-primary underline underline-offset-4 ${focusRing}`}
@@ -186,13 +184,22 @@ No issues found.`}
             Catalogs
           </Link>
           ). The CLI lists the members, asks for confirmation with{" "}
-          <code>[Y/n]</code> (default Yes), and only then installs. Pass{" "}
-          <code>--yes</code> to skip the prompt. Declining cancels with no file
-          changes.
+          <code>[Y/n]</code> (default Yes), and only then installs through the
+          same component pipeline. Pass <code>--yes</code> to skip the prompt.
+          Declining cancels with no file changes. A bare{" "}
+          <code>vinyaas add form</code> never installs a catalog — it looks for
+          a component named <code>form</code> and, if missing, suggests{" "}
+          <code>--catalog form</code>.
         </p>
-        <CodeBlock language="bash" code="vinyaas add form" />
-        <CodeBlock language="bash" code="vinyaas add dashboard --dry-run" />
-        <CodeBlock language="bash" code="vinyaas add application --yes" />
+        <CodeBlock language="bash" code="vinyaas add --catalog form" />
+        <CodeBlock
+          language="bash"
+          code="vinyaas add --catalog dashboard --dry-run"
+        />
+        <CodeBlock
+          language="bash"
+          code="vinyaas add --catalog application --yes"
+        />
 
         <h3
           id="force"
@@ -220,7 +227,10 @@ No issues found.`}
           components, catalogs, and categories.
         </p>
         <CodeBlock language="bash" code="vinyaas add button --dry-run" />
-        <CodeBlock language="bash" code="vinyaas add dashboard --dry-run" />
+        <CodeBlock
+          language="bash"
+          code="vinyaas add --catalog dashboard --dry-run"
+        />
         <CodeBlock
           language="bash"
           code="vinyaas add --category forms --dry-run"

@@ -31,7 +31,8 @@
         "skeleton",
         "table",
         "scroll-area",
-        "separator"
+        "separator",
+        "resizable"
       ]
     },
     {
@@ -67,7 +68,8 @@
         "tabs",
         "card",
         "badge",
-        "breadcrumb"
+        "breadcrumb",
+        "resizable"
       ]
     }
   ]

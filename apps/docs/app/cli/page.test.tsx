@@ -71,10 +71,11 @@ describe("CLI docs", () => {
     expect(body).toContain("vinyaas add button card badge");
     expect(body).toContain("vinyaas add button card --yes");
     expect(body).toContain("vinyaas add button --dry-run");
-    expect(body).toContain("vinyaas add form");
-    expect(body).toContain("vinyaas add dashboard --dry-run");
+    expect(body).toContain("vinyaas add --catalog form");
+    expect(body).toContain("vinyaas add --catalog dashboard --dry-run");
     expect(body).toContain("vinyaas catalog list");
     expect(body).toContain("vinyaas catalog info form");
+    expect(body).toContain("explicit");
     expect(body).toContain("vinyaas add --category forms");
     expect(body).toContain("vinyaas add --category forms --yes");
     expect(body).toContain("vinyaas status");

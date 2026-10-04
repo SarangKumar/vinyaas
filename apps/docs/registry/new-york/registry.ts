@@ -112,6 +112,19 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "resizable",
+    type: "registry:ui",
+    description:
+      "Resizable panel layouts with accessible drag handles for dashboards.",
+    dependencies: ["react-resizable-panels", "clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/resizable/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "separator",
     type: "registry:ui",
     description: "A horizontal or vertical divider between content.",

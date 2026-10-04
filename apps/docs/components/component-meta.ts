@@ -196,6 +196,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Resizable",
+    slug: "resizable",
+    description:
+      "Resizable panel layouts with accessible handles for dashboards.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Scroll Area",
     slug: "scroll-area",
     description: "A native scroll container with a thin scrollbar.",
