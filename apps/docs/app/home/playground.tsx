@@ -10,6 +10,7 @@ import { MessagesBlock } from "@/app/home/blocks/messages-block";
 import { NotificationSettingsBlock } from "@/app/home/blocks/notification-settings-block";
 import { ProfileBlock } from "@/app/home/blocks/profile-block";
 import { ProjectBlock } from "@/app/home/blocks/project-block";
+import { ResizableBlock } from "@/app/home/blocks/resizable-block";
 import { SecurityBlock } from "@/app/home/blocks/security-block";
 import { SignupBlock } from "@/app/home/blocks/signup-block";
 import { TableBlock } from "@/app/home/blocks/table-block";
@@ -25,6 +26,9 @@ import { PlaygroundGrid } from "@/components/playground";
  * Uses flex columns (PlaygroundGrid) so every column starts on the same
  * top edge — CSS columns fill top-to-bottom per column and look staggered.
  *
+ * Newest registry components (e.g. Resizable) sit near the start so the
+ * homepage keeps introducing the current release.
+ *
  * Layout at ultra-wide:
  *   fade ← 2 skeleton cols | 5-column masonry | 2 skeleton cols → fade
  *
@@ -38,6 +42,7 @@ export function Playground() {
     >
       <PlaygroundGrid mode="showcase">
         <ChartBlock />
+        <ResizableBlock />
         <LoginBlock />
         <CompanionBlock />
         <ChatBlock />

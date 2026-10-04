@@ -277,11 +277,11 @@ export default function ChangelogPage() {
           <li>
             <strong>Themes</strong> (<code>/themes</code>) is a website
             playground — not a registry component. Switch curated presets
-            (Default, Yellow, Rose, Orange, Green, Violet, Blue), adjust border
-            radius, preview themes across real Vinyaas UI compositions, and open
-            Code dialogs to inspect and copy each example&apos;s source. Theme
-            selection stays scoped to the playground and does not change the
-            docs site chrome.
+            (Default, Yellow, Rose, Orange, Red, Green, Violet, Blue), adjust
+            border radius, preview themes across real Vinyaas UI compositions,
+            and open Code dialogs to inspect and copy each example&apos;s
+            source. Theme selection stays scoped to the playground and does not
+            change the docs site chrome.
           </li>
           <li>
             <strong>Typeset</strong> (<code>/typeset</code>) is a typography
@@ -322,6 +322,11 @@ export default function ChangelogPage() {
             <code>introducedIn</code> metadata), plus a New Components section
             on the components catalog page.
           </li>
+          <li>
+            <strong>Red</strong> theme preset — brick / red-collar accent with
+            light and dark surfaces, charts, and radius support in the Themes
+            playground.
+          </li>
         </ul>
         <h3
           id="v1.3.0-improved"
@@ -337,6 +342,15 @@ export default function ChangelogPage() {
           <li>
             Homepage showcase vertical spacing aligned with the horizontal
             gutter (PlaygroundGrid gap only — no stacked card margins).
+          </li>
+          <li>
+            <strong>Blue</strong> and <strong>Violet</strong> theme presets —
+            fuller surface hierarchy (background, muted, accent, borders, ring,
+            charts) for coherent light and dark modes.
+          </li>
+          <li>
+            Homepage showcase coverage for newest registry components (Resizable
+            workspace card near the start of the masonry).
           </li>
         </ul>
         <h3

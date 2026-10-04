@@ -65,6 +65,9 @@ describe("Themes playground page", () => {
       "Yellow",
     );
     expect(screen.getByRole("button", { name: "Green" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Red" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Blue" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Violet" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Lavender" })).toBeNull();
   });
 

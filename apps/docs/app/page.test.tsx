@@ -1,7 +1,26 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 import Home from "./page";
+
+beforeAll(() => {
+  class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+
+  Object.defineProperty(window, "ResizeObserver", {
+    writable: true,
+    configurable: true,
+    value: ResizeObserverMock,
+  });
+  Object.defineProperty(globalThis, "ResizeObserver", {
+    writable: true,
+    configurable: true,
+    value: ResizeObserverMock,
+  });
+});
 
 describe("homepage", () => {
   it("renders the hero, playground masonry, and side rails", () => {
@@ -80,6 +99,15 @@ describe("homepage", () => {
 
     expect(
       screen.getByRole("heading", { name: "Traffic" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Workspace" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("separator", { name: "Resize explorer" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("separator", { name: "Resize terminal" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Sign in" }),

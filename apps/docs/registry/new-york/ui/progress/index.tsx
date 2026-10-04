@@ -11,8 +11,8 @@ export function Progress({ className, ref, ...props }: ProgressProps) {
       className={cn(
         "bg-muted h-2 w-full appearance-none overflow-hidden rounded-full",
         "[&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-bar]:rounded-full",
-        "[&::-webkit-progress-value]:bg-foreground [&::-webkit-progress-value]:rounded-full",
-        "[&::-moz-progress-bar]:bg-foreground",
+        "[&::-webkit-progress-value]:bg-primary [&::-webkit-progress-value]:rounded-full",
+        "[&::-moz-progress-bar]:bg-primary",
         className,
       )}
       {...props}

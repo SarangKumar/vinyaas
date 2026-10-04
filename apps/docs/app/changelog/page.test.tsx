@@ -68,6 +68,11 @@ describe("Changelog", () => {
     expect(document.body.textContent).toContain(
       "Homepage showcase vertical spacing",
     );
+    expect(document.body.textContent).toContain("red-collar");
+    expect(document.body.textContent).toContain("fuller surface hierarchy");
+    expect(document.body.textContent).toContain(
+      "Homepage showcase coverage for newest registry components",
+    );
     expect(document.body.textContent).toContain(
       "v1.2.0 focuses on installation clarity",
     );
