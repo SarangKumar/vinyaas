@@ -25,16 +25,13 @@ import {
   NativeSelectOption,
 } from "@/registry/new-york/ui/native-select";
 import { Progress } from "@/registry/new-york/ui/progress";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/registry/new-york/ui/resizable";
 import { Separator } from "@/registry/new-york/ui/separator";
 import { Switch } from "@/registry/new-york/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/registry/new-york/ui/table";
 import {
   Tabs,
   TabsContent,
@@ -350,58 +347,26 @@ export const themeExamples: ThemeExample[] = [
     ),
   },
   {
-    id: "component-table",
-    title: "Hot components",
-    description: "Most installed this week.",
+    id: "resizable-split",
+    title: "Resizable",
+    description: "Sidebar and content with a drag handle.",
     preview: (
-      <div className="grid min-w-0 gap-3">
-        <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
-          <Input
-            aria-label="Filter components"
-            placeholder="Filter…"
-            className="min-w-0 flex-1"
-          />
-          <NativeSelect
-            aria-label="Sort"
-            defaultValue="installs"
-            className="w-full sm:w-32"
-          >
-            <NativeSelectOption value="installs">Installs</NativeSelectOption>
-            <NativeSelectOption value="name">Name</NativeSelectOption>
-          </NativeSelect>
-        </div>
-        <div className="w-full min-w-0 overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Adds</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {[
-                ["Button", "Stable", "428"],
-                ["Dialog", "Stable", "301"],
-                ["Chart", "New", "186"],
-                ["Drawer", "New", "142"],
-              ].map(([name, status, adds]) => (
-                <TableRow key={name}>
-                  <TableCell className="font-medium">{name}</TableCell>
-                  <TableCell>
-                    <Badge variant={status === "New" ? "secondary" : "outline"}>
-                      {status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right tabular-nums">
-                    {adds}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+      <ResizablePanelGroup
+        orientation="horizontal"
+        className="border-border bg-background min-h-[140px] w-full overflow-hidden rounded-md border"
+      >
+        <ResizablePanel defaultSize="36%" minSize="24%" maxSize="50%">
+          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
+            Sidebar
+          </div>
+        </ResizablePanel>
+        <ResizableHandle withHandle aria-label="Resize sidebar" />
+        <ResizablePanel defaultSize="64%" minSize="40%">
+          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
+            Content
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     ),
   },
   {

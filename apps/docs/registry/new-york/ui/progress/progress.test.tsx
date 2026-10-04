@@ -42,4 +42,15 @@ describe("Progress", () => {
     expect(ref.current).toHaveAttribute("id", "upload");
     expect(ref.current).toHaveClass("h-2", "max-w-sm", "bg-muted");
   });
+
+  it("fills with the primary theme token class", () => {
+    render(<Progress aria-label="Theme fill" value={60} max={100} />);
+
+    const progress = screen.getByRole("progressbar", { name: "Theme fill" });
+    expect(progress.className).toMatch(
+      /\[&::-webkit-progress-value\]:bg-primary/,
+    );
+    expect(progress.className).toMatch(/\[&::-moz-progress-bar\]:bg-primary/);
+    expect(progress.className).not.toMatch(/bg-(?:red|blue|green|orange)-\d+/);
+  });
 });

@@ -1,21 +1,7 @@
-import { AccountSettingsBlock } from "@/app/home/blocks/account-settings-block";
-import { ChartBlock } from "@/app/home/blocks/chart-block";
-import { ChatBlock } from "@/app/home/blocks/chat-block";
-import { CompanionBlock } from "@/app/home/blocks/companion-block";
-import { FilterBlock } from "@/app/home/blocks/filter-block";
-import { InvoiceBlock } from "@/app/home/blocks/invoice-block";
-import { LoginBlock } from "@/app/home/blocks/login-block";
-import { MediaControlsBlock } from "@/app/home/blocks/media-controls-block";
-import { MessagesBlock } from "@/app/home/blocks/messages-block";
-import { NotificationSettingsBlock } from "@/app/home/blocks/notification-settings-block";
-import { ProfileBlock } from "@/app/home/blocks/profile-block";
-import { ProjectBlock } from "@/app/home/blocks/project-block";
-import { ResizableBlock } from "@/app/home/blocks/resizable-block";
-import { SecurityBlock } from "@/app/home/blocks/security-block";
-import { SignupBlock } from "@/app/home/blocks/signup-block";
-import { TableBlock } from "@/app/home/blocks/table-block";
-import { TabsSettingsBlock } from "@/app/home/blocks/tabs-settings-block";
-import { UploadBlock } from "@/app/home/blocks/upload-block";
+import {
+  SHOWCASE_BLOCK_COUNT,
+  showcaseBlocks,
+} from "@/app/home/showcase-blocks";
 import { PlaygroundGrid } from "@/components/playground";
 
 /**
@@ -26,8 +12,8 @@ import { PlaygroundGrid } from "@/components/playground";
  * Uses flex columns (PlaygroundGrid) so every column starts on the same
  * top edge — CSS columns fill top-to-bottom per column and look staggered.
  *
- * Newest registry components (e.g. Resizable) sit near the start so the
- * homepage keeps introducing the current release.
+ * Card source of truth: {@link showcaseBlocks} (exactly
+ * {@link SHOWCASE_BLOCK_COUNT} entries — see homepage showcase policy).
  *
  * Layout at ultra-wide:
  *   fade ← 2 skeleton cols | 5-column masonry | 2 skeleton cols → fade
@@ -38,27 +24,13 @@ export function Playground() {
   return (
     <div
       data-playground
+      data-showcase-count={SHOWCASE_BLOCK_COUNT}
       className="relative z-10 mx-auto w-full min-[1400px]:max-w-[1600px] min-[1900px]:max-w-[1900px] md:max-w-3xl lg:max-w-none xl:max-w-[1600px] 2xl:max-w-[1900px]"
     >
       <PlaygroundGrid mode="showcase">
-        <ChartBlock />
-        <ResizableBlock />
-        <LoginBlock />
-        <CompanionBlock />
-        <ChatBlock />
-        <TableBlock />
-        <TabsSettingsBlock />
-        <UploadBlock />
-        <FilterBlock />
-        <SecurityBlock />
-        <MessagesBlock />
-        <ProfileBlock />
-        <InvoiceBlock />
-        <ProjectBlock />
-        <MediaControlsBlock />
-        <SignupBlock />
-        <NotificationSettingsBlock />
-        <AccountSettingsBlock />
+        {showcaseBlocks.map(({ id, Block }) => (
+          <Block key={id} />
+        ))}
       </PlaygroundGrid>
     </div>
   );

@@ -49,46 +49,38 @@ export function PlaygroundBlock({
 }
 
 /**
- * Column breakpoints:
- * - `showcase` (homepage): 1 · md:2 · lg:3 · 1400:4 · 1900:5
- * - `playground` (themes/typeset): 1 · md:2 · xl:5
+ * Shared masonry column progression for homepage + Themes/Typeset:
+ * 1 → 2 (md/768) → 3 (lg/1024) → 4 (1400) → 5 (1900)
  */
-function usePlaygroundColumnCount(mode: "showcase" | "playground") {
+export function playgroundColumnCountForWidth(width: number) {
+  if (width >= 1900) {
+    return 5;
+  }
+  if (width >= 1400) {
+    return 4;
+  }
+  if (width >= 1024) {
+    return 3;
+  }
+  if (width >= 768) {
+    return 2;
+  }
+  return 1;
+}
+
+function usePlaygroundColumnCount() {
   const [count, setCount] = useState(1);
 
   useEffect(() => {
     function update() {
-      const width = window.innerWidth;
-
-      if (mode === "playground") {
-        if (width >= 1280) {
-          setCount(5);
-        } else if (width >= 768) {
-          setCount(2);
-        } else {
-          setCount(1);
-        }
-        return;
-      }
-
-      if (width >= 1900) {
-        setCount(5);
-      } else if (width >= 1400) {
-        setCount(4);
-      } else if (width >= 1024) {
-        setCount(3);
-      } else if (width >= 768) {
-        setCount(2);
-      } else {
-        setCount(1);
-      }
+      setCount(playgroundColumnCountForWidth(window.innerWidth));
     }
 
     update();
     window.addEventListener("resize", update);
 
     return () => window.removeEventListener("resize", update);
-  }, [mode]);
+  }, []);
 
   return count;
 }
@@ -98,10 +90,10 @@ export function PlaygroundGrid({
   mode = "playground",
 }: {
   children: ReactNode;
-  /** Homepage dense band vs themes/typeset 1→2→5. */
+  /** Homepage (`showcase`) or Themes/Typeset (`playground`) — same 1→5 steps. */
   mode?: "showcase" | "playground";
 }) {
-  const columnCount = usePlaygroundColumnCount(mode);
+  const columnCount = usePlaygroundColumnCount();
   const items = Children.toArray(children);
   const columns = Array.from({ length: columnCount }, () => [] as ReactNode[]);
 

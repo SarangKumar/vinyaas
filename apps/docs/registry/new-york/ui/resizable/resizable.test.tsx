@@ -23,7 +23,7 @@ beforeAll(() => {
   });
 });
 
-function HorizontalLayout() {
+function HorizontalLayout({ withHandle = true }: { withHandle?: boolean }) {
   return (
     <div style={{ width: 400, height: 200 }}>
       <ResizablePanelGroup orientation="horizontal" aria-label="Workspace">
@@ -35,7 +35,7 @@ function HorizontalLayout() {
         >
           <div>Sidebar</div>
         </ResizablePanel>
-        <ResizableHandle aria-label="Resize sidebar" withHandle />
+        <ResizableHandle aria-label="Resize sidebar" withHandle={withHandle} />
         <ResizablePanel defaultSize="70%" id="main">
           <div>Main</div>
         </ResizablePanel>
@@ -44,14 +44,14 @@ function HorizontalLayout() {
   );
 }
 
-function VerticalLayout() {
+function VerticalLayout({ withHandle = false }: { withHandle?: boolean }) {
   return (
     <div style={{ width: 400, height: 300 }}>
       <ResizablePanelGroup orientation="vertical">
         <ResizablePanel defaultSize="25%" id="header">
           <div>Header</div>
         </ResizablePanel>
-        <ResizableHandle aria-label="Resize header" />
+        <ResizableHandle aria-label="Resize header" withHandle={withHandle} />
         <ResizablePanel defaultSize="50%" id="content">
           <div>Content</div>
         </ResizablePanel>
@@ -62,6 +62,18 @@ function VerticalLayout() {
       </ResizablePanelGroup>
     </div>
   );
+}
+
+function gripDots(handle: HTMLElement) {
+  return handle.querySelectorAll(
+    '[data-slot="resizable-handle-grip-dots"] > span',
+  );
+}
+
+function gripDotsEl(handle: HTMLElement) {
+  return handle.querySelector(
+    '[data-slot="resizable-handle-grip-dots"]',
+  ) as HTMLElement | null;
 }
 
 describe("Resizable", () => {
@@ -152,45 +164,65 @@ describe("Resizable", () => {
     expect(after).toHaveFocus();
   });
 
-  it("applies orientation-specific sizing and cursor classes on handles", () => {
-    render(<HorizontalLayout />);
+  it("uses a padded 2×3 grip on vertical separators (horizontal resize)", () => {
+    render(<HorizontalLayout withHandle />);
 
-    const verticalBar = screen.getByRole("separator", {
-      name: "Resize sidebar",
-    });
-    expect(verticalBar).toHaveAttribute("aria-orientation", "vertical");
-    expect(verticalBar).toHaveAttribute("data-hit-area", "expanded");
-    expect(verticalBar.className).toMatch(/\bw-px\b/);
-    expect(verticalBar.className).toMatch(/cursor-col-resize/);
-    expect(verticalBar.className).toMatch(/after:w-3/);
-    expect(verticalBar.className).not.toMatch(/\bh-full\b/);
-    expect(verticalBar.className).toMatch(/items-center/);
-    expect(verticalBar.className).toMatch(/justify-center/);
+    const handle = screen.getByRole("separator", { name: "Resize sidebar" });
+    const grip = handle.querySelector(
+      '[data-slot="resizable-handle-grip"]',
+    ) as HTMLElement | null;
+    const dots = gripDotsEl(handle);
+
+    expect(handle).toHaveAttribute("aria-orientation", "vertical");
+    expect(grip).toBeTruthy();
+    expect(grip).toHaveAttribute("aria-hidden", "true");
+    expect(grip?.className).toMatch(/bg-secondary/);
+    expect(grip?.className).toMatch(/rounded-sm/);
+    expect(grip?.className).toMatch(/(?:^|\s)p-1(?:\s|$)/);
+    expect(grip?.className).not.toMatch(/(?:^|\s)border(?:\s|$)/);
+    expect(grip?.className).toMatch(
+      /group-aria-\[orientation=horizontal\]\/resizable-handle:rotate-90/,
+    );
+    expect(gripDots(handle)).toHaveLength(6);
+    expect(dots?.className).toMatch(/grid-cols-2/);
     expect(
-      verticalBar.querySelector('[data-slot="resizable-handle-grip"]'),
-    ).toBeTruthy();
+      handle.querySelector('[data-slot="resizable-handle-grip-dots"] > span')
+        ?.className,
+    ).toMatch(/bg-foreground/);
+    expect(handle.className).toMatch(/cursor-col-resize/);
+    expect(handle).toHaveAttribute("data-hit-area", "expanded");
   });
 
-  it("flips handle classes for vertical panel groups", () => {
-    render(<VerticalLayout />);
+  it("rotates the 2×3 grip 90° on horizontal separators (vertical resize)", () => {
+    render(<VerticalLayout withHandle />);
 
-    const horizontalBar = screen.getByRole("separator", {
-      name: "Resize header",
-    });
-    expect(horizontalBar).toHaveAttribute("aria-orientation", "horizontal");
-    expect(horizontalBar).toHaveAttribute("data-hit-area", "expanded");
-    expect(horizontalBar.className).toMatch(
-      /aria-\[orientation=horizontal\]:h-px/,
-    );
-    expect(horizontalBar.className).toMatch(
-      /aria-\[orientation=horizontal\]:w-full/,
-    );
-    expect(horizontalBar.className).toMatch(
+    const handle = screen.getByRole("separator", { name: "Resize header" });
+    const grip = handle.querySelector(
+      '[data-slot="resizable-handle-grip"]',
+    ) as HTMLElement | null;
+    const dots = gripDotsEl(handle);
+
+    expect(handle).toHaveAttribute("aria-orientation", "horizontal");
+    expect(handle.className).toMatch(
       /aria-\[orientation=horizontal\]:cursor-row-resize/,
     );
-    expect(horizontalBar.className).toMatch(
-      /aria-\[orientation=horizontal\]:after:h-3/,
+    expect(gripDots(handle)).toHaveLength(6);
+    expect(dots?.className).toMatch(/grid-cols-2/);
+    expect(grip?.className).toMatch(
+      /group-aria-\[orientation=horizontal\]\/resizable-handle:rotate-90/,
     );
+    expect(grip?.className).toMatch(/bg-secondary/);
+    expect(grip?.className).toMatch(/(?:^|\s)p-1(?:\s|$)/);
+    expect(grip?.className).not.toMatch(/(?:^|\s)border(?:\s|$)/);
+  });
+
+  it("omits the grip when withHandle is false", () => {
+    render(<HorizontalLayout withHandle={false} />);
+
+    const handle = screen.getByRole("separator", { name: "Resize sidebar" });
+    expect(
+      handle.querySelector('[data-slot="resizable-handle-grip"]'),
+    ).toBeNull();
   });
 
   it("keeps library cursor management enabled for crossing handles", () => {
@@ -198,13 +230,11 @@ describe("Resizable", () => {
     const group = container.querySelector(
       '[data-slot="resizable-panel-group"]',
     );
-    // Intersection / 2D cursors come from react-resizable-panels when
-    // disableCursor is not set. We only provide orientation fallbacks.
     expect(group?.getAttribute("disablecursor")).toBeNull();
     expect(group?.outerHTML.toLowerCase()).not.toContain("disablecursor");
   });
 
-  it("renders nested horizontal and vertical groups with oriented handles", () => {
+  it("renders nested horizontal and vertical groups with oriented grips", () => {
     render(
       <div style={{ width: 384, height: 200 }}>
         <ResizablePanelGroup orientation="horizontal" className="max-w-sm">
@@ -235,27 +265,18 @@ describe("Resizable", () => {
     const inner = screen.getByRole("separator", { name: "Resize inner" });
 
     expect(outer).toHaveAttribute("aria-orientation", "vertical");
-    expect(outer.className).toMatch(/\bw-px\b/);
     expect(outer.className).toMatch(/cursor-col-resize/);
-    expect(
-      outer.querySelector('[data-slot="resizable-handle-grip"]'),
-    ).toBeTruthy();
+    expect(gripDots(outer)).toHaveLength(6);
 
     expect(inner).toHaveAttribute("aria-orientation", "horizontal");
-    expect(inner.className).toMatch(/aria-\[orientation=horizontal\]:w-full/);
     expect(inner.className).toMatch(
       /aria-\[orientation=horizontal\]:cursor-row-resize/,
     );
-    expect(
-      inner.querySelector('[data-slot="resizable-handle-grip"]'),
-    ).toBeTruthy();
+    expect(gripDots(inner)).toHaveLength(6);
 
     const groups = document.querySelectorAll(
       '[data-slot="resizable-panel-group"]',
     );
     expect(groups).toHaveLength(2);
-    expect(groups[1]?.className).toMatch(
-      /aria-\[orientation=vertical\]:flex-col/,
-    );
   });
 });

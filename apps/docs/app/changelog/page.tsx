@@ -323,8 +323,9 @@ export default function ChangelogPage() {
             on the components catalog page.
           </li>
           <li>
-            <strong>Red</strong> theme preset — brick / red-collar accent with
-            light and dark surfaces, charts, and radius support in the Themes
+            <strong>Red</strong> theme preset — crimson design-system accent
+            (distinct from Rose, Orange, and semantic destructive) with light
+            and dark surfaces, charts, and radius support in the Themes
             playground.
           </li>
         </ul>
@@ -336,21 +337,28 @@ export default function ChangelogPage() {
         </h3>
         <ul className="text-foreground list-disc pl-5 text-base leading-7">
           <li>
-            Resizable handle affordances: orientation-aware cursors, expanded
-            hit targets, and crossing-handle 2D resize cursors from the library.
+            Resizable handle affordances: orientation-aware 6-dot grips
+            (vertical separator → 2×3; horizontal → 3×2), orientation-aware
+            cursors, expanded hit targets, and crossing-handle 2D resize cursors
+            from the library.
+          </li>
+          <li>
+            Themes and Typeset playground masonry restored to a 1 → 2 → 3 → 4 →
+            5 column progression at project breakpoints.
           </li>
           <li>
             Homepage showcase vertical spacing aligned with the horizontal
             gutter (PlaygroundGrid gap only — no stacked card margins).
           </li>
           <li>
-            <strong>Blue</strong> and <strong>Violet</strong> theme presets —
-            fuller surface hierarchy (background, muted, accent, borders, ring,
-            charts) for coherent light and dark modes.
+            Theme contrast polish: dark surfaces stay deep with a light primary
+            tint (Default / Yellow / Violet pattern), <strong>Red</strong> uses
+            a true red primary, and Progress fill follows{" "}
+            <code>bg-primary</code> / <code>--primary</code>.
           </li>
           <li>
-            Homepage showcase coverage for newest registry components (Resizable
-            workspace card near the start of the masonry).
+            Homepage showcase fixed at exactly 20 cards, with a compact
+            Resizable sidebar | main example near the start of the masonry.
           </li>
         </ul>
         <h3

@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { SHOWCASE_BLOCK_COUNT } from "@/app/home/showcase-blocks";
+
 import Home from "./page";
 
 beforeAll(() => {
@@ -76,6 +78,13 @@ describe("homepage", () => {
       "data-playground-mode",
       "showcase",
     );
+    expect(document.querySelector("[data-playground]")).toHaveAttribute(
+      "data-showcase-count",
+      String(SHOWCASE_BLOCK_COUNT),
+    );
+    expect(document.querySelectorAll("[data-play-block]")).toHaveLength(
+      SHOWCASE_BLOCK_COUNT,
+    );
     expect(
       document.querySelectorAll("[data-playground-column]").length,
     ).toBeGreaterThanOrEqual(1);
@@ -101,17 +110,17 @@ describe("homepage", () => {
       screen.getByRole("heading", { name: "Traffic" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Workspace" }),
+      screen.getByRole("heading", { name: "Resizable" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("separator", { name: "Resize explorer" }),
+      screen.getByRole("separator", { name: "Resize sidebar" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("separator", { name: "Resize terminal" }),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Sidebar")).toBeInTheDocument();
+    expect(screen.getByText("Main content")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Sign in" }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Search" })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Studio controls" }),
     ).toBeInTheDocument();

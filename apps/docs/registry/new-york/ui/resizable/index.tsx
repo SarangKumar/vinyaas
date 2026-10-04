@@ -50,16 +50,48 @@ export function ResizablePanel({ className, ...props }: ResizablePanelProps) {
 }
 
 export type ResizableHandleProps = PanelSeparatorProps & {
-  /** Renders a centered grip affordance inside the handle. */
+  /** Renders a centered orientation-aware grip affordance on the separator. */
   withHandle?: boolean;
 };
+
+/**
+ * Grip is always a 2×3 dot grid (horizontal-resize / vertical bar).
+ * On a horizontal separator (vertical resize), rotate 90° so it reads as 3×2.
+ *
+ * Secondary surface, rounded, padded, no border. Dots use foreground.
+ */
+function ResizableHandleGrip() {
+  return (
+    <div
+      aria-hidden="true"
+      data-slot="resizable-handle-grip"
+      className={cn(
+        "bg-secondary z-10 flex shrink-0 items-center justify-center rounded-sm p-1",
+        // Vertical-resize bar: tip the same 2×3 grip onto its side.
+        "group-aria-[orientation=horizontal]/resizable-handle:rotate-90",
+      )}
+    >
+      <div
+        data-slot="resizable-handle-grip-dots"
+        className="grid grid-cols-2 gap-0.5"
+      >
+        {Array.from({ length: 6 }, (_, index) => (
+          <span
+            key={index}
+            className="bg-foreground size-0.5 shrink-0 rounded-full"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /**
  * Keyboard-accessible resize handle (`role="separator"` from the library).
  *
  * Visual bar stays thin (`w-px` / `h-px`). A wider centered `::after` hit
  * target improves pointer and touch use. Orientation drives dimensions,
- * cursor fallback, hit-area axis, and withHandle rotation.
+ * cursor fallback, hit-area axis, and grip dot arrangement.
  *
  * Default styles size a vertical bar (horizontal group → `col-resize`).
  * When the separator reports `aria-orientation="horizontal"` (vertical group),
@@ -78,6 +110,7 @@ export function ResizableHandle({
       data-hit-area="expanded"
       disabled={disabled}
       className={cn(
+        "group/resizable-handle",
         "bg-border focus-visible:ring-ring relative flex w-px items-center justify-center",
         // Fallback when the library hover stylesheet is inactive. Crossing
         // handles override via the library's 2D cursor (move / grab / nwse*).
@@ -92,22 +125,12 @@ export function ResizableHandle({
         "aria-[orientation=horizontal]:after:-translate-y-1/2",
         "data-[separator=active]:bg-ring",
         "motion-reduce:transition-none",
-        "[&[aria-orientation=horizontal]>div]:rotate-90",
         disabled && "pointer-events-none opacity-50",
         className,
       )}
       {...props}
     >
-      {withHandle ? (
-        <div
-          aria-hidden="true"
-          data-slot="resizable-handle-grip"
-          className="bg-border z-10 flex h-4 w-3 items-center justify-center rounded-sm border"
-        >
-          <div className="bg-muted-foreground/70 h-2.5 w-px" />
-          <div className="bg-muted-foreground/70 ml-0.5 h-2.5 w-px" />
-        </div>
-      ) : null}
+      {withHandle ? <ResizableHandleGrip /> : null}
     </PanelSeparator>
   );
 }

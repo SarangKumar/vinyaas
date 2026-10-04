@@ -5,13 +5,32 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DocsStoreProvider } from "@/lib/store/provider";
 import { getThemePreset } from "@/lib/theme-playground";
 
 import { themeExamples } from "./examples";
 import ThemesPage, { metadata } from "./page";
+
+beforeAll(() => {
+  class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+
+  Object.defineProperty(window, "ResizeObserver", {
+    writable: true,
+    configurable: true,
+    value: ResizeObserverMock,
+  });
+  Object.defineProperty(globalThis, "ResizeObserver", {
+    writable: true,
+    configurable: true,
+    value: ResizeObserverMock,
+  });
+});
 
 function renderThemes() {
   return render(
@@ -51,6 +70,10 @@ describe("Themes playground page", () => {
     expect(screen.getByText("CLI installs")).toBeInTheDocument();
     expect(screen.getByText("Registry traffic")).toBeInTheDocument();
     expect(screen.getByText("Workspace access")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Resizable" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Hot components")).not.toBeInTheDocument();
     expect(screen.queryByText("June 2025")).not.toBeInTheDocument();
     expect(screen.queryByText("Total Revenue")).not.toBeInTheDocument();
     expect(document.querySelector("[data-playground-content]")).toBeTruthy();
