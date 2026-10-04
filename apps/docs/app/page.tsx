@@ -1,15 +1,33 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Playground } from "@/app/home/playground";
-import { PlaygroundSideRail } from "@/app/home/playground-side-skeletons";
+import { typesetPlaygroundPath } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 import logo from "@/components/logo.png";
 
 const primaryLink = `bg-primary text-primary-foreground inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium no-underline ${focusRing}`;
 const secondaryLink = `border-border bg-background text-foreground hover:bg-muted inline-flex h-9 items-center justify-center rounded-md border px-4 text-sm font-medium no-underline ${focusRing}`;
 const creditLink = `text-primary inline underline underline-offset-4 ${focusRing}`;
+
+/**
+ * Showcase is a separate client-heavy chunk (recharts, companion, dnd-kit, …).
+ * Deferring it keeps the hero’s first paint off that graph.
+ */
+const HomeShowcase = dynamic(
+  () =>
+    import("@/app/home/home-showcase").then((module) => module.HomeShowcase),
+  {
+    loading: () => (
+      <div
+        aria-hidden="true"
+        data-playground-loading
+        className="bg-muted dark:bg-background min-h-[70vh] w-full"
+      />
+    ),
+  },
+);
 
 export const metadata: Metadata = {
   title: "Vinyaas",
@@ -85,58 +103,13 @@ export default function Home() {
             Themes
           </Link>
           , and{" "}
-          <Link href="/typeset" className={creditLink}>
+          <Link href={typesetPlaygroundPath} className={creditLink}>
             Typeset
           </Link>{" "}
           playgrounds.
         </p>
       </section>
-      <div className="relative min-w-0">
-        {/*
-          Full-bleed showcase. From 2200px: CSS grid rail | masonry (1fr) | rail
-          so the 5-column band fills the middle without overlapping skeletons.
-          Bottom fade sits above the cards; footer sits above the fade.
-        */}
-        <div
-          data-playground-shell
-          className="bg-muted dark:bg-background relative flex w-full max-w-none flex-col overflow-hidden p-(--playground-pad) pb-0! [--gap:var(--playground-gap)] min-[1900px]:p-(--playground-pad-xl)! min-[1900px]:[--gap:var(--playground-gap-2xl)]! min-[2200px]:grid min-[2200px]:grid-cols-[var(--rail-width)_minmax(0,1fr)_var(--rail-width)] min-[2200px]:items-start min-[2200px]:gap-x-(--gap) min-[2200px]:[--rail-column:18rem] min-[2200px]:[--rail-width:calc(var(--rail-column)*2+var(--gap))] md:[--gap:var(--playground-gap-md)] lg:p-(--playground-pad-lg) xl:p-(--playground-pad-xl) xl:[--gap:var(--playground-gap-xl)]"
-        >
-          <PlaygroundSideRail side="left" />
-          <Playground />
-          <PlaygroundSideRail side="right" />
-          {/* Outer fades soft-mask the skeleton rails at the viewport edges */}
-          <div
-            aria-hidden="true"
-            data-playground-side-fade="left"
-            className="from-muted dark:from-background pointer-events-none absolute inset-y-0 left-0 z-[15] hidden w-28 bg-gradient-to-r to-transparent min-[2200px]:block"
-          />
-          <div
-            aria-hidden="true"
-            data-playground-side-fade="right"
-            className="from-muted dark:from-background pointer-events-none absolute inset-y-0 right-0 z-15 hidden w-28 bg-linear-to-l to-transparent min-[2200px]:block"
-          />
-          <div
-            aria-hidden="true"
-            data-playground-blur
-            className="from-background via-muted/80 dark:via-background/90 pointer-events-none absolute inset-x-0 bottom-0 z-20 h-54 bg-linear-to-t to-transparent min-[2200px]:col-span-3 lg:h-80 xl:h-64"
-          />
-        </div>
-        <footer className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center gap-1 px-5 pt-20 pb-10 text-center">
-          <p className="text-muted-foreground pointer-events-auto text-sm">
-            Made by{" "}
-            <a
-              href="https://github.com/SarangKumar"
-              target="_blank"
-              rel="noreferrer"
-              className={creditLink}
-            >
-              Sarang Kumar
-            </a>{" "}
-            · 2026
-          </p>
-          <p className="text-muted-foreground text-xs">v1.3.0</p>
-        </footer>
-      </div>
+      <HomeShowcase />
     </div>
   );
 }

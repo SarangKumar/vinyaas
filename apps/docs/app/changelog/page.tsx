@@ -354,13 +354,24 @@ export default function ChangelogPage() {
             from the library.
           </li>
           <li>
-            Themes and Typeset playground masonry share a CSS-columns ladder
-            with the homepage through xl:4; only the homepage adds a fifth
-            column at 1900px. Typeset options use a drawer below 1400px.
+            Themes and Typeset playgrounds keep CSS-columns masonry (1 → 2 → 3 →
+            4). The homepage showcase matches{" "}
+            <a
+              href="https://ui.shadcn.com/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline underline-offset-4"
+            >
+              ui.shadcn.com
+            </a>
+            : a CSS grid of flex columns (1 → 2 → 3 → 4 → 5) so mixed-height
+            cards pack without row gaps. Typeset options use a drawer below
+            1400px.
           </li>
           <li>
             Homepage showcase vertical spacing aligned with the horizontal
-            gutter (PlaygroundGrid gap only — no stacked card margins).
+            gutter (column <code>gap-(--gap)</code> only — no stacked card
+            margins).
           </li>
           <li>
             Theme contrast polish: dark surfaces stay deep with a light primary
@@ -369,8 +380,17 @@ export default function ChangelogPage() {
             <code>bg-primary</code> / <code>--primary</code>.
           </li>
           <li>
-            Homepage showcase fixed at exactly 20 cards, with compact Resizable,
-            Sidebar, and Drag & Drop examples near the start of the masonry.
+            Homepage showcase fixed at exactly 20 cards across five progressive
+            columns, with compact Resizable, Sidebar, and Drag & Drop examples
+            near the start. Ultra-wide decorative side rails (≥2200px) sit
+            absolute beside the 1900px band.
+          </li>
+          <li>
+            Docs chrome: navbar and sidebar/mobile nav include a Home link;
+            Typeset credit on the homepage points to the Typeset playground.
+            Showcase loads below the fold via dynamic import for faster first
+            paint. Sidebar demos clip cleanly when collapsed (icon-only headers,
+            overflow-hidden shells).
           </li>
         </ul>
         <h3

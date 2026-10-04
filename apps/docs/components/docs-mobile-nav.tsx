@@ -8,6 +8,7 @@ import Link from "next/link";
 import {
   companionPath,
   componentsPath,
+  homePath,
   installationPath,
   introductionPath,
   themesPath,
@@ -118,7 +119,7 @@ export function DocsMobileNav() {
               data-docs-mobile-backdrop
               className="absolute inset-0 bg-white/5 backdrop-blur-2xl dark:bg-white/5"
             />
-            <div className="bg-background/80 relative flex min-h-0 flex-1 flex-col dark:bg-background/75">
+            <div className="bg-background/80 dark:bg-background/75 relative flex min-h-0 flex-1 flex-col">
               <div
                 className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 py-5"
                 onClick={(event) => {
@@ -133,6 +134,9 @@ export function DocsMobileNav() {
                   Navigation
                 </p>
                 <nav aria-label="Site" className="mb-6 flex flex-col gap-1">
+                  <Link href={homePath} className={menuLink}>
+                    Home
+                  </Link>
                   <Link href={introductionPath} className={menuLink}>
                     Docs
                   </Link>
@@ -216,15 +220,15 @@ function MenuToggleIcon({ open }: { open: boolean }) {
       <span
         className={
           open
-            ? "bg-current absolute h-0.5 w-[1.125rem] rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none translate-y-0 rotate-45"
-            : "bg-current absolute h-0.5 w-[1.125rem] rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none -translate-y-[0.22rem] rotate-0"
+            ? "absolute h-0.5 w-[1.125rem] translate-y-0 rotate-45 rounded-full bg-current transition-transform duration-200 ease-out motion-reduce:transition-none"
+            : "absolute h-0.5 w-[1.125rem] -translate-y-[0.22rem] rotate-0 rounded-full bg-current transition-transform duration-200 ease-out motion-reduce:transition-none"
         }
       />
       <span
         className={
           open
-            ? "bg-current absolute h-0.5 w-[1.125rem] rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none translate-y-0 -rotate-45"
-            : "bg-current absolute h-0.5 w-[1.125rem] rounded-full transition-transform duration-200 ease-out motion-reduce:transition-none translate-y-[0.22rem] rotate-0"
+            ? "absolute h-0.5 w-[1.125rem] translate-y-0 -rotate-45 rounded-full bg-current transition-transform duration-200 ease-out motion-reduce:transition-none"
+            : "absolute h-0.5 w-[1.125rem] translate-y-[0.22rem] rotate-0 rounded-full bg-current transition-transform duration-200 ease-out motion-reduce:transition-none"
         }
       />
     </span>

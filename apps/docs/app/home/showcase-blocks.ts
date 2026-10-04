@@ -35,8 +35,9 @@ import { components } from "@/components/component-meta";
  * 4. Do not remove important single-representation components just because
  *    they are older.
  *
- * Layout (PlaygroundGrid mode="showcase") stays unchanged:
- * 1 · md:2 · lg:3 · xl:4 · homepage min-[1900px]:5 — CSS columns masonry.
+ * Layout (homepage, shadcn-style grid of flex columns):
+ * 1 · md:2 · lg:3 · min-[1400px]:4 · min-[1900px]:5.
+ * Cards are stacked in column flex stacks (not one card per grid cell).
  *
  * v1.3.0 note: Resizable, Sidebar, and Drag & Drop were added near the start;
  * Signup and Upload were replaced to keep the list at 20.

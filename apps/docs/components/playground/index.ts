@@ -10,7 +10,9 @@ export {
   playgroundColumnsClassName,
   playgroundDenseChromeInlineClassName,
   playgroundDenseChromeShowClassName,
+  playgroundShowcaseColumnClassName,
   playgroundShowcaseColumnsClassName,
+  playgroundShowcaseGridClassName,
 } from "./playground-layout";
 
 export {

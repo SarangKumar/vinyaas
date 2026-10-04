@@ -139,13 +139,12 @@ function BasicSidebar() {
     <SidebarProvider
       defaultOpen
       keyboardShortcut={false}
-      className="border-border min-h-[280px] rounded-md border"
+      className="border-border min-h-[280px] overflow-hidden rounded-md border"
     >
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center gap-2 px-2 py-1.5 text-sm font-medium">
+          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
             <DotIcon className="text-sidebar-primary size-4" />
-            <span>Acme</span>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -188,19 +187,13 @@ function DashboardSidebar() {
     <SidebarProvider
       defaultOpen
       keyboardShortcut={false}
-      className="border-border min-h-[360px] rounded-md border"
+      className="border-border min-h-[360px] overflow-hidden rounded-md border"
     >
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center gap-2 px-2 py-1.5">
+          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex size-8 items-center justify-center rounded-md text-xs font-semibold">
               V
-            </div>
-            <div className="grid min-w-0 group-data-[collapsible=icon]:hidden">
-              <span className="truncate text-sm font-medium">Vinyaas</span>
-              <span className="text-sidebar-foreground/70 truncate text-xs">
-                Workspace
-              </span>
             </div>
           </div>
         </SidebarHeader>
@@ -307,12 +300,14 @@ function CollapsedSidebar() {
     <SidebarProvider
       defaultOpen={false}
       keyboardShortcut={false}
-      className="border-border min-h-[280px] rounded-md border"
+      className="border-border min-h-[280px] overflow-hidden rounded-md border"
     >
       <Sidebar>
         <SidebarHeader>
-          <div className="border-border flex size-8 items-center justify-center rounded-md border text-xs font-semibold">
-            A
+          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
+            <div className="border-border flex size-8 items-center justify-center rounded-md border text-xs font-semibold">
+              A
+            </div>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -362,13 +357,20 @@ function CompositionSidebar() {
     <SidebarProvider
       defaultOpen
       keyboardShortcut={false}
-      className="border-border min-h-[300px] rounded-md border"
+      className="border-border min-h-[300px] overflow-hidden rounded-md border"
     >
       <Sidebar>
         <SidebarHeader className="gap-3">
-          <div className="px-2 text-sm font-semibold">Docs</div>
-          <Button type="button" size="sm" variant="outline" className="mx-2">
-            Search
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="mx-2 group-data-[collapsible=icon]:mx-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
+          >
+            <span className="group-data-[collapsible=icon]:sr-only">
+              Search
+            </span>
+            <DotIcon className="hidden size-4 group-data-[collapsible=icon]:block" />
           </Button>
         </SidebarHeader>
         <SidebarContent>
@@ -376,6 +378,12 @@ function CompositionSidebar() {
             <SidebarGroupLabel>Guides</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton tooltip="Home">
+                    <HomeIcon />
+                    <span>Home</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton isActive tooltip="Introduction">
                     <BookMark />
@@ -386,7 +394,10 @@ function CompositionSidebar() {
                   <SidebarMenuButton tooltip="Components">
                     <FolderIcon />
                     <span>Components</span>
-                    <Badge variant="secondary" className="ml-auto">
+                    <Badge
+                      variant="secondary"
+                      className="ml-auto group-data-[collapsible=icon]:hidden"
+                    >
                       New
                     </Badge>
                   </SidebarMenuButton>
@@ -395,9 +406,6 @@ function CompositionSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>
-          <p className="text-sidebar-foreground/70 px-2 text-xs">v1.3.0</p>
-        </SidebarFooter>
       </Sidebar>
       <SidebarInset className="min-h-[300px] p-4">
         <div className="flex items-center gap-2">
@@ -461,11 +469,10 @@ export function AppShell() {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center gap-2 px-2 py-1.5 text-sm font-medium">
+          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
             <span className="bg-sidebar-primary text-sidebar-primary-foreground flex size-6 items-center justify-center rounded-md text-[10px] font-semibold">
               A
             </span>
-            <span>Acme</span>
           </div>
         </SidebarHeader>
         <SidebarContent>

@@ -2,51 +2,55 @@ import type { CSSProperties, ReactNode } from "react";
 
 import { Skeleton } from "@/registry/new-york/ui/skeleton";
 
+const railClassName =
+  "absolute top-0 grid w-(--rail-width) grid-cols-[repeat(2,var(--rail-column))] gap-(--gap) opacity-50 [--rail-column:20rem] [--rail-width:calc(var(--rail-column)*2+var(--gap))]";
+
 /**
- * Ultra-wide decorative rail (≥2200px), in document flow.
- * The homepage shell is a 3-column grid: rail | masonry (1fr) | rail so the
- * main columns fill the middle without overlapping the skeletons.
+ * Ultra-wide decorative rails (≥2200px), absolute like ui.shadcn.com.
+ * Anchored to half of the 1900px showcase max-width (`950px`).
  */
-export function PlaygroundSideRail({ side }: { side: "left" | "right" }) {
+export function PlaygroundSideRails() {
   return (
     <div
       aria-hidden="true"
-      data-playground-side={side}
-      data-playground-rails={side}
-      className="pointer-events-none hidden w-(--rail-width) grid-cols-[repeat(2,var(--rail-column))] gap-(--gap) opacity-50 [--rail-column:18rem] [--rail-width:calc(var(--rail-column)*2+var(--gap))] min-[2200px]:grid"
+      data-playground-rails
+      className="pointer-events-none absolute inset-x-0 top-12 z-10 hidden min-[2200px]:block [&_[data-slot=skeleton]:nth-child(even)]:hidden"
     >
-      {side === "left" ? (
-        <>
-          <RailColumn>
-            <FormSkeletonCard />
-            <MetricsSkeletonCard />
-            <ListSkeletonCard />
-            <ComposerSkeletonCard />
-          </RailColumn>
-          <RailColumn>
-            <PaymentSkeletonCard />
-            <ProgressSkeletonCard />
-            <FieldsSkeletonCard />
-            <EmptySkeletonCard />
-          </RailColumn>
-        </>
-      ) : (
-        <>
-          <RailColumn>
-            <FieldsSkeletonCard />
-            <ProgressSkeletonCard />
-            <PasswordSkeletonCard />
-            <QrSkeletonCard />
-          </RailColumn>
-          <RailColumn>
-            <QrSkeletonCard />
-            <PaymentSkeletonCard />
-            <ListSkeletonCard />
-            <EmptySkeletonCard />
-            <ChecklistSkeletonCard />
-          </RailColumn>
-        </>
-      )}
+      <div
+        data-playground-side="left"
+        className={`${railClassName} left-[calc(50%-950px-var(--rail-width)-var(--gap))]`}
+      >
+        <RailColumn>
+          <FormSkeletonCard />
+          <MetricsSkeletonCard />
+          <ListSkeletonCard />
+          <ComposerSkeletonCard />
+        </RailColumn>
+        <RailColumn>
+          <PaymentSkeletonCard />
+          <ProgressSkeletonCard />
+          <FieldsSkeletonCard />
+          <EmptySkeletonCard />
+        </RailColumn>
+      </div>
+      <div
+        data-playground-side="right"
+        className={`${railClassName} right-[calc(50%-950px-var(--rail-width)-var(--gap))]`}
+      >
+        <RailColumn>
+          <FieldsSkeletonCard />
+          <ProgressSkeletonCard />
+          <PasswordSkeletonCard />
+          <QrSkeletonCard />
+        </RailColumn>
+        <RailColumn>
+          <QrSkeletonCard />
+          <PaymentSkeletonCard />
+          <ListSkeletonCard />
+          <EmptySkeletonCard />
+          <ChecklistSkeletonCard />
+        </RailColumn>
+      </div>
     </div>
   );
 }

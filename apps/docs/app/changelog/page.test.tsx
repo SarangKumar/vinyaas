@@ -69,11 +69,13 @@ describe("Changelog", () => {
       "Homepage showcase vertical spacing",
     );
     expect(document.body.textContent).toContain("crimson design-system");
-    expect(document.body.textContent).toContain("1 → 2 → 3 → 4 →");
+    expect(document.body.textContent).toContain("1 → 2 → 3 → 4 → 5");
+    expect(document.body.textContent).toContain("ui.shadcn.com");
     expect(document.body.textContent).toContain("light primary tint");
     expect(document.body.textContent).toContain(
       "Homepage showcase fixed at exactly 20",
     );
+    expect(document.body.textContent).toContain("dynamic import");
     expect(document.body.textContent).toContain(
       "v1.2.0 focuses on installation clarity",
     );

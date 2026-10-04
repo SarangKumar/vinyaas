@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { SHOWCASE_BLOCK_COUNT } from "@/app/home/showcase-blocks";
@@ -25,7 +25,7 @@ beforeAll(() => {
 });
 
 describe("homepage", () => {
-  it("renders the hero, playground masonry, and side rails", () => {
+  it("renders the hero, playground masonry, and side rails", async () => {
     render(<Home />);
 
     expect(
@@ -51,12 +51,15 @@ describe("homepage", () => {
     );
     expect(screen.getByRole("link", { name: "Typeset" })).toHaveAttribute(
       "href",
-      "/typeset",
+      "/typeset/playground",
     );
     expect(document.body.textContent).toContain("vinyaas init");
-    expect(document.body.textContent).toContain("v1.3.0");
     expect(document.querySelector("[data-home-brand]")).toBeTruthy();
     expect(screen.getByRole("img", { name: "Vinyaas" })).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(document.querySelector("[data-playground]")).toBeTruthy();
+    });
 
     expect(document.querySelector("[data-companion-showcase]")).toBeNull();
     expect(
@@ -86,36 +89,30 @@ describe("homepage", () => {
       SHOWCASE_BLOCK_COUNT,
     );
     const grid = document.querySelector("[data-playground-grid]");
-    expect(grid?.className).toMatch(/columns-1/);
-    expect(grid?.className).toMatch(/md:columns-2/);
-    expect(grid?.className).toMatch(/lg:columns-3/);
-    expect(grid?.className).toMatch(/xl:columns-4/);
-    expect(grid?.className).toMatch(/min-\[1900px\]:columns-5!/);
-    expect(playground?.className).toMatch(/min-\[1900px\]:max-w-\[1900px\]/);
+    expect(grid?.className).toMatch(/\bgrid\b/);
+    expect(grid?.className).toMatch(/md:grid-cols-2/);
+    expect(grid?.className).toMatch(/lg:grid-cols-3/);
+    expect(grid?.className).toMatch(/min-\[1400px\]:grid-cols-4!/);
+    expect(grid?.className).toMatch(/min-\[1900px\]:grid-cols-5!/);
     expect(playground?.className).toMatch(/xl:max-w-\[1600px\]/);
-    expect(playground?.className).toMatch(/min-\[2200px\]:max-w-none/);
+    expect(playground?.className).toMatch(/2xl:max-w-\[1900px\]/);
     expect(
       document.querySelector("[data-playground-shell]")?.className,
-    ).toMatch(/min-\[2200px\]:grid-cols-/);
-    expect(
-      document.querySelectorAll("[data-playground-item]").length,
-    ).toBeGreaterThanOrEqual(1);
-    expect(document.querySelector("[data-playground-item]")?.className).toMatch(
-      /mb-\(--gap\)/,
+    ).toMatch(/flex-col/);
+    expect(document.querySelectorAll("[data-playground-column]")).toHaveLength(
+      5,
     );
+    expect(document.body.textContent).toContain("v1.3.0");
+    expect(document.querySelectorAll("[data-playground-item]")).toHaveLength(0);
     const playBlock = document.querySelector("[data-play-block]");
     expect(playBlock?.className).not.toMatch(/mb-\(--gap\)/);
 
+    expect(document.querySelector("[data-playground-rails]")).toBeTruthy();
     const leftRail = document.querySelector('[data-playground-side="left"]');
     const rightRail = document.querySelector('[data-playground-side="right"]');
     expect(leftRail?.className).toContain("grid-cols-[repeat(2,");
     expect(rightRail?.className).toContain("grid-cols-[repeat(2,");
-    expect(
-      document.querySelector('[data-playground-side-fade="left"]'),
-    ).toBeTruthy();
-    expect(
-      document.querySelector('[data-playground-side-fade="right"]'),
-    ).toBeTruthy();
+    expect(document.querySelector("[data-playground-blur]")).toBeTruthy();
 
     expect(
       screen.getByRole("heading", { name: "Traffic" }),

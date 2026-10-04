@@ -111,11 +111,10 @@ function Preview() {
     >
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center gap-2 px-2 py-1.5 text-sm font-medium">
+          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
             <span className="bg-sidebar-primary text-sidebar-primary-foreground flex size-6 items-center justify-center rounded-md text-[10px] font-semibold">
               A
             </span>
-            <span>Acme</span>
           </div>
         </SidebarHeader>
         <SidebarContent>

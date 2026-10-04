@@ -60,10 +60,14 @@ describe("DocsMobileNav", () => {
       "href",
       "/introduction",
     );
-    expect(within(dialog).getByRole("link", { name: "Home" })).toHaveAttribute(
-      "href",
-      "/",
-    );
+    const homeLinks = within(dialog).getAllByRole("link", { name: "Home" });
+    expect(homeLinks.length).toBeGreaterThanOrEqual(1);
+    expect(homeLinks[0]).toHaveAttribute("href", "/");
+    expect(
+      within(dialog.querySelector('[aria-label="Site"]')!).getByRole("link", {
+        name: "Home",
+      }),
+    ).toHaveAttribute("href", "/");
     expect(
       screen.getAllByRole("link", { name: "Components" })[0],
     ).toHaveAttribute("href", "/components");

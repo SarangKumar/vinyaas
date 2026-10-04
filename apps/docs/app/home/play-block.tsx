@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Showcase card for the homepage playground grid.
- * Vertical rhythm comes from PlaygroundGrid `gap-(--gap)` — do not also add
+ * Vertical rhythm comes from the homepage grid `gap-(--gap)` — do not also add
  * margin-bottom or gaps stack to 2× the gutter.
  */
 export function PlayBlock({

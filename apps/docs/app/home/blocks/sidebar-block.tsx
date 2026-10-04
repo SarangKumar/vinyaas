@@ -38,7 +38,7 @@ export function SidebarBlock() {
       <SidebarProvider
         defaultOpen={false}
         keyboardShortcut={false}
-        className="border-border min-h-[240px] w-full rounded-md border"
+        className="border-border min-h-[240px] w-full overflow-hidden rounded-md border"
       >
         <Sidebar>
           <SidebarHeader>

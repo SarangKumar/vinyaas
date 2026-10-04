@@ -5,11 +5,10 @@ import { cn } from "@/lib/utils";
 import {
   playgroundColumnItemClassName,
   playgroundColumnsClassName,
-  playgroundShowcaseColumnsClassName,
 } from "./playground-layout";
 
 /**
- * Showcase card for the Pinterest masonry.
+ * Showcase card for Themes / Typeset playgrounds.
  * No per-card Code button — theme/typeset Copy code lives on the toolbar.
  */
 export function PlaygroundBlock({
@@ -53,20 +52,14 @@ export function PlaygroundBlock({
 }
 
 /**
- * Shared Pinterest masonry for homepage + Themes + Typeset.
- *
- * CSS columns (not a row grid) so cards can start at different vertical
- * offsets. Shared ladder: 1 → md:2 → lg:3 → xl:4. Homepage showcase adds
- * min-[1900px]:5; Themes / Typeset stay at a max of 4.
+ * Themes / Typeset Pinterest masonry (CSS columns).
+ * Homepage uses `playgroundShowcaseGridClassName` directly instead.
  */
 export function PlaygroundGrid({
   children,
-  mode = "playground",
   className,
 }: {
   children: ReactNode;
-  /** Homepage (`showcase`) or Themes/Typeset (`playground`). */
-  mode?: "showcase" | "playground";
   className?: string;
 }) {
   const items = Children.toArray(children);
@@ -74,12 +67,8 @@ export function PlaygroundGrid({
   return (
     <div
       data-playground-grid
-      data-playground-mode={mode}
-      className={cn(
-        playgroundColumnsClassName,
-        mode === "showcase" && playgroundShowcaseColumnsClassName,
-        className,
-      )}
+      data-playground-mode="playground"
+      className={cn(playgroundColumnsClassName, className)}
     >
       {items.map((item, index) => (
         <div
