@@ -82,17 +82,18 @@ describe("DocsShell", () => {
       throw new Error("Expected header sections");
     }
 
-    expect(
-      within(start).getByRole("link", { name: "Vinyaas" }),
-    ).toHaveAttribute("href", "/");
+    expect(within(start).getByRole("link", { name: "Home" })).toHaveAttribute(
+      "href",
+      "/",
+    );
     expect(within(start).getByRole("button", { name: "Menu" })).toHaveAttribute(
       "aria-expanded",
       "false",
     );
     expect(
-      within(start).getByRole("button", { name: "Menu" }).querySelector(
-        "[data-menu-icon]",
-      ),
+      within(start)
+        .getByRole("button", { name: "Menu" })
+        .querySelector("[data-menu-icon]"),
     ).toHaveAttribute("data-state", "closed");
     expect(within(start).getByRole("link", { name: "Docs" })).toHaveAttribute(
       "href",
@@ -138,12 +139,8 @@ describe("DocsShell", () => {
       ),
     ).toBeInTheDocument();
 
-    expect(
-      document.querySelector('[data-github-link="compact"]'),
-    ).toBeTruthy();
-    expect(
-      document.querySelector('[data-github-link="default"]'),
-    ).toBeTruthy();
+    expect(document.querySelector('[data-github-link="compact"]')).toBeTruthy();
+    expect(document.querySelector('[data-github-link="default"]')).toBeTruthy();
 
     const github = within(end).getAllByRole("link", { name: /GitHub/i })[0]!;
 

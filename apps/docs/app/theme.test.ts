@@ -87,13 +87,19 @@ describe("docs theme", () => {
       "--font-mono: var(--font-geist-mono), ui-monospace, monospace",
     );
 
+    // Sidebar surface tokens alias core theme colors.
+    expect(css).toContain("--sidebar: var(--background)");
+    expect(css).toContain("--sidebar-foreground: var(--foreground)");
+    expect(css).toContain("--sidebar-primary: var(--primary)");
+    expect(css).toContain("--color-sidebar: var(--sidebar)");
+    expect(css).toContain(
+      "--color-sidebar-foreground: var(--sidebar-foreground)",
+    );
+
     // No docs chrome or component/prose styling in the consumer theme.
-    expect(css).not.toContain("--sidebar-primary");
-    expect(css).not.toContain("--color-sidebar:");
     expect(css).not.toContain("--subtle-foreground");
     expect(css).not.toContain("--palette-");
     expect(css).not.toContain("--new:");
-    expect(css).not.toContain("--sidebar-foreground");
     expect(css).not.toContain("--playground-");
     expect(css).not.toContain("--syntax-");
     expect(css).not.toContain(".typeset-docs");
@@ -135,6 +141,8 @@ describe("docs theme", () => {
     expect(css).toContain("--playground-gap: 1rem");
     expect(css).toContain("--playground-gap-2xl: 2.5rem");
     expect(css).toContain("--spacing-playground-gap: var(--playground-gap)");
+    expect(css).toContain("--breakpoint-playground: 87.5rem");
+    expect(css).toContain("--breakpoint-playground-wide: 118.75rem");
     expect(css).toContain("--syntax-plain:");
     expect(css).toContain("code[data-language]");
     expect(css).toContain(":not(pre) > code:not([data-language])");

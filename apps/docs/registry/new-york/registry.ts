@@ -125,6 +125,39 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "drag-and-drop",
+    type: "registry:ui",
+    description:
+      "Sortable and reorderable drag-and-drop for lists, cards, and boards.",
+    dependencies: [
+      "@dnd-kit/core",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
+      "clsx",
+      "tailwind-merge",
+    ],
+    files: [
+      {
+        path: "ui/drag-and-drop/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "sidebar",
+    type: "registry:ui",
+    description:
+      "Composable dashboard sidebar with expanded, collapsed, and mobile navigation.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["drawer", "tooltip"],
+    files: [
+      {
+        path: "ui/sidebar/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "separator",
     type: "registry:ui",
     description: "A horizontal or vertical divider between content.",

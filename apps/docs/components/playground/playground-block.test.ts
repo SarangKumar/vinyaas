@@ -1,18 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { playgroundColumnCountForWidth } from "./playground-block";
+import {
+  playgroundColumnsClassName,
+  playgroundShowcaseColumnsClassName,
+} from "./playground-layout";
 
-describe("playgroundColumnCountForWidth", () => {
-  it("follows the 1 → 2 → 3 → 4 → 5 progression", () => {
-    expect(playgroundColumnCountForWidth(375)).toBe(1);
-    expect(playgroundColumnCountForWidth(767)).toBe(1);
-    expect(playgroundColumnCountForWidth(768)).toBe(2);
-    expect(playgroundColumnCountForWidth(1023)).toBe(2);
-    expect(playgroundColumnCountForWidth(1024)).toBe(3);
-    expect(playgroundColumnCountForWidth(1399)).toBe(3);
-    expect(playgroundColumnCountForWidth(1400)).toBe(4);
-    expect(playgroundColumnCountForWidth(1899)).toBe(4);
-    expect(playgroundColumnCountForWidth(1900)).toBe(5);
-    expect(playgroundColumnCountForWidth(2560)).toBe(5);
+describe("PlaygroundGrid layout", () => {
+  it("shares CSS columns through xl:4; homepage showcase adds columns-5", () => {
+    expect(playgroundColumnsClassName).toMatch(/xl:columns-4/);
+    expect(playgroundColumnsClassName).not.toMatch(/columns-5/);
+    expect(playgroundShowcaseColumnsClassName).toBe("min-[1900px]:columns-5!");
   });
 });

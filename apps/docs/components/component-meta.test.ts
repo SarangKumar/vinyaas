@@ -53,6 +53,7 @@ describe("component metadata", () => {
       "Resizable",
       "Scroll Area",
       "Separator",
+      "Sidebar",
       "Skeleton",
       "Slider",
       "Spinner",
@@ -85,18 +86,26 @@ describe("component metadata", () => {
     expect(
       components
         .filter((component) => component.introducedIn === "1.3.0")
-        .map((component) => component.slug),
-    ).toEqual(["resizable"]);
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual(["resizable", "sidebar"]);
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 7);
-    expect(newComponents().map((component) => component.slug)).toEqual([
-      "resizable",
-    ]);
+    ).toBe(components.length - 8);
+    expect(
+      newComponents()
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual(["resizable", "sidebar"]);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "resizable")!,
+      ),
+    ).toBe(true);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "sidebar")!,
       ),
     ).toBe(true);
     expect(

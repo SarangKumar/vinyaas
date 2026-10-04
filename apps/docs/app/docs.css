@@ -53,6 +53,14 @@
   --spacing-playground-gap-md: var(--playground-gap-md);
   --spacing-playground-gap-xl: var(--playground-gap-xl);
   --spacing-playground-gap-2xl: var(--playground-gap-2xl);
+
+  /*
+   * Playground composition ladder (homepage / Themes / Typeset / dense chrome).
+   * CSS columns masonry: 1 → md:2 → lg:3 → xl:4; homepage max min-[1900px]:5
+   * Dense chrome / Typeset inline options: min-[1400px].
+   */
+  --breakpoint-playground: 87.5rem; /* 1400px */
+  --breakpoint-playground-wide: 118.75rem; /* 1900px */
 }
 
 /*
@@ -189,7 +197,8 @@ code[data-language] .hljs-operator {
     column-fill: auto !important;
   }
 
-  [data-playground-block] {
+  [data-playground-block],
+  [data-play-block] {
     break-inside: avoid;
     page-break-inside: avoid;
     margin-bottom: 1rem;

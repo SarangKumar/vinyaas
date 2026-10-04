@@ -149,6 +149,9 @@ describe("documentation navigation", () => {
       items
         ?.filter((item) => item.indicator === "new")
         .map((item) => item.title),
-    ).toEqual(["Resizable"]);
+    ).toEqual(["Resizable", "Sidebar"]);
+    expect(items?.find((item) => item.title === "Sidebar")?.indicator).toBe(
+      "new",
+    );
   });
 });

@@ -317,6 +317,17 @@ export default function ChangelogPage() {
             workspace, analytics).
           </li>
           <li>
+            <strong>Sidebar</strong> — composable dashboard navigation with
+            expanded and collapsed desktop modes, mobile Drawer composition,
+            framework-agnostic menu buttons, and accessible collapsed labels.
+          </li>
+          <li>
+            <strong>Drag & Drop</strong> — sortable/reorderable interactions via{" "}
+            <code>@dnd-kit</code> with drag handles, keyboard and touch support,
+            drop indicators, disabled items, and multiple-container boards for
+            dashboard lists and cards (not a file-upload drop zone).
+          </li>
+          <li>
             New-component indicator in documentation navigation for components
             introduced in the current release (driven by{" "}
             <code>introducedIn</code> metadata), plus a New Components section
@@ -343,8 +354,9 @@ export default function ChangelogPage() {
             from the library.
           </li>
           <li>
-            Themes and Typeset playground masonry restored to a 1 → 2 → 3 → 4 →
-            5 column progression at project breakpoints.
+            Themes and Typeset playground masonry share a CSS-columns ladder
+            with the homepage through xl:4; only the homepage adds a fifth
+            column at 1900px. Typeset options use a drawer below 1400px.
           </li>
           <li>
             Homepage showcase vertical spacing aligned with the horizontal
@@ -357,8 +369,8 @@ export default function ChangelogPage() {
             <code>bg-primary</code> / <code>--primary</code>.
           </li>
           <li>
-            Homepage showcase fixed at exactly 20 cards, with a compact
-            Resizable sidebar | main example near the start of the masonry.
+            Homepage showcase fixed at exactly 20 cards, with compact Resizable,
+            Sidebar, and Drag & Drop examples near the start of the masonry.
           </li>
         </ul>
         <h3
@@ -436,8 +448,8 @@ export default function ChangelogPage() {
           </li>
         </ul>
         <p className="text-foreground text-base leading-7">
-          Remaining for later v1.3 increments: Drag &amp; Drop, sidebar,
-          data-table, and the rest of the planned dashboard component set.
+          Remaining for later v1.3 increments: data-table and the rest of the
+          planned dashboard component set.
         </p>
       </section>
       <section className="flex flex-col gap-4">

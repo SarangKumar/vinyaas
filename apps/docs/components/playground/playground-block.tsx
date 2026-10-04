@@ -1,8 +1,12 @@
-"use client";
-
-import { Children, useEffect, useState, type ReactNode } from "react";
+import { Children, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
+
+import {
+  playgroundColumnItemClassName,
+  playgroundColumnsClassName,
+  playgroundShowcaseColumnsClassName,
+} from "./playground-layout";
 
 /**
  * Showcase card for the Pinterest masonry.
@@ -25,7 +29,7 @@ export function PlaygroundBlock({
       data-playground-block
       data-example={title}
       className={cn(
-        "border-border bg-card text-card-foreground flex w-full min-w-0 flex-col gap-4 overflow-hidden rounded-xl border p-4 sm:gap-5 sm:p-5",
+        "border-border bg-card text-card-foreground flex w-full min-w-0 flex-col gap-4 rounded-xl border p-4 sm:gap-5 sm:p-5",
         className,
       )}
     >
@@ -41,7 +45,7 @@ export function PlaygroundBlock({
           ) : null}
         </header>
       ) : null}
-      <div className="flex max-w-full min-w-0 flex-col gap-4 overflow-hidden text-sm">
+      <div className="flex max-w-full min-w-0 flex-col gap-4 p-0.5 text-sm">
         {children}
       </div>
     </section>
@@ -49,72 +53,41 @@ export function PlaygroundBlock({
 }
 
 /**
- * Shared masonry column progression for homepage + Themes/Typeset:
- * 1 → 2 (md/768) → 3 (lg/1024) → 4 (1400) → 5 (1900)
+ * Shared Pinterest masonry for homepage + Themes + Typeset.
+ *
+ * CSS columns (not a row grid) so cards can start at different vertical
+ * offsets. Shared ladder: 1 → md:2 → lg:3 → xl:4. Homepage showcase adds
+ * min-[1900px]:5; Themes / Typeset stay at a max of 4.
  */
-export function playgroundColumnCountForWidth(width: number) {
-  if (width >= 1900) {
-    return 5;
-  }
-  if (width >= 1400) {
-    return 4;
-  }
-  if (width >= 1024) {
-    return 3;
-  }
-  if (width >= 768) {
-    return 2;
-  }
-  return 1;
-}
-
-function usePlaygroundColumnCount() {
-  const [count, setCount] = useState(1);
-
-  useEffect(() => {
-    function update() {
-      setCount(playgroundColumnCountForWidth(window.innerWidth));
-    }
-
-    update();
-    window.addEventListener("resize", update);
-
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  return count;
-}
-
 export function PlaygroundGrid({
   children,
   mode = "playground",
+  className,
 }: {
   children: ReactNode;
-  /** Homepage (`showcase`) or Themes/Typeset (`playground`) — same 1→5 steps. */
+  /** Homepage (`showcase`) or Themes/Typeset (`playground`). */
   mode?: "showcase" | "playground";
+  className?: string;
 }) {
-  const columnCount = usePlaygroundColumnCount();
   const items = Children.toArray(children);
-  const columns = Array.from({ length: columnCount }, () => [] as ReactNode[]);
-
-  items.forEach((item, index) => {
-    columns[index % columnCount]!.push(item);
-  });
 
   return (
     <div
       data-playground-grid
-      data-playground-columns={columnCount}
       data-playground-mode={mode}
-      className="relative z-10 flex w-full min-w-0 items-start gap-(--gap)"
+      className={cn(
+        playgroundColumnsClassName,
+        mode === "showcase" && playgroundShowcaseColumnsClassName,
+        className,
+      )}
     >
-      {columns.map((column, index) => (
+      {items.map((item, index) => (
         <div
           key={index}
-          data-playground-column
-          className="flex min-w-0 flex-1 flex-col gap-(--gap)"
+          data-playground-item
+          className={playgroundColumnItemClassName}
         >
-          {column}
+          {item}
         </div>
       ))}
     </div>

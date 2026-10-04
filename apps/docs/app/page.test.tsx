@@ -85,13 +85,24 @@ describe("homepage", () => {
     expect(document.querySelectorAll("[data-play-block]")).toHaveLength(
       SHOWCASE_BLOCK_COUNT,
     );
+    const grid = document.querySelector("[data-playground-grid]");
+    expect(grid?.className).toMatch(/columns-1/);
+    expect(grid?.className).toMatch(/md:columns-2/);
+    expect(grid?.className).toMatch(/lg:columns-3/);
+    expect(grid?.className).toMatch(/xl:columns-4/);
+    expect(grid?.className).toMatch(/min-\[1900px\]:columns-5!/);
+    expect(playground?.className).toMatch(/min-\[1900px\]:max-w-\[1900px\]/);
+    expect(playground?.className).toMatch(/xl:max-w-\[1600px\]/);
+    expect(playground?.className).toMatch(/min-\[2200px\]:max-w-none/);
     expect(
-      document.querySelectorAll("[data-playground-column]").length,
+      document.querySelector("[data-playground-shell]")?.className,
+    ).toMatch(/min-\[2200px\]:grid-cols-/);
+    expect(
+      document.querySelectorAll("[data-playground-item]").length,
     ).toBeGreaterThanOrEqual(1);
-    // Vertical rhythm comes from column gap only (not stacked card margins).
-    expect(
-      document.querySelector("[data-playground-column]")?.className,
-    ).toMatch(/gap-\(--gap\)/);
+    expect(document.querySelector("[data-playground-item]")?.className).toMatch(
+      /mb-\(--gap\)/,
+    );
     const playBlock = document.querySelector("[data-play-block]");
     expect(playBlock?.className).not.toMatch(/mb-\(--gap\)/);
 
@@ -115,8 +126,10 @@ describe("homepage", () => {
     expect(
       screen.getByRole("separator", { name: "Resize sidebar" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Sidebar")).toBeInTheDocument();
-    expect(screen.getByText("Main content")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Sidebar" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Main content").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("heading", { name: "Sign in" }),
     ).toBeInTheDocument();
@@ -128,7 +141,10 @@ describe("homepage", () => {
       screen.getByRole("heading", { name: "Storefront" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Uploads" }),
+      screen.getByRole("heading", { name: "Drag & Drop" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Reorder Revenue" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Workspace settings" }),

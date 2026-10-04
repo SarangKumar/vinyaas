@@ -14,12 +14,12 @@ import { NotificationSettingsBlock } from "@/app/home/blocks/notification-settin
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
 import { ProfileBlock } from "@/app/home/blocks/profile-block";
 import { ProjectBlock } from "@/app/home/blocks/project-block";
+import { DragAndDropBlock } from "@/app/home/blocks/drag-and-drop-block";
 import { ResizableBlock } from "@/app/home/blocks/resizable-block";
 import { SecurityBlock } from "@/app/home/blocks/security-block";
-import { SignupBlock } from "@/app/home/blocks/signup-block";
+import { SidebarBlock } from "@/app/home/blocks/sidebar-block";
 import { TableBlock } from "@/app/home/blocks/table-block";
 import { TabsSettingsBlock } from "@/app/home/blocks/tabs-settings-block";
-import { UploadBlock } from "@/app/home/blocks/upload-block";
 import { components } from "@/components/component-meta";
 
 /**
@@ -36,11 +36,10 @@ import { components } from "@/components/component-meta";
  *    they are older.
  *
  * Layout (PlaygroundGrid mode="showcase") stays unchanged:
- * 1 · md:2 · lg:3 · min-1400:4 · min-1900:5 — Pinterest-style columns.
+ * 1 · md:2 · lg:3 · xl:4 · homepage min-[1900px]:5 — CSS columns masonry.
  *
- * v1.3.0 note: Resizable and a dense primitives kit were added; the previous
- * loose ordering was replaced by this fixed-length source of truth. Command
- * search was added for Command/Kbd coverage.
+ * v1.3.0 note: Resizable, Sidebar, and Drag & Drop were added near the start;
+ * Signup and Upload were replaced to keep the list at 20.
  */
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
@@ -65,6 +64,12 @@ const registrySlugs = new Set(components.map((component) => component.slug));
 export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   { id: "chart", components: ["chart"], Block: ChartBlock },
   { id: "resizable", components: ["resizable"], Block: ResizableBlock },
+  { id: "sidebar", components: ["sidebar"], Block: SidebarBlock },
+  {
+    id: "drag-and-drop",
+    components: ["drag-and-drop"],
+    Block: DragAndDropBlock,
+  },
   {
     id: "primitives",
     components: [
@@ -107,7 +112,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     components: ["tabs", "input", "button", "label"],
     Block: TabsSettingsBlock,
   },
-  { id: "upload", components: ["file-upload"], Block: UploadBlock },
   {
     id: "filter",
     components: ["drawer", "button", "badge"],
@@ -142,11 +146,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "media",
     components: ["slider", "switch", "label"],
     Block: MediaControlsBlock,
-  },
-  {
-    id: "signup",
-    components: ["button", "input", "checkbox", "label"],
-    Block: SignupBlock,
   },
   {
     id: "notifications",

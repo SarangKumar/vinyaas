@@ -32,14 +32,22 @@
         "table",
         "scroll-area",
         "separator",
-        "resizable"
+        "resizable",
+        "sidebar",
+        "drag-and-drop"
       ]
     },
     {
       "id": "navigation",
       "name": "Navigation",
       "description": "Navigation and command patterns for application shells.",
-      "components": ["breadcrumb", "tabs", "dropdown-menu", "command"]
+      "components": [
+        "breadcrumb",
+        "tabs",
+        "dropdown-menu",
+        "command",
+        "sidebar"
+      ]
     },
     {
       "id": "feedback",
@@ -69,7 +77,9 @@
         "card",
         "badge",
         "breadcrumb",
-        "resizable"
+        "resizable",
+        "sidebar",
+        "drag-and-drop"
       ]
     }
   ]

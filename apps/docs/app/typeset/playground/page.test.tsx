@@ -41,11 +41,14 @@ describe("Typeset playground page", () => {
     ).toBeInTheDocument();
     expect(typesetExamples.length).toBeGreaterThanOrEqual(16);
     expect(document.querySelector("[data-playground-content]")).toBeTruthy();
-    expect(document.querySelector("[data-playground-grid]")).toHaveAttribute(
-      "data-playground-columns",
+    expect(document.querySelector("[data-playground-grid]")?.className).toMatch(
+      /xl:columns-4/,
     );
     expect(
-      document.querySelectorAll("[data-playground-column]").length,
+      document.querySelector("[data-playground-grid]")?.className,
+    ).not.toMatch(/columns-5/);
+    expect(
+      document.querySelectorAll("[data-playground-item]").length,
     ).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("Design manifesto")).toBeInTheDocument();
     expect(screen.getByText("Contrast formula")).toBeInTheDocument();

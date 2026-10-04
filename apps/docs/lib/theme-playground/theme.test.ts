@@ -131,11 +131,22 @@ describe("generateThemeCss", () => {
     expect(css).toContain("--color-destructive: var(--destructive);");
   });
 
+  it("emits sidebar tokens as aliases of core theme colors", () => {
+    const css = generateThemeCss(createDefaultTheme());
+
+    expect(css).toContain("--sidebar: var(--background);");
+    expect(css).toContain("--sidebar-foreground: var(--foreground);");
+    expect(css).toContain("--sidebar-primary: var(--primary);");
+    expect(css).toContain("--color-sidebar: var(--sidebar);");
+    expect(css).toContain(
+      "--color-sidebar-foreground: var(--sidebar-foreground);",
+    );
+  });
+
   it("does not emit docs-only or component animation CSS", () => {
     const css = generateThemeCss(createDefaultTheme());
 
     expect(css).not.toContain("--playground-");
-    expect(css).not.toContain("--sidebar-");
     expect(css).not.toContain("--syntax-");
     expect(css).not.toContain("--new:");
     expect(css).not.toContain("font-geist");

@@ -16,7 +16,9 @@
         "table",
         "scroll-area",
         "separator",
-        "resizable"
+        "resizable",
+        "sidebar",
+        "drag-and-drop"
       ]
     }
   ]

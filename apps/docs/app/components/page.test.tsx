@@ -21,8 +21,10 @@ describe("components catalog", () => {
     ]);
 
     const newlyIntroduced = newComponents();
-    expect(newlyIntroduced.map((component) => component.slug)).toEqual([
+    expect(newlyIntroduced.map((component) => component.slug).sort()).toEqual([
+      "drag-and-drop",
       "resizable",
+      "sidebar",
     ]);
 
     const newSection = screen.getByRole("heading", {
@@ -38,6 +40,16 @@ describe("components catalog", () => {
       resizable.querySelector('[data-nav-indicator="new"]'),
     ).toHaveAttribute("aria-hidden", "true");
     expect(resizable.textContent).toMatch(/accessible handles/i);
+
+    const sidebar = within(newSection!).getByRole("link", {
+      name: /Sidebar/i,
+    });
+    expect(sidebar).toHaveAttribute("href", "/components/sidebar");
+    expect(sidebar.textContent).toMatch(/v1\.3\.0/);
+    expect(sidebar.querySelector('[data-nav-indicator="new"]')).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
 
     const lists = [...document.querySelectorAll("ul")];
     // New Components list + All Components grid

@@ -26,7 +26,7 @@ import { Toaster } from "@/registry/new-york/ui/toast";
 const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-sidebar-foreground hover:text-foreground ${focusRing}`;
 
 /**
- * Site chrome. Mobile header: Menu · Vinyaas · Search · Theme · GitHub.
+ * Site chrome. Mobile header: Menu · Home · Search · Theme · GitHub.
  * Desktop keeps the full site nav + search field + GitHub/Portfolio.
  */
 export function DocsShell({ children }: { children: React.ReactNode }) {
@@ -43,32 +43,47 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
                 className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-3"
               >
                 <DocsMobileNav />
-                <Link
-                  href={homePath}
-                  className={`text-foreground inline-flex shrink-0 items-center rounded-md text-sm font-medium ${focusRing}`}
-                >
-                  Vinyaas
-                </Link>
                 <nav
                   aria-label="Site"
-                  className="hidden shrink-0 items-center gap-1 md:flex"
+                  className="flex shrink-0 items-center gap-1"
                 >
-                  <Link href={introductionPath} className={headerLink}>
+                  <Link href={homePath} className={headerLink}>
+                    Home
+                  </Link>
+                  <Link
+                    href={introductionPath}
+                    className={`${headerLink} hidden md:inline-flex`}
+                  >
                     Docs
                   </Link>
-                  <Link href={componentsPath} className={headerLink}>
+                  <Link
+                    href={componentsPath}
+                    className={`${headerLink} hidden md:inline-flex`}
+                  >
                     Components
                   </Link>
-                  <Link href={companionPath} className={headerLink}>
+                  <Link
+                    href={companionPath}
+                    className={`${headerLink} hidden md:inline-flex`}
+                  >
                     Companion
                   </Link>
-                  <Link href={installationPath} className={headerLink}>
+                  <Link
+                    href={installationPath}
+                    className={`${headerLink} hidden md:inline-flex`}
+                  >
                     Installation
                   </Link>
-                  <Link href={themesPath} className={headerLink}>
+                  <Link
+                    href={themesPath}
+                    className={`${headerLink} hidden md:inline-flex`}
+                  >
                     Themes
                   </Link>
-                  <Link href={typesetPlaygroundPath} className={headerLink}>
+                  <Link
+                    href={typesetPlaygroundPath}
+                    className={`${headerLink} hidden md:inline-flex`}
+                  >
                     Typeset
                   </Link>
                 </nav>

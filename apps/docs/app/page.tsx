@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Playground } from "@/app/home/playground";
-import { PlaygroundSideRails } from "@/app/home/playground-side-skeletons";
+import { PlaygroundSideRail } from "@/app/home/playground-side-skeletons";
 import { focusRing } from "@/components/focus-ring";
 import logo from "@/components/logo.png";
 
@@ -93,16 +93,17 @@ export default function Home() {
       </section>
       <div className="relative min-w-0">
         {/*
-          Full-bleed showcase. Side rails are absolute outside the 1900px
-          main band (shadcn pattern). Bottom fade sits above the cards;
-          footer sits above the fade.
+          Full-bleed showcase. From 2200px: CSS grid rail | masonry (1fr) | rail
+          so the 5-column band fills the middle without overlapping skeletons.
+          Bottom fade sits above the cards; footer sits above the fade.
         */}
         <div
           data-playground-shell
-          className="bg-muted dark:bg-background relative flex w-full max-w-none flex-col overflow-hidden p-(--playground-pad) pb-0! [--gap:var(--playground-gap)] min-[1900px]:p-(--playground-pad-xl)! min-[1900px]:[--gap:var(--playground-gap-2xl)]! md:[--gap:var(--playground-gap-md)] lg:p-(--playground-pad-lg) xl:p-(--playground-pad-xl) xl:[--gap:var(--playground-gap-xl)]"
+          className="bg-muted dark:bg-background relative flex w-full max-w-none flex-col overflow-hidden p-(--playground-pad) pb-0! [--gap:var(--playground-gap)] min-[1900px]:p-(--playground-pad-xl)! min-[1900px]:[--gap:var(--playground-gap-2xl)]! min-[2200px]:grid min-[2200px]:grid-cols-[var(--rail-width)_minmax(0,1fr)_var(--rail-width)] min-[2200px]:items-start min-[2200px]:gap-x-(--gap) min-[2200px]:[--rail-column:18rem] min-[2200px]:[--rail-width:calc(var(--rail-column)*2+var(--gap))] md:[--gap:var(--playground-gap-md)] lg:p-(--playground-pad-lg) xl:p-(--playground-pad-xl) xl:[--gap:var(--playground-gap-xl)]"
         >
-          <PlaygroundSideRails />
+          <PlaygroundSideRail side="left" />
           <Playground />
+          <PlaygroundSideRail side="right" />
           {/* Outer fades soft-mask the skeleton rails at the viewport edges */}
           <div
             aria-hidden="true"
@@ -117,7 +118,7 @@ export default function Home() {
           <div
             aria-hidden="true"
             data-playground-blur
-            className="from-background via-muted/80 dark:via-background/90 pointer-events-none absolute inset-x-0 bottom-0 z-20 h-54 bg-linear-to-t to-transparent lg:h-80 xl:h-64"
+            className="from-background via-muted/80 dark:via-background/90 pointer-events-none absolute inset-x-0 bottom-0 z-20 h-54 bg-linear-to-t to-transparent min-[2200px]:col-span-3 lg:h-80 xl:h-64"
           />
         </div>
         <footer className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center gap-1 px-5 pt-20 pb-10 text-center">

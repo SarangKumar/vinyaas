@@ -5,7 +5,13 @@
       "id": "navigation",
       "name": "Navigation",
       "description": "Navigation and command patterns for application shells.",
-      "components": ["breadcrumb", "tabs", "dropdown-menu", "command"]
+      "components": [
+        "breadcrumb",
+        "tabs",
+        "dropdown-menu",
+        "command",
+        "sidebar"
+      ]
     }
   ]
 }

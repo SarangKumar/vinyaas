@@ -112,6 +112,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Drag & Drop",
+    slug: "drag-and-drop",
+    description:
+      "Sortable and reorderable drag-and-drop for lists, cards, and boards.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Drawer",
     slug: "drawer",
     description: "A panel that slides in from the edge of the screen.",
@@ -213,6 +220,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     slug: "separator",
     description: "A horizontal or vertical divider between content.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Sidebar",
+    slug: "sidebar",
+    description:
+      "Composable dashboard sidebar with collapsed and mobile navigation.",
+    introducedIn: "1.3.0",
   },
   {
     name: "Skeleton",

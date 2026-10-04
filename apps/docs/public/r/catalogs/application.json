@@ -15,7 +15,9 @@
         "card",
         "badge",
         "breadcrumb",
-        "resizable"
+        "resizable",
+        "sidebar",
+        "drag-and-drop"
       ]
     }
   ]

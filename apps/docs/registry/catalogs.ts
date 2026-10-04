@@ -55,13 +55,15 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "scroll-area",
       "separator",
       "resizable",
+      "sidebar",
+      "drag-and-drop",
     ],
   },
   {
     id: "navigation",
     name: "Navigation",
     description: "Navigation and command patterns for application shells.",
-    components: ["breadcrumb", "tabs", "dropdown-menu", "command"],
+    components: ["breadcrumb", "tabs", "dropdown-menu", "command", "sidebar"],
   },
   {
     id: "feedback",
@@ -92,6 +94,8 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "badge",
       "breadcrumb",
       "resizable",
+      "sidebar",
+      "drag-and-drop",
     ],
   },
 ] as const;
@@ -112,15 +116,15 @@ export function listComponentCatalogIds(): string[] {
  * Do not invent fake registry items for these.
  *
  * form: select, form
- * dashboard: sidebar, data-table
- * navigation: sidebar, navigation-menu, pagination
+ * dashboard: data-table
+ * navigation: navigation-menu, pagination
  * feedback: alert-dialog, sheet, empty-state
- * application: sidebar, data-table, pagination
+ * application: data-table, pagination
  */
 export const plannedCatalogGaps: Readonly<Record<string, readonly string[]>> = {
   form: ["select", "form"],
-  dashboard: ["sidebar", "data-table"],
-  navigation: ["sidebar", "navigation-menu", "pagination"],
+  dashboard: ["data-table"],
+  navigation: ["navigation-menu", "pagination"],
   feedback: ["alert-dialog", "sheet", "empty-state"],
-  application: ["sidebar", "data-table", "pagination"],
+  application: ["data-table", "pagination"],
 };

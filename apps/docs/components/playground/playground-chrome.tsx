@@ -18,7 +18,7 @@ export function PlaygroundContent({
       data-playground-content
       className={cn(
         "mx-auto flex w-full min-w-0 flex-col gap-5 md:gap-6",
-        "max-w-3xl lg:max-w-5xl xl:max-w-[1400px] 2xl:max-w-[1600px]",
+        "md:max-w-3xl lg:max-w-none xl:max-w-[1600px]",
         className,
       )}
     >

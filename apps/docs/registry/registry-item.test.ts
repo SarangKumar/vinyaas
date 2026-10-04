@@ -645,6 +645,54 @@ describe("registry build output", () => {
     },
   );
 
+  it("keeps the new-york sidebar artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/sidebar.json");
+    const source = await fs.readFile(
+      path.join(docsRoot, "registry/new-york/ui/sidebar/index.tsx"),
+      "utf8",
+    );
+    const rawOutput = await fs.readFile(outputPath, "utf8");
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      registryDependencies?: string[];
+      files: { path: string; content: string }[];
+      docs?: string;
+      category?: string;
+    };
+    const item = newYork.find((entry) => entry.name === "sidebar");
+
+    if (!item) {
+      throw new Error("Expected a sidebar registry item");
+    }
+
+    const files = await readRegistryItemFiles(item, async (relativePath) => {
+      expect(relativePath).toBe("ui/sidebar/index.tsx");
+      return source;
+    });
+    const payload = serializeBuiltItem(item, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.name).toBe("sidebar");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(generated.registryDependencies).toEqual(["drawer", "tooltip"]);
+    expect(item.registryDependencies).toEqual(["drawer", "tooltip"]);
+    expect(generated.files).toHaveLength(1);
+    expect(generated.files[0]?.path).toBe("ui/sidebar/index.tsx");
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain("SidebarProvider");
+    expect(generated.files[0]?.content).toContain('from "../drawer"');
+    expect(generated.files[0]?.content).toContain('from "../tooltip"');
+    expect(generated.files[0]?.content).not.toContain("next/link");
+    expect(generated.files[0]?.content).not.toContain("next/navigation");
+    expect(generated.files[0]?.content).not.toContain("react-router");
+    expect(generated.docs).toMatch(/\/components\/sidebar$/);
+    expect(generated.category).toBe("navigation");
+  });
+
   it("does not publish utils as a registry item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/utils.json");
 
@@ -657,7 +705,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).rejects.toThrow();
     expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(40);
+    expect(newYork).toHaveLength(42);
   });
 
   it("matches the json schema item types", () => {

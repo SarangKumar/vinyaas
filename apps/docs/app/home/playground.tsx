@@ -5,27 +5,18 @@ import {
 import { PlaygroundGrid } from "@/components/playground";
 
 /**
- * Centered masonry for the main showcase cards.
- * Side skeleton rails are absolute (see PlaygroundSideRails) and sit
- * outside this max-width band at ≥2200px.
+ * Centered Pinterest masonry for the main showcase cards.
+ * Below 2200px the band uses max-width caps. From 2200px the shell is a
+ * 3-column grid and this area is `1fr`, filling space between the side rails.
  *
- * Uses flex columns (PlaygroundGrid) so every column starts on the same
- * top edge — CSS columns fill top-to-bottom per column and look staggered.
- *
- * Card source of truth: {@link showcaseBlocks} (exactly
- * {@link SHOWCASE_BLOCK_COUNT} entries — see homepage showcase policy).
- *
- * Layout at ultra-wide:
- *   fade ← 2 skeleton cols | 5-column masonry | 2 skeleton cols → fade
- *
- * 1 · md:2 · lg:3 · min-1400:4 · min-1900:5
+ * 1 · md:2 · lg:3 · xl:4 · min-[1900px]:5 (homepage max)
  */
 export function Playground() {
   return (
     <div
       data-playground
       data-showcase-count={SHOWCASE_BLOCK_COUNT}
-      className="relative z-10 mx-auto w-full min-[1400px]:max-w-[1600px] min-[1900px]:max-w-[1900px] md:max-w-3xl lg:max-w-none xl:max-w-[1600px] 2xl:max-w-[1900px]"
+      className="relative z-10 mx-auto w-full min-w-0 min-[1900px]:max-w-[1900px] min-[2200px]:max-w-none md:max-w-3xl lg:max-w-none xl:max-w-[1600px]"
     >
       <PlaygroundGrid mode="showcase">
         {showcaseBlocks.map(({ id, Block }) => (

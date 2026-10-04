@@ -4,11 +4,14 @@ export {
   PlaygroundOptionGroup,
   PlaygroundOptionStrip,
 } from "./playground-chrome";
+export { PlaygroundBlock, PlaygroundGrid } from "./playground-block";
 export {
-  PlaygroundBlock,
-  PlaygroundGrid,
-  playgroundColumnCountForWidth,
-} from "./playground-block";
+  playgroundColumnItemClassName,
+  playgroundColumnsClassName,
+  playgroundDenseChromeInlineClassName,
+  playgroundDenseChromeShowClassName,
+  playgroundShowcaseColumnsClassName,
+} from "./playground-layout";
 
 export {
   PlaygroundCheckIcon,
