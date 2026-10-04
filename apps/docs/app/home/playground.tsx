@@ -5,7 +5,7 @@ import {
 import {
   playgroundShowcaseColumnClassName,
   playgroundShowcaseGridClassName,
-} from "@/components/playground";
+} from "@/components/playground/playground-layout";
 
 /**
  * Homepage showcase — same pattern as ui.shadcn.com:

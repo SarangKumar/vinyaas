@@ -3,6 +3,7 @@
 import React, {
   createContext,
   useContext,
+  useId,
   useMemo,
   useState,
   type CSSProperties,
@@ -18,6 +19,7 @@ import {
   closestCenter,
   closestCorners,
   defaultDropAnimationSideEffects,
+  useDroppable,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -44,6 +46,11 @@ export type DragDropOrientation = "vertical" | "horizontal";
 export type DragDropItems =
   UniqueIdentifier[] | Record<string, UniqueIdentifier[]>;
 
+type OverlayEntry = {
+  children: ReactNode;
+  className?: string;
+};
+
 type DragDropContextValue = {
   orientation: DragDropOrientation;
   activeId: UniqueIdentifier | null;
@@ -53,6 +60,7 @@ type DragDropContextValue = {
   /** Single-list item ids when not using multiple containers. */
   singleItems: UniqueIdentifier[] | null;
   findContainer: (id: UniqueIdentifier) => string | undefined;
+  registerOverlay: (id: UniqueIdentifier, entry: OverlayEntry | null) => void;
 };
 
 const DragDropContext = createContext<DragDropContextValue | null>(null);
@@ -145,6 +153,11 @@ export type DragDropProps = {
   orientation?: DragDropOrientation;
   /** Item ids that cannot be dragged. */
   disabledIds?: readonly UniqueIdentifier[];
+  /**
+   * Stable id for `@dnd-kit` accessibility markup.
+   * Defaults to React `useId()` so SSR and hydration match.
+   */
+  id?: string;
   children: ReactNode;
   className?: string;
 };
@@ -160,13 +173,37 @@ export function DragDrop({
   onReorder,
   orientation = "vertical",
   disabledIds = [],
+  id,
   children,
   className,
 }: DragDropProps) {
+  const reactId = useId();
+  const dndId = id ?? reactId;
   const multi = isMultiItems(items);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [overId, setOverId] = useState<UniqueIdentifier | null>(null);
+  const [activeSize, setActiveSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+  const [overlaySnapshot, setOverlaySnapshot] = useState<OverlayEntry | null>(
+    null,
+  );
+  const overlayRegistry = React.useRef(
+    new Map<UniqueIdentifier, OverlayEntry>(),
+  );
   const disabledSet = useMemo(() => new Set(disabledIds), [disabledIds]);
+
+  const registerOverlay = React.useCallback(
+    (id: UniqueIdentifier, entry: OverlayEntry | null) => {
+      if (entry) {
+        overlayRegistry.current.set(id, entry);
+      } else {
+        overlayRegistry.current.delete(id);
+      }
+    },
+    [],
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -194,16 +231,21 @@ export function DragDrop({
         }
         return findContainerId(items as Record<string, UniqueIdentifier[]>, id);
       },
+      registerOverlay,
     }),
-    [orientation, activeId, overId, disabledSet, multi, items],
+    [orientation, activeId, overId, disabledSet, multi, items, registerOverlay],
   );
 
   const handleDragStart = (event: DragStartEvent) => {
     if (disabledSet.has(event.active.id)) {
       return;
     }
+    const rect = event.active.rect.current.initial;
     setActiveId(event.active.id);
     setOverId(event.active.id);
+    setActiveSize(rect ? { width: rect.width, height: rect.height } : null);
+    // Snapshot content so multi-container moves can unmount the source item.
+    setOverlaySnapshot(overlayRegistry.current.get(event.active.id) ?? null);
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -253,6 +295,8 @@ export function DragDrop({
     const { active, over } = event;
     setActiveId(null);
     setOverId(null);
+    setActiveSize(null);
+    setOverlaySnapshot(null);
 
     if (!over || active.id === over.id) {
       return;
@@ -281,6 +325,10 @@ export function DragDrop({
     if (activeContainer === overContainer) {
       const list = items[activeContainer] ?? [];
       const oldIndex = list.indexOf(active.id);
+      // Dropping on the empty container (or column chrome) keeps current order.
+      if (over.id === overContainer || over.id === activeContainer) {
+        return;
+      }
       const newIndex = list.indexOf(over.id);
       if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) {
         return;
@@ -289,17 +337,36 @@ export function DragDrop({
         ...items,
         [activeContainer]: arrayMove(list, oldIndex, newIndex),
       });
+      return;
     }
+
+    // Safety net when dragOver did not move into an empty column yet.
+    const activeItems = items[activeContainer] ?? [];
+    const overItems = items[overContainer] ?? [];
+    const activeIndex = activeItems.indexOf(active.id);
+    if (activeIndex < 0) {
+      return;
+    }
+    onReorder({
+      ...items,
+      [activeContainer]: activeItems.filter((id) => id !== active.id),
+      [overContainer]: [...overItems, active.id],
+    });
   };
 
   const handleDragCancel = () => {
     setActiveId(null);
     setOverId(null);
+    setActiveSize(null);
+    setOverlaySnapshot(null);
   };
+
+  const overlayEntry = activeId ? overlaySnapshot : null;
 
   return (
     <DragDropContext.Provider value={contextValue}>
       <DndContext
+        id={dndId}
         sensors={sensors}
         collisionDetection={multi ? closestCorners : closestCenter}
         accessibility={{ announcements: defaultAnnouncements }}
@@ -315,15 +382,35 @@ export function DragDrop({
         >
           {children}
         </div>
-        <DragOverlay dropAnimation={dropAnimation}>
-          {activeId ? (
-            <div
-              data-slot="drag-drop-overlay"
-              className="border-border bg-card text-card-foreground flex items-center gap-2 rounded-md border px-3 py-2 text-sm shadow-md"
+        <DragOverlay dropAnimation={dropAnimation} adjustScale={false}>
+          {activeId && overlayEntry ? (
+            <DragDropItemContext.Provider
+              value={{
+                handleProps: {},
+                registerHandle: () => undefined,
+                isDragging: true,
+                disabled: true,
+              }}
             >
-              <DragDropHandleIcon />
-              <span>Moving item</span>
-            </div>
+              <div
+                data-slot="drag-drop-overlay"
+                style={
+                  activeSize
+                    ? {
+                        width: activeSize.width,
+                        height: activeSize.height,
+                        boxSizing: "border-box",
+                      }
+                    : undefined
+                }
+                className={cn(
+                  "border-border bg-card text-card-foreground cursor-grabbing rounded-md border shadow-lg",
+                  overlayEntry.className,
+                )}
+              >
+                {overlayEntry.children}
+              </div>
+            </DragDropItemContext.Provider>
           ) : null}
         </DragOverlay>
       </DndContext>
@@ -342,6 +429,8 @@ export type DragDropListProps = {
 
 /**
  * Sortable list / column. Pass `id` + the container's item ids for boards.
+ * In multi-container mode the list itself is droppable so empty columns can
+ * receive items again.
  */
 export function DragDropList({
   id = "default",
@@ -350,7 +439,7 @@ export function DragDropList({
   className,
   strategy,
 }: DragDropListProps) {
-  const { orientation, isMulti, singleItems } =
+  const { orientation, isMulti, singleItems, activeId, overId } =
     useDragDropContext("DragDropList");
   const sortingStrategy =
     strategy ??
@@ -366,14 +455,33 @@ export function DragDropList({
     );
   }
 
+  const { setNodeRef, isOver } = useDroppable({
+    id,
+    disabled: !isMulti,
+    data: {
+      type: "container",
+      children: listItems,
+    },
+  });
+
+  const isEmptyDropTarget =
+    isMulti &&
+    activeId !== null &&
+    listItems.length === 0 &&
+    (isOver || overId === id);
+
   return (
     <SortableContext id={id} items={listItems} strategy={sortingStrategy}>
       <div
+        ref={setNodeRef}
         data-slot="drag-drop-list"
         data-drag-drop-list={id}
+        data-empty-drop-target={isEmptyDropTarget ? "" : undefined}
         className={cn(
           "flex min-w-0",
           orientation === "horizontal" ? "flex-row gap-2" : "flex-col gap-2",
+          isEmptyDropTarget &&
+            "bg-primary/5 ring-primary/35 rounded-md ring-2 ring-inset",
           className,
         )}
       >
@@ -401,7 +509,7 @@ export function DragDropItem({
   className,
   style,
 }: DragDropItemProps) {
-  const { orientation, overId, activeId, disabledIds } =
+  const { orientation, overId, activeId, disabledIds, registerOverlay } =
     useDragDropContext("DragDropItem");
   const isDisabled = disabled || disabledIds.has(id);
 
@@ -419,10 +527,24 @@ export function DragDropItem({
     disabled: isDisabled,
   });
 
+  React.useLayoutEffect(() => {
+    registerOverlay(id, { children, className });
+    return () => registerOverlay(id, null);
+  }, [id, children, className, registerOverlay]);
+
   const showIndicator = overId === id && activeId !== null && activeId !== id;
 
   const itemStyle: CSSProperties = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Transform.toString(
+      transform
+        ? {
+            ...transform,
+            // Keep the in-list ghost from scaling while the overlay holds size.
+            scaleX: 1,
+            scaleY: 1,
+          }
+        : null,
+    ),
     transition,
     ...style,
   };
@@ -454,7 +576,7 @@ export function DragDropItem({
           "transition-[opacity,box-shadow,background-color] duration-150 ease-linear",
           "motion-reduce:transition-none",
           !isDisabled && "hover:bg-accent/40",
-          isDragging && "z-10 opacity-40 shadow-sm",
+          isDragging && "z-10 opacity-30 shadow-none",
           isDisabled && "opacity-60",
           !hasHandle && !isDisabled && "touch-none",
           className,

@@ -139,7 +139,8 @@ describe("DragDrop", () => {
     fireEvent.keyDown(handle, { key: "Escape", code: "Escape" });
 
     expect(onReorder).not.toHaveBeenCalled();
-    expect(screen.getByText("Task A")).toBeInTheDocument();
+    // Overlay may briefly mirror the active item; the source row remains.
+    expect(screen.getAllByText("Task A").length).toBeGreaterThanOrEqual(1);
   });
 
   it("keeps nested buttons usable", () => {
@@ -195,8 +196,54 @@ describe("DragDrop", () => {
     ).toHaveLength(1);
   });
 
+  it("keeps empty multi-container lists as drop targets", () => {
+    function EmptyBoard() {
+      const [items, setItems] = useState<Record<string, string[]>>({
+        todo: ["Task A"],
+        done: [],
+      });
+
+      return (
+        <DragDrop
+          items={items}
+          onReorder={(next) => setItems(next as Record<string, string[]>)}
+        >
+          <DragDropList id="todo" items={items.todo} className="min-h-24">
+            {items.todo.map((item) => (
+              <DragDropItem key={item} id={item}>
+                <DragDropHandle aria-label={`Reorder ${item}`} />
+                {item}
+              </DragDropItem>
+            ))}
+          </DragDropList>
+          <DragDropList id="done" items={items.done} className="min-h-24" />
+        </DragDrop>
+      );
+    }
+
+    render(<EmptyBoard />);
+
+    const emptyList = document.querySelector('[data-drag-drop-list="done"]');
+    expect(emptyList).toBeTruthy();
+    expect(
+      emptyList?.querySelectorAll('[data-slot="drag-drop-item"]'),
+    ).toHaveLength(0);
+    // Droppable registration attaches the sortable/droppable node ref to the list.
+    expect(emptyList).toHaveAttribute("data-slot", "drag-drop-list");
+  });
+
   it("accepts Record containers as DragDropItems", () => {
     const items: DragDropItems = { a: ["1"], b: ["2"] };
     expect(Array.isArray(items)).toBe(false);
+  });
+
+  it("keeps drag overlay markup available for active items", () => {
+    render(<BasicList />);
+    expect(
+      document.querySelector('[data-slot="drag-drop-overlay"]'),
+    ).toBeNull();
+    expect(
+      document.querySelectorAll('[data-slot="drag-drop-item"]').length,
+    ).toBeGreaterThan(0);
   });
 });

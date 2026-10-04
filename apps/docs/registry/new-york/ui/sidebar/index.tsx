@@ -329,7 +329,7 @@ export function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
-            "bg-sidebar flex h-full w-full flex-col",
+            "bg-sidebar flex h-full w-full flex-col overflow-hidden",
             variant === "floating" &&
               "border-sidebar-border rounded-lg border shadow-sm",
           )}

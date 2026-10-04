@@ -107,13 +107,16 @@ function Preview() {
     <SidebarProvider
       defaultOpen
       keyboardShortcut={false}
-      className="border-border min-h-[240px] w-full max-w-3xl overflow-hidden rounded-md border"
+      className="border-border h-[240px] max-h-[240px] min-h-0 w-full max-w-3xl overflow-hidden rounded-md border [&_[data-slot=sidebar-inner]]:rounded-l-md"
     >
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
-            <span className="bg-sidebar-primary text-sidebar-primary-foreground flex size-6 items-center justify-center rounded-md text-[10px] font-semibold">
+          <div className="flex items-center gap-2 px-2 py-1.5">
+            <span className="bg-sidebar-primary text-sidebar-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-md text-[10px] font-semibold">
               A
+            </span>
+            <span className="truncate text-sm font-medium group-data-[collapsible=icon]:hidden">
+              Acme
             </span>
           </div>
         </SidebarHeader>

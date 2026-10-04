@@ -5,14 +5,8 @@ import type { Metadata } from "next";
 import type { ApiRow } from "@/components/api-table";
 import { ComponentReference } from "@/components/component-reference";
 import { componentPageMetadata } from "@/lib/page-metadata";
-import {
-  DragDrop,
-  DragDropHandle,
-  DragDropItem,
-  DragDropList,
-} from "@/registry/new-york/ui/drag-and-drop";
 
-import { examples, inPractice, usage } from "./examples";
+import { Preview, examples, inPractice, usage } from "./examples";
 
 export const metadata: Metadata = componentPageMetadata("drag-and-drop");
 
@@ -22,6 +16,12 @@ const api: ApiRow[] = [
     type: "UniqueIdentifier[] | Record<string, UniqueIdentifier[]>",
     description:
       "DragDrop: controlled item order. Use an array for one list, or a record of arrays for multiple containers.",
+  },
+  {
+    prop: "id",
+    type: "string",
+    description:
+      "DragDrop: stable id for accessibility markup. Defaults to React useId() so server and client match.",
   },
   {
     prop: "orientation",
@@ -52,29 +52,6 @@ const api: ApiRow[] = [
     description: "DragDropHandle: accessible name for the activator control.",
   },
 ];
-
-function Preview() {
-  return (
-    <DragDrop
-      items={["Revenue", "Customers", "Orders"]}
-      onReorder={() => undefined}
-      className="w-full max-w-md"
-    >
-      <DragDropList>
-        {["Revenue", "Customers", "Orders"].map((item) => (
-          <DragDropItem
-            key={item}
-            id={item}
-            className="flex items-center gap-2 p-2"
-          >
-            <DragDropHandle aria-label={`Reorder ${item}`} />
-            <span className="text-sm">{item}</span>
-          </DragDropItem>
-        ))}
-      </DragDropList>
-    </DragDrop>
-  );
-}
 
 export default async function DragAndDropPage() {
   const source = await readFile(
@@ -153,8 +130,10 @@ export default async function DragAndDropPage() {
             </li>
             <li>
               Multiple containers accept <code>items</code> as a record of id
-              arrays. Keep application state in the parent — this component does
-              not persist order.
+              arrays (Kanban-style boards). The drag overlay snapshots the
+              active item and locks its width/height so cards do not shrink
+              while dragging. Keep application state in the parent — this
+              component does not persist order.
             </li>
           </ul>
         </>

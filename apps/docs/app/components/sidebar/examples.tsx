@@ -134,17 +134,19 @@ function StateBadge({ label }: { label: string }) {
   return <Badge variant="secondary">{label}</Badge>;
 }
 
+const demoShell =
+  "border-border h-[280px] max-h-[280px] w-full min-h-0 overflow-hidden rounded-md border [&_[data-slot=sidebar-inner]]:rounded-l-md";
+
 function BasicSidebar() {
   return (
-    <SidebarProvider
-      defaultOpen
-      keyboardShortcut={false}
-      className="border-border min-h-[280px] overflow-hidden rounded-md border"
-    >
+    <SidebarProvider defaultOpen keyboardShortcut={false} className={demoShell}>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
-            <DotIcon className="text-sidebar-primary size-4" />
+          <div className="flex items-center gap-2 px-2 py-1.5">
+            <DotIcon className="text-sidebar-primary size-4 shrink-0" />
+            <span className="truncate text-sm font-medium group-data-[collapsible=icon]:hidden">
+              Acme
+            </span>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -187,13 +189,19 @@ function DashboardSidebar() {
     <SidebarProvider
       defaultOpen
       keyboardShortcut={false}
-      className="border-border min-h-[360px] overflow-hidden rounded-md border"
+      className="border-border h-[360px] max-h-[360px] min-h-0 w-full overflow-hidden rounded-md border [&_[data-slot=sidebar-inner]]:rounded-l-md"
     >
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex size-8 items-center justify-center rounded-md text-xs font-semibold">
+          <div className="flex items-center gap-2 px-2 py-1.5">
+            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-md text-xs font-semibold">
               V
+            </div>
+            <div className="grid min-w-0 group-data-[collapsible=icon]:hidden">
+              <span className="truncate text-sm font-medium">Vinyaas</span>
+              <span className="text-sidebar-foreground/70 truncate text-xs">
+                Workspace
+              </span>
             </div>
           </div>
         </SidebarHeader>
@@ -300,14 +308,17 @@ function CollapsedSidebar() {
     <SidebarProvider
       defaultOpen={false}
       keyboardShortcut={false}
-      className="border-border min-h-[280px] overflow-hidden rounded-md border"
+      className={demoShell}
     >
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
-            <div className="border-border flex size-8 items-center justify-center rounded-md border text-xs font-semibold">
+          <div className="flex items-center gap-2 px-2 py-1.5">
+            <div className="border-border flex size-8 shrink-0 items-center justify-center rounded-md border text-xs font-semibold">
               A
             </div>
+            <span className="truncate text-sm font-medium group-data-[collapsible=icon]:hidden">
+              Acme
+            </span>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -357,10 +368,13 @@ function CompositionSidebar() {
     <SidebarProvider
       defaultOpen
       keyboardShortcut={false}
-      className="border-border min-h-[300px] overflow-hidden rounded-md border"
+      className="border-border h-[300px] max-h-[300px] min-h-0 w-full overflow-hidden rounded-md border [&_[data-slot=sidebar-inner]]:rounded-l-md"
     >
       <Sidebar>
         <SidebarHeader className="gap-3">
+          <div className="px-2 text-sm font-semibold group-data-[collapsible=icon]:hidden">
+            Docs
+          </div>
           <Button
             type="button"
             size="sm"
@@ -469,8 +483,11 @@ export function AppShell() {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0">
-            <span className="bg-sidebar-primary text-sidebar-primary-foreground flex size-6 items-center justify-center rounded-md text-[10px] font-semibold">
+          <div className="flex items-center gap-2 px-2 py-1.5">
+            <span className="bg-sidebar-primary text-sidebar-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-md text-[10px] font-semibold">
+            <span className="truncate text-sm font-medium group-data-[collapsible=icon]:hidden">
+              Acme
+            </span>
               A
             </span>
           </div>

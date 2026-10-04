@@ -1,72 +1,56 @@
-import type {
-  ComponentExample,
-  ComponentInPractice,
-} from "@/components/component-reference";
+"use client";
 
+import { useState } from "react";
+
+import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import {
-  AttachmentOrder,
-  BasicSortable,
-  HandleAndDisabled,
-  HorizontalChips,
-  KanbanBoard,
-  PlaylistQueue,
-  Preview,
-  PriorityQueue,
-  TwoColumnBoard,
-  WholeItemDrag,
-} from "./demos";
-
-export { Preview };
-
-export const usage = `import { useState } from "react";
+  Card,
+  CardAction,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york/ui/card";
 import {
   DragDrop,
   DragDropHandle,
   DragDropItem,
   DragDropList,
-} from "@/components/ui/drag-and-drop";
+} from "@/registry/new-york/ui/drag-and-drop";
+import { Separator } from "@/registry/new-york/ui/separator";
 
-export function TaskList() {
+/** Hero preview for the docs page. */
+export function Preview() {
+  return <BasicSortable />;
+}
+
+export function BasicSortable() {
   const [items, setItems] = useState(["Task A", "Task B", "Task C", "Task D"]);
 
   return (
-    <DragDrop items={items} onReorder={setItems}>
+    <DragDrop
+      id="drag-drop-basic"
+      items={items}
+      onReorder={(next) => setItems(next as string[])}
+      className="w-full max-w-md"
+    >
       <DragDropList>
         {items.map((item) => (
-          <DragDropItem key={item} id={item} className="flex items-center gap-2 p-2">
-            <DragDropHandle aria-label={\`Reorder \${item}\`} />
-            <span>{item}</span>
+          <DragDropItem
+            key={item}
+            id={item}
+            className="flex items-center gap-2 p-2"
+          >
+            <DragDropHandle aria-label={`Reorder ${item}`} />
+            <span className="text-sm">{item}</span>
           </DragDropItem>
         ))}
       </DragDropList>
     </DragDrop>
   );
 }
-`;
-
-export const examples: ComponentExample[] = [
-  {
-    id: "basic",
-    title: "Basic sortable list",
-    description:
-      "Reorder items with a drag handle. Not a file-upload drop zone.",
-    preview: <BasicSortable />,
-    code: usage,
-  },
-  {
-    id: "handle-disabled",
-    title: "Drag handle and disabled items",
-    description:
-      "Handles stay keyboard-focusable. Disabled items cannot start a drag.",
-    preview: <HandleAndDisabled />,
-    code: `import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import {
-  DragDrop,
-  DragDropHandle,
-  DragDropItem,
-  DragDropList,
-} from "@/components/ui/drag-and-drop";
 
 export function HandleAndDisabled() {
   const [items, setItems] = useState([
@@ -78,6 +62,7 @@ export function HandleAndDisabled() {
 
   return (
     <DragDrop
+      id="drag-drop-disabled"
       items={items}
       disabledIds={["System Task"]}
       onReorder={(next) => setItems(next as string[])}
@@ -90,7 +75,7 @@ export function HandleAndDisabled() {
             id={item}
             className="flex items-center gap-2 p-2"
           >
-            <DragDropHandle aria-label={\`Reorder \${item}\`} />
+            <DragDropHandle aria-label={`Reorder ${item}`} />
             <span className="text-sm">{item}</span>
             {item === "System Task" ? (
               <Badge variant="secondary" className="ml-auto">
@@ -103,20 +88,6 @@ export function HandleAndDisabled() {
     </DragDrop>
   );
 }
-`,
-  },
-  {
-    id: "whole-item",
-    title: "Whole-item drag",
-    description:
-      "Omit DragDropHandle to make the entire row the drag activator.",
-    preview: <WholeItemDrag />,
-    code: `import { useState } from "react";
-import {
-  DragDrop,
-  DragDropItem,
-  DragDropList,
-} from "@/components/ui/drag-and-drop";
 
 export function WholeItemDrag() {
   const [items, setItems] = useState([
@@ -127,6 +98,7 @@ export function WholeItemDrag() {
 
   return (
     <DragDrop
+      id="drag-drop-whole-item"
       items={items}
       onReorder={(next) => setItems(next as string[])}
       className="w-full max-w-md"
@@ -148,20 +120,6 @@ export function WholeItemDrag() {
     </DragDrop>
   );
 }
-`,
-  },
-  {
-    id: "horizontal",
-    title: "Horizontal chips",
-    description: 'Use orientation="horizontal" for pill or chip reorder rows.',
-    preview: <HorizontalChips />,
-    code: `import { useState } from "react";
-import {
-  DragDrop,
-  DragDropHandle,
-  DragDropItem,
-  DragDropList,
-} from "@/components/ui/drag-and-drop";
 
 export function HorizontalChips() {
   const [items, setItems] = useState([
@@ -174,6 +132,7 @@ export function HorizontalChips() {
 
   return (
     <DragDrop
+      id="drag-drop-horizontal"
       items={items}
       orientation="horizontal"
       onReorder={(next) => setItems(next as string[])}
@@ -186,7 +145,7 @@ export function HorizontalChips() {
             id={item}
             className="inline-flex items-center gap-2 px-2.5 py-1.5"
           >
-            <DragDropHandle aria-label={\`Reorder \${item}\`} />
+            <DragDropHandle aria-label={`Reorder ${item}`} />
             <span className="text-sm">{item}</span>
           </DragDropItem>
         ))}
@@ -194,21 +153,47 @@ export function HorizontalChips() {
     </DragDrop>
   );
 }
-`,
-  },
-  {
-    id: "priority",
-    title: "Priority queue",
-    description:
-      "Numbered ranks update as items move — useful for triage and backlogs.",
-    preview: <PriorityQueue />,
-    code: `import { useState } from "react";
-import {
-  DragDrop,
-  DragDropHandle,
-  DragDropItem,
-  DragDropList,
-} from "@/components/ui/drag-and-drop";
+
+export function TwoColumnBoard() {
+  const [items, setItems] = useState({
+    todo: ["Task A", "Task B"],
+    done: ["Task C", "Task D"],
+  });
+
+  return (
+    <DragDrop
+      id="drag-drop-two-column"
+      items={items}
+      onReorder={(next) => setItems(next as { todo: string[]; done: string[] })}
+      className="w-full max-w-2xl"
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        {(
+          [
+            ["todo", "Todo"],
+            ["done", "Done"],
+          ] as const
+        ).map(([id, label]) => (
+          <div key={id} className="border-border rounded-md border p-3">
+            <p className="mb-2 text-sm font-medium">{label}</p>
+            <DragDropList id={id} items={items[id]} className="min-h-24">
+              {items[id].map((item) => (
+                <DragDropItem
+                  key={item}
+                  id={item}
+                  className="flex items-center gap-2 p-2"
+                >
+                  <DragDropHandle aria-label={`Reorder ${item}`} />
+                  <span className="text-sm">{item}</span>
+                </DragDropItem>
+              ))}
+            </DragDropList>
+          </div>
+        ))}
+      </div>
+    </DragDrop>
+  );
+}
 
 export function PriorityQueue() {
   const [items, setItems] = useState([
@@ -220,6 +205,7 @@ export function PriorityQueue() {
 
   return (
     <DragDrop
+      id="drag-drop-priority"
       items={items}
       onReorder={(next) => setItems(next as string[])}
       className="w-full max-w-md"
@@ -231,7 +217,7 @@ export function PriorityQueue() {
             id={item}
             className="flex items-center gap-3 p-2"
           >
-            <DragDropHandle aria-label={\`Reorder \${item}\`} />
+            <DragDropHandle aria-label={`Reorder ${item}`} />
             <span className="text-muted-foreground w-5 text-center text-xs tabular-nums">
               {index + 1}
             </span>
@@ -242,22 +228,6 @@ export function PriorityQueue() {
     </DragDrop>
   );
 }
-`,
-  },
-  {
-    id: "attachments",
-    title: "Attachment order",
-    description:
-      "Reorder files before upload or submit. Pair with file-upload for picking files.",
-    preview: <AttachmentOrder />,
-    code: `import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import {
-  DragDrop,
-  DragDropHandle,
-  DragDropItem,
-  DragDropList,
-} from "@/components/ui/drag-and-drop";
 
 export function AttachmentOrder() {
   const [items, setItems] = useState([
@@ -269,6 +239,7 @@ export function AttachmentOrder() {
 
   return (
     <DragDrop
+      id="drag-drop-attachments"
       items={items}
       onReorder={(next) => setItems(next as string[])}
       className="w-full max-w-md"
@@ -280,7 +251,7 @@ export function AttachmentOrder() {
             id={item}
             className="flex items-center gap-2 px-2 py-2"
           >
-            <DragDropHandle aria-label={\`Reorder \${item}\`} />
+            <DragDropHandle aria-label={`Reorder ${item}`} />
             <div className="bg-muted size-8 shrink-0 rounded-md" aria-hidden />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{item}</p>
@@ -293,23 +264,6 @@ export function AttachmentOrder() {
     </DragDrop>
   );
 }
-`,
-  },
-  {
-    id: "playlist",
-    title: "Playlist / queue",
-    description:
-      "Compose a bordered shell around DragDropList for media queues.",
-    preview: <PlaylistQueue />,
-    code: `import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import {
-  DragDrop,
-  DragDropHandle,
-  DragDropItem,
-  DragDropList,
-} from "@/components/ui/drag-and-drop";
 
 export function PlaylistQueue() {
   const [items, setItems] = useState([
@@ -322,6 +276,7 @@ export function PlaylistQueue() {
 
   return (
     <DragDrop
+      id="drag-drop-playlist"
       items={items}
       onReorder={(next) => setItems(next as string[])}
       className="w-full max-w-md"
@@ -345,7 +300,7 @@ export function PlaylistQueue() {
                 id={item}
                 className="flex items-center gap-2 px-2 py-1.5"
               >
-                <DragDropHandle aria-label={\`Reorder \${item}\`} />
+                <DragDropHandle aria-label={`Reorder ${item}`} />
                 <span className="text-muted-foreground w-4 text-xs tabular-nums">
                   {index + 1}
                 </span>
@@ -358,89 +313,6 @@ export function PlaylistQueue() {
     </DragDrop>
   );
 }
-`,
-  },
-  {
-    id: "board",
-    title: "Multiple containers",
-    description: "Move items between Todo and Done lists with a shared root.",
-    preview: <TwoColumnBoard />,
-    code: `import { useState } from "react";
-import {
-  DragDrop,
-  DragDropHandle,
-  DragDropItem,
-  DragDropList,
-} from "@/components/ui/drag-and-drop";
-
-export function TwoColumnBoard() {
-  const [items, setItems] = useState({
-    todo: ["Task A", "Task B"],
-    done: ["Task C", "Task D"],
-  });
-
-  return (
-    <DragDrop
-      items={items}
-      onReorder={(next) =>
-        setItems(next as { todo: string[]; done: string[] })
-      }
-      className="w-full max-w-2xl"
-    >
-      <div className="grid gap-4 sm:grid-cols-2">
-        {(
-          [
-            ["todo", "Todo"],
-            ["done", "Done"],
-          ] as const
-        ).map(([id, label]) => (
-          <div key={id} className="border-border rounded-md border p-3">
-            <p className="mb-2 text-sm font-medium">{label}</p>
-            <DragDropList id={id} items={items[id]} className="min-h-24">
-              {items[id].map((item) => (
-                <DragDropItem
-                  key={item}
-                  id={item}
-                  className="flex items-center gap-2 p-2"
-                >
-                  <DragDropHandle aria-label={\`Reorder \${item}\`} />
-                  <span className="text-sm">{item}</span>
-                </DragDropItem>
-              ))}
-            </DragDropList>
-          </div>
-        ))}
-      </div>
-    </DragDrop>
-  );
-}
-`,
-  },
-];
-
-export const inPractice: ComponentInPractice = {
-  description:
-    "A Kanban-style sprint board: three columns, card composition with Badge and Button, and size-stable drag overlays across containers.",
-  preview: <KanbanBoard />,
-  code: `import { useState } from "react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DragDrop,
-  DragDropHandle,
-  DragDropItem,
-  DragDropList,
-} from "@/components/ui/drag-and-drop";
-import { Separator } from "@/components/ui/separator";
 
 type KanbanColumns = {
   backlog: string[];
@@ -516,7 +388,7 @@ export function KanbanBoard() {
   ] as const;
 
   return (
-    <div className="border-border bg-card w-full min-w-0 overflow-hidden rounded-xl border shadow-sm">
+    <div className="border-border bg-card w-full min-w-0 basis-full overflow-hidden rounded-xl border shadow-sm">
       <div className="flex items-center justify-between gap-3 px-4 py-3">
         <div className="min-w-0">
           <p className="text-sm font-semibold tracking-tight">Sprint board</p>
@@ -529,6 +401,7 @@ export function KanbanBoard() {
       <Separator />
       <div className="bg-muted/30 p-3 sm:p-4">
         <DragDrop
+          id="drag-drop-kanban"
           items={columns}
           onReorder={(next) => setColumns(next as KanbanColumns)}
         >
@@ -536,12 +409,12 @@ export function KanbanBoard() {
             {lanes.map(([id, label]) => (
               <div
                 key={id}
-                className="bg-muted/60 flex min-h-80 flex-col rounded-lg border border-border/60 p-2.5"
+                className="bg-muted/60 border-border/60 flex min-h-80 flex-col rounded-lg border p-2.5"
               >
                 <div className="mb-2.5 flex items-center justify-between gap-2 px-1">
                   <div className="flex min-w-0 items-center gap-2">
                     <span
-                      className={\`size-1.5 shrink-0 rounded-full \${laneAccent[id]}\`}
+                      className={`size-1.5 shrink-0 rounded-full ${laneAccent[id]}`}
                       aria-hidden
                     />
                     <p className="truncate text-sm font-medium">{label}</p>
@@ -564,7 +437,7 @@ export function KanbanBoard() {
                       <DragDropItem
                         key={cardId}
                         id={cardId}
-                        className="hover:bg-card overflow-hidden border-border/80 p-0 shadow-sm"
+                        className="hover:bg-card border-border/80 overflow-hidden p-0 shadow-sm"
                       >
                         <Card
                           size="sm"
@@ -579,12 +452,12 @@ export function KanbanBoard() {
                             </CardDescription>
                             <CardAction>
                               <DragDropHandle
-                                aria-label={\`Reorder \${card?.title}\`}
+                                aria-label={`Reorder ${card?.title}`}
                                 className="text-muted-foreground"
                               />
                             </CardAction>
                           </CardHeader>
-                          <CardFooter className="flex-wrap justify-between gap-x-2 gap-y-1.5 border-t border-border/60 px-3 py-2">
+                          <CardFooter className="border-border/60 flex-wrap justify-between gap-x-2 gap-y-1.5 border-t px-3 py-2">
                             <div className="flex items-center gap-1.5">
                               <Badge
                                 variant="secondary"
@@ -628,5 +501,3 @@ export function KanbanBoard() {
     </div>
   );
 }
-`,
-};

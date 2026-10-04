@@ -1,5 +1,7 @@
 "use client";
 
+import type { CSSProperties } from "react";
+
 import { PlayBlock } from "@/app/home/play-block";
 import {
   Sidebar,
@@ -26,6 +28,9 @@ function Mark({ label }: { label: string }) {
   );
 }
 
+const demoShell =
+  "border-border h-[240px] max-h-[240px] w-full min-h-0 overflow-hidden rounded-md border [&_[data-slot=sidebar-inner]]:rounded-l-md";
+
 /**
  * Compact homepage Sidebar example — icon rail + inset content.
  */
@@ -38,12 +43,23 @@ export function SidebarBlock() {
       <SidebarProvider
         defaultOpen={false}
         keyboardShortcut={false}
-        className="border-border min-h-[240px] w-full overflow-hidden rounded-md border"
+        className={demoShell}
+        style={
+          {
+            "--sidebar-width": "11rem",
+            "--sidebar-width-icon": "3rem",
+          } as CSSProperties
+        }
       >
         <Sidebar>
           <SidebarHeader>
-            <div className="border-border flex size-8 items-center justify-center rounded-md border text-xs font-semibold">
-              V
+            <div className="flex items-center gap-2 px-2 py-1.5">
+              <div className="border-border flex size-8 shrink-0 items-center justify-center rounded-md border text-xs font-semibold">
+                V
+              </div>
+              <span className="truncate text-sm font-medium group-data-[collapsible=icon]:hidden">
+                Vinyaas
+              </span>
             </div>
           </SidebarHeader>
           <SidebarContent>
@@ -73,7 +89,7 @@ export function SidebarBlock() {
             </SidebarGroup>
           </SidebarContent>
         </Sidebar>
-        <SidebarInset className="min-h-[160px]">
+        <SidebarInset className="min-h-0 overflow-hidden">
           <div className="border-border flex items-center gap-2 border-b p-2.5">
             <SidebarTrigger />
             <p className="text-sm font-medium">Workspace</p>
