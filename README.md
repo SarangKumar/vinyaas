@@ -2,7 +2,7 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
-**v1.2.0** is the current release. The catalog covers forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities. Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
+**v1.3.0** is the current release. It adds registry-owned catalogs, a release-wide accessibility contract, and CLI catalog/`--dry-run` UX on top of the existing installable set (forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities). Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
 
 ## Prerequisites
 
@@ -265,20 +265,30 @@ The CLI is `packages/cli`. The registry and docs app are `apps/docs`.
 
 ```bash
 pnpm install
-pnpm --filter vinyaas build
-pnpm --filter vinyaas test
-pnpm test
+pnpm registry:build
+pnpm cli:build
+pnpm verify
 ```
+
+`pnpm verify` runs typecheck, lint, and tests for docs and the CLI.
+
+Useful scripts:
+
+- `pnpm dev` — docs app
+- `pnpm registry:build` — rebuild `apps/docs/public/r`
+- `pnpm cli:build` — bundle the CLI
+- `pnpm format` / `pnpm format:check` — Prettier
+- `pnpm test:watch` — docs Vitest watch mode
 
 ### CLI release preparation
 
 Development builds embed `http://localhost:3000/r` by default:
 
 ```bash
-pnpm --filter vinyaas build
+pnpm cli:build
 ```
 
-Production release builds (registry + CLI, no publish):
+Production release builds (registry + CLI, no publish) embed `https://vinyaas.vercel.app/r` and reject localhost:
 
 ```bash
 pnpm cli:release-build

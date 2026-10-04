@@ -125,8 +125,10 @@ export function CompanionHost() {
     null,
   );
 
-  patchRef.current = patchInstance;
-  instanceRef.current = instance;
+  useEffect(() => {
+    patchRef.current = patchInstance;
+    instanceRef.current = instance;
+  }, [patchInstance, instance]);
 
   // Create / rehydrate engine when companion species changes.
   useEffect(() => {
@@ -176,8 +178,7 @@ export function CompanionHost() {
 
       const dtMs = Math.min(48, now - last);
       last = now;
-      const sampleX =
-        engineRef.current.physics.position.x + COMPANION_SIZE / 2;
+      const sampleX = engineRef.current.physics.position.x + COMPANION_SIZE / 2;
       const surfaces =
         engineRef.current.state === "falling"
           ? collectLandingSurfaces(sampleX)
@@ -294,7 +295,8 @@ export function CompanionHost() {
           trigger: "cursor_nearby",
           payload: {
             cursorDistance: distance,
-            cursorNearbyRadius: engineRef.current.personality.cursorNearbyRadius,
+            cursorNearbyRadius:
+              engineRef.current.personality.cursorNearbyRadius,
           },
         },
         Date.now(),
@@ -354,8 +356,7 @@ export function CompanionHost() {
       }
 
       dragOffset.current = null;
-      const sampleX =
-        engineRef.current.physics.position.x + COMPANION_SIZE / 2;
+      const sampleX = engineRef.current.physics.position.x + COMPANION_SIZE / 2;
       const ended = engineEndDrag(
         engineRef.current,
         entry.meta,
@@ -393,9 +394,11 @@ export function CompanionHost() {
     return null;
   }
 
-  const clipKey = (snapshot.animation.clipId in entry.clips
-    ? snapshot.animation.clipId
-    : "idle") as CompanionAnimationRole;
+  const clipKey = (
+    snapshot.animation.clipId in entry.clips
+      ? snapshot.animation.clipId
+      : "idle"
+  ) as CompanionAnimationRole;
   const clip = entry.clips[clipKey] ?? entry.clips.idle;
   const dragging = snapshot.state === "dragging";
   const placed = snapshot.placed;

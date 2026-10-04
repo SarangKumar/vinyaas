@@ -44,7 +44,7 @@ describe("components catalog", () => {
     expect(document.body.textContent).toContain(
       `The catalog has ${components.length} independently installable`,
     );
-    expect(document.body.textContent).toContain("v1.2.0");
+    expect(document.body.textContent).toContain("v1.3.0");
     expect(document.body.textContent).not.toContain("marked new");
     expect(
       screen.queryByText(

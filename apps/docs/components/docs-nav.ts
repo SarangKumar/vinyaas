@@ -20,6 +20,12 @@ export const installationPath = "/installation";
 
 export const cliPath = "/cli";
 
+/** Named registry catalogs for discovery and bulk install. */
+export const catalogsPath = "/catalogs";
+
+/** Accessibility contract for registry components. */
+export const accessibilityPath = "/accessibility";
+
 /** Companion feature area (separate from registry UI components). */
 export const companionPath = "/companion";
 
@@ -92,6 +98,8 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Components", href: componentsPath },
       { title: "Installation", href: installationPath },
       { title: "CLI", href: cliPath },
+      { title: "Catalogs", href: catalogsPath },
+      { title: "Accessibility", href: accessibilityPath },
       { title: "Theming", href: themingPath },
       { title: "Typeset", href: typesetPath },
       { title: "Changelog", href: changelogPath },

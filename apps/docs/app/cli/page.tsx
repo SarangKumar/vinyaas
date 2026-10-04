@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = pageMetadata({
   title: "CLI",
   description:
-    "Vinyaas CLI v1.2.0: init, doctor, add by name or category, status, list, search, and info for source-based installs.",
+    "Vinyaas CLI v1.3.0: init, doctor, add by name/catalog/category, catalogs, status, list, search, and info.",
   path: "/cli",
 });
 
@@ -24,7 +24,7 @@ export default function CliPage() {
   return (
     <DocsArticle
       title="CLI"
-      description="The vinyaas package on npm (v1.2.0) installs UI as editable source. Framework create-app flows live on Installation."
+      description="The vinyaas package on npm (v1.3.0) installs UI as editable source. Framework create-app flows live on Installation."
     >
       <section className="flex flex-col gap-4">
         <h2 id="overview" className={sectionHeading}>
@@ -167,6 +167,32 @@ No issues found.`}
         <CodeBlock language="bash" code="vinyaas add button" />
         <CodeBlock language="bash" code="vinyaas add button card badge" />
         <CodeBlock language="bash" code="vinyaas add button card --yes" />
+        <CodeBlock language="bash" code="vinyaas add form" />
+
+        <h3
+          id="catalog-install"
+          className="text-foreground scroll-mt-8 text-base font-semibold"
+        >
+          Catalog installation
+        </h3>
+        <p className={body}>
+          A single argument that matches a registry catalog id expands to that
+          catalog&apos;s installable components. Catalogs are owned by the
+          registry (see{" "}
+          <Link
+            href="/catalogs"
+            className={`text-primary underline underline-offset-4 ${focusRing}`}
+          >
+            Catalogs
+          </Link>
+          ). The CLI lists the members, asks for confirmation with{" "}
+          <code>[Y/n]</code> (default Yes), and only then installs. Pass{" "}
+          <code>--yes</code> to skip the prompt. Declining cancels with no file
+          changes.
+        </p>
+        <CodeBlock language="bash" code="vinyaas add form" />
+        <CodeBlock language="bash" code="vinyaas add dashboard --dry-run" />
+        <CodeBlock language="bash" code="vinyaas add application --yes" />
 
         <h3
           id="force"
@@ -188,11 +214,13 @@ No issues found.`}
           --dry-run
         </h3>
         <p className={body}>
-          Resolves the install plan and prints it without writing files,
+          Resolves the install plan and prints components, files, npm
+          dependencies, and registry dependencies without writing files,
           installing packages, or updating the manifest. Works with named
-          components and categories.
+          components, catalogs, and categories.
         </p>
         <CodeBlock language="bash" code="vinyaas add button --dry-run" />
+        <CodeBlock language="bash" code="vinyaas add dashboard --dry-run" />
         <CodeBlock
           language="bash"
           code="vinyaas add --category forms --dry-run"
@@ -249,10 +277,13 @@ No issues found.`}
           Discover
         </h2>
         <p className={body}>
-          Browse without writing files. Use <code>list</code> to scan the
-          catalog, <code>search</code> to find by name or description, and{" "}
-          <code>info</code> to inspect one component before installing.
+          Browse without writing files. Use <code>list</code> to scan
+          components, <code>catalog</code> for named groups, <code>search</code>{" "}
+          to find by name or description, and <code>info</code> to inspect one
+          component before installing.
         </p>
+        <CodeBlock language="bash" code="vinyaas catalog list" />
+        <CodeBlock language="bash" code="vinyaas catalog info form" />
         <CodeBlock language="bash" code="vinyaas list" />
         <CodeBlock language="bash" code="vinyaas list --category forms" />
         <CodeBlock language="bash" code="vinyaas search button" />
@@ -262,8 +293,10 @@ No issues found.`}
         />
         <CodeBlock language="bash" code="vinyaas info button" />
         <p className={body}>
-          Output can include category, description, docs URL, files, and
-          dependencies. Filter <code>list</code> and <code>search</code> with{" "}
+          <code>catalog info</code> shows membership and which members are
+          already installed when a project manifest is available. Component{" "}
+          <code>list</code> / <code>search</code> output can include category,
+          description, docs URL, files, and dependencies. Filter with{" "}
           <code>--category</code>.
         </p>
       </section>
@@ -328,7 +361,7 @@ No issues found.`}
           Version
         </h2>
         <p className={body}>
-          Print the installed CLI version (currently v1.2.0).
+          Print the installed CLI version (currently v1.3.0).
         </p>
         <CodeBlock language="bash" code="vinyaas --version" />
       </section>

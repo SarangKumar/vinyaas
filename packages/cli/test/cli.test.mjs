@@ -57,6 +57,7 @@ describe("vinyaas", () => {
     assert.match(result.stdout, /--help/);
     assert.match(result.stdout, /\binit\b/);
     assert.match(result.stdout, /\badd\b/);
+    assert.match(result.stdout, /\bcatalog\b/);
     assert.match(result.stdout, /\blist\b/);
     assert.match(result.stdout, /\bsearch\b/);
     assert.match(result.stdout, /\binfo\b/);
@@ -118,6 +119,13 @@ describe("vinyaas", () => {
 
     assert.notEqual(result.exitCode, 0);
     assert.match(result.stderr, /nope/);
+  });
+
+  it("suggests nearby commands for typos", async () => {
+    const result = await run(["docto"]);
+
+    assert.notEqual(result.exitCode, 0);
+    assert.match(result.stderr, /docto|doctor/i);
   });
 
   it("fails for an unknown option", async () => {

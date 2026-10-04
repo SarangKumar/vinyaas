@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { components } from "./component-meta";
 import {
+  accessibilityPath,
+  catalogsPath,
   changelogPath,
   cliPath,
   companionAnimationsPath,
@@ -36,6 +38,8 @@ describe("documentation navigation", () => {
     expect(componentsJsonPath).toBe("/components-json");
     expect(installationPath).toBe("/installation");
     expect(cliPath).toBe("/cli");
+    expect(catalogsPath).toBe("/catalogs");
+    expect(accessibilityPath).toBe("/accessibility");
     expect(companionPath).toBe("/companion");
     expect(companionInstallationPath).toBe("/companion/installation");
     expect(companionJsonPath).toBe("/companion/configuration");
@@ -66,6 +70,8 @@ describe("documentation navigation", () => {
       "Components",
       "Installation",
       "CLI",
+      "Catalogs",
+      "Accessibility",
       "Theming",
       "Typeset",
       "Changelog",

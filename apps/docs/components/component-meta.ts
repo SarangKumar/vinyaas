@@ -12,9 +12,9 @@ export type ComponentCategory = RegistryCategory;
 export { formatRegistryCategoryLabel };
 
 /** The current docs/website release version. */
-export const currentVersion = "1.2.0";
+export const currentVersion = "1.3.0";
 
-export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0" | "1.2.0";
+export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0" | "1.2.0" | "1.3.0";
 
 type ComponentMetaSource = {
   name: string;

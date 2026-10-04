@@ -466,9 +466,9 @@ describe("vinyaas info", () => {
           fetch: catalogFetch(),
         }),
       (error) => {
-        assert.match(error.message, /Component "buton" not found\./);
+        assert.match(error.message, /Unknown component "buton"\./);
         assert.match(error.message, /Did you mean:/);
-        assert.match(error.message, /- button/);
+        assert.match(error.message, / {2}button/);
         return true;
       },
     );
@@ -482,7 +482,7 @@ describe("vinyaas info", () => {
           env: { REGISTRY_BASE_URL: "http://localhost:3000" },
           fetch: catalogFetch(),
         }),
-      /Component "nonexistent-component" not found\./,
+      /Unknown component "nonexistent-component"\./,
     );
   });
 

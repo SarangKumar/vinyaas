@@ -3,18 +3,22 @@ import path from "node:path";
 
 import prettier from "prettier";
 
+import { componentCatalogs } from "../apps/docs/registry/catalogs";
 import { withDefaultDocs } from "../apps/docs/registry/docs";
 import { themes } from "../apps/docs/registry/registry";
 import {
   readRegistryItemFiles,
+  serializeComponentCatalogIndex,
   serializeRegistryCatalog,
   serializeRegistryItem,
 } from "../apps/docs/registry/serialize";
 import type {
+  ComponentCatalogIndex,
   RegistryCatalog,
   RegistryItemPayload,
 } from "../apps/docs/registry/types";
 import {
+  validateComponentCatalogs,
   validateRegistry,
   formatRegistryValidationFailure,
 } from "../apps/docs/registry/validate";
@@ -77,7 +81,43 @@ async function buildRegistry() {
     console.log(`Generated ${themeName}/index`);
   }
 
+  await publishComponentCatalogs(themes);
+
   console.log("Registry build complete");
+}
+
+/** Named catalogs under `/r/catalogs` (CLI + docs discovery). */
+async function publishComponentCatalogs(
+  themeMap: typeof themes,
+): Promise<void> {
+  const knownNames = new Set(
+    Object.values(themeMap).flatMap((items) => items.map((item) => item.name)),
+  );
+  const issues = validateComponentCatalogs(componentCatalogs, knownNames);
+
+  if (issues.length > 0) {
+    throw new Error(formatRegistryValidationFailure(issues));
+  }
+
+  const catalogsRoot = path.join(outputRoot, "catalogs");
+  await fs.mkdir(catalogsRoot, { recursive: true });
+
+  const index = serializeComponentCatalogIndex(componentCatalogs);
+  const indexPath = path.join(catalogsRoot, "index.json");
+  const indexJson = await formatComponentCatalogJson(indexPath, index);
+
+  await fs.writeFile(indexPath, indexJson, "utf8");
+  console.log("Generated catalogs/index");
+
+  for (const catalog of index.items) {
+    const itemPath = path.join(catalogsRoot, `${catalog.id}.json`);
+    const itemJson = await formatComponentCatalogJson(itemPath, {
+      type: "catalogs",
+      items: [catalog],
+    });
+    await fs.writeFile(itemPath, itemJson, "utf8");
+    console.log(`Generated catalogs/${catalog.id}`);
+  }
 }
 
 /** Publish JSON schemas under `/r/schema` so $schema URLs resolve. */
@@ -130,6 +170,21 @@ async function formatRegistryJson(
 async function formatCatalogJson(
   outputPath: string,
   output: RegistryCatalog,
+): Promise<string> {
+  const prettierConfig = await prettier.resolveConfig(outputPath);
+
+  return prettier.format(JSON.stringify(output), {
+    ...prettierConfig,
+    filepath: outputPath,
+    parser: "json",
+  });
+}
+
+async function formatComponentCatalogJson(
+  outputPath: string,
+  output:
+    | ComponentCatalogIndex
+    | { type: "catalogs"; items: ComponentCatalogIndex["items"] },
 ): Promise<string> {
   const prettierConfig = await prettier.resolveConfig(outputPath);
 

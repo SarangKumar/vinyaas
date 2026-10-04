@@ -33,20 +33,23 @@ describe("homepage", () => {
       "/typeset",
     );
     expect(document.body.textContent).toContain("vinyaas init");
-    expect(document.body.textContent).toContain("v1.2.0");
+    expect(document.body.textContent).toContain("v1.3.0");
     expect(document.querySelector("[data-home-brand]")).toBeTruthy();
     expect(screen.getByRole("img", { name: "Vinyaas" })).toBeInTheDocument();
 
     expect(document.querySelector("[data-companion-showcase]")).toBeNull();
-    expect(document.querySelector("[data-companion-home-preview]")).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Companion" })).toBeInTheDocument();
+    expect(
+      document.querySelector("[data-companion-home-preview]"),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { name: "Companion" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Ember" })).toBeInTheDocument();
     expect(screen.queryByRole("img", { name: "Soul" })).toBeNull();
     expect(screen.queryByRole("img", { name: "Moss" })).toBeNull();
-    expect(screen.getByRole("link", { name: "Meet companions" })).toHaveAttribute(
-      "href",
-      "/companion",
-    );
+    expect(
+      screen.getByRole("link", { name: "Meet companions" }),
+    ).toHaveAttribute("href", "/companion");
 
     const playground = document.querySelector("[data-playground]");
     expect(playground).toBeTruthy();

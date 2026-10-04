@@ -168,7 +168,19 @@ const pages: SearchPage[] = [
   {
     title: "Changelog",
     href: "/changelog",
-    description: "What shipped in v0.1, v1.0.0, v1.1.0, and v1.2.0.",
+    description: "What shipped through v1.3.0.",
+    group: "Getting Started",
+  },
+  {
+    title: "Catalogs",
+    href: "/catalogs",
+    description: "Named registry catalogs for discovery and bulk install.",
+    group: "Getting Started",
+  },
+  {
+    title: "Accessibility",
+    href: "/accessibility",
+    description: "Release-wide accessibility contract for registry components.",
     group: "Getting Started",
   },
   ...components.map((component) => ({

@@ -30,12 +30,14 @@ describe("DocsNavLinks", () => {
     ).toBeNull();
 
     const sectionsStart = titles.indexOf("Home");
-    expect(titles.slice(sectionsStart, sectionsStart + 8)).toEqual([
+    expect(titles.slice(sectionsStart, sectionsStart + 10)).toEqual([
       "Home",
       "Introduction",
       "Components",
       "Installation",
       "CLI",
+      "Catalogs",
+      "Accessibility",
       "Theming",
       "Typeset",
       "Changelog",
@@ -65,9 +67,9 @@ describe("DocsNavLinks", () => {
         ?.querySelector('[data-nav-indicator="beta"]'),
     ).toBeTruthy();
     expect(
-      within(nav).getByText("COMPANION").querySelector(
-        '[data-nav-indicator="beta"]',
-      ),
+      within(nav)
+        .getByText("COMPANION")
+        .querySelector('[data-nav-indicator="beta"]'),
     ).toBeNull();
     expect(
       within(nav).getAllByRole("link", { name: "Installation" })[1],
@@ -84,12 +86,14 @@ describe("DocsNavLinks", () => {
     expect(
       within(nav).getByRole("link", { name: "Custom Companion" }),
     ).toHaveAttribute("href", "/companion/custom");
-    expect(
-      within(nav).getByRole("link", { name: "Examples" }),
-    ).toHaveAttribute("href", "/companion/examples");
-    expect(
-      within(nav).getByRole("link", { name: "Gallery" }),
-    ).toHaveAttribute("href", "/companion/gallery");
+    expect(within(nav).getByRole("link", { name: "Examples" })).toHaveAttribute(
+      "href",
+      "/companion/examples",
+    );
+    expect(within(nav).getByRole("link", { name: "Gallery" })).toHaveAttribute(
+      "href",
+      "/companion/gallery",
+    );
 
     const componentsStart = titles.indexOf(componentNames[0]!);
     expect(

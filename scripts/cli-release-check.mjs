@@ -15,9 +15,16 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import {
+  localRegistryBasePath,
+  productionRegistryBasePath,
+} from "../config/registry.ts";
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const cliRoot = path.join(root, "packages/cli");
-const PRODUCTION_DOCS = "https://vinyaas.vercel.app/components/button";
+const PRODUCTION_DOCS = `${productionRegistryBasePath.replace(/\/r$/, "")}/components/button`;
+const PRODUCTION_REGISTRY = productionRegistryBasePath;
+const LOCALHOST_REGISTRY = localRegistryBasePath;
 
 function run(command, args, options = {}) {
   console.log(`\n> ${command} ${args.join(" ")}`);
@@ -42,6 +49,33 @@ run("pnpm", ["cli:release-build"]);
 const pkg = JSON.parse(
   fs.readFileSync(path.join(cliRoot, "package.json"), "utf8"),
 );
+const cliBundle = path.join(cliRoot, "dist/index.js");
+
+if (!fs.existsSync(cliBundle)) {
+  console.error(`Expected built CLI missing: ${cliBundle}`);
+  process.exit(1);
+}
+
+const bundle = fs.readFileSync(cliBundle, "utf8");
+if (!bundle.includes(PRODUCTION_REGISTRY)) {
+  console.error("Release check failed: production registry path missing from CLI bundle.");
+  process.exit(1);
+}
+if (bundle.includes(LOCALHOST_REGISTRY)) {
+  console.error("Release check failed: localhost registry path found in CLI bundle.");
+  process.exit(1);
+}
+
+const versionResult = run("node", [cliBundle, "--version"], { capture: true });
+const reportedVersion = (versionResult.stdout || "").trim();
+if (reportedVersion !== pkg.version) {
+  console.error(
+    `CLI version mismatch: package.json=${pkg.version}, cli=${reportedVersion}`,
+  );
+  process.exit(1);
+}
+console.log(`CLI version OK: ${reportedVersion}`);
+
 const tarballName = `vinyaas-${pkg.version}.tgz`;
 const tarballPath = path.join(cliRoot, tarballName);
 

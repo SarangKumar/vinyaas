@@ -1,0 +1,21 @@
+{
+  "type": "catalogs",
+  "items": [
+    {
+      "id": "form",
+      "name": "Form",
+      "description": "Core form controls for building inputs, choices, and actions.",
+      "components": [
+        "button",
+        "input",
+        "label",
+        "textarea",
+        "native-select",
+        "checkbox",
+        "radio-group",
+        "switch",
+        "slider"
+      ]
+    }
+  ]
+}

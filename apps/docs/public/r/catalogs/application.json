@@ -1,0 +1,21 @@
+{
+  "type": "catalogs",
+  "items": [
+    {
+      "id": "application",
+      "name": "Application",
+      "description": "A starter set of application-shell and content primitives.",
+      "components": [
+        "command",
+        "dialog",
+        "dropdown-menu",
+        "popover",
+        "tooltip",
+        "tabs",
+        "card",
+        "badge",
+        "breadcrumb"
+      ]
+    }
+  ]
+}

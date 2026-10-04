@@ -1,6 +1,7 @@
 import { Command } from "commander";
 
 import { registerAddCommand } from "./commands/add.js";
+import { registerCatalogCommand } from "./commands/catalog.js";
 import { registerDoctorCommand } from "./commands/doctor.js";
 import { registerInfoCommand } from "./commands/info.js";
 import { registerInitCommand } from "./commands/init.js";
@@ -18,10 +19,12 @@ export function createProgram(): Command {
     .description(
       "Install and discover Vinyaas UI components from the registry.",
     )
-    .version(readPackageVersion());
+    .version(readPackageVersion())
+    .showSuggestionAfterError(true);
 
   registerInitCommand(program);
   registerAddCommand(program);
+  registerCatalogCommand(program);
   registerListCommand(program);
   registerSearchCommand(program);
   registerInfoCommand(program);

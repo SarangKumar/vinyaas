@@ -68,6 +68,20 @@ export interface RegistryCatalog {
   items: RegistryCatalogItem[];
 }
 
+/** Named component group from `/r/catalogs/index.json`. */
+export interface ComponentCatalog {
+  id: string;
+  name: string;
+  description: string;
+  components: string[];
+}
+
+/** Built payload for named catalogs. */
+export interface ComponentCatalogIndex {
+  type: "catalogs";
+  items: ComponentCatalog[];
+}
+
 /**
  * Stable discovery JSON for list/search.
  * Catalog entries are intentionally lightweight.

@@ -1,4 +1,6 @@
 import type {
+  ComponentCatalog,
+  ComponentCatalogIndex,
   RegistryCatalog,
   RegistryCatalogItem,
   RegistryCssVars,
@@ -7,6 +9,7 @@ import type {
   RegistryItemFile,
   RegistryItemPayload,
 } from "./types";
+import type { ComponentCatalogDefinition } from "./catalogs";
 
 /**
  * `dependencies` is always written so every installable item has a stable npm
@@ -55,6 +58,27 @@ export function serializeRegistryCatalog(
   return {
     style,
     items: catalogItems,
+  };
+}
+
+/** Builds the named-catalog index for `vinyaas catalog`. */
+export function serializeComponentCatalogIndex(
+  catalogs: readonly ComponentCatalogDefinition[],
+): ComponentCatalogIndex {
+  return {
+    type: "catalogs",
+    items: catalogs.map((catalog) => serializeComponentCatalog(catalog)),
+  };
+}
+
+export function serializeComponentCatalog(
+  catalog: ComponentCatalogDefinition,
+): ComponentCatalog {
+  return {
+    id: catalog.id,
+    name: catalog.name,
+    description: catalog.description,
+    components: [...catalog.components],
   };
 }
 

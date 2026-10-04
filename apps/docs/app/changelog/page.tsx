@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = pageMetadata({
   title: "Changelog",
   description:
-    "Release notes for Vinyaas v0.1, v1.0.0, v1.1.0, and v1.2.0, including installation, docs, and catalog updates.",
+    "Release notes for Vinyaas through v1.3.0, including catalogs, accessibility, CLI, and registry updates.",
 });
 
 const heading =
@@ -294,15 +294,103 @@ export default function ChangelogPage() {
         </ul>
       </section>
       <section className="flex flex-col gap-4">
+        <h2 id="v1.3.0" className={heading}>
+          v1.3.0
+        </h2>
+        <p className="text-foreground text-base leading-7">
+          v{currentVersion} lays the foundation for application and dashboard
+          primitives: a release-wide accessibility contract, registry-owned
+          component catalogs, CLI catalog install flows, dry-run installs, and
+          stronger release verification for the production registry URL.
+        </p>
+        <h3
+          id="v1.3.0-accessibility"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Accessibility
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Concise accessibility checklist for keyboard, focus, ARIA, disabled
+            and loading states, touch targets, and reduced motion.
+          </li>
+          <li>
+            Documented test convention for registry components (role/name
+            queries, Escape/focus for overlays).
+          </li>
+        </ul>
+        <h3
+          id="v1.3.0-catalogs"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Catalogs
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Named catalogs owned by the registry (<code>form</code>,{" "}
+            <code>dashboard</code>, <code>navigation</code>,{" "}
+            <code>feedback</code>, <code>application</code>).
+          </li>
+          <li>
+            Membership lists only currently installable component IDs; planned
+            gaps are documented separately.
+          </li>
+          <li>
+            Built to <code>/r/catalogs/</code> for CLI, docs, and future
+            tooling.
+          </li>
+        </ul>
+        <h3
+          id="v1.3.0-cli"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          CLI
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            <code>vinyaas catalog list</code> and{" "}
+            <code>vinyaas catalog info &lt;catalog&gt;</code>.
+          </li>
+          <li>
+            <code>vinyaas add &lt;catalog&gt;</code> expands a catalog after
+            confirmation (default Yes).
+          </li>
+          <li>
+            <code>--dry-run</code> prints components, files, dependencies, and
+            registry dependencies without writing files.
+          </li>
+          <li>Suggestions for unknown components, catalogs, and commands.</li>
+        </ul>
+        <h3
+          id="v1.3.0-tooling"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Developer tooling
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            <code>pnpm verify</code> runs typecheck, lint, and tests.
+          </li>
+          <li>
+            Release build/check scripts reject localhost registry URLs and
+            require the production path{" "}
+            <code>https://vinyaas.vercel.app/r</code>.
+          </li>
+        </ul>
+        <p className="text-foreground text-base leading-7">
+          Not in this foundation increment: Resizable, Drag &amp; Drop, sidebar,
+          data-table, and the rest of the planned dashboard component set.
+        </p>
+      </section>
+      <section className="flex flex-col gap-4">
         <h2 id="v1.2.0" className={heading}>
           v1.2.0
         </h2>
         <p className="text-foreground text-base leading-7">
-          v{currentVersion} focuses on installation clarity, documentation
-          polish, and Companions as a new docs feature. Framework-specific
-          guides and project-state onboarding replace the single generic install
-          page, and the site catalog presentation is cleaned up for the current
-          release.
+          v1.2.0 focuses on installation clarity, documentation polish, and
+          Companions as a new docs feature. Framework-specific guides and
+          project-state onboarding replace the single generic install page, and
+          the site catalog presentation is cleaned up for that release.
         </p>
         <h3
           id="v1.2.0-installation"
@@ -350,10 +438,10 @@ export default function ChangelogPage() {
             <code>jump</code>, <code>sleep</code>, <code>move</code>).
           </li>
           <li>
-            Personality instances and deterministic moods (
-            <code>happy</code>, <code>neutral</code>, <code>sleepy</code>,{" "}
-            <code>excited</code>) without AI. Instance profiles can override
-            name, traits, and behavior preferences while sharing species assets.
+            Personality instances and deterministic moods (<code>happy</code>,{" "}
+            <code>neutral</code>, <code>sleepy</code>, <code>excited</code>)
+            without AI. Instance profiles can override name, traits, and
+            behavior preferences while sharing species assets.
           </li>
           <li>
             Docs for installation, <code>companion.json</code>, and custom

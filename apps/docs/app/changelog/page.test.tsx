@@ -25,6 +25,7 @@ describe("Changelog", () => {
     expect(screen.getByRole("heading", { name: "v0.1" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "v1.0.0" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "v1.1.0" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "v1.3.0" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "v1.2.0" })).toBeInTheDocument();
     expect(
       screen.getAllByRole("heading", { name: "Component catalog" }),
@@ -34,7 +35,7 @@ describe("Changelog", () => {
     ).toBeGreaterThanOrEqual(2);
     expect(
       screen.getAllByRole("heading", { name: "CLI" }).length,
-    ).toBeGreaterThanOrEqual(3);
+    ).toBeGreaterThanOrEqual(4);
     expect(
       screen.getByRole("heading", { name: "Released" }),
     ).toBeInTheDocument();
@@ -55,9 +56,14 @@ describe("Changelog", () => {
     );
     expect(document.body.textContent).toContain("v1.1.0 continues the catalog");
     expect(document.body.textContent).toContain(
-      `v${currentVersion} focuses on installation clarity`,
+      `v${currentVersion} lays the foundation for application and dashboard`,
     );
-    expect(screen.getByRole("heading", { name: "Companions" })).toBeInTheDocument();
+    expect(document.body.textContent).toContain(
+      "v1.2.0 focuses on installation clarity",
+    );
+    expect(
+      screen.getByRole("heading", { name: "Companions" }),
+    ).toBeInTheDocument();
     expect(document.body.textContent).toContain("interaction system v0.1");
     expect(document.body.textContent).toContain("companion.json");
     expect(document.body.textContent).toContain("Ember, Soul, and Moss");

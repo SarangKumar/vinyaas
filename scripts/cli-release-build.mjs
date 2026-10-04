@@ -11,9 +11,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import {
+  localRegistryBasePath,
+  productionRegistryBasePath,
+} from "../config/registry.ts";
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const PRODUCTION_REGISTRY = "https://vinyaas.vercel.app/r";
-const LOCALHOST_REGISTRY = "http://localhost:3000/r";
+const PRODUCTION_REGISTRY = productionRegistryBasePath;
+const LOCALHOST_REGISTRY = localRegistryBasePath;
 
 function run(command, args, env = {}) {
   console.log(`\n> ${command} ${args.join(" ")}`);

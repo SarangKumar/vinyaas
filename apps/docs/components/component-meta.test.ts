@@ -64,7 +64,7 @@ describe("component metadata", () => {
   });
 
   it("tracks introduction versions without marking a current new set", () => {
-    expect(currentVersion).toBe("1.2.0");
+    expect(currentVersion).toBe("1.3.0");
     expect(
       components
         .filter((component) => component.introducedIn === "0.1")
