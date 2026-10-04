@@ -58,6 +58,16 @@ describe("Changelog", () => {
     expect(document.body.textContent).toContain(
       `v${currentVersion} lays the foundation for application and dashboard`,
     );
+    expect(screen.getByRole("heading", { name: "Added" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Improved" }),
+    ).toBeInTheDocument();
+    expect(document.body.textContent).toContain("composite docs examples");
+    expect(document.body.textContent).toContain("New-component indicator");
+    expect(document.body.textContent).toContain("orientation-aware cursors");
+    expect(document.body.textContent).toContain(
+      "Homepage showcase vertical spacing",
+    );
     expect(document.body.textContent).toContain(
       "v1.2.0 focuses on installation clarity",
     );

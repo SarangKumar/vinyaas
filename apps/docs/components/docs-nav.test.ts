@@ -129,7 +129,7 @@ describe("documentation navigation", () => {
     expect(JSON.stringify(docsNav)).not.toContain('"icon"');
   });
 
-  it("builds one alphabetical component list including Typography", () => {
+  it("builds one alphabetical component list with new indicators from metadata", () => {
     const items = docsNav.find((group) => group.title === "COMPONENTS")?.items;
 
     expect(items?.map((item) => item.title)).toEqual(
@@ -139,5 +139,16 @@ describe("documentation navigation", () => {
     );
     expect(items?.some((item) => item.title === "Typography")).toBe(true);
     expect(items?.every((item) => !("isNew" in item))).toBe(true);
+    expect(items?.find((item) => item.title === "Resizable")?.indicator).toBe(
+      "new",
+    );
+    expect(
+      items?.find((item) => item.title === "Button")?.indicator,
+    ).toBeUndefined();
+    expect(
+      items
+        ?.filter((item) => item.indicator === "new")
+        .map((item) => item.title),
+    ).toEqual(["Resizable"]);
   });
 });

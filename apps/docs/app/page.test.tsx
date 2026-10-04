@@ -60,6 +60,12 @@ describe("homepage", () => {
     expect(
       document.querySelectorAll("[data-playground-column]").length,
     ).toBeGreaterThanOrEqual(1);
+    // Vertical rhythm comes from column gap only (not stacked card margins).
+    expect(
+      document.querySelector("[data-playground-column]")?.className,
+    ).toMatch(/gap-\(--gap\)/);
+    const playBlock = document.querySelector("[data-play-block]");
+    expect(playBlock?.className).not.toMatch(/mb-\(--gap\)/);
 
     const leftRail = document.querySelector('[data-playground-side="left"]');
     const rightRail = document.querySelector('[data-playground-side="right"]');

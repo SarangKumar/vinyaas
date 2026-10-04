@@ -304,6 +304,42 @@ export default function ChangelogPage() {
           stronger release verification for the production registry URL.
         </p>
         <h3
+          id="v1.3.0-added"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Added
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            <strong>Resizable</strong> — horizontal and vertical panel layouts
+            via <code>react-resizable-panels</code>, with keyboard-accessible
+            handles, nested groups, and composite docs examples (dashboard, IDE
+            workspace, analytics).
+          </li>
+          <li>
+            New-component indicator in documentation navigation for components
+            introduced in the current release (driven by{" "}
+            <code>introducedIn</code> metadata), plus a New Components section
+            on the components catalog page.
+          </li>
+        </ul>
+        <h3
+          id="v1.3.0-improved"
+          className="text-foreground scroll-mt-8 text-base font-medium"
+        >
+          Improved
+        </h3>
+        <ul className="text-foreground list-disc pl-5 text-base leading-7">
+          <li>
+            Resizable handle affordances: orientation-aware cursors, expanded
+            hit targets, and crossing-handle 2D resize cursors from the library.
+          </li>
+          <li>
+            Homepage showcase vertical spacing aligned with the horizontal
+            gutter (PlaygroundGrid gap only — no stacked card margins).
+          </li>
+        </ul>
+        <h3
           id="v1.3.0-accessibility"
           className="text-foreground scroll-mt-8 text-base font-medium"
         >
@@ -354,11 +390,6 @@ export default function ChangelogPage() {
           <li>
             <code>vinyaas add --catalog &lt;catalog&gt;</code> expands a catalog
             after confirmation (default Yes). Bare names never install catalogs.
-          </li>
-          <li>
-            <strong>Resizable</strong> — dashboard panel layouts via{" "}
-            <code>react-resizable-panels</code>, with keyboard-accessible
-            handles.
           </li>
           <li>
             <code>--dry-run</code> prints components, files, dependencies, and

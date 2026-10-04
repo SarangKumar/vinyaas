@@ -16,6 +16,10 @@ export type ResizablePanelGroupProps = GroupProps;
 /**
  * Resizable panel group backed by `react-resizable-panels`.
  * Orientation comes from the library; vertical groups stack via ARIA.
+ *
+ * Cursor feedback (including corner/crossing 2D cursors when horizontal and
+ * vertical handles intersect) is owned by the library — do not set
+ * `disableCursor` unless you replace that behavior.
  */
 export function ResizablePanelGroup({
   className,
@@ -53,10 +57,14 @@ export type ResizableHandleProps = PanelSeparatorProps & {
 /**
  * Keyboard-accessible resize handle (`role="separator"` from the library).
  *
- * Default styles size a vertical bar (horizontal group). When the separator
- * reports `aria-orientation="horizontal"` (vertical group), width/height and
- * the hit-target `::after` flip. Height comes from the flex group stretch —
- * do not force `h-full` on the vertical bar.
+ * Visual bar stays thin (`w-px` / `h-px`). A wider centered `::after` hit
+ * target improves pointer and touch use. Orientation drives dimensions,
+ * cursor fallback, hit-area axis, and withHandle rotation.
+ *
+ * Default styles size a vertical bar (horizontal group → `col-resize`).
+ * When the separator reports `aria-orientation="horizontal"` (vertical group),
+ * classes flip to a horizontal bar (`row-resize`). Height of the vertical bar
+ * comes from flex stretch — do not force `h-full`.
  */
 export function ResizableHandle({
   className,
@@ -67,13 +75,19 @@ export function ResizableHandle({
   return (
     <PanelSeparator
       data-slot="resizable-handle"
+      data-hit-area="expanded"
       disabled={disabled}
       className={cn(
         "bg-border focus-visible:ring-ring relative flex w-px items-center justify-center",
-        "after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2",
+        // Fallback when the library hover stylesheet is inactive. Crossing
+        // handles override via the library's 2D cursor (move / grab / nwse*).
+        "cursor-col-resize",
+        "after:absolute after:inset-y-0 after:left-1/2 after:w-3 after:-translate-x-1/2",
         "focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:outline-none",
         "aria-[orientation=horizontal]:h-px aria-[orientation=horizontal]:w-full",
-        "aria-[orientation=horizontal]:after:left-0 aria-[orientation=horizontal]:after:h-1",
+        "aria-[orientation=horizontal]:cursor-row-resize",
+        "aria-[orientation=horizontal]:after:inset-x-0 aria-[orientation=horizontal]:after:top-1/2",
+        "aria-[orientation=horizontal]:after:left-0 aria-[orientation=horizontal]:after:h-3",
         "aria-[orientation=horizontal]:after:w-full aria-[orientation=horizontal]:after:translate-x-0",
         "aria-[orientation=horizontal]:after:-translate-y-1/2",
         "data-[separator=active]:bg-ring",
@@ -87,6 +101,7 @@ export function ResizableHandle({
       {withHandle ? (
         <div
           aria-hidden="true"
+          data-slot="resizable-handle-grip"
           className="bg-border z-10 flex h-4 w-3 items-center justify-center rounded-sm border"
         >
           <div className="bg-muted-foreground/70 h-2.5 w-px" />

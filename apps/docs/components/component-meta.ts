@@ -305,3 +305,16 @@ export function componentsInCategory(category: ComponentCategory) {
 export function componentHref(slug: string) {
   return `/components/${slug}`;
 }
+
+/** Components introduced in the current docs/website release. */
+export function isNewComponent(component: ComponentMeta) {
+  return component.introducedIn === currentVersion;
+}
+
+/** Sorted new components for nav indicators and the New Components section. */
+export function newComponents() {
+  return components
+    .filter(isNewComponent)
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name));
+}

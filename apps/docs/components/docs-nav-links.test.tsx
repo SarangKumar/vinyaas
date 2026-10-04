@@ -133,6 +133,18 @@ describe("DocsNavLinks", () => {
     );
     expect(within(nav).queryByText(", new")).toBeNull();
     expect(nav.querySelector(".bg-primary")).toBeNull();
+
+    const resizable = within(nav).getByRole("link", { name: /Resizable/i });
+    expect(resizable).toHaveAttribute("href", "/components/resizable");
+    expect(
+      resizable.querySelector('[data-nav-indicator="new"]'),
+    ).toHaveAttribute("aria-label", "New");
+    expect(
+      within(nav)
+        .getByRole("link", { name: "Button" })
+        .querySelector('[data-nav-indicator="new"]'),
+    ).toBeNull();
+
     expect(within(nav).getByRole("link", { name: "Input" })).toHaveAttribute(
       "aria-current",
       "page",

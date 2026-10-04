@@ -152,18 +152,23 @@ describe("Resizable", () => {
     expect(after).toHaveFocus();
   });
 
-  it("applies orientation-specific sizing classes on handles", () => {
+  it("applies orientation-specific sizing and cursor classes on handles", () => {
     render(<HorizontalLayout />);
 
     const verticalBar = screen.getByRole("separator", {
       name: "Resize sidebar",
     });
     expect(verticalBar).toHaveAttribute("aria-orientation", "vertical");
+    expect(verticalBar).toHaveAttribute("data-hit-area", "expanded");
     expect(verticalBar.className).toMatch(/\bw-px\b/);
+    expect(verticalBar.className).toMatch(/cursor-col-resize/);
+    expect(verticalBar.className).toMatch(/after:w-3/);
     expect(verticalBar.className).not.toMatch(/\bh-full\b/);
     expect(verticalBar.className).toMatch(/items-center/);
     expect(verticalBar.className).toMatch(/justify-center/);
-    expect(verticalBar.querySelector('[aria-hidden="true"]')).toBeTruthy();
+    expect(
+      verticalBar.querySelector('[data-slot="resizable-handle-grip"]'),
+    ).toBeTruthy();
   });
 
   it("flips handle classes for vertical panel groups", () => {
@@ -173,12 +178,30 @@ describe("Resizable", () => {
       name: "Resize header",
     });
     expect(horizontalBar).toHaveAttribute("aria-orientation", "horizontal");
+    expect(horizontalBar).toHaveAttribute("data-hit-area", "expanded");
     expect(horizontalBar.className).toMatch(
       /aria-\[orientation=horizontal\]:h-px/,
     );
     expect(horizontalBar.className).toMatch(
       /aria-\[orientation=horizontal\]:w-full/,
     );
+    expect(horizontalBar.className).toMatch(
+      /aria-\[orientation=horizontal\]:cursor-row-resize/,
+    );
+    expect(horizontalBar.className).toMatch(
+      /aria-\[orientation=horizontal\]:after:h-3/,
+    );
+  });
+
+  it("keeps library cursor management enabled for crossing handles", () => {
+    const { container } = render(<HorizontalLayout />);
+    const group = container.querySelector(
+      '[data-slot="resizable-panel-group"]',
+    );
+    // Intersection / 2D cursors come from react-resizable-panels when
+    // disableCursor is not set. We only provide orientation fallbacks.
+    expect(group?.getAttribute("disablecursor")).toBeNull();
+    expect(group?.outerHTML.toLowerCase()).not.toContain("disablecursor");
   });
 
   it("renders nested horizontal and vertical groups with oriented handles", () => {
@@ -213,11 +236,19 @@ describe("Resizable", () => {
 
     expect(outer).toHaveAttribute("aria-orientation", "vertical");
     expect(outer.className).toMatch(/\bw-px\b/);
-    expect(outer.querySelector('[aria-hidden="true"]')).toBeTruthy();
+    expect(outer.className).toMatch(/cursor-col-resize/);
+    expect(
+      outer.querySelector('[data-slot="resizable-handle-grip"]'),
+    ).toBeTruthy();
 
     expect(inner).toHaveAttribute("aria-orientation", "horizontal");
     expect(inner.className).toMatch(/aria-\[orientation=horizontal\]:w-full/);
-    expect(inner.querySelector('[aria-hidden="true"]')).toBeTruthy();
+    expect(inner.className).toMatch(
+      /aria-\[orientation=horizontal\]:cursor-row-resize/,
+    );
+    expect(
+      inner.querySelector('[data-slot="resizable-handle-grip"]'),
+    ).toBeTruthy();
 
     const groups = document.querySelectorAll(
       '[data-slot="resizable-panel-group"]',

@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Showcase card for the Pinterest masonry.
- * break-inside-avoid keeps cards whole; mb uses --gap so vertical rhythm
- * matches the column gutter.
+ * Vertical rhythm comes from PlaygroundGrid column `gap-(--gap)` — do not
+ * also add margin-bottom or gaps stack to 2× the horizontal gutter.
  */
 export function PlayBlock({
   title,
@@ -23,7 +23,7 @@ export function PlayBlock({
       data-slot="card"
       data-play-block
       className={cn(
-        "border-border/80 bg-card text-card-foreground mb-(--gap) flex w-full min-w-0 break-inside-avoid flex-col gap-5 overflow-hidden rounded-2xl border p-5 shadow-[0_1px_0_oklch(1_0_0/0.04)_inset] sm:gap-6 sm:p-6",
+        "border-border/80 bg-card text-card-foreground flex w-full min-w-0 break-inside-avoid flex-col gap-5 overflow-hidden rounded-2xl border p-5 shadow-[0_1px_0_oklch(1_0_0/0.04)_inset] sm:gap-6 sm:p-6",
         className,
       )}
     >

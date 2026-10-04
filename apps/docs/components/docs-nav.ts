@@ -1,6 +1,7 @@
 import {
   componentHref,
   components,
+  isNewComponent,
   type ComponentMeta,
 } from "@/components/component-meta";
 
@@ -66,8 +67,8 @@ export type DocsNavItem = {
   title: string;
   href: string;
   description?: string;
-  /** Subtle status mark (e.g. beta). */
-  indicator?: "beta";
+  /** Subtle status mark (beta feature, or newly released component). */
+  indicator?: "beta" | "new";
   /** Nested links. Prefer flat items — avoid third-level nesting. */
   children?: DocsNavItem[];
 };
@@ -85,6 +86,7 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
   return {
     title: component.name,
     href: componentHref(component.slug),
+    ...(isNewComponent(component) ? { indicator: "new" as const } : {}),
   };
 }
 

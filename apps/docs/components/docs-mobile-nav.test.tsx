@@ -99,6 +99,11 @@ describe("DocsMobileNav", () => {
     expect(
       screen.getByRole("link", { name: "Custom Companion" }),
     ).toHaveAttribute("href", "/companion/custom");
+    const resizable = screen.getByRole("link", { name: /Resizable/i });
+    expect(resizable).toHaveAttribute("href", "/components/resizable");
+    expect(
+      resizable.querySelector('[data-nav-indicator="new"]'),
+    ).toHaveAttribute("aria-label", "New");
     expect(
       screen.getAllByRole("link", { name: /Introduction/i })[1],
     ).toHaveAttribute("href", "/companion");

@@ -11,6 +11,8 @@ import {
   components,
   componentsInCategory,
   currentVersion,
+  isNewComponent,
+  newComponents,
 } from "./component-meta";
 
 describe("component metadata", () => {
@@ -64,7 +66,7 @@ describe("component metadata", () => {
     ]);
   });
 
-  it("tracks introduction versions without marking a current new set", () => {
+  it("tracks introduction versions and derives the current new set", () => {
     expect(currentVersion).toBe("1.3.0");
     expect(
       components
@@ -89,6 +91,19 @@ describe("component metadata", () => {
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
     ).toBe(components.length - 7);
+    expect(newComponents().map((component) => component.slug)).toEqual([
+      "resizable",
+    ]);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "resizable")!,
+      ),
+    ).toBe(true);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "button")!,
+      ),
+    ).toBe(false);
   });
 
   it("derives docs categories from the registry category map", () => {

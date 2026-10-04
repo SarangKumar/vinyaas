@@ -40,18 +40,18 @@ export function Playground() {
         <ChartBlock />
         <LoginBlock />
         <CompanionBlock />
-        <MediaControlsBlock />
         <ChatBlock />
+        <TableBlock />
+        <TabsSettingsBlock />
         <UploadBlock />
         <FilterBlock />
-        <SignupBlock />
-        <TabsSettingsBlock />
+        <SecurityBlock />
         <MessagesBlock />
         <ProfileBlock />
-        <TableBlock />
         <InvoiceBlock />
         <ProjectBlock />
-        <SecurityBlock />
+        <MediaControlsBlock />
+        <SignupBlock />
         <NotificationSettingsBlock />
         <AccountSettingsBlock />
       </PlaygroundGrid>

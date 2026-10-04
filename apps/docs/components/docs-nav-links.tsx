@@ -6,13 +6,15 @@ import { usePathname } from "next/navigation";
 import { docsNav, type DocsNavItem } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 
-function BetaDot() {
+function NavIndicator({ kind }: { kind: "beta" | "new" }) {
+  const label = kind === "beta" ? "Beta" : "New";
+
   return (
     <span
-      data-nav-indicator="beta"
+      data-nav-indicator={kind}
       className="bg-muted-foreground size-1.5 shrink-0 rounded-full"
-      aria-label="Beta"
-      title="Beta"
+      aria-label={label}
+      title={label}
     />
   );
 }
@@ -42,7 +44,7 @@ function NavLink({
       }
     >
       <span className="min-w-0 truncate">{item.title}</span>
-      {item.indicator === "beta" ? <BetaDot /> : null}
+      {item.indicator ? <NavIndicator kind={item.indicator} /> : null}
     </Link>
   );
 }
@@ -102,7 +104,9 @@ export function DocsNavLinks({
             {group.items.map((item) => (
               <li
                 key={`${group.title}-${item.href}`}
-                className={group.label ? (comfortable ? "pl-1" : "pl-2") : undefined}
+                className={
+                  group.label ? (comfortable ? "pl-1" : "pl-2") : undefined
+                }
               >
                 <NavLink
                   item={item}

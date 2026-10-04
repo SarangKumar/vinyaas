@@ -3,10 +3,6 @@ import path from "node:path";
 import type { Metadata } from "next";
 
 import type { ApiRow } from "@/components/api-table";
-import type {
-  ComponentExample,
-  ComponentInPractice,
-} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import { componentPageMetadata } from "@/lib/page-metadata";
 import {
@@ -15,28 +11,9 @@ import {
   ResizablePanelGroup,
 } from "@/registry/new-york/ui/resizable";
 
+import { examples, inPractice, usage } from "./examples";
+
 export const metadata: Metadata = componentPageMetadata("resizable");
-
-const usage = `import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
-
-export function Workspace() {
-  return (
-    <ResizablePanelGroup orientation="horizontal" className="min-h-[240px] rounded-md border">
-      <ResizablePanel defaultSize="30%" minSize="20%">
-        <div className="p-4">Sidebar</div>
-      </ResizablePanel>
-      <ResizableHandle withHandle aria-label="Resize sidebar" />
-      <ResizablePanel defaultSize="70%">
-        <div className="p-4">Main</div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
-  );
-}
-`;
 
 const api: ApiRow[] = [
   {
@@ -70,239 +47,14 @@ const api: ApiRow[] = [
     description:
       "Group or Handle: disables resize interaction for that surface.",
   },
-];
-
-const examples: ComponentExample[] = [
   {
-    id: "horizontal",
-    title: "Horizontal",
+    prop: "disableCursor",
+    type: "boolean",
+    defaultValue: "false",
     description:
-      "A sidebar and main content split. Drag or focus the handle and use arrow keys to resize.",
-    preview: (
-      <ResizablePanelGroup
-        orientation="horizontal"
-        className="border-border min-h-[220px] w-full max-w-2xl rounded-md border"
-      >
-        <ResizablePanel defaultSize="32%" minSize="20%" maxSize="50%">
-          <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-sm">
-            Sidebar
-          </div>
-        </ResizablePanel>
-        <ResizableHandle withHandle aria-label="Resize sidebar" />
-        <ResizablePanel defaultSize="68%">
-          <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-sm">
-            Main content
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    ),
-    code: `<ResizablePanelGroup orientation="horizontal" className="min-h-[220px] rounded-md border">
-  <ResizablePanel defaultSize="32%" minSize="20%" maxSize="50%">
-    <div>Sidebar</div>
-  </ResizablePanel>
-  <ResizableHandle withHandle aria-label="Resize sidebar" />
-  <ResizablePanel defaultSize="68%">
-    <div>Main content</div>
-  </ResizablePanel>
-</ResizablePanelGroup>`,
-  },
-  {
-    id: "vertical",
-    title: "Vertical",
-    description:
-      "Header, content, and bottom panel stacked with two resize handles.",
-    preview: (
-      <ResizablePanelGroup
-        orientation="vertical"
-        className="border-border min-h-[280px] w-full max-w-2xl rounded-md border"
-      >
-        <ResizablePanel defaultSize="22%" minSize="12%">
-          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
-            Header
-          </div>
-        </ResizablePanel>
-        <ResizableHandle aria-label="Resize header" />
-        <ResizablePanel defaultSize="56%">
-          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
-            Content
-          </div>
-        </ResizablePanel>
-        <ResizableHandle aria-label="Resize bottom panel" />
-        <ResizablePanel defaultSize="22%" minSize="12%">
-          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
-            Bottom panel
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    ),
-    code: `<ResizablePanelGroup orientation="vertical" className="min-h-[280px] rounded-md border">
-  <ResizablePanel defaultSize="22%" minSize="12%">
-    <div>Header</div>
-  </ResizablePanel>
-  <ResizableHandle aria-label="Resize header" />
-  <ResizablePanel defaultSize="56%">
-    <div>Content</div>
-  </ResizablePanel>
-  <ResizableHandle aria-label="Resize bottom panel" />
-  <ResizablePanel defaultSize="22%" minSize="12%">
-    <div>Bottom panel</div>
-  </ResizablePanel>
-</ResizablePanelGroup>`,
-  },
-  {
-    id: "multiple",
-    title: "Multiple panels",
-    description:
-      "Three columns with independent handles. Each handle stays in the tab order.",
-    preview: (
-      <ResizablePanelGroup
-        orientation="horizontal"
-        className="border-border min-h-[200px] w-full max-w-2xl rounded-md border"
-      >
-        <ResizablePanel defaultSize="25%" minSize="15%">
-          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
-            Nav
-          </div>
-        </ResizablePanel>
-        <ResizableHandle aria-label="Resize navigation" />
-        <ResizablePanel defaultSize="45%">
-          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
-            Editor
-          </div>
-        </ResizablePanel>
-        <ResizableHandle aria-label="Resize inspector" />
-        <ResizablePanel defaultSize="30%" minSize="15%">
-          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
-            Inspector
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    ),
-    code: `<ResizablePanelGroup orientation="horizontal" className="min-h-[200px] rounded-md border">
-  <ResizablePanel defaultSize="25%" minSize="15%">
-    <div>Nav</div>
-  </ResizablePanel>
-  <ResizableHandle aria-label="Resize navigation" />
-  <ResizablePanel defaultSize="45%">
-    <div>Editor</div>
-  </ResizablePanel>
-  <ResizableHandle aria-label="Resize inspector" />
-  <ResizablePanel defaultSize="30%" minSize="15%">
-    <div>Inspector</div>
-  </ResizablePanel>
-</ResizablePanelGroup>`,
-  },
-  {
-    id: "nested",
-    title: "Nested groups",
-    description:
-      "A horizontal outer group with a nested vertical split. Handles stretch with their group orientation.",
-    preview: (
-      <ResizablePanelGroup
-        orientation="horizontal"
-        className="border-border max-w-sm rounded-lg border"
-      >
-        <ResizablePanel defaultSize="50%">
-          <div className="flex h-[200px] items-center justify-center p-6">
-            <span className="font-semibold">One</span>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle withHandle aria-label="Resize outer panels" />
-        <ResizablePanel defaultSize="50%">
-          <ResizablePanelGroup orientation="vertical">
-            <ResizablePanel defaultSize="25%">
-              <div className="flex h-full items-center justify-center p-6">
-                <span className="font-semibold">Two</span>
-              </div>
-            </ResizablePanel>
-            <ResizableHandle withHandle aria-label="Resize inner panels" />
-            <ResizablePanel defaultSize="75%">
-              <div className="flex h-full items-center justify-center p-6">
-                <span className="font-semibold">Three</span>
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    ),
-    code: `<ResizablePanelGroup
-  orientation="horizontal"
-  className="max-w-sm rounded-lg border"
->
-  <ResizablePanel defaultSize="50%">
-    <div className="flex h-[200px] items-center justify-center p-6">
-      <span className="font-semibold">One</span>
-    </div>
-  </ResizablePanel>
-  <ResizableHandle withHandle />
-  <ResizablePanel defaultSize="50%">
-    <ResizablePanelGroup orientation="vertical">
-      <ResizablePanel defaultSize="25%">
-        <div className="flex h-full items-center justify-center p-6">
-          <span className="font-semibold">Two</span>
-        </div>
-      </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel defaultSize="75%">
-        <div className="flex h-full items-center justify-center p-6">
-          <span className="font-semibold">Three</span>
-        </div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
-  </ResizablePanel>
-</ResizablePanelGroup>`,
+      "Group: turn off library cursor management. Leave false so crossing handles can show a 2D resize cursor.",
   },
 ];
-
-const inPractice: ComponentInPractice = {
-  description:
-    "Use Resizable for application shells where users need to adjust sidebars or tool panes. Label every handle.",
-  preview: (
-    <ResizablePanelGroup
-      orientation="horizontal"
-      className="border-border bg-card min-h-[240px] w-full max-w-2xl overflow-hidden rounded-md border"
-    >
-      <ResizablePanel defaultSize="28%" minSize="18%">
-        <div className="flex h-full flex-col gap-2 p-4 text-sm">
-          <p className="font-medium">Projects</p>
-          <p className="text-muted-foreground">Marketing</p>
-          <p className="text-muted-foreground">Docs site</p>
-          <p className="text-muted-foreground">CLI</p>
-        </div>
-      </ResizablePanel>
-      <ResizableHandle withHandle aria-label="Resize project list" />
-      <ResizablePanel defaultSize="72%">
-        <div className="flex h-full flex-col gap-2 p-4 text-sm">
-          <p className="font-medium">Overview</p>
-          <p className="text-muted-foreground">
-            Resize the project list with the handle. Arrow keys work when the
-            handle is focused.
-          </p>
-        </div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
-  ),
-  code: `import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
-
-export function DashboardShell() {
-  return (
-    <ResizablePanelGroup orientation="horizontal" className="min-h-[240px] rounded-md border">
-      <ResizablePanel defaultSize="28%" minSize="18%">
-        <div className="p-4">Projects</div>
-      </ResizablePanel>
-      <ResizableHandle withHandle aria-label="Resize project list" />
-      <ResizablePanel defaultSize="72%">
-        <div className="p-4">Overview</div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
-  );
-}
-`,
-};
 
 export default async function ResizablePage() {
   const source = await readFile(
@@ -318,12 +70,20 @@ export default async function ResizablePage() {
         <>
           <p>
             Resizable wraps <code>react-resizable-panels</code> with Vinyaas
-            styling. Use it for sidebars, split editors, and stacked dashboard
-            panes. Prefer percentage strings for sizes (
-            <code>&quot;30%&quot;</code>).
+            styling for sidebars, split editors, and stacked dashboard panes.
+            Prefer percentage strings for sizes (<code>&quot;30%&quot;</code>).
           </p>
           <p>
-            Install with <code>vinyaas add resizable</code>, or include it via{" "}
+            Use <code>orientation=&quot;horizontal&quot;</code> for side-by-side
+            panels and <code>orientation=&quot;vertical&quot;</code> for stacked
+            panels. Nest groups when a pane needs its own axis — for example an
+            explorer beside an editor/terminal split.
+          </p>
+          <p>
+            Handles stay visually thin with an expanded hit target. Single-axis
+            cursors follow separator orientation; when horizontal and vertical
+            handles cross, the library shows a two-dimensional resize cursor.
+            Install with <code>vinyaas add resizable</code> or via{" "}
             <code>vinyaas add --catalog dashboard</code>.
           </p>
         </>
@@ -363,8 +123,13 @@ export default async function ResizablePage() {
               and dims pointer interaction.
             </li>
             <li>
-              Hit targets are expanded with a larger after-pseudo for easier
-              pointer and touch use.
+              Hit targets stay larger than the visible bar via a centered{" "}
+              <code>::after</code> region; the library also enforces a minimum
+              resize target size for fine and coarse pointers.
+            </li>
+            <li>
+              Leave <code>disableCursor</code> unset so crossing horizontal and
+              vertical handles can announce a 2D resize affordance.
             </li>
             <li>
               Non-essential motion respects <code>prefers-reduced-motion</code>{" "}
