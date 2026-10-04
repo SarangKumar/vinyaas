@@ -53,7 +53,13 @@ describe("homepage", () => {
 
     const playground = document.querySelector("[data-playground]");
     expect(playground).toBeTruthy();
-    expect(playground?.className).toContain("min-[1900px]:columns-5!");
+    expect(document.querySelector("[data-playground-grid]")).toHaveAttribute(
+      "data-playground-mode",
+      "showcase",
+    );
+    expect(
+      document.querySelectorAll("[data-playground-column]").length,
+    ).toBeGreaterThanOrEqual(1);
 
     const leftRail = document.querySelector('[data-playground-side="left"]');
     const rightRail = document.querySelector('[data-playground-side="right"]');

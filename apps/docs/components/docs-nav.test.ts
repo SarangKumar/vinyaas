@@ -57,11 +57,11 @@ describe("documentation navigation", () => {
     expect(changelogPath).toBe("/changelog");
     expect(docsNav.map((group) => group.title)).toEqual([
       "SECTIONS",
-      "COMPANION",
       "COMPONENTS",
+      "COMPANION",
       "GET STARTED",
     ]);
-    expect(docsNav[2]?.layout).toBe("names");
+    expect(docsNav[1]?.layout).toBe("names");
 
     const sections = docsNav[0]?.items;
     expect(sections?.map((item) => item.title)).toEqual([
@@ -86,7 +86,7 @@ describe("documentation navigation", () => {
     );
     expect(sections?.every((item) => !item.children?.length)).toBe(true);
 
-    const companion = docsNav[1];
+    const companion = docsNav[2];
     expect(companion?.items[0]?.indicator).toBe("beta");
     expect(companion?.items.map((item) => item.title)).toEqual([
       "Introduction",

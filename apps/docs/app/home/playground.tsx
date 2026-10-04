@@ -15,11 +15,15 @@ import { SignupBlock } from "@/app/home/blocks/signup-block";
 import { TableBlock } from "@/app/home/blocks/table-block";
 import { TabsSettingsBlock } from "@/app/home/blocks/tabs-settings-block";
 import { UploadBlock } from "@/app/home/blocks/upload-block";
+import { PlaygroundGrid } from "@/components/playground";
 
 /**
  * Centered masonry for the main showcase cards.
  * Side skeleton rails are absolute (see PlaygroundSideRails) and sit
  * outside this max-width band at ≥2200px.
+ *
+ * Uses flex columns (PlaygroundGrid) so every column starts on the same
+ * top edge — CSS columns fill top-to-bottom per column and look staggered.
  *
  * Layout at ultra-wide:
  *   fade ← 2 skeleton cols | 5-column masonry | 2 skeleton cols → fade
@@ -30,25 +34,27 @@ export function Playground() {
   return (
     <div
       data-playground
-      className="relative z-10 mx-auto w-full columns-1 gap-(--gap) **:data-[slot=card]:w-full min-[1400px]:columns-4! min-[1900px]:columns-5! md:max-w-3xl md:columns-2 lg:max-w-none lg:columns-3 xl:max-w-[1600px] 2xl:max-w-[1900px]"
+      className="relative z-10 mx-auto w-full min-[1400px]:max-w-[1600px] min-[1900px]:max-w-[1900px] md:max-w-3xl lg:max-w-none xl:max-w-[1600px] 2xl:max-w-[1900px]"
     >
-      <ChartBlock />
-      <LoginBlock />
-      <CompanionBlock />
-      <MediaControlsBlock />
-      <ChatBlock />
-      <UploadBlock />
-      <FilterBlock />
-      <SignupBlock />
-      <TabsSettingsBlock />
-      <MessagesBlock />
-      <ProfileBlock />
-      <TableBlock />
-      <InvoiceBlock />
-      <ProjectBlock />
-      <SecurityBlock />
-      <NotificationSettingsBlock />
-      <AccountSettingsBlock />
+      <PlaygroundGrid mode="showcase">
+        <ChartBlock />
+        <LoginBlock />
+        <CompanionBlock />
+        <MediaControlsBlock />
+        <ChatBlock />
+        <UploadBlock />
+        <FilterBlock />
+        <SignupBlock />
+        <TabsSettingsBlock />
+        <MessagesBlock />
+        <ProfileBlock />
+        <TableBlock />
+        <InvoiceBlock />
+        <ProjectBlock />
+        <SecurityBlock />
+        <NotificationSettingsBlock />
+        <AccountSettingsBlock />
+      </PlaygroundGrid>
     </div>
   );
 }

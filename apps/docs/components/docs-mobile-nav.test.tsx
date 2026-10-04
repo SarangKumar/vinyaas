@@ -60,9 +60,10 @@ describe("DocsMobileNav", () => {
       "href",
       "/introduction",
     );
-    expect(
-      within(dialog).getByRole("link", { name: "Home" }),
-    ).toHaveAttribute("href", "/");
+    expect(within(dialog).getByRole("link", { name: "Home" })).toHaveAttribute(
+      "href",
+      "/",
+    );
     expect(
       screen.getAllByRole("link", { name: "Components" })[0],
     ).toHaveAttribute("href", "/components");
@@ -76,6 +77,19 @@ describe("DocsMobileNav", () => {
     expect(screen.getByText("COMPANION")).toBeInTheDocument();
     expect(screen.getByText("GET STARTED")).toBeInTheDocument();
     expect(screen.getByText("SECTIONS")).toBeInTheDocument();
+    // Companion sits after the Components name list, before Get Started.
+    expect(
+      screen
+        .getByText("COMPONENTS")
+        .compareDocumentPosition(screen.getByText("COMPANION")) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      screen
+        .getByText("COMPANION")
+        .compareDocumentPosition(screen.getByText("GET STARTED")) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     expect(screen.queryByText("RESOURCES")).toBeNull();
     expect(screen.queryByRole("link", { name: "Next.js" })).toBeNull();
     expect(screen.getAllByRole("link", { name: "CLI" })[0]).toHaveAttribute(

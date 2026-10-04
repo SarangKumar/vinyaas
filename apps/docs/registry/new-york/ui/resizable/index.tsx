@@ -15,20 +15,17 @@ export type ResizablePanelGroupProps = GroupProps;
 
 /**
  * Resizable panel group backed by `react-resizable-panels`.
- * Use `orientation` to match ARIA/`Separator` conventions in Vinyaas.
+ * Orientation comes from the library; vertical groups stack via ARIA.
  */
 export function ResizablePanelGroup({
   className,
-  orientation = "horizontal",
   ...props
 }: ResizablePanelGroupProps) {
   return (
     <Group
       data-slot="resizable-panel-group"
-      orientation={orientation}
       className={cn(
-        "flex h-full w-full",
-        orientation === "vertical" && "flex-col",
+        "flex h-full w-full aria-[orientation=vertical]:flex-col",
         className,
       )}
       {...props}
@@ -55,10 +52,11 @@ export type ResizableHandleProps = PanelSeparatorProps & {
 
 /**
  * Keyboard-accessible resize handle (`role="separator"` from the library).
- * Provide an `aria-label` when neighboring panels are not otherwise named.
  *
- * In a horizontal group the handle reports `aria-orientation="vertical"`.
- * In a vertical group the handle reports `aria-orientation="horizontal"`.
+ * Default styles size a vertical bar (horizontal group). When the separator
+ * reports `aria-orientation="horizontal"` (vertical group), width/height and
+ * the hit-target `::after` flip. Height comes from the flex group stretch —
+ * do not force `h-full` on the vertical bar.
  */
 export function ResizableHandle({
   className,
@@ -71,20 +69,16 @@ export function ResizableHandle({
       data-slot="resizable-handle"
       disabled={disabled}
       className={cn(
-        "bg-border focus-visible:ring-ring relative flex items-center justify-center",
-        "focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
-        // Horizontal group → vertical separator bar
-        "aria-[orientation=vertical]:h-full aria-[orientation=vertical]:w-px",
-        "aria-[orientation=vertical]:after:absolute aria-[orientation=vertical]:after:inset-y-0",
-        "aria-[orientation=vertical]:after:left-1/2 aria-[orientation=vertical]:after:w-4",
-        "aria-[orientation=vertical]:after:-translate-x-1/2",
-        // Vertical group → horizontal separator bar
+        "bg-border focus-visible:ring-ring relative flex w-px items-center justify-center",
+        "after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2",
+        "focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:outline-none",
         "aria-[orientation=horizontal]:h-px aria-[orientation=horizontal]:w-full",
-        "aria-[orientation=horizontal]:after:absolute aria-[orientation=horizontal]:after:inset-x-0",
-        "aria-[orientation=horizontal]:after:top-1/2 aria-[orientation=horizontal]:after:h-4",
+        "aria-[orientation=horizontal]:after:left-0 aria-[orientation=horizontal]:after:h-1",
+        "aria-[orientation=horizontal]:after:w-full aria-[orientation=horizontal]:after:translate-x-0",
         "aria-[orientation=horizontal]:after:-translate-y-1/2",
         "data-[separator=active]:bg-ring",
         "motion-reduce:transition-none",
+        "[&[aria-orientation=horizontal]>div]:rotate-90",
         disabled && "pointer-events-none opacity-50",
         className,
       )}

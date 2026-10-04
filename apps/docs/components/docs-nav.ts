@@ -106,6 +106,14 @@ export const docsNav: DocsNavGroup[] = [
     ],
   },
   {
+    title: "COMPONENTS",
+    label: true,
+    layout: "names",
+    items: [...components]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(componentNavItem),
+  },
+  {
     title: "COMPANION",
     label: true,
     items: [
@@ -118,14 +126,6 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Examples", href: companionExamplesPath },
       { title: "Gallery", href: companionGalleryPath },
     ],
-  },
-  {
-    title: "COMPONENTS",
-    label: true,
-    layout: "names",
-    items: [...components]
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(componentNavItem),
   },
   {
     title: "GET STARTED",

@@ -151,4 +151,80 @@ describe("Resizable", () => {
     after.focus();
     expect(after).toHaveFocus();
   });
+
+  it("applies orientation-specific sizing classes on handles", () => {
+    render(<HorizontalLayout />);
+
+    const verticalBar = screen.getByRole("separator", {
+      name: "Resize sidebar",
+    });
+    expect(verticalBar).toHaveAttribute("aria-orientation", "vertical");
+    expect(verticalBar.className).toMatch(/\bw-px\b/);
+    expect(verticalBar.className).not.toMatch(/\bh-full\b/);
+    expect(verticalBar.className).toMatch(/items-center/);
+    expect(verticalBar.className).toMatch(/justify-center/);
+    expect(verticalBar.querySelector('[aria-hidden="true"]')).toBeTruthy();
+  });
+
+  it("flips handle classes for vertical panel groups", () => {
+    render(<VerticalLayout />);
+
+    const horizontalBar = screen.getByRole("separator", {
+      name: "Resize header",
+    });
+    expect(horizontalBar).toHaveAttribute("aria-orientation", "horizontal");
+    expect(horizontalBar.className).toMatch(
+      /aria-\[orientation=horizontal\]:h-px/,
+    );
+    expect(horizontalBar.className).toMatch(
+      /aria-\[orientation=horizontal\]:w-full/,
+    );
+  });
+
+  it("renders nested horizontal and vertical groups with oriented handles", () => {
+    render(
+      <div style={{ width: 384, height: 200 }}>
+        <ResizablePanelGroup orientation="horizontal" className="max-w-sm">
+          <ResizablePanel defaultSize="50%" id="one">
+            <div>One</div>
+          </ResizablePanel>
+          <ResizableHandle withHandle aria-label="Resize outer" />
+          <ResizablePanel defaultSize="50%" id="nested">
+            <ResizablePanelGroup orientation="vertical">
+              <ResizablePanel defaultSize="25%" id="two">
+                <div>Two</div>
+              </ResizablePanel>
+              <ResizableHandle withHandle aria-label="Resize inner" />
+              <ResizablePanel defaultSize="75%" id="three">
+                <div>Three</div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>,
+    );
+
+    expect(screen.getByText("One")).toBeInTheDocument();
+    expect(screen.getByText("Two")).toBeInTheDocument();
+    expect(screen.getByText("Three")).toBeInTheDocument();
+
+    const outer = screen.getByRole("separator", { name: "Resize outer" });
+    const inner = screen.getByRole("separator", { name: "Resize inner" });
+
+    expect(outer).toHaveAttribute("aria-orientation", "vertical");
+    expect(outer.className).toMatch(/\bw-px\b/);
+    expect(outer.querySelector('[aria-hidden="true"]')).toBeTruthy();
+
+    expect(inner).toHaveAttribute("aria-orientation", "horizontal");
+    expect(inner.className).toMatch(/aria-\[orientation=horizontal\]:w-full/);
+    expect(inner.querySelector('[aria-hidden="true"]')).toBeTruthy();
+
+    const groups = document.querySelectorAll(
+      '[data-slot="resizable-panel-group"]',
+    );
+    expect(groups).toHaveLength(2);
+    expect(groups[1]?.className).toMatch(
+      /aria-\[orientation=vertical\]:flex-col/,
+    );
+  });
 });

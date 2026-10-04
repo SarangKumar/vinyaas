@@ -42,7 +42,7 @@ export function ThemesPlayground() {
       <PlaygroundContent>
         <PlaygroundHeader
           title="Themes"
-          description="Pick a preset and radius, then explore real compositions. Changes stay scoped to this playground."
+          description="Pick a preset and radius, then preview real UI. Changes stay on this page."
         />
         <ThemeControls
           presetId={presetId}

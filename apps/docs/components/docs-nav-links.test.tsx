@@ -47,7 +47,10 @@ describe("DocsNavLinks", () => {
       "/",
     );
 
-    const companionStart = titles.indexOf("Changelog") + 1;
+    // Companion follows the COMPONENTS name list (after Accordion…Typography).
+    const companionStart = titles.lastIndexOf("Introduction");
+    expect(companionStart).toBeGreaterThan(titles.indexOf("Changelog"));
+    expect(titles.indexOf("Accordion")).toBeLessThan(companionStart);
     expect(titles.slice(companionStart, companionStart + 8)).toEqual([
       "Introduction",
       "Installation",
@@ -59,11 +62,14 @@ describe("DocsNavLinks", () => {
       "Gallery",
     ]);
     expect(
-      within(nav).getAllByRole("link", { name: /Introduction/i })[1],
+      within(nav)
+        .getAllByRole("link", { name: /Introduction/i })
+        .at(-1),
     ).toHaveAttribute("href", "/companion");
     expect(
       within(nav)
-        .getAllByRole("link", { name: /Introduction/i })[1]
+        .getAllByRole("link", { name: /Introduction/i })
+        .at(-1)
         ?.querySelector('[data-nav-indicator="beta"]'),
     ).toBeTruthy();
     expect(
