@@ -1,0 +1,16 @@
+{
+  "$schema": "https://vinyaas.vercel.app/r/schema/registry-item.json",
+  "name": "empty-state",
+  "type": "registry:ui",
+  "description": "A composable empty state for lists, tables, and dashboard panels.",
+  "dependencies": ["clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "ui/empty-state/index.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst emptySize = {\n  default: \"gap-3 p-8\",\n  sm: \"gap-2 p-5\",\n} as const;\n\nexport type EmptySize = keyof typeof emptySize;\n\n/**\n * Compact empty-state shell for lists, tables, and dashboard panels.\n */\nexport function Empty({\n  className,\n  size = \"default\",\n  ...props\n}: React.ComponentProps<\"div\"> & {\n  size?: EmptySize;\n}) {\n  return (\n    <div\n      data-slot=\"empty\"\n      data-size={size}\n      role=\"status\"\n      className={cn(\n        \"border-border bg-card text-card-foreground flex w-full min-w-0 flex-col items-center justify-center rounded-md border border-dashed text-center\",\n        emptySize[size],\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function EmptyIcon({\n  className,\n  ...props\n}: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"empty-icon\"\n      className={cn(\n        \"bg-muted text-muted-foreground mb-1 flex size-10 items-center justify-center rounded-full [&_svg]:size-5\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function EmptyTitle({\n  className,\n  ...props\n}: React.ComponentProps<\"h3\">) {\n  return (\n    <h3\n      data-slot=\"empty-title\"\n      className={cn(\n        \"text-foreground min-w-0 text-sm leading-none font-semibold tracking-tight\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function EmptyDescription({\n  className,\n  ...props\n}: React.ComponentProps<\"p\">) {\n  return (\n    <p\n      data-slot=\"empty-description\"\n      className={cn(\n        \"text-muted-foreground max-w-sm min-w-0 text-sm leading-5 text-pretty\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function EmptyActions({\n  className,\n  ...props\n}: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"empty-actions\"\n      className={cn(\n        \"mt-1 flex flex-wrap items-center justify-center gap-2\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "docs": "https://vinyaas.vercel.app/components/empty-state",
+  "category": "feedback"
+}

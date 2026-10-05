@@ -81,6 +81,16 @@ describe("component catalogs", () => {
     expect(getComponentCatalog("feedback")?.components).toContain("sheet");
     expect(getComponentCatalog("application")?.components).toContain("sheet");
     expect(getComponentCatalog("navigation")?.components).toContain("sheet");
+    expect(plannedCatalogGaps.feedback).not.toContain("empty-state");
+    expect(getComponentCatalog("feedback")?.components).toContain(
+      "empty-state",
+    );
+    expect(getComponentCatalog("dashboard")?.components).toContain(
+      "empty-state",
+    );
+    expect(getComponentCatalog("form")?.components).toContain("calendar");
+    expect(getComponentCatalog("form")?.components).toContain("date-picker");
+    expect(getComponentCatalog("form")?.components).toContain("combobox");
     expect(plannedCatalogGaps.navigation).not.toContain("navigation-menu");
     expect(getComponentCatalog("navigation")?.components).toContain(
       "navigation-menu",

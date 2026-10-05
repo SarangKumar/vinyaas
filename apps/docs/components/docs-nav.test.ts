@@ -151,8 +151,12 @@ describe("documentation navigation", () => {
         .map((item) => item.title),
     ).toEqual([
       "Alert Dialog",
+      "Calendar",
+      "Combobox",
       "Data Table",
+      "Date Picker",
       "Drag & Drop",
+      "Empty State",
       "Navigation Menu",
       "Pagination",
       "Resizable",

@@ -33,6 +33,9 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "textarea",
       "native-select",
       "select",
+      "combobox",
+      "calendar",
+      "date-picker",
       "checkbox",
       "radio-group",
       "switch",
@@ -60,6 +63,10 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "resizable",
       "sidebar",
       "drag-and-drop",
+      "empty-state",
+      "calendar",
+      "date-picker",
+      "combobox",
     ],
   },
   {
@@ -71,6 +78,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "tabs",
       "dropdown-menu",
       "command",
+      "combobox",
       "sidebar",
       "sheet",
       "navigation-menu",
@@ -91,6 +99,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "skeleton",
       "progress",
       "spinner",
+      "empty-state",
     ],
   },
   {
@@ -99,6 +108,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
     description: "A starter set of application-shell and content primitives.",
     components: [
       "command",
+      "combobox",
       "alert-dialog",
       "dialog",
       "sheet",
@@ -115,6 +125,9 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "drag-and-drop",
       "pagination",
       "data-table",
+      "calendar",
+      "date-picker",
+      "empty-state",
     ],
   },
 ] as const;
@@ -137,13 +150,13 @@ export function listComponentCatalogIds(): string[] {
  * form: form
  * dashboard: —
  * navigation: —
- * feedback: empty-state
+ * feedback: —
  * application: —
  */
 export const plannedCatalogGaps: Readonly<Record<string, readonly string[]>> = {
   form: ["form"],
   dashboard: [],
   navigation: [],
-  feedback: ["empty-state"],
+  feedback: [],
   application: [],
 };

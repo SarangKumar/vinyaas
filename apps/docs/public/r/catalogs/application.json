@@ -7,6 +7,7 @@
       "description": "A starter set of application-shell and content primitives.",
       "components": [
         "command",
+        "combobox",
         "alert-dialog",
         "dialog",
         "sheet",
@@ -22,7 +23,10 @@
         "sidebar",
         "drag-and-drop",
         "pagination",
-        "data-table"
+        "data-table",
+        "calendar",
+        "date-picker",
+        "empty-state"
       ]
     }
   ]

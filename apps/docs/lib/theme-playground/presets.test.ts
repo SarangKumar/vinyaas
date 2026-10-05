@@ -39,10 +39,10 @@ describe("theme presets", () => {
   it("exposes unique curated presets including Red", () => {
     expect(themePresets.map((preset) => preset.label)).toEqual([
       "Default",
-      "Yellow",
+      "Red",
       "Rose",
       "Orange",
-      "Red",
+      "Yellow",
       "Green",
       "Violet",
       "Blue",

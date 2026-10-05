@@ -20,7 +20,11 @@
         "separator",
         "resizable",
         "sidebar",
-        "drag-and-drop"
+        "drag-and-drop",
+        "empty-state",
+        "calendar",
+        "date-picker",
+        "combobox"
       ]
     }
   ]

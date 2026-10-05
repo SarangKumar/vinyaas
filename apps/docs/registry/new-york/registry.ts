@@ -645,6 +645,67 @@ const items: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "calendar",
+    type: "registry:ui",
+    description:
+      "An accessible month calendar for selecting and displaying dates.",
+    dependencies: [
+      "react-day-picker",
+      "date-fns",
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge",
+    ],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/calendar/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "date-picker",
+    type: "registry:ui",
+    description:
+      "A button-triggered calendar popover for choosing a single date.",
+    dependencies: ["date-fns", "clsx", "tailwind-merge"],
+    registryDependencies: ["button", "calendar", "popover"],
+    files: [
+      {
+        path: "ui/date-picker/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "combobox",
+    type: "registry:ui",
+    description:
+      "A searchable selection control for filtering and choosing from options.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["button", "command", "popover"],
+    files: [
+      {
+        path: "ui/combobox/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "empty-state",
+    type: "registry:ui",
+    description:
+      "A composable empty state for lists, tables, and dashboard panels.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/empty-state/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
 
 export const registry: readonly RegistryItem[] = items.map((item) => {

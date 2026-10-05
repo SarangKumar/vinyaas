@@ -23,8 +23,12 @@ describe("components catalog", () => {
     const newlyIntroduced = newComponents();
     expect(newlyIntroduced.map((component) => component.slug).sort()).toEqual([
       "alert-dialog",
+      "calendar",
+      "combobox",
       "data-table",
+      "date-picker",
       "drag-and-drop",
+      "empty-state",
       "navigation-menu",
       "pagination",
       "resizable",

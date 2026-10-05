@@ -32,15 +32,19 @@ describe("component metadata", () => {
       "Badge",
       "Breadcrumb",
       "Button",
+      "Calendar",
       "Card",
       "Chart",
       "Checkbox",
+      "Combobox",
       "Command",
       "Data Table",
+      "Date Picker",
       "Dialog",
       "Drag & Drop",
       "Drawer",
       "Dropdown Menu",
+      "Empty State",
       "File Upload",
       "Hover Card",
       "Input",
@@ -97,8 +101,12 @@ describe("component metadata", () => {
         .sort(),
     ).toEqual([
       "alert-dialog",
+      "calendar",
+      "combobox",
       "data-table",
+      "date-picker",
       "drag-and-drop",
+      "empty-state",
       "navigation-menu",
       "pagination",
       "resizable",
@@ -109,15 +117,19 @@ describe("component metadata", () => {
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 15);
+    ).toBe(components.length - 19);
     expect(
       newComponents()
         .map((component) => component.slug)
         .sort(),
     ).toEqual([
       "alert-dialog",
+      "calendar",
+      "combobox",
       "data-table",
+      "date-picker",
       "drag-and-drop",
+      "empty-state",
       "navigation-menu",
       "pagination",
       "resizable",

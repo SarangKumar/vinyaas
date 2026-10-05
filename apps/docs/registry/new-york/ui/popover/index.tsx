@@ -112,7 +112,7 @@ export function PopoverTrigger({
   return React.cloneElement(children, {
     "aria-expanded": open,
     "aria-controls": open ? contentId : undefined,
-    "aria-haspopup": "dialog",
+    "aria-haspopup": children.props["aria-haspopup"] ?? "dialog",
     ref: (node: HTMLElement | null) => {
       triggerRef.current = node;
       assignRef(children.props.ref, node);

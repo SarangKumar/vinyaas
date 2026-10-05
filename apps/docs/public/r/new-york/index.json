@@ -65,6 +65,13 @@
       "category": "forms"
     },
     {
+      "name": "calendar",
+      "type": "registry:ui",
+      "description": "An accessible month calendar for selecting and displaying dates.",
+      "docs": "https://vinyaas.vercel.app/components/calendar",
+      "category": "forms"
+    },
+    {
       "name": "card",
       "type": "registry:ui",
       "description": "A bordered container for related content.",
@@ -86,6 +93,13 @@
       "category": "forms"
     },
     {
+      "name": "combobox",
+      "type": "registry:ui",
+      "description": "A searchable selection control for filtering and choosing from options.",
+      "docs": "https://vinyaas.vercel.app/components/combobox",
+      "category": "forms"
+    },
+    {
       "name": "command",
       "type": "registry:ui",
       "description": "A searchable list for pages and actions.",
@@ -98,6 +112,13 @@
       "description": "A dashboard table with search, sorting, selection, column visibility, and pagination.",
       "docs": "https://vinyaas.vercel.app/components/data-table",
       "category": "data-display"
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "description": "A button-triggered calendar popover for choosing a single date.",
+      "docs": "https://vinyaas.vercel.app/components/date-picker",
+      "category": "forms"
     },
     {
       "name": "dialog",
@@ -125,6 +146,13 @@
       "type": "registry:ui",
       "description": "A menu of actions anchored to a trigger control.",
       "docs": "https://vinyaas.vercel.app/components/dropdown-menu",
+      "category": "feedback"
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "description": "A composable empty state for lists, tables, and dashboard panels.",
+      "docs": "https://vinyaas.vercel.app/components/empty-state",
       "category": "feedback"
     },
     {

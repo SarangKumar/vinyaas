@@ -49,10 +49,18 @@ describe("homepage showcase blocks", () => {
     expect(showcaseBlockIds()).toContain("data-table");
     expect(showcaseBlockIds()).toContain("alert-dialog");
     expect(showcaseBlockIds()).toContain("sheet");
+    expect(showcaseBlockIds()).toContain("calendar");
+    expect(showcaseBlockIds()).toContain("date-picker");
+    expect(showcaseBlockIds()).toContain("combobox");
+    expect(showcaseBlockIds()).toContain("empty-state");
     expect(showcaseBlockIds()).not.toContain("project");
     expect(showcaseBlockIds()).not.toContain("notifications");
     expect(showcaseBlockIds()).not.toContain("invoice");
     expect(showcaseBlockIds()).not.toContain("messages");
+    expect(showcaseBlockIds()).not.toContain("login");
+    expect(showcaseBlockIds()).not.toContain("feedback");
+    expect(showcaseBlockIds()).not.toContain("security");
+    expect(showcaseBlockIds()).not.toContain("profile");
 
     const excluded = new Set<string>(homepageExcludedNewComponents);
     for (const component of newComponents()) {

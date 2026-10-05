@@ -1,22 +1,22 @@
 import type { ComponentType } from "react";
 
 import { AlertDialogBlock } from "@/app/home/blocks/alert-dialog-block";
+import { CalendarBlock } from "@/app/home/blocks/calendar-block";
 import { ChartBlock } from "@/app/home/blocks/chart-block";
 import { ChatBlock } from "@/app/home/blocks/chat-block";
+import { ComboboxBlock } from "@/app/home/blocks/combobox-block";
 import { CommandSearchBlock } from "@/app/home/blocks/command-search-block";
 import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { DataTableBlock } from "@/app/home/blocks/data-table-block";
-import { FeedbackBlock } from "@/app/home/blocks/feedback-block";
+import { DatePickerBlock } from "@/app/home/blocks/date-picker-block";
+import { EmptyStateBlock } from "@/app/home/blocks/empty-state-block";
 import { FilterBlock } from "@/app/home/blocks/filter-block";
-import { LoginBlock } from "@/app/home/blocks/login-block";
 import { SelectBlock } from "@/app/home/blocks/select-block";
 import { OtpBlock } from "@/app/home/blocks/otp-block";
 import { PaginationBlock } from "@/app/home/blocks/pagination-block";
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
-import { ProfileBlock } from "@/app/home/blocks/profile-block";
 import { DragAndDropBlock } from "@/app/home/blocks/drag-and-drop-block";
 import { ResizableBlock } from "@/app/home/blocks/resizable-block";
-import { SecurityBlock } from "@/app/home/blocks/security-block";
 import { SheetBlock } from "@/app/home/blocks/sheet-block";
 import { TableBlock } from "@/app/home/blocks/table-block";
 import { TabsSettingsBlock } from "@/app/home/blocks/tabs-settings-block";
@@ -43,7 +43,9 @@ import { components } from "@/components/component-meta";
  * like Pinterest without a spare column wrapping underneath.
  *
  * v1.3.0 note: Sheet replaced Invoice; Alert Dialog replaced Notifications;
- * Data Table replaced Project. Navigation Menu / Sidebar stay docs-only.
+ * Data Table replaced Project. Calendar, Date Picker, Combobox, and Empty
+ * State replaced Login, Feedback, Security, and Profile. Navigation Menu /
+ * Sidebar stay docs-only.
  */
 
 /** Shell / nav primitives that are too dense for homepage masonry cards. */
@@ -97,6 +99,26 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     Block: DataTableBlock,
   },
   {
+    id: "calendar",
+    components: ["calendar"],
+    Block: CalendarBlock,
+  },
+  {
+    id: "date-picker",
+    components: ["date-picker", "label"],
+    Block: DatePickerBlock,
+  },
+  {
+    id: "combobox",
+    components: ["combobox", "label"],
+    Block: ComboboxBlock,
+  },
+  {
+    id: "empty-state",
+    components: ["empty-state", "button"],
+    Block: EmptyStateBlock,
+  },
+  {
     id: "resizable",
     components: ["resizable"],
     Block: ResizableBlock,
@@ -137,11 +159,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     ],
     Block: PrimitivesKitBlock,
   },
-  {
-    id: "login",
-    components: ["button", "input", "checkbox", "label"],
-    Block: LoginBlock,
-  },
   { id: "companion", components: [], Block: CompanionBlock },
   {
     id: "command",
@@ -167,21 +184,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "filter",
     components: ["drawer", "button", "badge"],
     Block: FilterBlock,
-  },
-  {
-    id: "feedback",
-    components: ["textarea", "button", "label", "toast"],
-    Block: FeedbackBlock,
-  },
-  {
-    id: "security",
-    components: ["switch", "checkbox", "button"],
-    Block: SecurityBlock,
-  },
-  {
-    id: "profile",
-    components: ["card", "badge", "button", "avatar", "dropdown-menu"],
-    Block: ProfileBlock,
   },
 ];
 

@@ -14,7 +14,8 @@
         "toast",
         "skeleton",
         "progress",
-        "spinner"
+        "spinner",
+        "empty-state"
       ]
     }
   ]

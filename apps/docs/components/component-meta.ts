@@ -88,6 +88,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "0.1",
   },
   {
+    name: "Calendar",
+    slug: "calendar",
+    description: "An accessible month calendar for selecting dates.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Card",
     slug: "card",
     description: "A bordered container for related content.",
@@ -106,6 +112,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Combobox",
+    slug: "combobox",
+    description: "A searchable control for filtering and choosing options.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Command",
     slug: "command",
     description: "A searchable list of actions and pages.",
@@ -116,6 +128,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     slug: "data-table",
     description:
       "A dashboard table with search, sorting, selection, and pagination.",
+    introducedIn: "1.3.0",
+  },
+  {
+    name: "Date Picker",
+    slug: "date-picker",
+    description: "A calendar popover for choosing a single date.",
     introducedIn: "1.3.0",
   },
   {
@@ -142,6 +160,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     slug: "dropdown-menu",
     description: "A menu of actions anchored to a button.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Empty State",
+    slug: "empty-state",
+    description: "A composable empty state for lists and dashboard panels.",
+    introducedIn: "1.3.0",
   },
   {
     name: "File Upload",

@@ -17,6 +17,21 @@ import {
   type ChartConfig,
 } from "@/registry/new-york/ui/chart";
 import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Calendar } from "@/registry/new-york/ui/calendar";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxTrigger,
+} from "@/registry/new-york/ui/combobox";
+import { DatePicker } from "@/registry/new-york/ui/date-picker";
+import {
+  Empty,
+  EmptyActions,
+  EmptyDescription,
+  EmptyIcon,
+  EmptyTitle,
+} from "@/registry/new-york/ui/empty-state";
 import { Input } from "@/registry/new-york/ui/input";
 import { Kbd } from "@/registry/new-york/ui/kbd";
 import { Label } from "@/registry/new-york/ui/label";
@@ -637,6 +652,84 @@ export const themeExamples: ThemeExample[] = [
           </Button>
         </div>
       </div>
+    ),
+  },
+  {
+    id: "calendar",
+    title: "Calendar",
+    description: "Selected day, today, and month navigation.",
+    preview: (
+      <Calendar
+        mode="single"
+        defaultMonth={new Date(2026, 2, 1)}
+        selected={new Date(2026, 2, 12)}
+        className="rounded-md border"
+      />
+    ),
+  },
+  {
+    id: "date-picker",
+    title: "Date picker",
+    description: "Trigger showing a selected deployment date.",
+    preview: (
+      <div className="grid min-w-0 gap-2">
+        <Label htmlFor="theme-deploy-date">Deployment date</Label>
+        <DatePicker
+          id="theme-deploy-date"
+          defaultValue={new Date(2026, 3, 8)}
+          placeholder="Pick a date"
+        />
+      </div>
+    ),
+  },
+  {
+    id: "combobox",
+    title: "Combobox",
+    description: "Searchable assignee filter.",
+    preview: (
+      <div className="grid min-w-0 gap-2">
+        <Label htmlFor="theme-assignee">Assignee</Label>
+        <Combobox defaultValue="maya">
+          <ComboboxTrigger id="theme-assignee" placeholder="Select assignee" />
+          <ComboboxContent searchPlaceholder="Search people…">
+            <ComboboxItem value="maya">Maya Chen</ComboboxItem>
+            <ComboboxItem value="jordan">Jordan Lee</ComboboxItem>
+            <ComboboxItem value="sam">Sam Rivera</ComboboxItem>
+          </ComboboxContent>
+        </Combobox>
+      </div>
+    ),
+  },
+  {
+    id: "empty-state",
+    title: "Empty state",
+    description: "Icon, copy, and primary action.",
+    preview: (
+      <Empty size="sm" className="min-w-0">
+        <EmptyIcon>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="size-5"
+          >
+            <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+          </svg>
+        </EmptyIcon>
+        <EmptyTitle>No projects yet</EmptyTitle>
+        <EmptyDescription>
+          Create your first project to start organizing work.
+        </EmptyDescription>
+        <EmptyActions>
+          <Button type="button" size="sm">
+            Create project
+          </Button>
+        </EmptyActions>
+      </Empty>
     ),
   },
 ];

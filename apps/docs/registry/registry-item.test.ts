@@ -830,7 +830,40 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).resolves.toBeUndefined();
     expect(newYork.some((item) => item.name === "select")).toBe(true);
-    expect(newYork).toHaveLength(48);
+    expect(newYork).toHaveLength(52);
+  });
+
+  it("publishes Calendar, Date Picker, Combobox, and Empty State", async () => {
+    for (const name of [
+      "calendar",
+      "date-picker",
+      "combobox",
+      "empty-state",
+    ] as const) {
+      const outputPath = path.join(docsRoot, `public/r/new-york/${name}.json`);
+      await expect(fs.access(outputPath)).resolves.toBeUndefined();
+      expect(newYork.some((item) => item.name === name)).toBe(true);
+    }
+
+    const calendar = newYork.find((item) => item.name === "calendar");
+    expect(calendar?.dependencies).toEqual(
+      expect.arrayContaining(["react-day-picker", "date-fns"]),
+    );
+    expect(calendar?.registryDependencies).toEqual(["button"]);
+
+    const datePicker = newYork.find((item) => item.name === "date-picker");
+    expect(datePicker?.registryDependencies).toEqual([
+      "button",
+      "calendar",
+      "popover",
+    ]);
+
+    const combobox = newYork.find((item) => item.name === "combobox");
+    expect(combobox?.registryDependencies).toEqual([
+      "button",
+      "command",
+      "popover",
+    ]);
   });
 
   it("matches the json schema item types", () => {

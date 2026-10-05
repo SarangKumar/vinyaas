@@ -148,7 +148,16 @@ describe("homepage", () => {
     expect(screen.getAllByText("Outline").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Preview").length).toBeGreaterThan(0);
     expect(
-      screen.getByRole("heading", { name: "Sign in" }),
+      screen.getByRole("heading", { name: "Schedule" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Deadline" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Assignee" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Empty workspace" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Search" })).toBeInTheDocument();
     expect(
@@ -159,9 +168,6 @@ describe("homepage", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Verify email" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Send feedback" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Storefront" }),
@@ -182,11 +188,15 @@ describe("homepage", () => {
       screen.getByRole("heading", { name: "Workspace settings" }),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("button", { name: /Continue with Google/i }).length,
-    ).toBeGreaterThan(0);
+      screen.getByRole("button", { name: /pick a deadline/i }),
+    ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("button", { name: /Continue with GitHub/i }).length,
-    ).toBeGreaterThan(0);
+      screen.getByRole("combobox", { name: /maya chen|select assignee/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /create project/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("grid")).toBeInTheDocument();
 
     fireEvent.change(screen.getByRole("textbox", { name: "Search projects" }), {
       target: { value: "Priya" },
