@@ -24,7 +24,7 @@ export function SheetBlock() {
   return (
     <PlayBlock
       title="Sheet"
-      description="Edit project settings in a side panel without leaving the page."
+      description="Slide in settings without leaving the page."
     >
       <div className="border-border flex items-center justify-between gap-3 rounded-lg border p-3">
         <div className="min-w-0">
@@ -43,7 +43,7 @@ export function SheetBlock() {
           <SheetHeader>
             <SheetTitle>Project settings</SheetTitle>
             <SheetDescription>
-              Update the project name and alerts.
+              Update the project name and deploy alerts.
             </SheetDescription>
           </SheetHeader>
           <div className="grid gap-2">

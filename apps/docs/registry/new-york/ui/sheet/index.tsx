@@ -204,6 +204,8 @@ export type SheetContentProps = React.HTMLAttributes<HTMLDivElement> & {
   showCloseButton?: boolean;
 };
 
+const SHEET_EXIT_MS = 220;
+
 export function SheetContent({
   className,
   children,
@@ -215,10 +217,12 @@ export function SheetContent({
   const contentRef = useRef<HTMLDivElement>(null);
   const [present, setPresent] = useState(open);
   const [exiting, setExiting] = useState(false);
+  const presentRef = useRef(open);
 
   useEffect(() => {
     if (open) {
       const timeout = window.setTimeout(() => {
+        presentRef.current = true;
         setPresent(true);
         setExiting(false);
       }, 0);
@@ -226,12 +230,18 @@ export function SheetContent({
       return () => window.clearTimeout(timeout);
     }
 
+    // Already unmounted — do not flip into an exit class before the first open.
+    if (!presentRef.current) {
+      return;
+    }
+
     const hide = window.setTimeout(
       () => {
+        presentRef.current = false;
         setPresent(false);
         setExiting(false);
       },
-      reducedMotion() ? 0 : 200,
+      reducedMotion() ? 0 : SHEET_EXIT_MS,
     );
     const mark = window.setTimeout(() => setExiting(true), 0);
 

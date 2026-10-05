@@ -10,6 +10,7 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 import {
   BasicSheetDemo,
   DashboardSheetDemo,
+  FiltersSheetDemo,
   MobileNavSheetDemo,
   SettingsSheetDemo,
   SidesSheetDemo,
@@ -18,8 +19,11 @@ import {
 export const metadata: Metadata = componentPageMetadata("sheet");
 
 const usage = `import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -28,21 +32,28 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export function ProjectSettingsSheet() {
+export function InviteSheet() {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button variant="outline">Open</Button>
+        <Button variant="outline">Invite teammate</Button>
       </SheetTrigger>
       <SheetContent side="right">
         <SheetHeader>
-          <SheetTitle>Project settings</SheetTitle>
+          <SheetTitle>Invite to workspace</SheetTitle>
           <SheetDescription>
-            Manage the settings for this project.
+            Send an email invite. Members can join projects after they accept.
           </SheetDescription>
         </SheetHeader>
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" type="email" placeholder="priya@company.com" />
+        </div>
         <SheetFooter>
-          <Button>Save changes</Button>
+          <SheetClose>
+            <Button variant="outline">Cancel</Button>
+          </SheetClose>
+          <Button>Send invite</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -89,22 +100,25 @@ const api: ApiRow[] = [
 const examples: ComponentExample[] = [
   {
     id: "basic",
-    title: "Basic",
+    title: "Invite teammate",
     description:
-      "A right-side sheet with title, description, and footer actions.",
+      "A right sheet for a short invite form with role selection and footer actions.",
     preview: <BasicSheetDemo />,
     code: usage,
   },
   {
     id: "sides",
     title: "Sides",
-    description: "Sheets can slide in from any edge.",
+    description:
+      "Each edge supports a different workflow—profile, docs, status, and cart.",
     preview: <SidesSheetDemo />,
     code: `import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -113,21 +127,25 @@ import {
 export function SheetSides() {
   return (
     <>
-      {(["right", "left", "top", "bottom"] as const).map((side) => (
-        <Sheet key={side}>
-          <SheetTrigger>
-            <Button variant="outline">{side}</Button>
-          </SheetTrigger>
-          <SheetContent side={side}>
-            <SheetHeader>
-              <SheetTitle>{side} sheet</SheetTitle>
-              <SheetDescription>
-                Slides in from the {side} edge.
-              </SheetDescription>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
-      ))}
+      <Sheet>
+        <SheetTrigger>
+          <Button variant="outline">Edit profile</Button>
+        </SheetTrigger>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>Edit profile</SheetTitle>
+            <SheetDescription>
+              Update how your name appears across the workspace.
+            </SheetDescription>
+          </SheetHeader>
+          <SheetFooter>
+            <SheetClose>
+              <Button>Continue</Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+      {/* Also try side="left" | "top" | "bottom" */}
     </>
   );
 }
@@ -135,9 +153,9 @@ export function SheetSides() {
   },
   {
     id: "settings",
-    title: "Settings",
+    title: "Project settings",
     description:
-      "A form sheet composing Label, Input, Select, Switch, and Button.",
+      "A settings form sheet composing Label, Input, Select, Switch, and Button.",
     preview: <SettingsSheetDemo />,
     code: `import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -161,34 +179,22 @@ import {
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 
-export function SettingsSheet() {
+export function ProjectSettingsSheet() {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button variant="outline">Edit settings</Button>
+        <Button variant="outline">Settings</Button>
       </SheetTrigger>
       <SheetContent side="right">
         <SheetHeader>
           <SheetTitle>Project settings</SheetTitle>
           <SheetDescription>
-            Update name, visibility, and notifications.
+            Name, visibility, and deployment alerts.
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-2">
           <Label htmlFor="name">Project name</Label>
           <Input id="name" defaultValue="vinyaas-web" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="visibility">Visibility</Label>
-          <Select defaultValue="private">
-            <SelectTrigger id="visibility">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="private">Private</SelectItem>
-              <SelectItem value="team">Team</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
         <div className="flex items-center justify-between">
           <Label htmlFor="alerts">Deploy alerts</Label>
@@ -208,9 +214,9 @@ export function SettingsSheet() {
   },
   {
     id: "dashboard",
-    title: "Dashboard details",
+    title: "Deployment details",
     description:
-      "Selecting a project opens a sheet with status, metadata, and actions.",
+      "Inspect a deployment from a list—status, metadata, logs, and promote actions.",
     preview: <DashboardSheetDemo />,
     code: `import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -224,23 +230,26 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-export function ProjectDetailsSheet() {
+export function DeploymentDetailsSheet() {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <Button variant="outline" onClick={() => setOpen(true)}>
-        Details
+        Inspect
       </Button>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="right">
           <SheetHeader>
-            <SheetTitle>Vinyaas</SheetTitle>
-            <SheetDescription>Owned by Sarang.</SheetDescription>
+            <SheetTitle>vinyaas-web</SheetTitle>
+            <SheetDescription>feat: sheet polish</SheetDescription>
           </SheetHeader>
-          <Badge variant="secondary">Active</Badge>
+          <Badge variant="secondary">Ready</Badge>
           <SheetFooter>
-            <Button size="sm">Edit</Button>
+            <Button variant="outline" size="sm">
+              View logs
+            </Button>
+            <Button size="sm">Promote</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -250,9 +259,69 @@ export function ProjectDetailsSheet() {
 `,
   },
   {
+    id: "filters",
+    title: "Filters",
+    description:
+      "A board filter sheet with status, priority checkboxes, and an assigned-to-me switch.",
+    preview: <FiltersSheetDemo />,
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
+
+export function FiltersSheet() {
+  return (
+    <Sheet>
+      <SheetTrigger>
+        <Button variant="outline">
+          Filters
+          <Badge variant="secondary" className="ml-1.5">
+            3
+          </Badge>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right">
+        <SheetHeader>
+          <SheetTitle>Filters</SheetTitle>
+          <SheetDescription>
+            Narrow issues without leaving the board.
+          </SheetDescription>
+        </SheetHeader>
+        <div className="flex items-center gap-2">
+          <Checkbox id="high" defaultChecked />
+          <Label htmlFor="high">High</Label>
+        </div>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="mine">Assigned to me</Label>
+          <Switch id="mine" />
+        </div>
+        <SheetFooter>
+          <SheetClose>
+            <Button>Apply filters</Button>
+          </SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
+`,
+  },
+  {
     id: "mobile-nav",
     title: "Mobile navigation",
-    description: "A left sheet used as a compact app navigation surface.",
+    description:
+      "A left sheet for workspace navigation with sections and a signed-in user footer.",
     preview: <MobileNavSheetDemo />,
     code: `import { Button } from "@/components/ui/button";
 import {
@@ -275,8 +344,10 @@ export function MobileNavSheet() {
       </SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
-          <SheetTitle>Navigation</SheetTitle>
-          <SheetDescription>Jump to a section of the app.</SheetDescription>
+          <SheetTitle>Menu</SheetTitle>
+          <SheetDescription>
+            Navigate the workspace on smaller screens.
+          </SheetDescription>
         </SheetHeader>
         <nav className="flex flex-col gap-1">
           <SheetClose>
@@ -306,10 +377,10 @@ export default async function SheetPage() {
       description="A side modal for settings, details, filters, and mobile navigation."
       overview={
         <p>
-          Sheet is a modal panel anchored to an edge of the viewport. Prefer it
-          for forms, record details, and mobile navigation. Use Dialog for
-          centered tasks, Alert Dialog for destructive confirmations, and Drawer
-          when you already have a filter-style panel pattern.
+          Sheet is a modal panel that slides in from an edge of the viewport.
+          Prefer it for forms, record details, filters, and mobile navigation.
+          Use Dialog for centered tasks and Alert Dialog for destructive
+          confirmations.
         </p>
       }
       install="vinyaas add sheet"
@@ -317,7 +388,8 @@ export default async function SheetPage() {
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
           <code>components/ui/sheet/index.tsx</code> with <code>sheet.css</code>
-          .
+          . Enter and exit motion live in that CSS file and respect reduced
+          motion.
         </p>
       }
       usage={usage}
