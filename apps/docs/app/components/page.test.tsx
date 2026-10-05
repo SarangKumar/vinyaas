@@ -28,6 +28,7 @@ describe("components catalog", () => {
       "pagination",
       "resizable",
       "select",
+      "sheet",
       "sidebar",
     ]);
 

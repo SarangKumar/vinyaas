@@ -451,6 +451,23 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "sheet",
+    type: "registry:ui",
+    description:
+      "A side modal for settings, details, filters, and mobile navigation.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/sheet/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/sheet/sheet.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "chart",
     type: "registry:ui",
     description: "Themed charts for dashboards and product analytics.",

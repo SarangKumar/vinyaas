@@ -249,6 +249,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Sheet",
+    slug: "sheet",
+    description:
+      "A side modal for settings, details, filters, and mobile navigation.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Sidebar",
     slug: "sidebar",
     description:

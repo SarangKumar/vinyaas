@@ -30,6 +30,26 @@ import {
   TableRow,
 } from "@/registry/new-york/ui/table";
 
+function TrashIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={className ?? "size-4"}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 6h18" />
+      <path d="M8 6V4h8v2" />
+      <path d="M19 6l-1 14H6L5 6" />
+      <path d="M10 11v6M14 11v6" />
+    </svg>
+  );
+}
+
 export function BasicAlertDialogDemo() {
   return (
     <AlertDialog>
@@ -148,8 +168,15 @@ export function DashboardAlertDialogDemo() {
                     <TableCell className="text-right">
                       <AlertDialog>
                         <AlertDialogTrigger>
-                          <Button variant="destructive" size="sm">
-                            Delete
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon-sm"
+                            className="sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3"
+                            aria-label={`Delete ${project.name}`}
+                          >
+                            <TrashIcon className="size-4 sm:hidden" />
+                            <span className="hidden sm:inline">Delete</span>
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
@@ -182,5 +209,46 @@ export function DashboardAlertDialogDemo() {
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+export function InPracticeAlertDialogDemo() {
+  return (
+    <div className="border-border flex w-full max-w-sm items-center justify-between gap-3 rounded-lg border p-3 text-left">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium">vinyaas-web</p>
+        <p className="text-muted-foreground text-xs">Production · us-east-1</p>
+      </div>
+      <AlertDialog>
+        <AlertDialogTrigger>
+          <Button
+            type="button"
+            variant="destructive"
+            size="icon-sm"
+            className="sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3"
+            aria-label="Delete vinyaas-web"
+          >
+            <TrashIcon className="size-4 sm:hidden" />
+            <span className="hidden sm:inline">Delete</span>
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete project?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This removes the project and its deployments. This action cannot
+              be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <Badge variant="destructive">vinyaas-web</Badge>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">
+              Delete project
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 }

@@ -2,7 +2,10 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import type { ApiRow } from "@/components/api-table";
-import type { ComponentExample } from "@/components/component-reference";
+import type {
+  ComponentExample,
+  ComponentInPractice,
+} from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
@@ -12,6 +15,7 @@ import {
   ControlledAlertDialogDemo,
   DashboardAlertDialogDemo,
   DestructiveAlertDialogDemo,
+  InPracticeAlertDialogDemo,
 } from "./alert-dialog-demos";
 
 export const metadata: Metadata = componentPageMetadata("alert-dialog");
@@ -219,7 +223,7 @@ export function ControlledAlertDialog() {
     id: "dashboard",
     title: "Projects table",
     description:
-      "A dashboard row action that opens a destructive confirmation before deleting.",
+      "A dashboard row action that opens a destructive confirmation before deleting. Tight layouts use an icon trigger.",
     preview: <DashboardAlertDialogDemo />,
     code: `import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -270,8 +274,26 @@ export function ProjectsTable() {
               <TableCell className="text-right">
                 <AlertDialog>
                   <AlertDialogTrigger>
-                    <Button variant="destructive" size="sm">
-                      Delete
+                    <Button
+                      variant="destructive"
+                      size="icon-sm"
+                      className="sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3"
+                      aria-label="Delete Vinyaas"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        className="size-4 sm:hidden"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M3 6h18" />
+                        <path d="M8 6V4h8v2" />
+                        <path d="M19 6l-1 14H6L5 6" />
+                        <path d="M10 11v6M14 11v6" />
+                      </svg>
+                      <span className="hidden sm:inline">Delete</span>
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -302,6 +324,80 @@ export function ProjectsTable() {
   },
 ];
 
+const inPracticeCode = `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+export function DeleteProjectRow() {
+  return (
+    <div className="border-border flex w-full max-w-sm items-center justify-between gap-3 rounded-lg border p-3">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium">vinyaas-web</p>
+        <p className="text-muted-foreground text-xs">Production · us-east-1</p>
+      </div>
+      <AlertDialog>
+        <AlertDialogTrigger>
+          <Button
+            variant="destructive"
+            size="icon-sm"
+            className="sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3"
+            aria-label="Delete vinyaas-web"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="size-4 sm:hidden"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M3 6h18" />
+              <path d="M8 6V4h8v2" />
+              <path d="M19 6l-1 14H6L5 6" />
+              <path d="M10 11v6M14 11v6" />
+            </svg>
+            <span className="hidden sm:inline">Delete</span>
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete project?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This removes the project and its deployments. This action cannot
+              be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <Badge variant="destructive">vinyaas-web</Badge>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">
+              Delete project
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+`;
+
+const inPractice: ComponentInPractice = {
+  description:
+    "A project row keeps the destructive action behind a confirmation. In tight layouts the trigger collapses to an icon; Cancel stays available and the badge names what will be removed.",
+  preview: <InPracticeAlertDialogDemo />,
+  code: { tsx: inPracticeCode, jsx: inPracticeCode },
+};
+
 export default async function AlertDialogPage() {
   const source = await readFile(
     path.join(process.cwd(), "registry/new-york/ui/alert-dialog/index.tsx"),
@@ -322,6 +418,7 @@ export default async function AlertDialogPage() {
       usage={usage}
       api={api}
       examples={examples}
+      inPractice={inPractice}
       accessibility={
         <ul className="list-disc pl-5">
           <li>
@@ -340,7 +437,7 @@ export default async function AlertDialogPage() {
           </li>
           <li>
             Cancel and Action are keyboard-accessible buttons with clear
-            focus-visible styles.
+            focus-visible styles. Icon-only triggers need an accessible name.
           </li>
         </ul>
       }

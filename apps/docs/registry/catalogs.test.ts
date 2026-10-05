@@ -77,6 +77,10 @@ describe("component catalogs", () => {
     expect(getComponentCatalog("application")?.components).toContain(
       "alert-dialog",
     );
+    expect(plannedCatalogGaps.feedback).not.toContain("sheet");
+    expect(getComponentCatalog("feedback")?.components).toContain("sheet");
+    expect(getComponentCatalog("application")?.components).toContain("sheet");
+    expect(getComponentCatalog("navigation")?.components).toContain("sheet");
     expect(getComponentCatalog("dashboard")?.components).toContain("sidebar");
     expect(getComponentCatalog("navigation")?.components).toContain("sidebar");
     expect(getComponentCatalog("application")?.components).toContain("sidebar");

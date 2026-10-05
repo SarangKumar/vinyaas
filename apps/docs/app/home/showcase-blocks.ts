@@ -7,7 +7,6 @@ import { CommandSearchBlock } from "@/app/home/blocks/command-search-block";
 import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { DataTableBlock } from "@/app/home/blocks/data-table-block";
 import { FilterBlock } from "@/app/home/blocks/filter-block";
-import { InvoiceBlock } from "@/app/home/blocks/invoice-block";
 import { LoginBlock } from "@/app/home/blocks/login-block";
 import { SelectBlock } from "@/app/home/blocks/select-block";
 import { MessagesBlock } from "@/app/home/blocks/messages-block";
@@ -17,6 +16,7 @@ import { ProfileBlock } from "@/app/home/blocks/profile-block";
 import { DragAndDropBlock } from "@/app/home/blocks/drag-and-drop-block";
 import { ResizableBlock } from "@/app/home/blocks/resizable-block";
 import { SecurityBlock } from "@/app/home/blocks/security-block";
+import { SheetBlock } from "@/app/home/blocks/sheet-block";
 import { SidebarBlock } from "@/app/home/blocks/sidebar-block";
 import { TableBlock } from "@/app/home/blocks/table-block";
 import { TabsSettingsBlock } from "@/app/home/blocks/tabs-settings-block";
@@ -40,7 +40,8 @@ import { components } from "@/components/component-meta";
  * Cards round-robin into exactly that many stacks so mixed heights pack
  * like Pinterest without a spare column wrapping underneath.
  *
- * v1.3.0 note: Alert Dialog replaced Notifications; Data Table replaced Project.
+ * v1.3.0 note: Sheet replaced Invoice; Alert Dialog replaced Notifications;
+ * Data Table replaced Project.
  */
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
@@ -64,6 +65,11 @@ const registrySlugs = new Set(components.map((component) => component.slug));
  */
 export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   { id: "chart", components: ["chart"], Block: ChartBlock },
+  {
+    id: "sheet",
+    components: ["sheet", "button", "input", "label", "switch", "badge"],
+    Block: SheetBlock,
+  },
   {
     id: "alert-dialog",
     components: ["alert-dialog", "button", "badge"],
@@ -160,11 +166,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "profile",
     components: ["card", "badge", "button", "avatar", "dropdown-menu"],
     Block: ProfileBlock,
-  },
-  {
-    id: "invoice",
-    components: ["card", "badge", "button", "separator"],
-    Block: InvoiceBlock,
   },
 ];
 

@@ -247,6 +247,13 @@
       "category": "layout"
     },
     {
+      "name": "sheet",
+      "type": "registry:ui",
+      "description": "A side modal for settings, details, filters, and mobile navigation.",
+      "docs": "https://vinyaas.vercel.app/components/sheet",
+      "category": "feedback"
+    },
+    {
       "name": "sidebar",
       "type": "registry:ui",
       "description": "Composable dashboard sidebar with expanded, collapsed, and mobile navigation.",

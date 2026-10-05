@@ -50,6 +50,7 @@
         "dropdown-menu",
         "command",
         "sidebar",
+        "sheet",
         "pagination"
       ]
     },
@@ -62,6 +63,7 @@
         "alert-dialog",
         "dialog",
         "drawer",
+        "sheet",
         "toast",
         "skeleton",
         "progress",
@@ -76,6 +78,7 @@
         "command",
         "alert-dialog",
         "dialog",
+        "sheet",
         "dropdown-menu",
         "popover",
         "tooltip",

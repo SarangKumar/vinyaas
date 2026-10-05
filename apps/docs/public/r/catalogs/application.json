@@ -9,6 +9,7 @@
         "command",
         "alert-dialog",
         "dialog",
+        "sheet",
         "dropdown-menu",
         "popover",
         "tooltip",

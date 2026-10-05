@@ -58,6 +58,7 @@ describe("component metadata", () => {
       "Scroll Area",
       "Select",
       "Separator",
+      "Sheet",
       "Sidebar",
       "Skeleton",
       "Slider",
@@ -100,12 +101,13 @@ describe("component metadata", () => {
       "pagination",
       "resizable",
       "select",
+      "sheet",
       "sidebar",
     ]);
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 13);
+    ).toBe(components.length - 14);
     expect(
       newComponents()
         .map((component) => component.slug)
@@ -117,6 +119,7 @@ describe("component metadata", () => {
       "pagination",
       "resizable",
       "select",
+      "sheet",
       "sidebar",
     ]);
     expect(

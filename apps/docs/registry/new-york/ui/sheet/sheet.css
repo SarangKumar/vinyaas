@@ -1,0 +1,144 @@
+@keyframes vinyaas-sheet-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes vinyaas-sheet-out-right {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes vinyaas-sheet-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes vinyaas-sheet-out-left {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes vinyaas-sheet-in-top {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes vinyaas-sheet-out-top {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes vinyaas-sheet-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes vinyaas-sheet-out-bottom {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes vinyaas-sheet-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vinyaas-sheet-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.vinyaas-sheet-overlay-in {
+  animation: vinyaas-sheet-overlay-in 160ms ease-out;
+}
+
+.vinyaas-sheet-overlay-out {
+  animation: vinyaas-sheet-overlay-out 160ms ease-in forwards;
+}
+
+.vinyaas-sheet-in-right {
+  animation: vinyaas-sheet-in-right 200ms ease-out;
+}
+
+.vinyaas-sheet-out-right {
+  animation: vinyaas-sheet-out-right 200ms ease-in forwards;
+}
+
+.vinyaas-sheet-in-left {
+  animation: vinyaas-sheet-in-left 200ms ease-out;
+}
+
+.vinyaas-sheet-out-left {
+  animation: vinyaas-sheet-out-left 200ms ease-in forwards;
+}
+
+.vinyaas-sheet-in-top {
+  animation: vinyaas-sheet-in-top 200ms ease-out;
+}
+
+.vinyaas-sheet-out-top {
+  animation: vinyaas-sheet-out-top 200ms ease-in forwards;
+}
+
+.vinyaas-sheet-in-bottom {
+  animation: vinyaas-sheet-in-bottom 200ms ease-out;
+}
+
+.vinyaas-sheet-out-bottom {
+  animation: vinyaas-sheet-out-bottom 200ms ease-in forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyaas-sheet-overlay-in,
+  .vinyaas-sheet-overlay-out,
+  .vinyaas-sheet-in-right,
+  .vinyaas-sheet-out-right,
+  .vinyaas-sheet-in-left,
+  .vinyaas-sheet-out-left,
+  .vinyaas-sheet-in-top,
+  .vinyaas-sheet-out-top,
+  .vinyaas-sheet-in-bottom,
+  .vinyaas-sheet-out-bottom {
+    animation: none;
+  }
+}

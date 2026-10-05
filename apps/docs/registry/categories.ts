@@ -45,6 +45,7 @@ export const registryComponentCategories: Readonly<
   command: "navigation",
   dialog: "feedback",
   drawer: "feedback",
+  sheet: "feedback",
   "drag-and-drop": "layout",
   "dropdown-menu": "feedback",
   "file-upload": "forms",

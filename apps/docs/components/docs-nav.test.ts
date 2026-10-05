@@ -156,6 +156,7 @@ describe("documentation navigation", () => {
       "Pagination",
       "Resizable",
       "Select",
+      "Sheet",
       "Sidebar",
     ]);
     expect(items?.find((item) => item.title === "Select")?.indicator).toBe(

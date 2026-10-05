@@ -10,6 +10,7 @@
         "alert-dialog",
         "dialog",
         "drawer",
+        "sheet",
         "toast",
         "skeleton",
         "progress",
