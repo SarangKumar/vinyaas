@@ -1,3 +1,5 @@
+"use client";
+
 import {
   SHOWCASE_BLOCK_COUNT,
   distributeShowcaseBlocks,
@@ -5,19 +7,18 @@ import {
   showcaseBlocks,
 } from "@/app/home/showcase-blocks";
 import {
-  playgroundShowcaseColumnClassName,
+  playgroundShowcaseColumnStackClassName,
   playgroundShowcaseGridClassName,
 } from "@/components/playground/playground-layout";
-
-const COLUMN_COUNT = 5;
+import { useShowcaseColumnCount } from "@/components/playground/use-showcase-column-count";
 
 /**
  * Homepage showcase — same pattern as ui.shadcn.com:
  * a responsive CSS grid of flex columns (not one card per cell).
- * Cards stay stacked in columns so mixed heights don’t leave row gaps.
  *
- * Visibility: 1 → md:2 → lg:3 → 1400:4 → 1900:5
- * When no filter is active, every showcase card is rendered.
+ * Column stacks are rebuilt for the active breakpoint (1→2→3→4→5) so
+ * cards redistribute instead of wrapping a spare column under the grid.
+ * Cards keep `min-w-0` / `max-w-full` so demos shrink inside each track.
  */
 export function Playground({
   filter = null,
@@ -25,15 +26,9 @@ export function Playground({
   /** Optional id/slug filter. Empty/absent = show the full showcase. */
   filter?: string | null;
 }) {
+  const columnCount = useShowcaseColumnCount();
   const visible = filterShowcaseBlocks(showcaseBlocks, filter);
-  const columns = distributeShowcaseBlocks(visible, COLUMN_COUNT);
-  const columnClassNames = [
-    playgroundShowcaseColumnClassName.base,
-    playgroundShowcaseColumnClassName.lg,
-    playgroundShowcaseColumnClassName.wide,
-    playgroundShowcaseColumnClassName.md,
-    playgroundShowcaseColumnClassName.ultra,
-  ] as const;
+  const columns = distributeShowcaseBlocks(visible, columnCount);
 
   return (
     <div
@@ -41,6 +36,7 @@ export function Playground({
       data-playground-grid
       data-playground-mode="showcase"
       data-showcase-count={visible.length}
+      data-showcase-columns={columnCount}
       data-showcase-filter={filter?.trim() ? filter.trim() : "none"}
       className={playgroundShowcaseGridClassName}
     >
@@ -56,7 +52,7 @@ export function Playground({
           <div
             key={index}
             data-playground-column={index}
-            className={columnClassNames[index]}
+            className={playgroundShowcaseColumnStackClassName}
           >
             {blocks.map(({ id, Block }) => (
               <Block key={id} />

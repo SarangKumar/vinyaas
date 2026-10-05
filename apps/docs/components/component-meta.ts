@@ -185,6 +185,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Pagination",
+    slug: "pagination",
+    description:
+      "Composable page navigation with previous, next, links, and ellipsis.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Popover",
     slug: "popover",
     description: "A floating panel with interactive content.",

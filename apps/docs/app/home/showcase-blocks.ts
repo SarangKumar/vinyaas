@@ -1,6 +1,5 @@
 import type { ComponentType } from "react";
 
-import { AccountSettingsBlock } from "@/app/home/blocks/account-settings-block";
 import { ChartBlock } from "@/app/home/blocks/chart-block";
 import { ChatBlock } from "@/app/home/blocks/chat-block";
 import { CommandSearchBlock } from "@/app/home/blocks/command-search-block";
@@ -11,6 +10,7 @@ import { LoginBlock } from "@/app/home/blocks/login-block";
 import { SelectBlock } from "@/app/home/blocks/select-block";
 import { MessagesBlock } from "@/app/home/blocks/messages-block";
 import { NotificationSettingsBlock } from "@/app/home/blocks/notification-settings-block";
+import { PaginationBlock } from "@/app/home/blocks/pagination-block";
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
 import { ProfileBlock } from "@/app/home/blocks/profile-block";
 import { ProjectBlock } from "@/app/home/blocks/project-block";
@@ -36,11 +36,11 @@ import { components } from "@/components/component-meta";
  *    they are older.
  *
  * Layout (homepage, shadcn-style grid of flex columns):
- * 1 · md:2 · lg:3 · min-[1400px]:4 · min-[1900px]:5.
- * Cards are stacked in column flex stacks (not one card per grid cell).
+ * 1 · md:2 · lg:3 · min-[1400px]:4 · min-[1900px]:5
+ * Cards round-robin into exactly that many stacks so mixed heights pack
+ * like Pinterest without a spare column wrapping underneath.
  *
- * v1.3.0 note: Resizable, Sidebar, and Drag & Drop were added near the start;
- * Signup and Upload were replaced to keep the list at 20.
+ * v1.3.0 note: Pagination replaced Account so the list stays at 20.
  */
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
@@ -75,6 +75,11 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "select",
     components: ["select"],
     Block: SelectBlock,
+  },
+  {
+    id: "pagination",
+    components: ["pagination"],
+    Block: PaginationBlock,
   },
   {
     id: "primitives",
@@ -152,11 +157,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "notifications",
     components: ["switch", "button", "label"],
     Block: NotificationSettingsBlock,
-  },
-  {
-    id: "account",
-    components: ["input", "button", "switch", "checkbox", "label"],
-    Block: AccountSettingsBlock,
   },
 ];
 

@@ -8,7 +8,7 @@ export type ApiRow = {
 export function ApiTable({ rows }: { rows: ApiRow[] }) {
   return (
     <div className="border-border overflow-x-auto rounded-md border">
-      <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
+      <table className="text-foreground w-full min-w-[36rem] border-collapse text-left text-base leading-7">
         <thead>
           <tr className="border-border border-b">
             <th className="text-foreground px-3 py-2 font-medium">Prop</th>

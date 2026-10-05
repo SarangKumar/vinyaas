@@ -10,7 +10,8 @@
         "tabs",
         "dropdown-menu",
         "command",
-        "sidebar"
+        "sidebar",
+        "pagination"
       ]
     }
   ]

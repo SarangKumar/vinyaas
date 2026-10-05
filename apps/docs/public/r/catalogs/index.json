@@ -31,6 +31,7 @@
         "progress",
         "skeleton",
         "table",
+        "pagination",
         "scroll-area",
         "separator",
         "resizable",
@@ -47,7 +48,8 @@
         "tabs",
         "dropdown-menu",
         "command",
-        "sidebar"
+        "sidebar",
+        "pagination"
       ]
     },
     {
@@ -80,7 +82,8 @@
         "breadcrumb",
         "resizable",
         "sidebar",
-        "drag-and-drop"
+        "drag-and-drop",
+        "pagination"
       ]
     }
   ]

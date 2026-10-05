@@ -48,6 +48,7 @@ describe("component metadata", () => {
       "Label",
       "Marker",
       "Native Select",
+      "Pagination",
       "Popover",
       "Progress",
       "Radio Group",
@@ -90,16 +91,33 @@ describe("component metadata", () => {
         .filter((component) => component.introducedIn === "1.3.0")
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["drag-and-drop", "resizable", "select", "sidebar"]);
+    ).toEqual([
+      "drag-and-drop",
+      "pagination",
+      "resizable",
+      "select",
+      "sidebar",
+    ]);
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 10);
+    ).toBe(components.length - 11);
     expect(
       newComponents()
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["drag-and-drop", "resizable", "select", "sidebar"]);
+    ).toEqual([
+      "drag-and-drop",
+      "pagination",
+      "resizable",
+      "select",
+      "sidebar",
+    ]);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "pagination")!,
+      ),
+    ).toBe(true);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "resizable")!,

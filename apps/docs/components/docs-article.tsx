@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { docsMutedBodyClassName } from "@/components/docs-prose";
+
 export function DocsArticle({
   title,
   description,
@@ -19,7 +21,7 @@ export function DocsArticle({
           {title}
         </h1>
         {description ? (
-          <p className="text-muted-foreground text-base leading-7 text-pretty sm:text-sm sm:leading-6">
+          <p className={`${docsMutedBodyClassName} text-pretty`}>
             {description}
           </p>
         ) : null}

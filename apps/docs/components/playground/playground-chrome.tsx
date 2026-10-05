@@ -39,7 +39,7 @@ export function PlaygroundHeader({
       <h1 className="text-foreground shrink-0 text-[1.75rem] leading-tight font-semibold tracking-tight sm:text-3xl">
         {title}
       </h1>
-      <p className="text-muted-foreground max-w-md text-sm leading-6 text-pretty sm:max-w-xs sm:pb-0.5 sm:text-right sm:leading-6">
+      <p className="text-muted-foreground max-w-md text-base leading-7 text-pretty sm:max-w-xs sm:pb-0.5 sm:text-right">
         {description}
       </p>
     </header>

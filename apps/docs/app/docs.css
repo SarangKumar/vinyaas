@@ -95,7 +95,7 @@
   /*
    * Playground composition ladder (homepage / Themes / Typeset / dense chrome).
    * Themes/Typeset (CSS columns): 1 → md:2 → lg:3 → xl:4
-   * Homepage (grid of flex columns): 1 → md:2 → lg:3 → 1400:4 → 1900:5
+   * Homepage (CSS columns masonry): 1 → md:2 → lg:3 → 1400:4 → 1900:5
    * Dense chrome / Typeset inline options: min-[1400px].
    */
   --breakpoint-playground: 87.5rem; /* 1400px */

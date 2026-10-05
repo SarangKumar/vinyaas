@@ -51,7 +51,7 @@ export function CheckoutOptions() {
             <RadioGroupItem value="starter" id="plan-starter" className="mt-0.5" />
             <div className="grid gap-1">
               <Label htmlFor="plan-starter">Starter</Label>
-              <p className="text-muted-foreground text-sm leading-6">
+              <p className="text-muted-foreground text-base leading-7">
                 $12 / month · one workspace
               </p>
             </div>
@@ -60,7 +60,7 @@ export function CheckoutOptions() {
             <RadioGroupItem value="pro" id="plan-pro" className="mt-0.5" />
             <div className="grid gap-1">
               <Label htmlFor="plan-pro">Pro</Label>
-              <p className="text-muted-foreground text-sm leading-6">
+              <p className="text-muted-foreground text-base leading-7">
                 $29 / month · unlimited members
               </p>
             </div>
@@ -69,7 +69,7 @@ export function CheckoutOptions() {
             <RadioGroupItem value="business" id="plan-business" className="mt-0.5" />
             <div className="grid gap-1">
               <Label htmlFor="plan-business">Business</Label>
-              <p className="text-muted-foreground text-sm leading-6">
+              <p className="text-muted-foreground text-base leading-7">
                 $79 / month · SSO and audit log
               </p>
             </div>
@@ -243,7 +243,7 @@ const inPractice: ComponentInPractice = {
             />
             <div className="grid gap-1">
               <Label htmlFor="practice-plan-starter">Starter</Label>
-              <p className="text-muted-foreground text-sm leading-6">
+              <p className="text-muted-foreground text-base leading-7">
                 $12 / month · one workspace
               </p>
             </div>
@@ -256,7 +256,7 @@ const inPractice: ComponentInPractice = {
             />
             <div className="grid gap-1">
               <Label htmlFor="practice-plan-pro">Pro</Label>
-              <p className="text-muted-foreground text-sm leading-6">
+              <p className="text-muted-foreground text-base leading-7">
                 $29 / month · unlimited members
               </p>
             </div>
@@ -269,7 +269,7 @@ const inPractice: ComponentInPractice = {
             />
             <div className="grid gap-1">
               <Label htmlFor="practice-plan-business">Business</Label>
-              <p className="text-muted-foreground text-sm leading-6">
+              <p className="text-muted-foreground text-base leading-7">
                 $79 / month · SSO and audit log
               </p>
             </div>

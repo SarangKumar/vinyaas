@@ -14,6 +14,7 @@
         "progress",
         "skeleton",
         "table",
+        "pagination",
         "scroll-area",
         "separator",
         "resizable",

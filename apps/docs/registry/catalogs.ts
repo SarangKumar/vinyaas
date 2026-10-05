@@ -53,6 +53,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "progress",
       "skeleton",
       "table",
+      "pagination",
       "scroll-area",
       "separator",
       "resizable",
@@ -64,7 +65,14 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
     id: "navigation",
     name: "Navigation",
     description: "Navigation and command patterns for application shells.",
-    components: ["breadcrumb", "tabs", "dropdown-menu", "command", "sidebar"],
+    components: [
+      "breadcrumb",
+      "tabs",
+      "dropdown-menu",
+      "command",
+      "sidebar",
+      "pagination",
+    ],
   },
   {
     id: "feedback",
@@ -97,6 +105,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "resizable",
       "sidebar",
       "drag-and-drop",
+      "pagination",
     ],
   },
 ] as const;
@@ -116,16 +125,16 @@ export function listComponentCatalogIds(): string[] {
  * Planned catalog members not yet in the registry (document only).
  * Do not invent fake registry items for these.
  *
- * form: select, form
+ * form: form
  * dashboard: data-table
- * navigation: navigation-menu, pagination
+ * navigation: navigation-menu
  * feedback: alert-dialog, sheet, empty-state
- * application: data-table, pagination
+ * application: data-table
  */
 export const plannedCatalogGaps: Readonly<Record<string, readonly string[]>> = {
   form: ["form"],
   dashboard: ["data-table"],
-  navigation: ["navigation-menu", "pagination"],
+  navigation: ["navigation-menu"],
   feedback: ["alert-dialog", "sheet", "empty-state"],
-  application: ["data-table", "pagination"],
+  application: ["data-table"],
 };

@@ -11,9 +11,13 @@ export {
   playgroundDenseChromeInlineClassName,
   playgroundDenseChromeShowClassName,
   playgroundShowcaseColumnClassName,
+  playgroundShowcaseColumnStackClassName,
   playgroundShowcaseColumnsClassName,
   playgroundShowcaseGridClassName,
+  getShowcaseColumnCount,
+  SHOWCASE_COLUMN_BREAKPOINTS,
 } from "./playground-layout";
+export type { ShowcaseColumnCount } from "./playground-layout";
 
 export {
   PlaygroundCheckIcon,
@@ -21,4 +25,5 @@ export {
   PlaygroundCopyCodeButton,
 } from "./playground-copy-code";
 export { usePrintFromScroll } from "./use-print-from-scroll";
+export { useShowcaseColumnCount } from "./use-showcase-column-count";
 export { useSiteColorScheme } from "./use-site-color-scheme";

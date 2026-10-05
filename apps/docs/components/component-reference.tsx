@@ -5,6 +5,10 @@ import { CodeBlock } from "@/components/code-block";
 import { ComponentDemo } from "@/components/component-demo";
 import type { CodeLanguage, DemoCode } from "@/components/code-languages";
 import { DocsArticle } from "@/components/docs-article";
+import {
+  docsBodyClassName,
+  docsMutedBodyClassName,
+} from "@/components/docs-prose";
 import { InstallCommand } from "@/components/install-command";
 import { cliCommands } from "@/components/package-managers";
 
@@ -12,7 +16,6 @@ const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 const subsectionHeading =
   "text-foreground scroll-mt-8 text-base font-semibold tracking-tight";
-
 export type ComponentExample = {
   id: string;
   title: string;
@@ -70,7 +73,7 @@ export function ComponentReference({
           <h2 id="overview" className={sectionHeading}>
             Overview
           </h2>
-          <div className="text-foreground flex flex-col gap-3 text-sm leading-6">
+          <div className={`${docsBodyClassName} flex flex-col gap-3`}>
             {overview}
           </div>
         </section>
@@ -94,7 +97,7 @@ export function ComponentReference({
           />
         </div>
         {manual ? (
-          <div className="text-foreground flex flex-col gap-3 text-sm leading-6">
+          <div className={`${docsBodyClassName} flex flex-col gap-3`}>
             <h3 id="manual" className={subsectionHeading}>
               Manual
             </h3>
@@ -118,9 +121,7 @@ export function ComponentReference({
               <h3 id={example.id} className={subsectionHeading}>
                 {example.title}
               </h3>
-              <p className="text-muted-foreground text-sm leading-6">
-                {example.description}
-              </p>
+              <p className={docsMutedBodyClassName}>{example.description}</p>
               <ComponentDemo
                 preview={example.preview}
                 code={example.code}
@@ -135,9 +136,7 @@ export function ComponentReference({
           <h2 id="in-practice" className={sectionHeading}>
             In practice
           </h2>
-          <p className="text-muted-foreground text-sm leading-6">
-            {inPractice.description}
-          </p>
+          <p className={docsMutedBodyClassName}>{inPractice.description}</p>
           <ComponentDemo
             preview={inPractice.preview}
             code={inPractice.code}
@@ -150,14 +149,14 @@ export function ComponentReference({
           <h2 id="api" className={sectionHeading}>
             API
           </h2>
-          <p className="text-foreground text-sm leading-6">
+          <p className={docsBodyClassName}>
             Other attributes for the underlying element are passed through.
           </p>
           <ApiTable rows={api} />
         </section>
       ) : null}
       {accessibility ? (
-        <section className="text-foreground flex flex-col gap-4 text-sm leading-6">
+        <section className={`${docsBodyClassName} flex flex-col gap-4`}>
           <h2 id="accessibility" className={sectionHeading}>
             Accessibility
           </h2>

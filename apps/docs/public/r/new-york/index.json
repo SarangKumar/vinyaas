@@ -177,6 +177,13 @@
       "category": "forms"
     },
     {
+      "name": "pagination",
+      "type": "registry:ui",
+      "description": "Composable page navigation with previous, next, page links, and ellipsis.",
+      "docs": "https://vinyaas.vercel.app/components/pagination",
+      "category": "navigation"
+    },
+    {
       "name": "popover",
       "type": "registry:ui",
       "description": "A floating panel with interactive content.",

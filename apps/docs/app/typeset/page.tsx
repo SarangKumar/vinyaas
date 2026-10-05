@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { DocsArticle } from "@/components/docs-article";
+import { docsBodyClassName } from "@/components/docs-prose";
 import { focusRing } from "@/components/focus-ring";
 import {
   componentsPath,
@@ -19,7 +20,7 @@ export const metadata: Metadata = pageMetadata({
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
-const body = "text-foreground text-base leading-7";
+const body = docsBodyClassName;
 
 export default function TypesetPage() {
   return (

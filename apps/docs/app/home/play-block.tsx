@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Showcase card for the homepage playground grid.
- * Vertical rhythm comes from the homepage grid `gap-(--gap)` — do not also add
- * margin-bottom or gaps stack to 2× the gutter.
+ * Showcase card for the homepage playground masonry.
+ * Vertical rhythm comes from the column-item `mb-(--gap)` wrapper in
+ * {@link Playground} — do not also add margin-bottom on the card.
  */
 export function PlayBlock({
   title,
@@ -23,7 +23,7 @@ export function PlayBlock({
       data-slot="card"
       data-play-block
       className={cn(
-        "border-border/80 bg-card text-card-foreground flex w-full min-w-0 break-inside-avoid flex-col gap-5 rounded-2xl border p-5 shadow-[0_1px_0_oklch(1_0_0/0.04)_inset] sm:gap-6 sm:p-6",
+        "border-border/80 bg-card text-card-foreground flex w-full max-w-full min-w-0 flex-col gap-5 overflow-hidden rounded-2xl border p-5 shadow-[0_1px_0_oklch(1_0_0/0.04)_inset] sm:gap-6 sm:p-6",
         className,
       )}
     >

@@ -35,7 +35,7 @@ import { Switch } from "@/components/ui/switch";
 export function FormSettings() {
   return (
     <form className="grid w-full max-w-md gap-4 text-left">
-      <p className="text-muted-foreground text-sm leading-6">
+      <p className="text-muted-foreground text-base leading-7">
         Choose how the workspace reaches you. Switches keep local state and are
         not submitted with the form.
       </p>
@@ -43,7 +43,7 @@ export function FormSettings() {
         <div className="flex min-w-0 items-start justify-between gap-4">
           <div className="min-w-0">
             <Label htmlFor="email-channel">Email</Label>
-            <p className="text-muted-foreground mt-1 text-sm leading-6">
+            <p className="text-muted-foreground mt-1 text-base leading-7">
               Receipts, invoices, and weekly digests.
             </p>
           </div>
@@ -52,7 +52,7 @@ export function FormSettings() {
         <div className="flex min-w-0 items-start justify-between gap-4">
           <div className="min-w-0">
             <Label htmlFor="push-channel">Push</Label>
-            <p className="text-muted-foreground mt-1 text-sm leading-6">
+            <p className="text-muted-foreground mt-1 text-base leading-7">
               Deployments and review requests on this device.
             </p>
           </div>
@@ -61,7 +61,7 @@ export function FormSettings() {
         <div className="flex min-w-0 items-start justify-between gap-4">
           <div className="min-w-0">
             <Label htmlFor="security-channel">Security</Label>
-            <p className="text-muted-foreground mt-1 text-sm leading-6">
+            <p className="text-muted-foreground mt-1 text-base leading-7">
               Sign-ins, password changes, and 2FA events.
             </p>
           </div>
@@ -74,7 +74,7 @@ export function FormSettings() {
         <div className="flex min-w-0 items-start justify-between gap-4">
           <div className="min-w-0">
             <Label htmlFor="product-channel">Product updates</Label>
-            <p className="text-muted-foreground mt-1 text-sm leading-6">
+            <p className="text-muted-foreground mt-1 text-base leading-7">
               Release notes and occasional announcements.
             </p>
           </div>
@@ -198,7 +198,7 @@ const inPractice: ComponentInPractice = {
     "Notification channels use labelled switches. Save settings is the form action; the switches themselves are not submitted.",
   preview: (
     <form className="grid w-full max-w-md gap-4 text-left">
-      <p className="text-muted-foreground text-sm leading-6">
+      <p className="text-muted-foreground text-base leading-7">
         Choose how the workspace reaches you. Switches keep local state and are
         not submitted with the form.
       </p>
@@ -206,7 +206,7 @@ const inPractice: ComponentInPractice = {
         <div className="flex min-w-0 items-start justify-between gap-4">
           <div className="min-w-0">
             <Label htmlFor="practice-email-channel">Email</Label>
-            <p className="text-muted-foreground mt-1 text-sm leading-6">
+            <p className="text-muted-foreground mt-1 text-base leading-7">
               Receipts, invoices, and weekly digests.
             </p>
           </div>
@@ -219,7 +219,7 @@ const inPractice: ComponentInPractice = {
         <div className="flex min-w-0 items-start justify-between gap-4">
           <div className="min-w-0">
             <Label htmlFor="practice-push-channel">Push</Label>
-            <p className="text-muted-foreground mt-1 text-sm leading-6">
+            <p className="text-muted-foreground mt-1 text-base leading-7">
               Deployments and review requests on this device.
             </p>
           </div>
@@ -232,7 +232,7 @@ const inPractice: ComponentInPractice = {
         <div className="flex min-w-0 items-start justify-between gap-4">
           <div className="min-w-0">
             <Label htmlFor="practice-security-channel">Security</Label>
-            <p className="text-muted-foreground mt-1 text-sm leading-6">
+            <p className="text-muted-foreground mt-1 text-base leading-7">
               Sign-ins, password changes, and 2FA events.
             </p>
           </div>
@@ -245,7 +245,7 @@ const inPractice: ComponentInPractice = {
         <div className="flex min-w-0 items-start justify-between gap-4">
           <div className="min-w-0">
             <Label htmlFor="practice-product-channel">Product updates</Label>
-            <p className="text-muted-foreground mt-1 text-sm leading-6">
+            <p className="text-muted-foreground mt-1 text-base leading-7">
               Release notes and occasional announcements.
             </p>
           </div>

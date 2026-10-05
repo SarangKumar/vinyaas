@@ -38,7 +38,7 @@ export function PlaygroundBlock({
             {title}
           </h2>
           {description ? (
-            <p className="text-muted-foreground text-sm leading-6">
+            <p className="text-muted-foreground text-base leading-7">
               {description}
             </p>
           ) : null}
@@ -52,8 +52,8 @@ export function PlaygroundBlock({
 }
 
 /**
- * Themes / Typeset Pinterest masonry (CSS columns).
- * Homepage uses `playgroundShowcaseGridClassName` directly instead.
+ * Themes / Typeset / Homepage Pinterest masonry (CSS columns).
+ * Homepage uses `playgroundShowcaseGridClassName` (grid of flex columns).
  */
 export function PlaygroundGrid({
   children,

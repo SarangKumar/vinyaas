@@ -31,6 +31,7 @@ export const changelogVersions: ChangelogVersion[] = [
       {
         title: "Added",
         items: [
+          `Pagination — composable page navigation with previous/next, page links, ellipsis, and accessible current-page semantics for tables and lists.`,
           `Resizable — horizontal and vertical panel layouts with keyboard-accessible handles, nested groups, and composite docs examples.`,
           `Sidebar — composable dashboard navigation with expanded and collapsed desktop modes, mobile Drawer composition, and accessible collapsed labels.`,
           `Drag & Drop — sortable and reorderable lists and boards via @dnd-kit, with handles, keyboard and touch support, drop indicators, and multiple containers.`,

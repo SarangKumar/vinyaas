@@ -43,6 +43,8 @@ describe("homepage showcase blocks", () => {
     expect(dragAndDrop?.components).toContain("drag-and-drop");
     expect(showcaseBlockIds()).not.toContain("signup");
     expect(showcaseBlockIds()).not.toContain("upload");
+    expect(showcaseBlockIds()).not.toContain("account");
+    expect(showcaseBlockIds()).toContain("pagination");
 
     for (const component of newComponents()) {
       expect(

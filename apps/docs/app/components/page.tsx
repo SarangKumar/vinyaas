@@ -10,6 +10,7 @@ import {
   type ComponentMeta,
 } from "@/components/component-meta";
 import { DocsArticle } from "@/components/docs-article";
+import { docsMutedBodyClassName } from "@/components/docs-prose";
 import { focusRing } from "@/components/focus-ring";
 import { pageMetadata } from "@/lib/page-metadata";
 
@@ -34,7 +35,7 @@ export default function ComponentsPage() {
       title="Components"
       description={`${components.length} accessible primitives you install into your project as source.`}
     >
-      <p className="text-muted-foreground text-sm leading-6">
+      <p className={docsMutedBodyClassName}>
         The catalog has {components.length} independently installable registry
         items on v{currentVersion}. Button is the v0.1 foundation; later
         releases expanded forms, overlays, feedback, and product UI. The CLI
@@ -46,7 +47,7 @@ export default function ComponentsPage() {
           <h2 id="new-components" className={heading}>
             New Components
           </h2>
-          <p className="text-muted-foreground text-sm leading-6">
+          <p className={docsMutedBodyClassName}>
             Introduced in v{currentVersion}. Sidebar links for these components
             show a subtle new indicator.
           </p>
@@ -68,7 +69,7 @@ export default function ComponentsPage() {
                       v{item.introducedIn}
                     </span>
                   </span>
-                  <span className="text-muted-foreground text-sm leading-6">
+                  <span className={docsMutedBodyClassName}>
                     {item.description}
                   </span>
                 </Link>

@@ -71,6 +71,15 @@ describe("component catalogs", () => {
     expect(getComponentCatalog("dashboard")?.components).toContain(
       "drag-and-drop",
     );
+    expect(getComponentCatalog("dashboard")?.components).toContain(
+      "pagination",
+    );
+    expect(getComponentCatalog("navigation")?.components).toContain(
+      "pagination",
+    );
+    expect(getComponentCatalog("application")?.components).toContain(
+      "pagination",
+    );
     expect(getComponentCatalog("application")?.components).toContain(
       "resizable",
     );

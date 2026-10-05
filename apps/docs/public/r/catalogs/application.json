@@ -17,7 +17,8 @@
         "breadcrumb",
         "resizable",
         "sidebar",
-        "drag-and-drop"
+        "drag-and-drop",
+        "pagination"
       ]
     }
   ]

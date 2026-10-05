@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { SHOWCASE_BLOCK_COUNT } from "@/app/home/showcase-blocks";
+import { getShowcaseColumnCount } from "@/components/playground/playground-layout";
 
 import Home from "./page";
 
@@ -21,6 +22,27 @@ beforeAll(() => {
     writable: true,
     configurable: true,
     value: ResizeObserverMock,
+  });
+
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    configurable: true,
+    value: (query: string) => {
+      const width = window.innerWidth;
+      const minWidth = Number(/min-width:\s*(\d+)px/.exec(query)?.[1] ?? 0);
+      return {
+        matches: width >= minWidth,
+        media: query,
+        onchange: null,
+        addListener() {},
+        removeListener() {},
+        addEventListener() {},
+        removeEventListener() {},
+        dispatchEvent() {
+          return false;
+        },
+      };
+    },
   });
 });
 
@@ -97,13 +119,16 @@ describe("homepage", () => {
       document.querySelector("[data-playground-shell]")?.className,
     ).toMatch(/flex-col/);
     expect(document.querySelectorAll("[data-playground-column]")).toHaveLength(
-      5,
+      getShowcaseColumnCount(window.innerWidth),
+    );
+    expect(document.querySelector("[data-playground]")).toHaveAttribute(
+      "data-showcase-columns",
+      String(getShowcaseColumnCount(window.innerWidth)),
     );
     expect(document.body.textContent).toContain("v1.3.0");
     expect(document.querySelectorAll("[data-playground-item]")).toHaveLength(0);
     const playBlock = document.querySelector("[data-play-block]");
     expect(playBlock?.className).not.toMatch(/mb-\(--gap\)/);
-
     expect(document.querySelector("[data-playground-rails]")).toBeTruthy();
     const leftRail = document.querySelector('[data-playground-side="left"]');
     const rightRail = document.querySelector('[data-playground-side="right"]');

@@ -119,7 +119,7 @@ import {
 
 export function AssignedTo() {
   return (
-    <p className="text-sm leading-6">
+    <p className="text-foreground text-base leading-7">
       Assigned to{" "}
       <HoverCard>
         <HoverCardTrigger>
@@ -297,7 +297,7 @@ const inPractice: ComponentInPractice = {
   description:
     "An assignment line links @johndoe. Hover or focus the mention to open a profile with Avatar, role, and bio.",
   preview: (
-    <p className="text-sm leading-6">
+    <p className="text-foreground text-base leading-7">
       Assigned to <ProfileHoverPreview trigger="@johndoe" badge="Design lead" />
     </p>
   ),

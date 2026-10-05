@@ -313,6 +313,20 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "pagination",
+    type: "registry:ui",
+    description:
+      "Composable page navigation with previous, next, page links, and ellipsis.",
+    dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/pagination/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "card",
     type: "registry:ui",
     description: "A bordered container for related content.",

@@ -5,11 +5,11 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
+  getShowcaseColumnCount,
   playgroundColumnItemClassName,
   playgroundColumnsClassName,
   playgroundDenseChromeInlineClassName,
   playgroundDenseChromeShowClassName,
-  playgroundShowcaseColumnClassName,
   playgroundShowcaseGridClassName,
 } from "./playground-layout";
 
@@ -33,7 +33,7 @@ describe("playground layout utilities", () => {
     expect(playgroundColumnItemClassName).toContain("break-inside-avoid");
   });
 
-  it("encodes homepage shadcn-style grid of flex columns up to 5", () => {
+  it("encodes homepage grid-of-columns ladder up to 5 tracks", () => {
     expect(playgroundShowcaseGridClassName).toContain("grid");
     expect(playgroundShowcaseGridClassName).toContain("md:grid-cols-2");
     expect(playgroundShowcaseGridClassName).toContain("lg:grid-cols-3");
@@ -45,13 +45,17 @@ describe("playground layout utilities", () => {
     );
     expect(playgroundShowcaseGridClassName).toContain("xl:max-w-[1600px]");
     expect(playgroundShowcaseGridClassName).toContain("2xl:max-w-[1900px]");
-    expect(playgroundShowcaseColumnClassName.base).toContain("flex-col");
-    expect(playgroundShowcaseColumnClassName.md).toContain("flex-col");
-    expect(playgroundShowcaseColumnClassName.lg).toContain("flex-col");
-    expect(playgroundShowcaseColumnClassName.wide).toContain("flex-col");
-    expect(playgroundShowcaseColumnClassName.ultra).toContain("flex-col");
-    expect(playgroundShowcaseColumnClassName.md).not.toContain("hidden");
-    expect(playgroundShowcaseColumnClassName.lg).not.toContain("hidden");
+    expect(playgroundShowcaseGridClassName).not.toContain("columns-");
+  });
+
+  it("maps viewport widths to matching showcase column counts", () => {
+    expect(getShowcaseColumnCount(375)).toBe(1);
+    expect(getShowcaseColumnCount(768)).toBe(2);
+    expect(getShowcaseColumnCount(1024)).toBe(3);
+    expect(getShowcaseColumnCount(1399)).toBe(3);
+    expect(getShowcaseColumnCount(1400)).toBe(4);
+    expect(getShowcaseColumnCount(1899)).toBe(4);
+    expect(getShowcaseColumnCount(1900)).toBe(5);
   });
 
   it("shows Typeset inline options above 1400px", () => {

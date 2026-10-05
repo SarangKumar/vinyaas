@@ -56,6 +56,7 @@ export const registryComponentCategories: Readonly<
   marker: "utilities",
   "native-select": "forms",
   select: "forms",
+  pagination: "navigation",
   popover: "feedback",
   progress: "feedback",
   "radio-group": "forms",
