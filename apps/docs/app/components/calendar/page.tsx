@@ -185,7 +185,7 @@ today.setHours(0, 0, 0, 0);
     id: "month-navigation",
     title: "Month navigation",
     description:
-      "Caption buttons move between months. Set defaultMonth for a fixed starting view.",
+      "Previous/next buttons and native month/year selects. Set defaultMonth for a fixed starting view.",
     preview: <MonthNavigationDemo />,
     code: `const [date, setDate] = useState<Date | undefined>(
   new Date(2026, 2, 12),
@@ -200,9 +200,10 @@ today.setHours(0, 0, 0, 0);
     className="rounded-md border"
   />
   <p className="text-muted-foreground text-sm leading-6">
-    Use the previous and next controls in the caption to move between
-    months. Pass <code className="text-foreground">defaultMonth</code> to
-    open on a specific month.
+    Use the previous/next buttons or the month and year selects to move
+    between months. Pass{" "}
+    <code className="text-foreground">defaultMonth</code> to open on a
+    specific month.
   </p>
 </div>`,
   },

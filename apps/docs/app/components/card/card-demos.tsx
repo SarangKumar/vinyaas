@@ -101,7 +101,12 @@ export function ProjectCardDemo() {
       </CardHeader>
       <CardContent className="grid gap-2">
         <Badge variant="outline">On track</Badge>
-        <Progress aria-label="Project progress" value={72} />
+        <Progress
+          aria-label="Project progress"
+          value={72}
+          max={100}
+          className="w-full min-w-0"
+        />
       </CardContent>
       <CardFooter>
         <Button variant="outline">View project</Button>

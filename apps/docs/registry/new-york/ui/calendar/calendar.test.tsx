@@ -136,11 +136,81 @@ describe("Calendar", () => {
   it("navigates months with previous and next controls", () => {
     render(<Calendar mode="single" defaultMonth={new Date(2026, 2, 15)} />);
 
-    expect(screen.getByText(/March 2026/i)).toBeInTheDocument();
+    const month = screen.getByRole("combobox", { name: /month/i });
+    expect(month).toHaveValue("2");
+
     fireEvent.click(screen.getByRole("button", { name: /next/i }));
-    expect(screen.getByText(/April 2026/i)).toBeInTheDocument();
+    expect(month).toHaveValue("3");
+
     fireEvent.click(screen.getByRole("button", { name: /previous/i }));
-    expect(screen.getByText(/March 2026/i)).toBeInTheDocument();
+    expect(month).toHaveValue("2");
+  });
+
+  it("exposes working native month and year selects without clipped labels", () => {
+    const { container } = render(
+      <Calendar mode="single" defaultMonth={new Date(2026, 8, 15)} />,
+    );
+
+    const month = screen.getByRole("combobox", { name: /month/i });
+    const year = screen.getByRole("combobox", { name: /year/i });
+
+    expect(month.tagName).toBe("SELECT");
+    expect(year.tagName).toBe("SELECT");
+    expect(month).toHaveValue("8");
+    expect(year).toHaveValue("2026");
+    expect(month).toHaveDisplayValue(/sep/i);
+    expect(year).toHaveDisplayValue("2026");
+
+    fireEvent.change(month, { target: { value: "0" } });
+    expect(month).toHaveValue("0");
+    expect(month).toHaveDisplayValue(/jan/i);
+
+    fireEvent.change(year, { target: { value: "2025" } });
+    expect(year).toHaveValue("2025");
+
+    const monthWrap = container.querySelector(
+      '[data-slot="calendar-month-select"]',
+    );
+    const yearWrap = container.querySelector(
+      '[data-slot="calendar-year-select"]',
+    );
+    expect(monthWrap?.className).toMatch(/w-\[6\.5rem\]/);
+    expect(yearWrap?.className).toMatch(/w-\[5\.5rem\]/);
+    expect(month.className).toMatch(/pr-8/);
+    expect(month.className).not.toMatch(/leading-none/);
+  });
+
+  it("keeps caption selects above the nav overlay", () => {
+    const { container } = render(
+      <Calendar mode="single" defaultMonth={new Date(2026, 9, 15)} />,
+    );
+
+    const nav = container.querySelector("nav");
+    const dropdowns = container.querySelector("[class*='z-30']");
+    expect(nav?.className).toMatch(/pointer-events-none/);
+    expect(screen.getByRole("button", { name: /previous/i }).className).toMatch(
+      /pointer-events-auto/,
+    );
+    expect(screen.getByRole("button", { name: /next/i }).className).toMatch(
+      /pointer-events-auto/,
+    );
+    expect(dropdowns).toBeTruthy();
+  });
+
+  it("keeps rounded focus and selected day shapes", () => {
+    render(
+      <Calendar
+        mode="single"
+        defaultMonth={new Date(2026, 2, 15)}
+        selected={new Date(2026, 2, 15)}
+      />,
+    );
+
+    const day = screen.getByRole("button", { name: /15/ });
+    expect(day.className).toMatch(/rounded-md/);
+    expect(day.className).toMatch(
+      /focus-visible:rounded-md|focus-visible:ring/,
+    );
   });
 
   it("supports keyboard focus on day buttons", () => {

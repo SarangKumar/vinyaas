@@ -21,7 +21,26 @@ describe("Progress", () => {
     const progress = screen.getByRole("progressbar", { name: "Loading" });
 
     expect(progress).not.toHaveAttribute("value");
+    expect(progress).toHaveAttribute("max", "100");
     expect(progress).not.toHaveAttribute("role");
+  });
+
+  it("defaults max to 100 so value maps to a fill percentage", () => {
+    render(<Progress aria-label="Upload" value={40} />);
+
+    const progress = screen.getByRole("progressbar", { name: "Upload" });
+    expect(progress).toHaveAttribute("value", "40");
+    expect(progress).toHaveAttribute("max", "100");
+  });
+
+  it("stays full-width and shrinkable in flex layouts", () => {
+    render(<Progress aria-label="Responsive" value={58} className="min-w-0" />);
+
+    const progress = screen.getByRole("progressbar", { name: "Responsive" });
+    expect(progress.className).toMatch(/w-full/);
+    expect(progress.className).toMatch(/min-w-0/);
+    expect(progress.className).toMatch(/max-w-full/);
+    expect(progress.className).toMatch(/block/);
   });
 
   it("passes through className, id, and a ref", () => {

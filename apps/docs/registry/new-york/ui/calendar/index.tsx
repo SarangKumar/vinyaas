@@ -1,7 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { DayPicker, type DayPickerProps } from "react-day-picker";
+import {
+  DayPicker,
+  type DayPickerProps,
+  type DropdownProps,
+} from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../button";
@@ -10,22 +14,32 @@ export type CalendarProps = DayPickerProps;
 
 /**
  * Accessible month calendar built on react-day-picker.
- * Supports single and range selection with Vinyaas tokens.
+ * Supports single and range selection with Vinyaas tokens,
+ * native month/year selects, and previous/next navigation.
  */
 export function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  captionLayout = "dropdown",
+  formatters,
   components,
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
+      captionLayout={captionLayout}
       className={cn(
         "border-border bg-background text-foreground w-fit rounded-md p-3",
         className,
       )}
+      formatters={{
+        // Abbreviated months keep caption selects readable beside prev/next.
+        formatMonthDropdown: (month) =>
+          month.toLocaleString("en-US", { month: "short" }),
+        ...formatters,
+      }}
       classNames={{
         root: cn("w-fit", classNames?.root),
         months: cn(
@@ -34,36 +48,46 @@ export function Calendar({
         ),
         month: cn("flex w-full flex-col gap-3", classNames?.month),
         month_caption: cn(
-          "relative flex h-9 w-full items-center justify-center px-10",
+          "relative flex h-9 w-full items-center justify-center px-9",
           classNames?.month_caption,
         ),
         caption_label: cn(
           "text-foreground text-sm font-medium",
           classNames?.caption_label,
         ),
+        dropdowns: cn(
+          // Above the nav hit-target so month/year selects stay clickable.
+          "relative z-30 flex h-9 items-center justify-center gap-2",
+          classNames?.dropdowns,
+        ),
+        dropdown_root: cn("relative", classNames?.dropdown_root),
+        dropdown: cn(classNames?.dropdown),
+        months_dropdown: cn(classNames?.months_dropdown),
+        years_dropdown: cn(classNames?.years_dropdown),
         nav: cn(
-          "absolute inset-x-0 top-0 flex items-center justify-between gap-1",
+          // Full-width overlay — must not steal clicks from the selects.
+          "pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between",
           classNames?.nav,
         ),
         button_previous: cn(
           buttonVariants({ variant: "outline", size: "icon-sm" }),
-          "size-8 shrink-0",
+          "pointer-events-auto relative z-20 size-8 shrink-0",
           classNames?.button_previous,
         ),
         button_next: cn(
           buttonVariants({ variant: "outline", size: "icon-sm" }),
-          "size-8 shrink-0",
+          "pointer-events-auto relative z-20 size-8 shrink-0",
           classNames?.button_next,
         ),
         month_grid: cn("w-full border-collapse", classNames?.month_grid),
-        weekdays: cn("flex", classNames?.weekdays),
+        weekdays: cn("flex w-full", classNames?.weekdays),
         weekday: cn(
-          "text-muted-foreground w-9 rounded-md text-center text-xs font-normal",
+          "text-muted-foreground flex-1 rounded-md text-center text-xs font-normal",
           classNames?.weekday,
         ),
         week: cn("mt-1.5 flex w-full", classNames?.week),
         day: cn(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20",
+          "relative flex-1 p-0 text-center text-sm focus-within:relative focus-within:z-20",
           "[&:has([aria-selected])]:bg-accent [&:has([aria-selected])]:rounded-md",
           "[&:has([aria-selected].day-range-end)]:rounded-r-md",
           "[&:has([aria-selected].day-range-start)]:rounded-l-md",
@@ -73,7 +97,8 @@ export function Calendar({
         ),
         day_button: cn(
           buttonVariants({ variant: "ghost", size: "icon-sm" }),
-          "size-9 font-normal aria-selected:opacity-100",
+          "h-9 w-full min-w-0 rounded-md p-0 font-normal aria-selected:opacity-100",
+          "focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           classNames?.day_button,
         ),
         range_start: cn(
@@ -103,11 +128,12 @@ export function Calendar({
         disabled: cn("text-muted-foreground opacity-40", classNames?.disabled),
         hidden: cn("invisible", classNames?.hidden),
         focused: cn(
-          "relative z-10 ring-2 ring-ring ring-offset-2 ring-offset-background",
+          "relative z-10 rounded-md ring-2 ring-ring ring-offset-2 ring-offset-background",
           classNames?.focused,
         ),
       }}
       components={{
+        Dropdown: CalendarDropdown,
         Chevron: ({
           orientation,
           className: chevronClassName,
@@ -142,6 +168,62 @@ export function Calendar({
       }}
       {...props}
     />
+  );
+}
+
+/**
+ * Native month/year <select>. Wider than the day grid caption used to allow,
+ * with reserved chevron space so labels never sit under the icon.
+ */
+function CalendarDropdown({
+  options,
+  className,
+  "aria-label": ariaLabel,
+  value,
+  ...selectProps
+}: DropdownProps) {
+  const isYear = /year/i.test(ariaLabel ?? "");
+
+  return (
+    <div
+      data-slot={isYear ? "calendar-year-select" : "calendar-month-select"}
+      className={cn(
+        // Width wins over any DayPicker className so labels stay readable.
+        className,
+        "border-input bg-background relative inline-flex h-8 shrink-0 items-center overflow-hidden rounded-md border",
+        isYear ? "w-[5.5rem]" : "w-[6.5rem]",
+      )}
+    >
+      <select
+        {...selectProps}
+        aria-label={ariaLabel}
+        value={
+          value === undefined || value === null ? undefined : String(value)
+        }
+        className={cn(
+          "text-foreground h-full w-full min-w-0 cursor-pointer bg-transparent py-0 pr-8 pl-2.5 text-sm outline-none",
+          "appearance-none [-moz-appearance:none] [-webkit-appearance:none]",
+          "focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+          "disabled:cursor-not-allowed disabled:opacity-50",
+        )}
+      >
+        {options?.map((option) => (
+          <option
+            key={option.value}
+            value={String(option.value)}
+            disabled={option.disabled}
+          >
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 flex w-8 items-center justify-center"
+      >
+        <ChevronDownIcon className="text-muted-foreground size-3.5 opacity-70" />
+      </span>
+    </div>
   );
 }
 

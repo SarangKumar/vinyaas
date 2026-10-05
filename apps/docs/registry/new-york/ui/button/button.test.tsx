@@ -53,7 +53,7 @@ describe("Button", () => {
     const { rerender } = render(<Button>Save</Button>);
     const button = screen.getByRole("button", { name: "Save" });
 
-    expect(button).toHaveClass("h-9", "text-sm", "px-4");
+    expect(button).toHaveClass("h-9", "min-h-9", "max-h-9", "text-sm", "px-4");
     expect(button).not.toHaveClass("h-8");
     expect(button).not.toHaveClass("h-10");
     expect(button).not.toHaveClass("h-7");
@@ -100,6 +100,34 @@ describe("Button", () => {
       </Button>,
     );
     expect(screen.getByRole("button", { name: "Save" })).toHaveClass("size-10");
+  });
+
+  it("keeps the same height across variants at the default size", () => {
+    const { rerender } = render(<Button variant="default">Save</Button>);
+    const button = () => screen.getByRole("button", { name: "Save" });
+
+    for (const variant of [
+      "default",
+      "outline",
+      "ghost",
+      "secondary",
+      "destructive",
+    ] as const) {
+      rerender(
+        <Button variant={variant} size="default">
+          Save
+        </Button>,
+      );
+      expect(button()).toHaveClass("h-9", "min-h-9", "max-h-9", "box-border");
+    }
+
+    rerender(
+      <Button variant="link" size="default">
+        Save
+      </Button>,
+    );
+    expect(button()).toHaveClass("h-auto");
+    expect(button()).not.toHaveClass("min-h-9");
   });
 
   it("is keyboard focusable and activates from a click", () => {

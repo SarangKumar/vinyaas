@@ -78,9 +78,10 @@ export function MonthNavigationDemo() {
         className="rounded-md border"
       />
       <p className="text-muted-foreground text-sm leading-6">
-        Use the previous and next controls in the caption to move between
-        months. Pass <code className="text-foreground">defaultMonth</code> to
-        open on a specific month.
+        Use the previous/next buttons or the month and year selects to move
+        between months. Pass{" "}
+        <code className="text-foreground">defaultMonth</code> to open on a
+        specific month.
       </p>
     </div>
   );

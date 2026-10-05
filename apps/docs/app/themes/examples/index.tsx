@@ -339,12 +339,19 @@ export const themeExamples: ThemeExample[] = [
     title: "Ship checklist",
     description: "Before tagging the docs release.",
     preview: (
-      <div className="grid gap-3">
+      <div className="grid min-w-0 gap-3">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-muted-foreground text-xs">3 of 5 done</span>
+          <span className="text-muted-foreground text-xs tabular-nums">
+            3 of 5 done · 60%
+          </span>
           <Badge>v1.1</Badge>
         </div>
-        <Progress aria-label="Ship progress" value={60} />
+        <Progress
+          aria-label="Ship progress"
+          value={3}
+          max={5}
+          className="w-full min-w-0"
+        />
         <ul className="grid gap-2">
           {[
             ["ship-themes", "Themes playground scoped", true],
@@ -604,17 +611,22 @@ export const themeExamples: ThemeExample[] = [
     id: "upload-token",
     title: "Upload tokens",
     preview: (
-      <div className="grid gap-3">
+      <div className="grid min-w-0 gap-3">
         <div className="border-border flex min-w-0 items-center justify-between gap-3 rounded-lg border border-dashed p-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">brand-tokens.css</p>
             <p className="text-muted-foreground text-xs">94 KB · mapping…</p>
           </div>
-          <Badge variant="secondary" className="shrink-0">
+          <Badge variant="secondary" className="shrink-0 tabular-nums">
             58%
           </Badge>
         </div>
-        <Progress aria-label="Upload" value={58} />
+        <Progress
+          aria-label="Upload"
+          value={58}
+          max={100}
+          className="w-full min-w-0"
+        />
         <div className="flex flex-wrap gap-2">
           <Button type="button" size="sm" variant="outline">
             Cancel

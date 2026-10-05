@@ -13,6 +13,8 @@ import {
 import { Progress } from "@/registry/new-york/ui/progress";
 
 export function ProjectBlock() {
+  const progress = 68;
+
   return (
     <PlayBlock title="Analytical Engine">
       <div className="flex items-center justify-between gap-2">
@@ -34,7 +36,18 @@ export function ProjectBlock() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Progress aria-label="Project progress" value={68} />
+      <div className="grid min-w-0 gap-1.5">
+        <div className="text-muted-foreground flex items-center justify-between gap-2 text-xs">
+          <span>Progress</span>
+          <span className="text-foreground tabular-nums">{progress}%</span>
+        </div>
+        <Progress
+          aria-label="Project progress"
+          value={progress}
+          max={100}
+          className="w-full min-w-0"
+        />
+      </div>
       <div className="flex items-center justify-between gap-3">
         <div className="flex -space-x-2">
           {["AL", "GH", "PS"].map((initials) => (
