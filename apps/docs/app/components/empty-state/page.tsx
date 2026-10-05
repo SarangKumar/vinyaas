@@ -54,7 +54,15 @@ import {
 
 function FolderIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
     </svg>
   );
@@ -62,16 +70,20 @@ function FolderIcon() {
 
 export function ProjectsPanel() {
   return (
-    <Empty>
+    <Empty className="max-w-lg">
       <EmptyIcon>
         <FolderIcon />
       </EmptyIcon>
       <EmptyTitle>No projects yet</EmptyTitle>
       <EmptyDescription>
-        Create your first project to organize repositories and environments.
+        Projects group repositories, environments, and access rules. Create your
+        first project to get started.
       </EmptyDescription>
       <EmptyActions>
         <Button type="button">Create your first project</Button>
+        <Button type="button" variant="ghost">
+          Browse templates
+        </Button>
       </EmptyActions>
     </Empty>
   );
@@ -118,7 +130,7 @@ const examples: ComponentExample[] = [
     title: "Basic",
     description: "Title and description inside the dashed border shell.",
     preview: <BasicEmptyDemo />,
-    code: `<Empty>
+    code: `<Empty className="max-w-md">
   <EmptyTitle>No results</EmptyTitle>
   <EmptyDescription>
     Try adjusting your filters or search terms.
@@ -130,12 +142,14 @@ const examples: ComponentExample[] = [
     title: "With icon",
     description: "EmptyIcon centers an illustrative glyph above the copy.",
     preview: <WithIconEmptyDemo />,
-    code: `<Empty>
+    code: `<Empty className="max-w-md">
   <EmptyIcon>
     <FolderIcon />
   </EmptyIcon>
   <EmptyTitle>No files yet</EmptyTitle>
-  <EmptyDescription>Upload assets to share them with your team.</EmptyDescription>
+  <EmptyDescription>
+    Upload assets to share them with your team.
+  </EmptyDescription>
 </Empty>`,
   },
   {
@@ -143,35 +157,62 @@ const examples: ComponentExample[] = [
     title: "With action",
     description: "A single primary action for the most likely next step.",
     preview: <WithActionEmptyDemo />,
-    code: `<EmptyActions>
-  <Button type="button" size="sm">
-    Create project
-  </Button>
-</EmptyActions>`,
+    code: `<Empty className="max-w-md">
+  <EmptyIcon>
+    <FolderIcon />
+  </EmptyIcon>
+  <EmptyTitle>No projects yet</EmptyTitle>
+  <EmptyDescription>
+    Create a project to organize issues, docs, and deploys.
+  </EmptyDescription>
+  <EmptyActions>
+    <Button type="button" size="sm">
+      Create project
+    </Button>
+  </EmptyActions>
+</Empty>`,
   },
   {
     id: "multiple-actions",
     title: "With multiple actions",
     description: "Primary and secondary actions for branching flows.",
     preview: <WithMultipleActionsEmptyDemo />,
-    code: `<EmptyActions>
-  <Button type="button" size="sm">Invite people</Button>
-  <Button type="button" size="sm" variant="outline">
-    Import CSV
-  </Button>
-</EmptyActions>`,
+    code: `<Empty className="max-w-md">
+  <EmptyTitle>Invite your team</EmptyTitle>
+  <EmptyDescription>
+    You are the only member in this workspace. Add teammates or import from
+    CSV.
+  </EmptyDescription>
+  <EmptyActions>
+    <Button type="button" size="sm">
+      Invite people
+    </Button>
+    <Button type="button" size="sm" variant="outline">
+      Import CSV
+    </Button>
+  </EmptyActions>
+</Empty>`,
   },
   {
     id: "table-search",
     title: "Table / search",
     description: "Compact size for filtered tables and search with no matches.",
     preview: <TableSearchEmptyDemo />,
-    code: `<Empty size="sm">
+    code: `<Empty size="sm" className="max-w-lg">
   <EmptyIcon>
     <SearchIcon />
   </EmptyIcon>
   <EmptyTitle>No matching rows</EmptyTitle>
-  <EmptyDescription>Clear the search or try another keyword.</EmptyDescription>
+  <EmptyDescription>
+    Nothing matched{" "}
+    <span className="text-foreground font-medium">billing</span>. Clear the
+    search or try another keyword.
+  </EmptyDescription>
+  <EmptyActions>
+    <Button type="button" size="sm" variant="outline">
+      Clear search
+    </Button>
+  </EmptyActions>
 </Empty>`,
   },
 ];

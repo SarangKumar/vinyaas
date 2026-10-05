@@ -24,11 +24,11 @@ export function SelectBlock() {
     >
       <div className="grid gap-2">
         <Label htmlFor="home-timezone">Timezone</Label>
-        <Select searchable defaultValue="ist">
+        <Select defaultValue="ist">
           <SelectTrigger id="home-timezone" className="w-full">
             <SelectValue placeholder="Select a timezone" />
           </SelectTrigger>
-          <SelectContent searchPlaceholder="Search timezones">
+          <SelectContent>
             <SelectGroup>
               <SelectLabel>Americas</SelectLabel>
               <SelectItem value="est">Eastern (EST)</SelectItem>

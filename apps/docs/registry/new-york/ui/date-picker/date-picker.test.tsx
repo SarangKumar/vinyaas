@@ -15,6 +15,13 @@ describe("DatePicker", () => {
     expect(screen.getByRole("grid")).toBeInTheDocument();
   });
 
+  it("spaces the calendar icon and label with gap-2", () => {
+    render(<DatePicker placeholder="Pick a date" />);
+    const trigger = screen.getByRole("button", { name: /pick a date/i });
+    expect(trigger.className).toMatch(/gap-2/);
+    expect(trigger.className).toMatch(/inline-flex/);
+  });
+
   it("selects a date, updates the trigger label, and closes", () => {
     const onValueChange = vi.fn();
     render(
@@ -37,12 +44,25 @@ describe("DatePicker", () => {
     expect(screen.queryByRole("grid")).not.toBeInTheDocument();
   });
 
+  it("announces the selected date on the trigger", () => {
+    render(
+      <DatePicker
+        defaultValue={new Date(2026, 3, 8)}
+        formatString="PPP"
+        placeholder="Pick a date"
+      />,
+    );
+
+    const trigger = screen.getByRole("button");
+    expect(trigger.getAttribute("aria-label") ?? "").toMatch(/selected date/i);
+  });
+
   it("respects the disabled state", () => {
     render(<DatePicker disabled placeholder="Pick a date" />);
     expect(screen.getByRole("button", { name: /pick a date/i })).toBeDisabled();
   });
 
-  it("restores focus to the trigger after Escape", () => {
+  it("closes on Escape without trapping focus", () => {
     render(<DatePicker defaultOpen placeholder="Pick a date" />);
     const trigger = screen.getByRole("button", { name: /pick a date/i });
     fireEvent.keyDown(document, { key: "Escape" });

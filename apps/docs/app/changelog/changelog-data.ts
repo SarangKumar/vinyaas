@@ -39,7 +39,7 @@ export const changelogVersions: ChangelogVersion[] = [
           `Resizable — horizontal and vertical panel layouts with keyboard-accessible handles, nested groups, and composite docs examples.`,
           `Sidebar — composable dashboard navigation with expanded and collapsed desktop modes, mobile Drawer composition, and accessible collapsed labels.`,
           `Drag & Drop — sortable and reorderable lists and boards via @dnd-kit, with handles, keyboard and touch support, drop indicators, and multiple containers.`,
-          `Select — searchable custom dropdown with grouped options, built-in filter, keyboard listbox navigation, and form-friendly hidden input support.`,
+          `Select — custom dropdown with grouped options, keyboard listbox navigation, and form-friendly hidden input support.`,
           `Select documentation with basic, grouped, disabled, long-list, form, and dashboard examples.`,
           `Calendar — accessible month calendar for single-date selection with keyboard navigation and disabled dates.`,
           `Date Picker — button + popover + calendar composition for choosing a single date.`,

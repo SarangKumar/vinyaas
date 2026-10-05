@@ -50,12 +50,26 @@ describe("Empty", () => {
     ).toBeInTheDocument();
   });
 
-  it("supports compact sizing", () => {
+  it("supports compact sizing with quieter padding tokens", () => {
     render(
       <Empty size="sm">
         <EmptyTitle>Empty</EmptyTitle>
       </Empty>,
     );
-    expect(screen.getByRole("status")).toHaveAttribute("data-size", "sm");
+    const root = screen.getByRole("status");
+    expect(root).toHaveAttribute("data-size", "sm");
+    expect(root.className).toMatch(/py-8|px-6|gap-3/);
+  });
+
+  it("uses readable description typography", () => {
+    render(
+      <Empty>
+        <EmptyTitle>No results</EmptyTitle>
+        <EmptyDescription>Try another filter.</EmptyDescription>
+      </Empty>,
+    );
+    expect(screen.getByText(/try another filter/i).className).toMatch(
+      /text-sm|leading-6/,
+    );
   });
 });

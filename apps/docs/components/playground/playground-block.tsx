@@ -33,18 +33,22 @@ export function PlaygroundBlock({
       )}
     >
       {title ? (
-        <header className="flex min-w-0 flex-col gap-1">
+        <header className="flex min-h-[4.75rem] min-w-0 flex-col gap-1">
           <h2 className="text-foreground text-[0.9375rem] font-medium tracking-tight">
             {title}
           </h2>
           {description ? (
-            <p className="text-muted-foreground text-base leading-7">
+            <p className="text-muted-foreground line-clamp-2 text-sm leading-6">
               {description}
             </p>
-          ) : null}
+          ) : (
+            <p className="invisible text-sm leading-6" aria-hidden="true">
+              &nbsp;
+            </p>
+          )}
         </header>
       ) : null}
-      <div className="flex max-w-full min-w-0 flex-col gap-4 p-0.5 text-sm">
+      <div className="flex max-w-full min-w-0 flex-1 flex-col gap-4 p-0.5 text-sm">
         {children}
       </div>
     </section>

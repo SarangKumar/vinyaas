@@ -270,7 +270,7 @@ const componentSources: readonly ComponentMetaSource[] = [
     name: "Select",
     slug: "select",
     description:
-      "A custom select with optional search, grouped options, and keyboard-friendly listbox behavior.",
+      "A custom select with grouped options and keyboard-friendly listbox behavior.",
     introducedIn: "1.3.0",
   },
   {

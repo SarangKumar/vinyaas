@@ -657,12 +657,15 @@ export const themeExamples: ThemeExample[] = [
   {
     id: "calendar",
     title: "Calendar",
-    description: "Selected day, today, and month navigation.",
+    description: "Selected range, today accents, and month navigation.",
     preview: (
       <Calendar
-        mode="single"
+        mode="range"
         defaultMonth={new Date(2026, 2, 1)}
-        selected={new Date(2026, 2, 12)}
+        selected={{
+          from: new Date(2026, 2, 10),
+          to: new Date(2026, 2, 16),
+        }}
         className="rounded-md border"
       />
     ),
@@ -670,7 +673,7 @@ export const themeExamples: ThemeExample[] = [
   {
     id: "date-picker",
     title: "Date picker",
-    description: "Trigger showing a selected deployment date.",
+    description: "Calendar icon with spaced selected-date label.",
     preview: (
       <div className="grid min-w-0 gap-2">
         <Label htmlFor="theme-deploy-date">Deployment date</Label>
@@ -685,7 +688,7 @@ export const themeExamples: ThemeExample[] = [
   {
     id: "combobox",
     title: "Combobox",
-    description: "Searchable assignee filter.",
+    description: "Searchable assignee filter with a selected value.",
     preview: (
       <div className="grid min-w-0 gap-2">
         <Label htmlFor="theme-assignee">Assignee</Label>
@@ -695,6 +698,7 @@ export const themeExamples: ThemeExample[] = [
             <ComboboxItem value="maya">Maya Chen</ComboboxItem>
             <ComboboxItem value="jordan">Jordan Lee</ComboboxItem>
             <ComboboxItem value="sam">Sam Rivera</ComboboxItem>
+            <ComboboxItem value="priya">Priya Nair</ComboboxItem>
           </ComboboxContent>
         </Combobox>
       </div>
@@ -703,7 +707,7 @@ export const themeExamples: ThemeExample[] = [
   {
     id: "empty-state",
     title: "Empty state",
-    description: "Icon, copy, and primary action.",
+    description: "Icon, title, description, and primary action.",
     preview: (
       <Empty size="sm" className="min-w-0">
         <EmptyIcon>

@@ -3,14 +3,14 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const emptySize = {
-  default: "gap-3 p-8",
-  sm: "gap-2 p-5",
+  default: "gap-4 px-8 py-12",
+  sm: "gap-3 px-6 py-8",
 } as const;
 
 export type EmptySize = keyof typeof emptySize;
 
 /**
- * Compact empty-state shell for lists, tables, and dashboard panels.
+ * Quiet empty-state shell for lists, tables, and dashboard panels.
  */
 export function Empty({
   className,
@@ -25,7 +25,7 @@ export function Empty({
       data-size={size}
       role="status"
       className={cn(
-        "border-border bg-card text-card-foreground flex w-full min-w-0 flex-col items-center justify-center rounded-md border border-dashed text-center",
+        "border-border/80 bg-background text-card-foreground flex w-full min-w-0 flex-col items-center justify-center rounded-lg border border-dashed text-center",
         emptySize[size],
         className,
       )}
@@ -42,7 +42,7 @@ export function EmptyIcon({
     <div
       data-slot="empty-icon"
       className={cn(
-        "bg-muted text-muted-foreground mb-1 flex size-10 items-center justify-center rounded-full [&_svg]:size-5",
+        "bg-muted text-muted-foreground flex size-11 items-center justify-center rounded-full [&_svg]:size-5",
         className,
       )}
       {...props}
@@ -58,7 +58,7 @@ export function EmptyTitle({
     <h3
       data-slot="empty-title"
       className={cn(
-        "text-foreground min-w-0 text-sm leading-none font-semibold tracking-tight",
+        "text-foreground min-w-0 text-base leading-snug font-medium tracking-tight",
         className,
       )}
       {...props}
@@ -74,7 +74,7 @@ export function EmptyDescription({
     <p
       data-slot="empty-description"
       className={cn(
-        "text-muted-foreground max-w-sm min-w-0 text-sm leading-5 text-pretty",
+        "text-muted-foreground max-w-sm min-w-0 text-sm leading-6 text-pretty",
         className,
       )}
       {...props}
@@ -90,7 +90,7 @@ export function EmptyActions({
     <div
       data-slot="empty-actions"
       className={cn(
-        "mt-1 flex flex-wrap items-center justify-center gap-2",
+        "mt-1 flex flex-wrap items-center justify-center gap-2 pt-1",
         className,
       )}
       {...props}

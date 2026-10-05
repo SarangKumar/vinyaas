@@ -18,7 +18,6 @@ export type DatePickerProps = {
   formatString?: string;
   id?: string;
   className?: string;
-  /** Called when the open state changes. */
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -72,6 +71,8 @@ export function DatePicker({
   }
 
   const label = selected ? format(selected, formatString) : placeholder;
+  const accessibleName =
+    ariaLabel ?? (selected ? `Selected date ${label}` : placeholder);
 
   return (
     <Popover open={isOpen} onOpenChange={setOpen}>
@@ -81,17 +82,15 @@ export function DatePicker({
           type="button"
           variant="outline"
           disabled={disabled}
-          aria-label={
-            ariaLabel ?? (selected ? `Selected date ${label}` : placeholder)
-          }
+          aria-label={accessibleName}
           data-empty={!selected ? "" : undefined}
           className={cn(
-            "w-full min-w-0 justify-start text-left font-normal",
+            "inline-flex w-full min-w-0 items-center justify-start gap-2 text-left font-normal",
             !selected && "text-muted-foreground",
             className,
           )}
         >
-          <CalendarGlyph className="mr-2 size-4 shrink-0 opacity-70" />
+          <CalendarGlyph className="size-4 shrink-0 opacity-70" />
           <span className="truncate">{label}</span>
         </Button>
       </PopoverTrigger>

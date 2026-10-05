@@ -16,13 +16,11 @@ function TimezoneSelect({
   defaultValue,
   onValueChange,
   disabled,
-  searchable = false,
 }: {
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   disabled?: boolean;
-  searchable?: boolean;
 }) {
   return (
     <Select
@@ -30,12 +28,11 @@ function TimezoneSelect({
       defaultValue={defaultValue}
       onValueChange={onValueChange}
       disabled={disabled}
-      searchable={searchable}
     >
       <SelectTrigger aria-label="Timezone">
         <SelectValue placeholder="Select a timezone" />
       </SelectTrigger>
-      <SelectContent searchPlaceholder="Search timezones">
+      <SelectContent>
         <SelectGroup>
           <SelectLabel>North America</SelectLabel>
           <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
@@ -73,30 +70,18 @@ describe("Select", () => {
     expect(screen.queryByRole("listbox")).toBeNull();
   });
 
-  it("opens without a search field by default", async () => {
+  it("opens the listbox and focuses the first option", async () => {
     render(<TimezoneSelect />);
 
     fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
 
     expect(screen.getByRole("listbox")).toBeInTheDocument();
-    expect(screen.queryByPlaceholderText("Search timezones")).toBeNull();
     expect(screen.getByText("North America")).toBeInTheDocument();
 
     await waitFor(() => {
       expect(
         screen.getByRole("option", { name: /Eastern Standard Time/ }),
       ).toHaveFocus();
-    });
-  });
-
-  it("shows search when searchable is set", async () => {
-    render(<TimezoneSelect searchable />);
-
-    fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
-
-    expect(screen.getByPlaceholderText("Search timezones")).toBeInTheDocument();
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText("Search timezones")).toHaveFocus();
     });
   });
 
@@ -130,35 +115,6 @@ describe("Select", () => {
 
     rerender(<TimezoneSelect value="jst" onValueChange={onValueChange} />);
     expect(screen.getByText("Japan Standard Time (JST)")).toBeInTheDocument();
-  });
-
-  it("filters options with case-insensitive search when searchable", () => {
-    render(<TimezoneSelect searchable />);
-
-    fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
-    fireEvent.change(screen.getByPlaceholderText("Search timezones"), {
-      target: { value: "japan" },
-    });
-
-    expect(
-      screen.getByRole("option", { name: /Japan Standard Time/ }),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("option", { name: /Eastern Standard Time/ }),
-    ).toBeNull();
-    expect(screen.getByText("Asia")).toBeInTheDocument();
-    expect(screen.queryByText("North America")).toBeNull();
-  });
-
-  it("shows empty state when searchable search matches nothing", () => {
-    render(<TimezoneSelect searchable />);
-
-    fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
-    fireEvent.change(screen.getByPlaceholderText("Search timezones"), {
-      target: { value: "zzz" },
-    });
-
-    expect(screen.getByText("No results found.")).toBeInTheDocument();
   });
 
   it("does not select disabled options", () => {

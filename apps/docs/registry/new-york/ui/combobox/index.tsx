@@ -89,8 +89,7 @@ export function Combobox({
   const isOpenControlled = open !== undefined;
   const isOpen = isOpenControlled ? open : uncontrolledOpen;
 
-  const labelsRef = React.useRef(new Map<string, string>());
-  const [, bump] = React.useState(0);
+  const [labels, setLabels] = React.useState(() => new Map<string, string>());
 
   const setValue = React.useCallback(
     (next: string | undefined) => {
@@ -114,29 +113,38 @@ export function Combobox({
 
   const registerLabel = React.useCallback(
     (itemValue: string, label: string) => {
-      if (labelsRef.current.get(itemValue) === label) {
-        return;
-      }
-      labelsRef.current.set(itemValue, label);
-      bump((n) => n + 1);
+      setLabels((prev) => {
+        if (prev.get(itemValue) === label) {
+          return prev;
+        }
+        const next = new Map(prev);
+        next.set(itemValue, label);
+        return next;
+      });
     },
     [],
   );
 
   const unregisterLabel = React.useCallback((itemValue: string) => {
-    if (!labelsRef.current.has(itemValue)) {
-      return;
-    }
-    labelsRef.current.delete(itemValue);
-    bump((n) => n + 1);
+    setLabels((prev) => {
+      if (!prev.has(itemValue)) {
+        return prev;
+      }
+      const next = new Map(prev);
+      next.delete(itemValue);
+      return next;
+    });
   }, []);
 
-  const labelFor = React.useCallback((itemValue: string | undefined) => {
-    if (!itemValue) {
-      return undefined;
-    }
-    return labelsRef.current.get(itemValue);
-  }, []);
+  const labelFor = React.useCallback(
+    (itemValue: string | undefined) => {
+      if (!itemValue) {
+        return undefined;
+      }
+      return labels.get(itemValue);
+    },
+    [labels],
+  );
 
   const context = React.useMemo(
     () => ({
@@ -178,15 +186,18 @@ export function ComboboxTrigger({
   className,
   placeholder = "Select option…",
   children,
+  "aria-label": ariaLabel,
+  disabled: disabledProp,
   ...props
 }: ComboboxTriggerProps) {
   const combobox = useCombobox();
   const label = combobox.labelFor(combobox.value);
   const display = children ?? label ?? placeholder;
   const accessibleName =
-    typeof display === "string" || typeof display === "number"
+    ariaLabel ??
+    (typeof display === "string" || typeof display === "number"
       ? String(display)
-      : placeholder;
+      : placeholder);
 
   return (
     <PopoverTrigger>
@@ -196,18 +207,18 @@ export function ComboboxTrigger({
         role="combobox"
         aria-haspopup="listbox"
         aria-expanded={combobox.open}
-        aria-label={props["aria-label"] ?? accessibleName}
-        disabled={combobox.disabled || props.disabled}
+        aria-label={accessibleName}
+        disabled={combobox.disabled || disabledProp}
         data-empty={!combobox.value ? "" : undefined}
         className={cn(
-          "w-full min-w-0 justify-between font-normal",
+          "inline-flex w-full min-w-0 items-center justify-between gap-2 font-normal",
           !combobox.value && "text-muted-foreground",
           className,
         )}
         {...props}
       >
         <span className="truncate">{display}</span>
-        <ChevronDownIcon className="text-muted-foreground ml-2 size-4 shrink-0 opacity-70" />
+        <ChevronDownIcon className="text-muted-foreground size-4 shrink-0 opacity-70" />
       </Button>
     </PopoverTrigger>
   );
@@ -221,6 +232,34 @@ export type ComboboxContentProps = {
   align?: "start" | "center" | "end";
 };
 
+function collectComboboxItems(nodes: React.ReactNode): Array<{
+  value: string;
+  label: string;
+}> {
+  const items: Array<{ value: string; label: string }> = [];
+
+  React.Children.forEach(nodes, (child) => {
+    if (
+      !React.isValidElement<{ value?: unknown; children?: React.ReactNode }>(
+        child,
+      )
+    ) {
+      return;
+    }
+
+    if (typeof child.props.value !== "string") {
+      return;
+    }
+
+    items.push({
+      value: child.props.value,
+      label: textContent(child.props.children),
+    });
+  });
+
+  return items;
+}
+
 export function ComboboxContent({
   children,
   className,
@@ -228,13 +267,24 @@ export function ComboboxContent({
   emptyMessage = "No results found.",
   align = "start",
 }: ComboboxContentProps) {
+  const combobox = useCombobox();
+
+  React.useLayoutEffect(() => {
+    for (const item of collectComboboxItems(children)) {
+      combobox.registerLabel(item.value, item.label);
+    }
+  }, [children, combobox.registerLabel]);
+
   return (
     <PopoverContent
       align={align}
       className={cn("w-72 min-w-[12rem] p-0", className)}
     >
       <Command className="rounded-md border-0 shadow-none">
-        <CommandInput placeholder={searchPlaceholder} />
+        <CommandInput
+          placeholder={searchPlaceholder}
+          aria-label={searchPlaceholder}
+        />
         <CommandList>
           <CommandEmpty>{emptyMessage}</CommandEmpty>
           {children}
@@ -264,8 +314,8 @@ export function ComboboxItem({
 
   React.useEffect(() => {
     combobox.registerLabel(value, label);
-    return () => combobox.unregisterLabel(value);
-  }, [combobox.registerLabel, combobox.unregisterLabel, value, label]);
+    // Keep labels after unmount so a closed trigger can still show the selection.
+  }, [combobox.registerLabel, value, label]);
 
   const selected = combobox.value === value;
 

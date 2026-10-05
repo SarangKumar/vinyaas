@@ -15,6 +15,7 @@ import {
   DisabledDatesDemo,
   MeetingScheduleInPracticeDemo,
   MonthNavigationDemo,
+  RangeCalendarDemo,
   SelectedDateDemo,
 } from "./calendar-demos";
 
@@ -58,6 +59,9 @@ export function ScheduleMeeting() {
           disabled={{ dayOfWeek: [0, 6] }}
           className="rounded-md border"
         />
+        <p className="text-muted-foreground text-sm leading-6">
+          Weekends are unavailable for this room.
+        </p>
       </div>
       {date ? (
         <Badge variant="secondary" className="w-fit">
@@ -78,17 +82,17 @@ const api: ApiRow[] = [
     prop: "mode",
     type: '"single" | "multiple" | "range"',
     description:
-      "Selection mode forwarded to DayPicker. Use single for one date.",
+      "Selection mode forwarded to DayPicker. Use single for one date or range for a start and end.",
   },
   {
     prop: "selected",
     type: "Date | Date[] | DateRange",
-    description: "The selected date or dates for the active mode.",
+    description: "The selected date, dates, or range for the active mode.",
   },
   {
     prop: "onSelect",
     type: "(date) => void",
-    description: "Called when the user selects or clears a date.",
+    description: "Called when the user selects or clears a date or range.",
   },
   {
     prop: "disabled",
@@ -138,20 +142,38 @@ const examples: ComponentExample[] = [
   new Date(2026, 9, 15),
 );
 
-<Calendar
-  mode="single"
-  selected={date}
-  onSelect={setDate}
-  defaultMonth={date}
-  className="rounded-md border"
-/>`,
+<div className="grid w-full max-w-sm gap-3">
+  <Calendar
+    mode="single"
+    selected={date}
+    onSelect={setDate}
+    defaultMonth={date}
+    className="rounded-md border"
+  />
+  {date ? (
+    <p className="text-muted-foreground text-sm leading-6">
+      Selected{" "}
+      <span className="text-foreground font-medium">
+        {date.toLocaleDateString(undefined, {
+          weekday: "short",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })}
+      </span>
+    </p>
+  ) : null}
+</div>`,
   },
   {
     id: "disabled",
     title: "Disabled dates",
     description: "Matchers prevent choosing past days.",
     preview: <DisabledDatesDemo />,
-    code: `<Calendar
+    code: `const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+<Calendar
   mode="single"
   selected={date}
   onSelect={setDate}
@@ -165,13 +187,52 @@ const examples: ComponentExample[] = [
     description:
       "Caption buttons move between months. Set defaultMonth for a fixed starting view.",
     preview: <MonthNavigationDemo />,
-    code: `<Calendar
-  mode="single"
-  selected={date}
-  onSelect={setDate}
-  defaultMonth={new Date(2026, 2, 1)}
-  className="rounded-md border"
-/>`,
+    code: `const [date, setDate] = useState<Date | undefined>(
+  new Date(2026, 2, 12),
+);
+
+<div className="grid w-full max-w-sm gap-3">
+  <Calendar
+    mode="single"
+    selected={date}
+    onSelect={setDate}
+    defaultMonth={new Date(2026, 2, 1)}
+    className="rounded-md border"
+  />
+  <p className="text-muted-foreground text-sm leading-6">
+    Use the previous and next controls in the caption to move between
+    months. Pass <code className="text-foreground">defaultMonth</code> to
+    open on a specific month.
+  </p>
+</div>`,
+  },
+  {
+    id: "range",
+    title: "Date range",
+    description: "Pick a start and end date with in-range highlighting.",
+    preview: <RangeCalendarDemo />,
+    code: `const [range, setRange] = useState<DateRange | undefined>({
+  from: new Date(2026, 2, 10),
+  to: new Date(2026, 2, 16),
+});
+
+<div className="grid w-full max-w-sm gap-3">
+  <Calendar
+    mode="range"
+    selected={range}
+    onSelect={setRange}
+    defaultMonth={new Date(2026, 2, 1)}
+    numberOfMonths={1}
+    className="rounded-md border"
+  />
+  {range?.from ? (
+    <p className="text-muted-foreground text-sm leading-6">
+      {range.to
+        ? \`\${range.from.toLocaleDateString()} – \${range.to.toLocaleDateString()}\`
+        : \`Starting \${range.from.toLocaleDateString()}\`}
+    </p>
+  ) : null}
+</div>`,
   },
 ];
 

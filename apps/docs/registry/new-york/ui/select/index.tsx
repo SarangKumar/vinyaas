@@ -29,13 +29,9 @@ type SelectContextValue = {
   open: boolean;
   setOpen: (open: boolean, options?: SetOpenOptions) => void;
   disabled: boolean;
-  searchable: boolean;
   triggerRef: React.RefObject<HTMLElement | null>;
   contentId: string;
   listboxId: string;
-  searchId: string;
-  query: string;
-  setQuery: (query: string) => void;
   activeValue: string | undefined;
   setActiveValue: (value: string | undefined) => void;
   registerLabel: (value: string, label: string) => void;
@@ -124,7 +120,6 @@ export function Select({
   defaultOpen = false,
   onOpenChange,
   disabled = false,
-  searchable = false,
   name,
 }: {
   children: React.ReactNode;
@@ -135,20 +130,16 @@ export function Select({
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
-  /** When true, show a built-in search field and filter options. Off by default. */
-  searchable?: boolean;
   /** Optional form field name (hidden input). */
   name?: string;
 }) {
   const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
-  const [query, setQuery] = useState("");
   const [activeValue, setActiveValue] = useState<string | undefined>();
   const [labels, setLabels] = useState(() => new Map<string, string>());
   const triggerRef = useRef<HTMLElement>(null);
   const contentId = useId();
   const listboxId = useId();
-  const searchId = useId();
 
   const isValueControlled = value !== undefined;
   const selectedValue = isValueControlled ? value : uncontrolledValue;
@@ -175,7 +166,6 @@ export function Select({
       onOpenChange?.(next);
 
       if (!next) {
-        setQuery("");
         setActiveValue(undefined);
 
         if (options?.restoreFocus !== false) {
@@ -230,13 +220,9 @@ export function Select({
       open: isOpen,
       setOpen,
       disabled,
-      searchable,
       triggerRef,
       contentId,
       listboxId,
-      searchId,
-      query,
-      setQuery,
       activeValue,
       setActiveValue,
       registerLabel,
@@ -250,11 +236,8 @@ export function Select({
       isOpen,
       setOpen,
       disabled,
-      searchable,
       contentId,
       listboxId,
-      searchId,
-      query,
       activeValue,
       registerLabel,
       unregisterLabel,
@@ -289,7 +272,6 @@ export function SelectTrigger({
     open,
     setOpen,
     disabled,
-    searchable,
     triggerRef,
     contentId,
     listboxId,
@@ -305,7 +287,7 @@ export function SelectTrigger({
       aria-expanded={open}
       aria-controls={open ? listboxId : undefined}
       aria-haspopup="listbox"
-      aria-autocomplete={searchable ? "list" : "none"}
+      aria-autocomplete="none"
       disabled={disabled}
       data-slot="select-trigger"
       className={cn(
@@ -376,65 +358,6 @@ export function SelectValue({
   );
 }
 
-function matchesQuery(label: string, query: string) {
-  if (!query.trim()) {
-    return true;
-  }
-
-  return label.toLowerCase().includes(query.trim().toLowerCase());
-}
-
-function filterSelectChildren(
-  children: React.ReactNode,
-  query: string,
-): React.ReactNode {
-  const nodes = React.Children.toArray(children);
-  const next: React.ReactNode[] = [];
-
-  for (const child of nodes) {
-    if (!React.isValidElement(child)) {
-      next.push(child);
-      continue;
-    }
-
-    if (child.type === SelectGroup) {
-      const filtered = stripOrphanLabels(
-        filterSelectChildren(
-          (child.props as { children?: React.ReactNode }).children,
-          query,
-        ),
-      );
-
-      if (React.Children.count(filtered) === 0) {
-        continue;
-      }
-
-      next.push(React.cloneElement(child, {}, filtered));
-      continue;
-    }
-
-    if (child.type === SelectItem) {
-      const itemProps = child.props as SelectItemProps;
-      const label = textContent(itemProps.children);
-
-      if (matchesQuery(label, query)) {
-        next.push(child);
-      }
-
-      continue;
-    }
-
-    if (child.type === SelectLabel || child.type === SelectSeparator) {
-      next.push(child);
-      continue;
-    }
-
-    next.push(child);
-  }
-
-  return next;
-}
-
 function collectSelectItems(nodes: React.ReactNode): Array<{
   value: string;
   label: string;
@@ -469,40 +392,6 @@ function collectSelectItems(nodes: React.ReactNode): Array<{
   return items;
 }
 
-function stripOrphanLabels(nodes: React.ReactNode): React.ReactNode {
-  const list = React.Children.toArray(nodes);
-  const result: React.ReactNode[] = [];
-  let pendingLabel: React.ReactElement | null = null;
-
-  for (const node of list) {
-    if (React.isValidElement(node) && node.type === SelectLabel) {
-      pendingLabel = node;
-      continue;
-    }
-
-    if (
-      React.isValidElement(node) &&
-      (node.type === SelectItem || node.type === SelectGroup)
-    ) {
-      if (pendingLabel) {
-        result.push(pendingLabel);
-        pendingLabel = null;
-      }
-
-      result.push(node);
-      continue;
-    }
-
-    if (pendingLabel) {
-      pendingLabel = null;
-    }
-
-    result.push(node);
-  }
-
-  return result;
-}
-
 type SelectItemProps = {
   value: string;
   disabled?: boolean;
@@ -515,17 +404,14 @@ export function SelectContent({
   className,
   align = "start",
   side = "bottom",
-  searchPlaceholder = "Search…",
 }: {
   children: React.ReactNode;
   className?: string;
   align?: Align;
   side?: Side;
-  searchPlaceholder?: string;
 }) {
   const select = useSelect();
   const contentRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
   const [point, setPoint] = useState<{
     top: number;
     left: number;
@@ -537,30 +423,6 @@ export function SelectContent({
       select.registerLabel(item.value, item.label);
     }
   }, [children, select]);
-
-  const filteredChildren = useMemo(() => {
-    if (!select.searchable || !select.query.trim()) {
-      return children;
-    }
-
-    const filtered = filterSelectChildren(children, select.query);
-    return stripOrphanLabels(filtered);
-  }, [children, select.query, select.searchable]);
-
-  const hasVisibleItems =
-    React.Children.toArray(filteredChildren).some(
-      (node) => React.isValidElement(node) && node.type === SelectItem,
-    ) ||
-    React.Children.toArray(filteredChildren).some(
-      (node) =>
-        React.isValidElement(node) &&
-        node.type === SelectGroup &&
-        React.Children.toArray(
-          (node.props as { children?: React.ReactNode }).children,
-        ).some(
-          (child) => React.isValidElement(child) && child.type === SelectItem,
-        ),
-    );
 
   useLayoutEffect(() => {
     if (!select.open) {
@@ -646,7 +508,7 @@ export function SelectContent({
       window.removeEventListener("resize", place);
       window.removeEventListener("scroll", place, true);
     };
-  }, [select.open, align, side, select.triggerRef, select.query, children]);
+  }, [select.open, align, side, select.triggerRef, children]);
 
   useEffect(() => {
     if (!select.open || select.disabled) {
@@ -654,11 +516,6 @@ export function SelectContent({
     }
 
     const timeout = window.setTimeout(() => {
-      if (select.searchable) {
-        searchRef.current?.focus();
-        return;
-      }
-
       const options = [
         ...(contentRef.current?.querySelectorAll<HTMLElement>(
           '[role="option"]:not([aria-disabled="true"])',
@@ -681,8 +538,8 @@ export function SelectContent({
       window.clearTimeout(timeout);
     };
     // Intentionally only when the list opens — not on every activeValue change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- open/disabled/searchable gate initial focus
-  }, [select.open, select.disabled, select.searchable]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- open/disabled gate initial focus
+  }, [select.open, select.disabled]);
 
   useEffect(() => {
     if (!select.open || select.disabled) {
@@ -719,42 +576,18 @@ export function SelectContent({
         (option) => option.dataset.value === select.activeValue,
       );
       const index = active ? list.indexOf(active) : -1;
-      const searchFocused =
-        select.searchable && document.activeElement === searchRef.current;
 
       if (event.key === "Tab") {
         // Move through options while open. At either end, close without
         // restoring focus so the browser continues normal Tab order.
         if (event.shiftKey) {
-          if (searchFocused) {
-            select.setOpen(false, { restoreFocus: false });
-            return;
-          }
-
           if (index <= 0) {
-            if (select.searchable) {
-              event.preventDefault();
-              searchRef.current?.focus();
-              return;
-            }
-
             select.setOpen(false, { restoreFocus: false });
             return;
           }
 
           event.preventDefault();
           highlight(list[index - 1]);
-          return;
-        }
-
-        if (searchFocused) {
-          if (list.length === 0) {
-            select.setOpen(false, { restoreFocus: false });
-            return;
-          }
-
-          event.preventDefault();
-          highlight(list[0]);
           return;
         }
 
@@ -841,48 +674,15 @@ export function SelectContent({
         "border-border/80 bg-popover text-popover-foreground z-50 flex max-h-[min(20rem,calc(100dvh-2rem))] flex-col overflow-hidden rounded-md border p-0 text-sm shadow-md motion-reduce:transition-none",
         className,
       )}
-      tabIndex={select.searchable ? undefined : -1}
+      tabIndex={-1}
     >
-      {select.searchable ? (
-        <div className="border-border/80 border-b px-3 py-2">
-          <label htmlFor={select.searchId} className="sr-only">
-            {searchPlaceholder}
-          </label>
-          <input
-            ref={searchRef}
-            id={select.searchId}
-            type="search"
-            autoComplete="off"
-            placeholder={searchPlaceholder}
-            value={select.query}
-            onChange={(event) => select.setQuery(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "ArrowDown") {
-                event.preventDefault();
-                const first = contentRef.current?.querySelector<HTMLElement>(
-                  '[role="option"]:not([aria-disabled="true"])',
-                );
-                select.setActiveValue(first?.dataset.value);
-                first?.focus();
-              }
-            }}
-            className="border-input bg-muted/40 text-foreground placeholder:text-muted-foreground/80 focus-visible:ring-ring h-9 w-full rounded-md border px-3 text-sm focus-visible:ring-2 focus-visible:outline-none"
-          />
-        </div>
-      ) : null}
       <div
         id={select.listboxId}
         role="listbox"
         aria-label="Options"
         className="overflow-y-auto overscroll-contain p-1"
       >
-        {hasVisibleItems ? (
-          filteredChildren
-        ) : (
-          <p className="text-muted-foreground px-2 py-6 text-center text-sm">
-            No results found.
-          </p>
-        )}
+        {children}
       </div>
     </div>,
     document.body,
@@ -951,11 +751,8 @@ export function SelectItem({
   }, [select, value, label]);
 
   useEffect(() => {
-    if (select.open && !select.activeValue && !disabled) {
-      const first = !select.query && selected;
-      if (first) {
-        select.setActiveValue(value);
-      }
+    if (select.open && !select.activeValue && !disabled && selected) {
+      select.setActiveValue(value);
     }
   }, [select, value, disabled, selected]);
 

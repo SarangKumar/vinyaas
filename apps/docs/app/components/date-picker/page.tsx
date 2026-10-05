@@ -55,6 +55,9 @@ export function ScheduleDeploy() {
           disabledDates={{ dayOfWeek: [0, 6] }}
           className="w-full"
         />
+        <p className="text-muted-foreground text-sm leading-6">
+          Production deploys run on weekdays only.
+        </p>
       </div>
       <Button type="submit" disabled={!date}>
         Schedule deploy
@@ -131,14 +134,27 @@ const examples: ComponentExample[] = [
     title: "Controlled",
     description: "Drive the value from React state for forms and resets.",
     preview: <ControlledDatePickerDemo />,
-    code: `const [date, setDate] = useState<Date | undefined>();
+    code: `const [date, setDate] = useState<Date | undefined>(
+  new Date(2026, 9, 20),
+);
 
-<DatePicker
-  value={date}
-  onValueChange={setDate}
-  aria-label="Release date"
-  className="w-full max-w-sm"
-/>`,
+<div className="grid w-full max-w-sm gap-3">
+  <DatePicker
+    value={date}
+    onValueChange={setDate}
+    aria-label="Release date"
+    className="w-full"
+  />
+  <Button
+    type="button"
+    variant="outline"
+    size="sm"
+    className="w-fit"
+    onClick={() => setDate(undefined)}
+  >
+    Clear
+  </Button>
+</div>`,
   },
   {
     id: "disabled",
@@ -158,13 +174,15 @@ const examples: ComponentExample[] = [
     description:
       "Pair Label and id for deadline fields with future-only dates.",
     preview: <DeadlineLabelDemo />,
-    code: `<Label htmlFor="project-deadline">Project deadline</Label>
-<DatePicker
-  id="project-deadline"
-  placeholder="Select deadline"
-  disabledDates={{ before: new Date() }}
-  className="w-full max-w-sm"
-/>`,
+    code: `<div className="grid w-full max-w-sm gap-2">
+  <Label htmlFor="project-deadline">Project deadline</Label>
+  <DatePicker
+    id="project-deadline"
+    placeholder="Select deadline"
+    disabledDates={{ before: new Date() }}
+    className="w-full"
+  />
+</div>`,
   },
 ];
 

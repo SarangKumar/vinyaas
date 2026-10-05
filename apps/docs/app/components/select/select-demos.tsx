@@ -29,30 +29,13 @@ export function BasicSelectDemo() {
   );
 }
 
-export function SearchableSelectDemo() {
-  return (
-    <Select searchable defaultValue="react">
-      <SelectTrigger className="w-full max-w-sm" aria-label="Framework">
-        <SelectValue placeholder="Select a framework" />
-      </SelectTrigger>
-      <SelectContent searchPlaceholder="Search frameworks…">
-        <SelectItem value="next">Next.js</SelectItem>
-        <SelectItem value="react">React</SelectItem>
-        <SelectItem value="vite">Vite</SelectItem>
-        <SelectItem value="remix">Remix</SelectItem>
-        <SelectItem value="astro">Astro</SelectItem>
-      </SelectContent>
-    </Select>
-  );
-}
-
 export function GroupedTimezoneDemo() {
   return (
-    <Select searchable defaultValue="est">
+    <Select defaultValue="est">
       <SelectTrigger className="w-full max-w-md" aria-label="Timezone">
         <SelectValue placeholder="Select a timezone" />
       </SelectTrigger>
-      <SelectContent searchPlaceholder="Search timezones">
+      <SelectContent>
         <SelectGroup>
           <SelectLabel>North America</SelectLabel>
           <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
@@ -71,11 +54,11 @@ export function GroupedTimezoneDemo() {
 
 export function ChangelogStyleSelectDemo() {
   return (
-    <Select searchable defaultValue="1.3.0">
+    <Select defaultValue="1.3.0">
       <SelectTrigger className="w-full max-w-xs" aria-label="Version">
         <SelectValue placeholder="Select a version" />
       </SelectTrigger>
-      <SelectContent searchPlaceholder="Search versions…">
+      <SelectContent>
         <SelectItem value="1.3.0">v1.3.0</SelectItem>
         <SelectItem value="1.2.0">v1.2.0</SelectItem>
         <SelectItem value="1.1.0">v1.1.0</SelectItem>
@@ -118,11 +101,11 @@ const longOptions = Array.from({ length: 40 }, (_, index) => ({
 
 export function LongListSelectDemo() {
   return (
-    <Select searchable defaultValue="city-0">
+    <Select defaultValue="city-0">
       <SelectTrigger className="w-full max-w-sm" aria-label="City">
         <SelectValue placeholder="Pick a city" />
       </SelectTrigger>
-      <SelectContent searchPlaceholder="Search cities">
+      <SelectContent>
         {longOptions.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}

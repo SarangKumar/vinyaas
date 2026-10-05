@@ -78,7 +78,7 @@ export function DeploymentDateInPracticeDemo() {
           disabledDates={{ dayOfWeek: [0, 6] }}
           className="w-full"
         />
-        <p className="text-muted-foreground text-xs">
+        <p className="text-muted-foreground text-sm leading-6">
           Production deploys run on weekdays only.
         </p>
       </div>

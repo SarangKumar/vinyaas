@@ -73,6 +73,18 @@ describe("Themes playground page", () => {
     expect(
       screen.getByRole("heading", { name: "Resizable" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Calendar" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Date picker" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Combobox" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Empty state" }),
+    ).toBeInTheDocument();
     expect(screen.queryByText("Hot components")).not.toBeInTheDocument();
     expect(screen.queryByText("June 2025")).not.toBeInTheDocument();
     expect(screen.queryByText("Total Revenue")).not.toBeInTheDocument();

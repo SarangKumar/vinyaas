@@ -56,7 +56,7 @@ export function AssigneeFilter() {
   return (
     <Combobox defaultValue="ada">
       <ComboboxTrigger
-        className="w-44"
+        className="w-full max-w-md"
         aria-label="Assignee"
         placeholder="Assignee"
       />
@@ -121,10 +121,15 @@ const examples: ComponentExample[] = [
     description: "Composable trigger and list with a default selection.",
     preview: <BasicComboboxDemo />,
     code: `<Combobox defaultValue="docs">
-  <ComboboxTrigger aria-label="Page" placeholder="Select a page" />
+  <ComboboxTrigger
+    className="w-full max-w-sm"
+    aria-label="Page"
+    placeholder="Select a page"
+  />
   <ComboboxContent>
     <ComboboxItem value="docs">Documentation</ComboboxItem>
     <ComboboxItem value="components">Components</ComboboxItem>
+    <ComboboxItem value="themes">Themes</ComboboxItem>
   </ComboboxContent>
 </Combobox>`,
   },
@@ -134,12 +139,18 @@ const examples: ComponentExample[] = [
     description: "Typing filters options while the popover is open.",
     preview: <FrameworkSearchDemo />,
     code: `<Combobox>
-  <ComboboxTrigger aria-label="Framework" placeholder="Select framework" />
+  <ComboboxTrigger
+    className="w-full max-w-sm"
+    aria-label="Framework"
+    placeholder="Select framework"
+  />
   <ComboboxContent searchPlaceholder="Search frameworks…">
     <ComboboxItem value="next" keywords={["nextjs"]}>
       Next.js
     </ComboboxItem>
     <ComboboxItem value="react">React</ComboboxItem>
+    <ComboboxItem value="vite">Vite</ComboboxItem>
+    <ComboboxItem value="remix">Remix</ComboboxItem>
   </ComboboxContent>
 </Combobox>`,
   },
@@ -149,9 +160,20 @@ const examples: ComponentExample[] = [
     description:
       "Individual items can be unavailable without disabling the field.",
     preview: <DisabledOptionsDemo />,
-    code: `<ComboboxItem value="grace" disabled>
-  Grace Hopper (away)
-</ComboboxItem>`,
+    code: `<Combobox defaultValue="ada">
+  <ComboboxTrigger
+    className="w-full max-w-sm"
+    aria-label="Assignee"
+    placeholder="Select assignee"
+  />
+  <ComboboxContent searchPlaceholder="Search teammates…">
+    <ComboboxItem value="ada">Ada Lovelace</ComboboxItem>
+    <ComboboxItem value="grace" disabled>
+      Grace Hopper (away)
+    </ComboboxItem>
+    <ComboboxItem value="alan">Alan Turing</ComboboxItem>
+  </ComboboxContent>
+</Combobox>`,
   },
   {
     id: "assignee-filter",
@@ -159,15 +181,36 @@ const examples: ComponentExample[] = [
     description:
       "Compact assignee control for boards. Customize emptyMessage when search finds no matches.",
     preview: <AssigneeDashboardDemo />,
-    code: `<Combobox value={assignee} onValueChange={setAssignee}>
-  <ComboboxTrigger className="w-40" aria-label="Assignee" />
-  <ComboboxContent
-    searchPlaceholder="Search…"
-    emptyMessage="No teammates match your search."
-  >
-    <ComboboxItem value="ada">Ada</ComboboxItem>
-  </ComboboxContent>
-</Combobox>`,
+    code: `const [assignee, setAssignee] = useState<string | undefined>("ada");
+
+<div className="border-border flex w-full max-w-md flex-wrap items-center justify-between gap-3 rounded-xl border p-3">
+  <div className="min-w-0">
+    <p className="text-sm font-medium">Open tasks</p>
+    <p className="text-muted-foreground text-xs">
+      {assignee ? \`Filtered by assignee\` : "All teammates"}
+    </p>
+  </div>
+  <Combobox value={assignee} onValueChange={setAssignee}>
+    <ComboboxTrigger
+      className="w-40"
+      aria-label="Assignee"
+      placeholder="Assignee"
+    />
+    <ComboboxContent
+      searchPlaceholder="Search…"
+      emptyMessage="No teammates match your search."
+    >
+      <ComboboxItem value="ada">Ada</ComboboxItem>
+      <ComboboxItem value="grace">Grace</ComboboxItem>
+      <ComboboxItem value="alan">Alan</ComboboxItem>
+    </ComboboxContent>
+  </Combobox>
+  {assignee ? (
+    <Badge variant="secondary" className="w-full sm:w-auto">
+      {assignee}
+    </Badge>
+  ) : null}
+</div>`,
   },
 ];
 

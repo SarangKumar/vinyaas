@@ -3,17 +3,17 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/registry/new-york/ui/select";
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxTrigger,
+} from "@/registry/new-york/ui/combobox";
 
 import { changelogVersions, resolveChangelogVersionId } from "./changelog-data";
 
 /**
  * Filters the changelog to one release. Updates `?v=` without a full navigation.
+ * Uses Combobox so longer version lists stay searchable.
  */
 export function ChangelogVersionSelect({ selectedId }: { selectedId: string }) {
   const router = useRouter();
@@ -29,10 +29,12 @@ export function ChangelogVersionSelect({ selectedId }: { selectedId: string }) {
       >
         Version
       </label>
-      <Select
+      <Combobox
         value={selected}
-        searchable
         onValueChange={(value) => {
+          if (!value) {
+            return;
+          }
           const next = new URLSearchParams(searchParams.toString());
           const resolved = resolveChangelogVersionId(value);
           next.set("v", resolved);
@@ -42,21 +44,22 @@ export function ChangelogVersionSelect({ selectedId }: { selectedId: string }) {
           });
         }}
       >
-        <SelectTrigger
+        <ComboboxTrigger
           id="changelog-version"
           aria-label="Changelog version"
+          placeholder="Select a version"
           className="w-full sm:w-56"
         >
-          <SelectValue placeholder="Select a version" />
-        </SelectTrigger>
-        <SelectContent searchPlaceholder="Search versions…">
+          {changelogVersions.find((version) => version.id === selected)?.label}
+        </ComboboxTrigger>
+        <ComboboxContent searchPlaceholder="Search versions…">
           {changelogVersions.map((version) => (
-            <SelectItem key={version.id} value={version.id}>
+            <ComboboxItem key={version.id} value={version.id}>
               {version.label}
-            </SelectItem>
+            </ComboboxItem>
           ))}
-        </SelectContent>
-      </Select>
+        </ComboboxContent>
+      </Combobox>
     </div>
   );
 }

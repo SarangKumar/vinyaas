@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { DateRange } from "react-day-picker";
 
 import { Badge } from "@/registry/new-york/ui/badge";
 import { Label } from "@/registry/new-york/ui/label";
@@ -23,7 +24,7 @@ export function SelectedDateDemo() {
   const [date, setDate] = useState<Date | undefined>(new Date(2026, 9, 15));
 
   return (
-    <div className="grid w-full max-w-sm gap-2">
+    <div className="grid w-full max-w-sm gap-3">
       <Calendar
         mode="single"
         selected={date}
@@ -32,7 +33,7 @@ export function SelectedDateDemo() {
         className="rounded-md border"
       />
       {date ? (
-        <p className="text-muted-foreground text-xs">
+        <p className="text-muted-foreground text-sm leading-6">
           Selected{" "}
           <span className="text-foreground font-medium">
             {date.toLocaleDateString(undefined, {
@@ -68,7 +69,7 @@ export function MonthNavigationDemo() {
   const [date, setDate] = useState<Date | undefined>(new Date(2026, 2, 12));
 
   return (
-    <div className="grid w-full max-w-sm gap-2">
+    <div className="grid w-full max-w-sm gap-3">
       <Calendar
         mode="single"
         selected={date}
@@ -76,11 +77,38 @@ export function MonthNavigationDemo() {
         defaultMonth={new Date(2026, 2, 1)}
         className="rounded-md border"
       />
-      <p className="text-muted-foreground text-xs">
+      <p className="text-muted-foreground text-sm leading-6">
         Use the previous and next controls in the caption to move between
         months. Pass <code className="text-foreground">defaultMonth</code> to
         open on a specific month.
       </p>
+    </div>
+  );
+}
+
+export function RangeCalendarDemo() {
+  const [range, setRange] = useState<DateRange | undefined>({
+    from: new Date(2026, 2, 10),
+    to: new Date(2026, 2, 16),
+  });
+
+  return (
+    <div className="grid w-full max-w-sm gap-3">
+      <Calendar
+        mode="range"
+        selected={range}
+        onSelect={setRange}
+        defaultMonth={new Date(2026, 2, 1)}
+        numberOfMonths={1}
+        className="rounded-md border"
+      />
+      {range?.from ? (
+        <p className="text-muted-foreground text-sm leading-6">
+          {range.to
+            ? `${range.from.toLocaleDateString()} – ${range.to.toLocaleDateString()}`
+            : `Starting ${range.from.toLocaleDateString()}`}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -102,7 +130,7 @@ export function MeetingScheduleInPracticeDemo() {
           disabled={{ dayOfWeek: [0, 6] }}
           className="rounded-md border"
         />
-        <p className="text-muted-foreground text-xs">
+        <p className="text-muted-foreground text-sm leading-6">
           Weekends are unavailable for this room.
         </p>
       </div>
