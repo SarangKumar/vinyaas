@@ -565,7 +565,11 @@ describe("registry build output", () => {
       'role="dialog"',
     ],
     ["chart", ["ui/chart/index.tsx"], "ChartContainer"],
-    ["accordion", ["ui/accordion/index.tsx"], "aria-expanded"],
+    [
+      "accordion",
+      ["ui/accordion/index.tsx", "ui/accordion/accordion.css"],
+      "aria-expanded",
+    ],
     ["breadcrumb", ["ui/breadcrumb/index.tsx"], "breadcrumb"],
     ["scroll-area", ["ui/scroll-area/index.tsx"], "data-scroll-area"],
     ["slider", ["ui/slider/index.tsx"], 'type="range"'],

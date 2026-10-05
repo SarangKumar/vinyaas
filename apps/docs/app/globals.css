@@ -167,8 +167,8 @@
 }
 
 #docs-content table {
-  display: block;
+  /* Keep table layout (not display:block) so w-full columns span the card.
+   * Horizontal overflow stays on Table / ApiTable wrappers. */
+  width: 100%;
   max-width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }

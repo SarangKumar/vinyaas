@@ -9,6 +9,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/registry/new-york/ui/accordion";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york/ui/card";
 import type { ApiRow } from "@/components/api-table";
 import type {
   ComponentExample,
@@ -41,53 +48,64 @@ export function Faq() {
 }
 `;
 
-const settingsFaqCode = `import {
+const billingFaqCode = `import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-export function WorkspacePreferences() {
+export function BillingFaq() {
   return (
-    <Accordion
-      type="multiple"
-      defaultValue={["notifications", "faq"]}
-      className="w-full max-w-md"
-    >
-      <AccordionItem value="notifications">
-        <AccordionTrigger>Notifications</AccordionTrigger>
-        <AccordionContent>
-          <div className="flex items-center justify-between gap-3 py-1">
-            <Label htmlFor="product-updates">Product updates</Label>
-            <Switch id="product-updates" defaultChecked />
-          </div>
-          <div className="flex items-center gap-2 py-1">
-            <Checkbox id="activity-mail" defaultChecked />
-            <Label htmlFor="activity-mail">Email me about activity</Label>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="privacy">
-        <AccordionTrigger>Privacy</AccordionTrigger>
-        <AccordionContent>
-          <div className="flex items-center justify-between gap-3 py-1">
-            <Label htmlFor="profile-public">Public profile</Label>
-            <Switch id="profile-public" />
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="faq">
-        <AccordionTrigger>Where do settings apply?</AccordionTrigger>
-        <AccordionContent>
-          Preferences sync across the workspace. Each member can override email
-          notifications on their own account.
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+    <Card className="w-full max-w-md gap-0 p-0 text-left">
+      <CardHeader className="gap-1.5 px-4 pt-4 pb-3">
+        <CardTitle className="text-base">Subscription & Billing</CardTitle>
+        <CardDescription>
+          Common questions about your account, plans, payments and
+          cancellations.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="gap-0 px-0 pb-1">
+        <Accordion
+          type="single"
+          collapsible
+          defaultValue="plans"
+          className="border-0"
+        >
+          <AccordionItem value="plans">
+            <AccordionTrigger>What subscription plans do you offer?</AccordionTrigger>
+            <AccordionContent>
+              We offer three subscription tiers: Starter, Pro, and Business.
+              Each plan includes a different mix of billing cycles, storage,
+              API access, and support response times.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="billing">
+            <AccordionTrigger>How does billing work?</AccordionTrigger>
+            <AccordionContent>
+              Plans renew automatically at the end of each billing period. You
+              can switch between monthly and yearly pricing from account
+              settings at any time.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="cancel">
+            <AccordionTrigger>How do I cancel my subscription?</AccordionTrigger>
+            <AccordionContent>
+              Cancel from Billing in account settings. Access continues through
+              the end of the current period, and you can resubscribe whenever
+              you are ready.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </CardContent>
+    </Card>
   );
 }
 `;
@@ -232,45 +250,56 @@ export function SettingsAccordion() {
 
 const inPractice: ComponentInPractice = {
   description:
-    "Workspace preferences mix settings panels with a short FAQ answer. Multiple sections stay open so controls and help share one stack.",
+    "A billing FAQ inside a Card. The first question opens by default; the rest stay collapsed until selected.",
   preview: (
-    <Accordion
-      type="multiple"
-      defaultValue={["notifications", "faq"]}
-      className="w-full max-w-md text-left"
-    >
-      <AccordionItem value="notifications">
-        <AccordionTrigger>Notifications</AccordionTrigger>
-        <AccordionContent>
-          <div className="flex items-center justify-between gap-3 py-1">
-            <Label htmlFor="product-updates">Product updates</Label>
-            <Switch id="product-updates" defaultChecked />
-          </div>
-          <div className="flex items-center gap-2 py-1">
-            <Checkbox id="activity-mail" defaultChecked />
-            <Label htmlFor="activity-mail">Email me about activity</Label>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="privacy">
-        <AccordionTrigger>Privacy</AccordionTrigger>
-        <AccordionContent>
-          <div className="flex items-center justify-between gap-3 py-1">
-            <Label htmlFor="profile-public">Public profile</Label>
-            <Switch id="profile-public" />
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="faq">
-        <AccordionTrigger>Where do settings apply?</AccordionTrigger>
-        <AccordionContent>
-          Preferences sync across the workspace. Each member can override email
-          notifications on their own account.
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+    <Card className="w-full max-w-md gap-0 p-0 text-left">
+      <CardHeader className="gap-1.5 px-4 pt-4 pb-3">
+        <CardTitle className="text-base">Subscription & Billing</CardTitle>
+        <CardDescription>
+          Common questions about your account, plans, payments and
+          cancellations.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="gap-0 px-0 pb-1">
+        <Accordion
+          type="single"
+          collapsible
+          defaultValue="plans"
+          className="border-0"
+        >
+          <AccordionItem value="plans">
+            <AccordionTrigger>
+              What subscription plans do you offer?
+            </AccordionTrigger>
+            <AccordionContent>
+              We offer three subscription tiers: Starter, Pro, and Business.
+              Each plan includes a different mix of billing cycles, storage, API
+              access, and support response times.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="billing">
+            <AccordionTrigger>How does billing work?</AccordionTrigger>
+            <AccordionContent>
+              Plans renew automatically at the end of each billing period. You
+              can switch between monthly and yearly pricing from account
+              settings at any time.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="cancel">
+            <AccordionTrigger>
+              How do I cancel my subscription?
+            </AccordionTrigger>
+            <AccordionContent>
+              Cancel from Billing in account settings. Access continues through
+              the end of the current period, and you can resubscribe whenever
+              you are ready.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </CardContent>
+    </Card>
   ),
-  code: { tsx: settingsFaqCode, jsx: settingsFaqCode },
+  code: { tsx: billingFaqCode, jsx: billingFaqCode },
 };
 
 export default async function AccordionPage() {
@@ -294,9 +323,10 @@ export default async function AccordionPage() {
       manual={
         <p>
           After <code>vinyaas init</code>, place the source at{" "}
-          <code>components/ui/accordion/index.tsx</code>. It imports{" "}
-          <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
-          <code>clsx</code> and <code>tailwind-merge</code>.
+          <code>components/ui/accordion/index.tsx</code> and copy{" "}
+          <code>accordion.css</code> beside it. It imports <code>cn</code> from{" "}
+          <code>@/lib/utils</code>. The project also needs <code>clsx</code> and{" "}
+          <code>tailwind-merge</code>.
         </p>
       }
       usage={usage}

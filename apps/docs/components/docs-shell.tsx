@@ -26,8 +26,9 @@ import { Toaster } from "@/registry/new-york/ui/toast";
 const headerLink = `text-foreground hover:text-foreground/80 cursor-pointer rounded-md px-2 py-1 text-sm ${focusRing}`;
 
 /**
- * Site chrome. Mobile header: Menu · Home · Search · Theme · GitHub.
- * Desktop keeps the full site nav + search field + GitHub/Portfolio.
+ * Site chrome. Below lg: Menu · Home · Search · Theme · GitHub.
+ * At lg+: full site nav links + search field + GitHub/Portfolio.
+ * Nav links and the hamburger share the lg breakpoint so they never overlap.
  */
 export function DocsShell({ children }: { children: React.ReactNode }) {
   const portfolio = portfolioUrl();
@@ -52,37 +53,37 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
                   </Link>
                   <Link
                     href={introductionPath}
-                    className={`${headerLink} hidden md:inline-flex`}
+                    className={`${headerLink} hidden lg:inline-flex`}
                   >
                     Docs
                   </Link>
                   <Link
                     href={componentsPath}
-                    className={`${headerLink} hidden md:inline-flex`}
+                    className={`${headerLink} hidden lg:inline-flex`}
                   >
                     Components
                   </Link>
                   <Link
                     href={companionPath}
-                    className={`${headerLink} hidden md:inline-flex`}
+                    className={`${headerLink} hidden lg:inline-flex`}
                   >
                     Companion
                   </Link>
                   <Link
                     href={installationPath}
-                    className={`${headerLink} hidden md:inline-flex`}
+                    className={`${headerLink} hidden lg:inline-flex`}
                   >
                     Installation
                   </Link>
                   <Link
                     href={themesPath}
-                    className={`${headerLink} hidden md:inline-flex`}
+                    className={`${headerLink} hidden lg:inline-flex`}
                   >
                     Themes
                   </Link>
                   <Link
                     href={typesetPlaygroundPath}
-                    className={`${headerLink} hidden md:inline-flex`}
+                    className={`${headerLink} hidden lg:inline-flex`}
                   >
                     Typeset
                   </Link>

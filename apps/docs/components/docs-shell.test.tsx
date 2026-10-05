@@ -137,6 +137,13 @@ describe("DocsShell", () => {
     expect(
       within(start).getByRole("link", { name: "Typeset" }),
     ).toHaveAttribute("href", "/typeset/playground");
+    expect(within(start).getByRole("link", { name: "Docs" })).toHaveClass(
+      "hidden",
+      "lg:inline-flex",
+    );
+    expect(
+      within(start).getByRole("button", { name: "Menu" }).parentElement,
+    ).toHaveClass("lg:hidden");
     expect(
       within(start).queryByRole("button", { name: "Search documentation" }),
     ).toBeNull();

@@ -432,6 +432,10 @@ const items: readonly RegistryItem[] = [
         path: "ui/accordion/index.tsx",
         type: "registry:ui",
       },
+      {
+        path: "ui/accordion/accordion.css",
+        type: "registry:ui",
+      },
     ],
   },
   {

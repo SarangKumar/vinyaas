@@ -45,22 +45,23 @@
 
   /*
    * CodeBlock theme — same neutral hue as globals (~286), dual-mode.
-   * Light: soft muted paper. Dark: nested charcoal. Calm, low-chroma syntax.
+   * Light: soft paper with brighter, more visible syntax tokens.
+   * Dark: nested charcoal. Calm syntax with enough chroma to read.
    */
   --syntax-editor: oklch(0.975 0.003 286);
   --syntax-chrome: oklch(0.955 0.003 286);
   --syntax-border: oklch(0.9 0.004 286);
-  --syntax-plain: oklch(0.28 0.012 286);
-  --syntax-comment: oklch(0.55 0.012 286);
-  --syntax-keyword: oklch(0.42 0.06 285);
-  --syntax-fn: oklch(0.4 0.055 250);
-  --syntax-string: oklch(0.4 0.055 155);
-  --syntax-number: oklch(0.45 0.055 50);
-  --syntax-param: oklch(0.34 0.02 286);
-  --syntax-type: oklch(0.4 0.05 200);
-  --syntax-tag: oklch(0.4 0.055 250);
-  --syntax-attribute: oklch(0.4 0.04 200);
-  --syntax-punct: oklch(0.48 0.01 286);
+  --syntax-plain: oklch(0.26 0.014 286);
+  --syntax-comment: oklch(0.5 0.016 286);
+  --syntax-keyword: oklch(0.46 0.14 285);
+  --syntax-fn: oklch(0.44 0.13 250);
+  --syntax-string: oklch(0.44 0.12 155);
+  --syntax-number: oklch(0.48 0.12 50);
+  --syntax-param: oklch(0.34 0.03 286);
+  --syntax-type: oklch(0.44 0.11 200);
+  --syntax-tag: oklch(0.44 0.13 250);
+  --syntax-attribute: oklch(0.44 0.1 200);
+  --syntax-punct: oklch(0.46 0.02 286);
 }
 
 .dark {

@@ -114,9 +114,11 @@ describe("docs theme", () => {
     expect(css).not.toContain("@keyframes vinyaas-toast-");
     expect(css).not.toContain("@keyframes vinyaas-dialog-");
     expect(css).not.toContain("@keyframes vinyaas-tooltip-");
+    expect(css).not.toContain("@keyframes vinyaas-accordion-");
     expect(css).not.toContain(".vinyaas-toast-in");
     expect(css).not.toContain(".vinyaas-dialog-in");
     expect(css).not.toContain(".vinyaas-tooltip-in");
+    expect(css).not.toContain(".vinyaas-accordion-down");
 
     await expect(
       fs.access(path.join(docsRoot, "tailwind.config.ts")),
