@@ -3,7 +3,9 @@
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { DocsFeatureCard } from "@/components/docs-feature-card";
 import { DocsNavLinks } from "@/components/docs-nav-links";
+import { DocsPageFeedback } from "@/components/docs-page-feedback";
 import { TableOfContents } from "@/components/table-of-contents";
 
 /**
@@ -47,11 +49,11 @@ export function DocsFrame({ children }: { children: ReactNode }) {
   return (
     <div
       data-docs-frame="docs"
-      className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)_13rem]"
+      className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)_15rem]"
     >
       <aside
         data-docs-sidebar
-        className="border-border relative z-0 hidden min-h-0 overflow-y-auto overscroll-y-contain border-r lg:block print:hidden"
+        className="relative z-0 hidden min-h-0 overflow-y-auto overscroll-y-contain lg:block print:hidden"
       >
         <DocsNavLinks className="flex flex-col gap-6 px-4 py-6" />
       </aside>
@@ -64,21 +66,11 @@ export function DocsFrame({ children }: { children: ReactNode }) {
         </main>
       </div>
       <aside className="relative z-0 hidden min-h-0 overflow-y-auto overscroll-y-contain xl:block print:hidden">
-        <div className="flex min-h-full flex-col">
+        <div className="flex min-h-full flex-col pb-8">
           <TableOfContents />
-          <div className="mt-auto px-5 pb-8">
-            <div
-              data-docs-feature-card
-              className="border-border bg-card/70 hover:bg-card text-card-foreground rounded-md border p-3 transition-colors"
-            >
-              <p className="text-foreground text-sm font-medium">
-                What&apos;s new
-              </p>
-              <p className="text-muted-foreground mt-1.5 text-xs leading-5">
-                Build dashboards faster with Resizable, Sidebar, Drag &amp;
-                Drop, catalogs, and accessible primitives.
-              </p>
-            </div>
+          <DocsPageFeedback />
+          <div className="mt-4 px-5">
+            <DocsFeatureCard />
           </div>
         </div>
       </aside>

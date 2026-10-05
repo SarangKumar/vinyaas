@@ -247,6 +247,19 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "select",
+    type: "registry:ui",
+    description:
+      "A searchable custom select with grouped options, keyboard navigation, and accessible listbox behavior.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/select/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "toast",
     type: "registry:ui",
     description:

@@ -32,6 +32,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "label",
       "textarea",
       "native-select",
+      "select",
       "checkbox",
       "radio-group",
       "switch",
@@ -122,7 +123,7 @@ export function listComponentCatalogIds(): string[] {
  * application: data-table, pagination
  */
 export const plannedCatalogGaps: Readonly<Record<string, readonly string[]>> = {
-  form: ["select", "form"],
+  form: ["form"],
   dashboard: ["data-table"],
   navigation: ["navigation-menu", "pagination"],
   feedback: ["alert-dialog", "sheet", "empty-state"],

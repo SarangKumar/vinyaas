@@ -149,7 +149,7 @@ describe("documentation navigation", () => {
       items
         ?.filter((item) => item.indicator === "new")
         .map((item) => item.title),
-    ).toEqual(["Drag & Drop", "Resizable", "Sidebar"]);
+    ).toEqual(["Drag & Drop", "Resizable", "Select", "Sidebar"]);
     expect(items?.find((item) => item.title === "Sidebar")?.indicator).toBe(
       "new",
     );

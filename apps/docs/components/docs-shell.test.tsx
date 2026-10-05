@@ -75,13 +75,14 @@ describe("DocsShell", () => {
     expect(
       await within(onThisPage).findByRole("link", { name: "Notes" }),
     ).toHaveAttribute("href", "#notes");
+    expect(document.querySelector("[data-docs-page-feedback]")).toBeTruthy();
     expect(document.querySelector("[data-docs-feature-card]")).toBeTruthy();
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
     ).toContain("What's new");
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
-    ).toContain("Resizable");
+    ).toContain("Select");
     const homeNav = within(
       document.querySelector("[data-header-section='start']") as HTMLElement,
     ).getByRole("link", { name: "Home" });

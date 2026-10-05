@@ -123,9 +123,7 @@ describe("homepage", () => {
       screen.getByRole("heading", { name: "Sign in" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Search" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Studio controls" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Select" })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Storefront" }),
     ).toBeInTheDocument();

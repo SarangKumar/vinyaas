@@ -8,7 +8,7 @@ import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { FilterBlock } from "@/app/home/blocks/filter-block";
 import { InvoiceBlock } from "@/app/home/blocks/invoice-block";
 import { LoginBlock } from "@/app/home/blocks/login-block";
-import { MediaControlsBlock } from "@/app/home/blocks/media-controls-block";
+import { SelectBlock } from "@/app/home/blocks/select-block";
 import { MessagesBlock } from "@/app/home/blocks/messages-block";
 import { NotificationSettingsBlock } from "@/app/home/blocks/notification-settings-block";
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
@@ -70,6 +70,11 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "drag-and-drop",
     components: ["drag-and-drop"],
     Block: DragAndDropBlock,
+  },
+  {
+    id: "select",
+    components: ["select"],
+    Block: SelectBlock,
   },
   {
     id: "primitives",
@@ -142,11 +147,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "project",
     components: ["card", "badge", "button", "progress", "dropdown-menu"],
     Block: ProjectBlock,
-  },
-  {
-    id: "media",
-    components: ["slider", "switch", "label"],
-    Block: MediaControlsBlock,
   },
   {
     id: "notifications",

@@ -80,8 +80,10 @@ export default function Home() {
         </h1>
         <p className="text-muted-foreground mt-4 max-w-xl text-base leading-7 text-balance text-pretty sm:max-w-2xl sm:text-lg sm:leading-8">
           A registry-driven component library for React and Tailwind CSS v4. Run{" "}
-          <code className="font-mono text-[0.95em]">vinyaas init</code>, add the
-          components you need, and keep the source in your project.
+          <code className="font-mono text-[0.95em] whitespace-nowrap">
+            vinyaas init
+          </code>
+          , add the components you need, and keep the source in your project.
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
           <Link href="/installation" className={primaryLink}>

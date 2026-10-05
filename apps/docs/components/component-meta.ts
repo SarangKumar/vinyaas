@@ -216,6 +216,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Select",
+    slug: "select",
+    description:
+      "A searchable custom select with grouped options and keyboard-friendly listbox behavior.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Separator",
     slug: "separator",
     description: "A horizontal or vertical divider between content.",

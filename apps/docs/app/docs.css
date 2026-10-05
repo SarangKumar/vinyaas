@@ -19,6 +19,18 @@
     sans-serif;
 
   /*
+   * Docs type scale ~1px smaller than Tailwind defaults (outside @layer).
+   */
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.1875rem;
+  --text-2xl: 1.3125rem;
+  --text-3xl: 1.6875rem;
+  --text-4xl: 2.0625rem;
+
+  /*
    * Homepage playground rhythm. --gap is set from these on the shell
    * and shrinks on smaller viewports.
    * Aligns with Tailwind spacing: 4=1rem, 6=1.5rem, 8=2rem, 10=2.5rem.
@@ -79,6 +91,27 @@
 
 body {
   font-family: var(--default-font-family);
+}
+
+[data-docs-sidebar] {
+  position: relative;
+}
+
+[data-docs-sidebar]::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--border) 12%,
+    var(--border) 88%,
+    transparent
+  );
 }
 
 /*

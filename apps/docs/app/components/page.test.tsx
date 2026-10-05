@@ -24,6 +24,7 @@ describe("components catalog", () => {
     expect(newlyIntroduced.map((component) => component.slug).sort()).toEqual([
       "drag-and-drop",
       "resizable",
+      "select",
       "sidebar",
     ]);
 

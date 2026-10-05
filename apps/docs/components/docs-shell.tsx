@@ -36,7 +36,7 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
     <DocsSearchProvider>
       <CompanionProvider>
         <div className="bg-background text-foreground flex h-full min-h-0 flex-col">
-          <header className="border-border bg-background relative z-[60] h-12 shrink-0 border-b print:hidden">
+          <header className="bg-background relative z-[60] h-12 shrink-0 print:hidden">
             <div className="grid h-full grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-3 sm:gap-3 sm:px-4">
               <div
                 data-header-section="start"

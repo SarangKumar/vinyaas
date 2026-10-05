@@ -12,6 +12,7 @@ import SpinnerPage from "./spinner/page";
 import KbdPage from "./kbd/page";
 import ProgressPage from "./progress/page";
 import NativeSelectPage from "./native-select/page";
+import SelectPage from "./select/page";
 import PopoverPage from "./popover/page";
 import RadioGroupPage from "./radio-group/page";
 import SeparatorPage from "./separator/page";
@@ -129,6 +130,12 @@ const pages = [
     title: "Native Select",
     command: "npx vinyaas add native-select",
     api: "multiple",
+  },
+  {
+    load: SelectPage,
+    title: "Select",
+    command: "npx vinyaas add select",
+    api: "onValueChange",
   },
   {
     load: ToastPage,

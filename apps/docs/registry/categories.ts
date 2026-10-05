@@ -55,6 +55,7 @@ export const registryComponentCategories: Readonly<
   label: "forms",
   marker: "utilities",
   "native-select": "forms",
+  select: "forms",
   popover: "feedback",
   progress: "feedback",
   "radio-group": "forms",

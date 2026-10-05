@@ -78,7 +78,7 @@ describe("generateThemeCss", () => {
     expect(css).toContain("--primary: oklch(0.21 0.006 285.885);");
     expect(css).toContain("--background: oklch(0.141 0.005 285.823);");
     expect(css).toContain("--primary: oklch(0.92 0.004 286.32);");
-    expect(css).toContain("--border: oklch(1 0 0 / 10%);");
+    expect(css).toContain("--border: oklch(1 0 0 / 8%);");
   });
 
   it("applies a custom primary color", () => {

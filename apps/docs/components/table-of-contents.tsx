@@ -36,12 +36,12 @@ export function TableOfContents() {
   return (
     <nav aria-label="On this page" className="px-5 py-8">
       <p className="text-foreground text-sm font-medium">On this page</p>
-      <ul className="mt-5 flex flex-col gap-3">
+      <ul className="mt-4 flex flex-col gap-1.5">
         {items.map((item) => (
           <li key={item.id} className={item.level === 3 ? "pl-5" : undefined}>
             <a
               href={`#${item.id}`}
-              className={`text-foreground/80 hover:text-foreground block rounded-md py-0.5 text-sm leading-6 ${focusRing}`}
+              className={`text-foreground/80 hover:text-foreground block rounded-md py-1 text-sm leading-5 ${focusRing}`}
               onClick={(event) => {
                 scrollArticleTo(item.id, event);
               }}

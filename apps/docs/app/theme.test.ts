@@ -43,8 +43,8 @@ describe("docs theme", () => {
     expect(css).toContain("--card-foreground: oklch(0.141 0.005 285.823)");
     expect(css).toContain("--popover: oklch(1 0 0)");
     expect(css).toContain("--popover-foreground: oklch(0.141 0.005 285.823)");
-    expect(css).toContain("--border: oklch(0.92 0.004 286.32)");
-    expect(css).toContain("--input: oklch(0.92 0.004 286.32)");
+    expect(css).toContain("--border: oklch(0.945 0.003 286.32)");
+    expect(css).toContain("--input: oklch(0.945 0.003 286.32)");
     expect(css).toContain("--ring: oklch(0.705 0.015 286.067)");
     expect(css).toContain("--chart-1: oklch(0.32 0.012 285.885)");
     expect(css).toContain("--chart-2: oklch(0.42 0.01 285.885)");
@@ -65,7 +65,7 @@ describe("docs theme", () => {
     expect(css).toContain("--chart-3: oklch(0.72 0.006 286.32)");
     expect(css).toContain("--chart-4: oklch(0.64 0.005 286.32)");
     expect(css).toContain("--chart-5: oklch(0.56 0.004 286.32)");
-    expect(css).toContain("--border: oklch(1 0 0 / 10%)");
+    expect(css).toContain("--border: oklch(1 0 0 / 8%)");
     expect(css).toContain("--sidebar: oklch(0.985 0 0)");
     expect(css).toContain("--sidebar: oklch(0.21 0.006 285.885)");
 
@@ -140,7 +140,7 @@ describe("docs theme", () => {
     expect(css).toContain("--default-font-family:");
     expect(css).toContain("var(--font-geist-sans)");
     expect(css).toContain("font-family: var(--default-font-family)");
-    expect(css).not.toContain("--text-base: 0.875rem");
+    expect(css).toContain("--text-base: 0.9375rem");
     expect(css).toContain(
       "--color-sidebar-foreground: var(--sidebar-foreground)",
     );

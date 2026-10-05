@@ -700,12 +700,12 @@ describe("registry build output", () => {
     expect(newYork.some((item) => item.name === "utils")).toBe(false);
   });
 
-  it("does not publish a Select registry item", async () => {
+  it("publishes the Select registry item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/select.json");
 
-    await expect(fs.access(outputPath)).rejects.toThrow();
-    expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(42);
+    await expect(fs.access(outputPath)).resolves.toBeUndefined();
+    expect(newYork.some((item) => item.name === "select")).toBe(true);
+    expect(newYork).toHaveLength(43);
   });
 
   it("matches the json schema item types", () => {
