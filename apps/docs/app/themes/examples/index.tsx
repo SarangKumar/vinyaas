@@ -526,7 +526,7 @@ export const themeExamples: ThemeExample[] = [
           <div className="min-w-0">
             <p className="text-sm font-medium">Preview surface</p>
             <p className="text-muted-foreground text-xs">
-              Uses <code className="text-[0.7rem]">--radius</code>
+              Uses <code>--radius</code>
             </p>
           </div>
           <Button type="button" size="sm">

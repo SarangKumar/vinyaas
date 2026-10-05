@@ -72,6 +72,16 @@ describe("components catalog", () => {
     expect(names(allGrid)).toEqual(all);
     expect(all).toContain("Button");
     expect(all).toHaveLength(components.length);
+    const selectLink = allGrid.querySelector(
+      'a[href="/components/select"]',
+    ) as HTMLElement | null;
+    expect(
+      selectLink?.querySelector('[data-nav-indicator="new"]'),
+    ).toHaveAttribute("aria-label", "New");
+    const buttonLink = allGrid.querySelector(
+      'a[href="/components/button"]',
+    ) as HTMLElement | null;
+    expect(buttonLink?.querySelector('[data-nav-indicator="new"]')).toBeNull();
     expect(document.body.textContent).toContain(
       `The catalog has ${components.length} independently installable`,
     );
@@ -80,7 +90,8 @@ describe("components catalog", () => {
 });
 
 function names(list: Element) {
-  return [...list.querySelectorAll("a")].map((link) =>
-    link.textContent?.trim(),
-  );
+  return [...list.querySelectorAll("a")].map((link) => {
+    const label = link.querySelector("span.min-w-0")?.textContent?.trim();
+    return label ?? link.textContent?.trim();
+  });
 }

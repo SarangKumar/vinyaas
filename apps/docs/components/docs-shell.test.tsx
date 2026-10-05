@@ -81,7 +81,10 @@ describe("DocsShell", () => {
     ).toContain("What's new");
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
-    ).toContain("latest Vinyaas components");
+    ).toMatch(/Select|Resizable|Sidebar|Drag & Drop/);
+    expect(
+      document.querySelector("[data-docs-feature-card]")?.textContent,
+    ).toContain("View changelog");
     expect(document.querySelector("[data-docs-page-feedback]")).toBeNull();
     const homeNav = within(
       document.querySelector("[data-header-section='start']") as HTMLElement,

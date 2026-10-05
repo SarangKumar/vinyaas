@@ -5,6 +5,7 @@ import {
   componentHref,
   components,
   currentVersion,
+  isNewComponent,
   newComponents,
   type ComponentMeta,
 } from "@/components/component-meta";
@@ -93,9 +94,16 @@ function NameGrid({ items }: { items: readonly ComponentMeta[] }) {
         <li key={item.slug}>
           <Link
             href={componentHref(item.slug)}
-            className={`text-foreground hover:bg-muted flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm no-underline ${focusRing}`}
+            className={`text-foreground hover:bg-muted flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-sm no-underline ${focusRing}`}
           >
-            {item.name}
+            <span className="min-w-0 truncate">{item.name}</span>
+            {isNewComponent(item) ? (
+              <span
+                data-nav-indicator="new"
+                className="bg-foreground/70 size-1.5 shrink-0 rounded-full"
+                aria-label="New"
+              />
+            ) : null}
           </Link>
         </li>
       ))}

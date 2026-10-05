@@ -48,7 +48,7 @@ export function DocsFrame({ children }: { children: ReactNode }) {
   return (
     <div
       data-docs-frame="docs"
-      className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[15rem_minmax(0,1fr)_15rem]"
+      className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[18rem_minmax(0,1fr)] xl:grid-cols-[18rem_minmax(0,1fr)_18rem]"
     >
       <aside
         data-docs-sidebar

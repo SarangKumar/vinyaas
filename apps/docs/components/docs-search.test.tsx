@@ -18,7 +18,7 @@ function Search() {
 }
 
 describe("documentation search", () => {
-  it("does not list pages before a query", async () => {
+  it("lists all pages before a query", async () => {
     render(<Search />);
 
     fireEvent.click(
@@ -26,8 +26,9 @@ describe("documentation search", () => {
     );
 
     expect(
-      await screen.findByText("Search components, docs and pages"),
+      await screen.findByRole("option", { name: /Introduction/ }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: /Button/ })).toBeInTheDocument();
     expect(document.querySelector("[data-dialog-content]")).toHaveClass(
       "bg-popover",
     );
@@ -39,7 +40,7 @@ describe("documentation search", () => {
     );
     expect(input?.parentElement?.parentElement).toHaveClass("p-px");
     expect(document.querySelector("[data-slot=command-footer]")).toBeTruthy();
-    expect(screen.queryByRole("option")).toBeNull();
+    expect(screen.getAllByRole("option").length).toBeGreaterThan(10);
   });
 
   it("filters to matching pages and opens the chosen one", async () => {

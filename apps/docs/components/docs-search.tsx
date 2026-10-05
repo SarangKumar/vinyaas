@@ -374,7 +374,7 @@ function SearchDialog() {
   const { open, setOpen } = useDocsSearch();
   const [query, setQuery] = useState("");
   const normalized = query.trim().toLowerCase();
-  const results = normalized ? rankSearchPages(pages, normalized) : [];
+  const results = normalized ? rankSearchPages(pages, normalized) : pages;
 
   return (
     <Dialog
@@ -401,11 +401,7 @@ function SearchDialog() {
             placeholder="Search documentation..."
           />
           <CommandList>
-            {normalized === "" ? (
-              <p className="text-muted-foreground px-3 py-8 text-center text-sm">
-                Search components, docs and pages
-              </p>
-            ) : results.length === 0 ? (
+            {normalized !== "" && results.length === 0 ? (
               <div className="px-3 py-8 text-center text-sm">
                 <p>No results found.</p>
                 <p className="text-muted-foreground">
@@ -456,6 +452,7 @@ function SearchDialog() {
           <CommandFooter>
             <span className="inline-flex items-center gap-1.5">
               <Kbd className="gap-1">
+                <span>Tab</span>
                 <span>↑</span>
                 <span>↓</span>
               </Kbd>
