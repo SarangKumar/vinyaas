@@ -50,6 +50,7 @@ describe("component metadata", () => {
       "Label",
       "Marker",
       "Native Select",
+      "Navigation Menu",
       "Pagination",
       "Popover",
       "Progress",
@@ -98,6 +99,7 @@ describe("component metadata", () => {
       "alert-dialog",
       "data-table",
       "drag-and-drop",
+      "navigation-menu",
       "pagination",
       "resizable",
       "select",
@@ -107,7 +109,7 @@ describe("component metadata", () => {
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 14);
+    ).toBe(components.length - 15);
     expect(
       newComponents()
         .map((component) => component.slug)
@@ -116,6 +118,7 @@ describe("component metadata", () => {
       "alert-dialog",
       "data-table",
       "drag-and-drop",
+      "navigation-menu",
       "pagination",
       "resizable",
       "select",

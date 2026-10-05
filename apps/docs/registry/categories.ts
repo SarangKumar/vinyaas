@@ -57,6 +57,7 @@ export const registryComponentCategories: Readonly<
   label: "forms",
   marker: "utilities",
   "native-select": "forms",
+  "navigation-menu": "navigation",
   select: "forms",
   pagination: "navigation",
   popover: "feedback",

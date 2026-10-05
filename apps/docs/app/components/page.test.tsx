@@ -25,6 +25,7 @@ describe("components catalog", () => {
       "alert-dialog",
       "data-table",
       "drag-and-drop",
+      "navigation-menu",
       "pagination",
       "resizable",
       "select",

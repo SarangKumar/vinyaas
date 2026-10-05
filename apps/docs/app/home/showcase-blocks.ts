@@ -9,7 +9,7 @@ import { DataTableBlock } from "@/app/home/blocks/data-table-block";
 import { FilterBlock } from "@/app/home/blocks/filter-block";
 import { LoginBlock } from "@/app/home/blocks/login-block";
 import { SelectBlock } from "@/app/home/blocks/select-block";
-import { MessagesBlock } from "@/app/home/blocks/messages-block";
+import { NavigationMenuBlock } from "@/app/home/blocks/navigation-menu-block";
 import { PaginationBlock } from "@/app/home/blocks/pagination-block";
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
 import { ProfileBlock } from "@/app/home/blocks/profile-block";
@@ -40,8 +40,8 @@ import { components } from "@/components/component-meta";
  * Cards round-robin into exactly that many stacks so mixed heights pack
  * like Pinterest without a spare column wrapping underneath.
  *
- * v1.3.0 note: Sheet replaced Invoice; Alert Dialog replaced Notifications;
- * Data Table replaced Project.
+ * v1.3.0 note: Navigation Menu replaced Messages; Sheet replaced Invoice;
+ * Alert Dialog replaced Notifications; Data Table replaced Project.
  */
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
@@ -65,6 +65,11 @@ const registrySlugs = new Set(components.map((component) => component.slug));
  */
 export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   { id: "chart", components: ["chart"], Block: ChartBlock },
+  {
+    id: "navigation-menu",
+    components: ["navigation-menu", "card", "badge", "button"],
+    Block: NavigationMenuBlock,
+  },
   {
     id: "sheet",
     components: ["sheet", "button", "input", "label", "switch", "badge"],
@@ -156,11 +161,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "security",
     components: ["switch", "checkbox", "button"],
     Block: SecurityBlock,
-  },
-  {
-    id: "messages",
-    components: ["button", "input", "badge", "avatar"],
-    Block: MessagesBlock,
   },
   {
     id: "profile",

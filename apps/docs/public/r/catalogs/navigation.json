@@ -12,6 +12,7 @@
         "command",
         "sidebar",
         "sheet",
+        "navigation-menu",
         "pagination"
       ]
     }

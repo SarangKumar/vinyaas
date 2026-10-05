@@ -137,6 +137,9 @@ describe("homepage", () => {
     expect(document.querySelector("[data-playground-blur]")).toBeTruthy();
 
     expect(
+      screen.getByRole("heading", { name: "Navigation Menu" }),
+    ).toBeInTheDocument();
+    expect(
       screen.getByRole("heading", { name: "Traffic" }),
     ).toBeInTheDocument();
     expect(

@@ -81,6 +81,13 @@ describe("component catalogs", () => {
     expect(getComponentCatalog("feedback")?.components).toContain("sheet");
     expect(getComponentCatalog("application")?.components).toContain("sheet");
     expect(getComponentCatalog("navigation")?.components).toContain("sheet");
+    expect(plannedCatalogGaps.navigation).not.toContain("navigation-menu");
+    expect(getComponentCatalog("navigation")?.components).toContain(
+      "navigation-menu",
+    );
+    expect(getComponentCatalog("application")?.components).toContain(
+      "navigation-menu",
+    );
     expect(getComponentCatalog("dashboard")?.components).toContain("sidebar");
     expect(getComponentCatalog("navigation")?.components).toContain("sidebar");
     expect(getComponentCatalog("application")?.components).toContain("sidebar");

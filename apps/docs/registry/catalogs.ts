@@ -73,6 +73,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "command",
       "sidebar",
       "sheet",
+      "navigation-menu",
       "pagination",
     ],
   },
@@ -102,6 +103,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "dialog",
       "sheet",
       "dropdown-menu",
+      "navigation-menu",
       "popover",
       "tooltip",
       "tabs",
@@ -134,14 +136,14 @@ export function listComponentCatalogIds(): string[] {
  *
  * form: form
  * dashboard: —
- * navigation: navigation-menu
+ * navigation: —
  * feedback: empty-state
  * application: —
  */
 export const plannedCatalogGaps: Readonly<Record<string, readonly string[]>> = {
   form: ["form"],
   dashboard: [],
-  navigation: ["navigation-menu"],
+  navigation: [],
   feedback: ["empty-state"],
   application: [],
 };

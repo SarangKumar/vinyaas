@@ -565,6 +565,14 @@ describe("registry build output", () => {
       'role="dialog"',
     ],
     ["sheet", ["ui/sheet/index.tsx", "ui/sheet/sheet.css"], 'role="dialog"'],
+    [
+      "navigation-menu",
+      [
+        "ui/navigation-menu/index.tsx",
+        "ui/navigation-menu/navigation-menu.css",
+      ],
+      "NavigationMenuViewport",
+    ],
     ["chart", ["ui/chart/index.tsx"], "ChartContainer"],
     [
       "accordion",
@@ -822,7 +830,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).resolves.toBeUndefined();
     expect(newYork.some((item) => item.name === "select")).toBe(true);
-    expect(newYork).toHaveLength(47);
+    expect(newYork).toHaveLength(48);
   });
 
   it("matches the json schema item types", () => {

@@ -500,14 +500,15 @@ describe("composed examples", () => {
     expect(screen.getAllByText("Esc").length).toBeGreaterThan(0);
     expect(document.body.textContent).toMatch(/visual only/i);
   });
-  it("renders spinner action preview and marker separator feed", async () => {
+  it("renders spinner preview and marker separator feed", async () => {
     renderDocs(await SpinnerPage());
-    expect(
-      screen.getAllByRole("button", { name: "Save changes" }).length,
-    ).toBeGreaterThan(0);
+    expect(screen.getAllByRole("status").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("heading", { name: "In a button" }),
     ).toHaveAttribute("id", "in-a-button");
+    expect(
+      screen.getAllByRole("button", { name: "Save changes" }).length,
+    ).toBeGreaterThan(0);
 
     renderDocs(await MarkerPage());
     expect(

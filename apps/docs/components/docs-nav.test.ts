@@ -153,6 +153,7 @@ describe("documentation navigation", () => {
       "Alert Dialog",
       "Data Table",
       "Drag & Drop",
+      "Navigation Menu",
       "Pagination",
       "Resizable",
       "Select",

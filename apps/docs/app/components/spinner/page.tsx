@@ -212,7 +212,7 @@ export default async function SpinnerPage() {
       }
       source={source}
     >
-      <SubmitSpinner />
+      <Spinner />
     </ComponentReference>
   );
 }

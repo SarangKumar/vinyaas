@@ -198,6 +198,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Navigation Menu",
+    slug: "navigation-menu",
+    description:
+      "A composable site navigation menu with rich mega-menu content panels.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Pagination",
     slug: "pagination",
     description:

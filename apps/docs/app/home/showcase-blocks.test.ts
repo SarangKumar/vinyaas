@@ -48,9 +48,11 @@ describe("homepage showcase blocks", () => {
     expect(showcaseBlockIds()).toContain("data-table");
     expect(showcaseBlockIds()).toContain("alert-dialog");
     expect(showcaseBlockIds()).toContain("sheet");
+    expect(showcaseBlockIds()).toContain("navigation-menu");
     expect(showcaseBlockIds()).not.toContain("project");
     expect(showcaseBlockIds()).not.toContain("notifications");
     expect(showcaseBlockIds()).not.toContain("invoice");
+    expect(showcaseBlockIds()).not.toContain("messages");
 
     for (const component of newComponents()) {
       expect(

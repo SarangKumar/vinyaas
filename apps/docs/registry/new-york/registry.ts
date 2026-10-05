@@ -468,6 +468,23 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "navigation-menu",
+    type: "registry:ui",
+    description:
+      "A composable site navigation menu with rich mega-menu content panels.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/navigation-menu/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/navigation-menu/navigation-menu.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "chart",
     type: "registry:ui",
     description: "Themed charts for dashboards and product analytics.",

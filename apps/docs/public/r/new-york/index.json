@@ -191,6 +191,13 @@
       "category": "forms"
     },
     {
+      "name": "navigation-menu",
+      "type": "registry:ui",
+      "description": "A composable site navigation menu with rich mega-menu content panels.",
+      "docs": "https://vinyaas.vercel.app/components/navigation-menu",
+      "category": "navigation"
+    },
+    {
       "name": "pagination",
       "type": "registry:ui",
       "description": "Composable page navigation with previous, next, page links, and ellipsis.",
