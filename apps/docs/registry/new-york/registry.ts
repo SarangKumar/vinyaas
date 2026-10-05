@@ -400,6 +400,24 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "alert-dialog",
+    type: "registry:ui",
+    description:
+      "A modal confirmation dialog for important or destructive actions.",
+    dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/alert-dialog/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/alert-dialog/alert-dialog.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "dialog",
     type: "registry:ui",
     description:

@@ -32,6 +32,7 @@ export const registryComponentCategories: Readonly<
 > = {
   accordion: "layout",
   alert: "feedback",
+  "alert-dialog": "feedback",
   "aspect-ratio": "layout",
   attachment: "data-display",
   avatar: "data-display",

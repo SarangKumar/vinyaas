@@ -16,6 +16,13 @@
       "category": "feedback"
     },
     {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "description": "A modal confirmation dialog for important or destructive actions.",
+      "docs": "https://vinyaas.vercel.app/components/alert-dialog",
+      "category": "feedback"
+    },
+    {
       "name": "aspect-ratio",
       "type": "registry:ui",
       "description": "A container that preserves a fixed width-to-height aspect ratio.",

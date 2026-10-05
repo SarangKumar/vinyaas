@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 
+import { AlertDialogBlock } from "@/app/home/blocks/alert-dialog-block";
 import { ChartBlock } from "@/app/home/blocks/chart-block";
 import { ChatBlock } from "@/app/home/blocks/chat-block";
 import { CommandSearchBlock } from "@/app/home/blocks/command-search-block";
@@ -10,7 +11,6 @@ import { InvoiceBlock } from "@/app/home/blocks/invoice-block";
 import { LoginBlock } from "@/app/home/blocks/login-block";
 import { SelectBlock } from "@/app/home/blocks/select-block";
 import { MessagesBlock } from "@/app/home/blocks/messages-block";
-import { NotificationSettingsBlock } from "@/app/home/blocks/notification-settings-block";
 import { PaginationBlock } from "@/app/home/blocks/pagination-block";
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
 import { ProfileBlock } from "@/app/home/blocks/profile-block";
@@ -40,7 +40,7 @@ import { components } from "@/components/component-meta";
  * Cards round-robin into exactly that many stacks so mixed heights pack
  * like Pinterest without a spare column wrapping underneath.
  *
- * v1.3.0 note: Data Table replaced Project so the list stays at 20.
+ * v1.3.0 note: Alert Dialog replaced Notifications; Data Table replaced Project.
  */
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
@@ -64,6 +64,11 @@ const registrySlugs = new Set(components.map((component) => component.slug));
  */
 export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   { id: "chart", components: ["chart"], Block: ChartBlock },
+  {
+    id: "alert-dialog",
+    components: ["alert-dialog", "button", "badge"],
+    Block: AlertDialogBlock,
+  },
   {
     id: "data-table",
     components: [
@@ -160,11 +165,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "invoice",
     components: ["card", "badge", "button", "separator"],
     Block: InvoiceBlock,
-  },
-  {
-    id: "notifications",
-    components: ["switch", "button", "label"],
-    Block: NotificationSettingsBlock,
   },
 ];
 

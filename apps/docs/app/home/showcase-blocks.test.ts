@@ -46,7 +46,9 @@ describe("homepage showcase blocks", () => {
     expect(showcaseBlockIds()).not.toContain("account");
     expect(showcaseBlockIds()).toContain("pagination");
     expect(showcaseBlockIds()).toContain("data-table");
+    expect(showcaseBlockIds()).toContain("alert-dialog");
     expect(showcaseBlockIds()).not.toContain("project");
+    expect(showcaseBlockIds()).not.toContain("notifications");
 
     for (const component of newComponents()) {
       expect(

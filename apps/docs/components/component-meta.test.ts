@@ -25,6 +25,7 @@ describe("component metadata", () => {
     expect(names).toEqual([
       "Accordion",
       "Alert",
+      "Alert Dialog",
       "Aspect Ratio",
       "Attachment",
       "Avatar",
@@ -93,6 +94,7 @@ describe("component metadata", () => {
         .map((component) => component.slug)
         .sort(),
     ).toEqual([
+      "alert-dialog",
       "data-table",
       "drag-and-drop",
       "pagination",
@@ -103,12 +105,13 @@ describe("component metadata", () => {
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 12);
+    ).toBe(components.length - 13);
     expect(
       newComponents()
         .map((component) => component.slug)
         .sort(),
     ).toEqual([
+      "alert-dialog",
       "data-table",
       "drag-and-drop",
       "pagination",

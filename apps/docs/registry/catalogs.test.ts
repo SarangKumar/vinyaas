@@ -70,6 +70,13 @@ describe("component catalogs", () => {
     expect(getComponentCatalog("application")?.components).toContain(
       "data-table",
     );
+    expect(plannedCatalogGaps.feedback).not.toContain("alert-dialog");
+    expect(getComponentCatalog("feedback")?.components).toContain(
+      "alert-dialog",
+    );
+    expect(getComponentCatalog("application")?.components).toContain(
+      "alert-dialog",
+    );
     expect(getComponentCatalog("dashboard")?.components).toContain("sidebar");
     expect(getComponentCatalog("navigation")?.components).toContain("sidebar");
     expect(getComponentCatalog("application")?.components).toContain("sidebar");

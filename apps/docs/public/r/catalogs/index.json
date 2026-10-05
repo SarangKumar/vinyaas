@@ -59,6 +59,7 @@
       "description": "Alerts, overlays, and progress cues for user feedback.",
       "components": [
         "alert",
+        "alert-dialog",
         "dialog",
         "drawer",
         "toast",
@@ -73,6 +74,7 @@
       "description": "A starter set of application-shell and content primitives.",
       "components": [
         "command",
+        "alert-dialog",
         "dialog",
         "dropdown-menu",
         "popover",

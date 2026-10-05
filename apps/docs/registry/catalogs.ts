@@ -81,6 +81,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
     description: "Alerts, overlays, and progress cues for user feedback.",
     components: [
       "alert",
+      "alert-dialog",
       "dialog",
       "drawer",
       "toast",
@@ -95,6 +96,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
     description: "A starter set of application-shell and content primitives.",
     components: [
       "command",
+      "alert-dialog",
       "dialog",
       "dropdown-menu",
       "popover",
@@ -130,13 +132,13 @@ export function listComponentCatalogIds(): string[] {
  * form: form
  * dashboard: —
  * navigation: navigation-menu
- * feedback: alert-dialog, sheet, empty-state
+ * feedback: sheet, empty-state
  * application: —
  */
 export const plannedCatalogGaps: Readonly<Record<string, readonly string[]>> = {
   form: ["form"],
   dashboard: [],
   navigation: ["navigation-menu"],
-  feedback: ["alert-dialog", "sheet", "empty-state"],
+  feedback: ["sheet", "empty-state"],
   application: [],
 };

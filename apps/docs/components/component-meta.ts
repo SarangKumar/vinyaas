@@ -46,6 +46,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Alert Dialog",
+    slug: "alert-dialog",
+    description: "A confirmation modal for important or destructive actions.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Aspect Ratio",
     slug: "aspect-ratio",
     description: "Displays content within a desired ratio.",

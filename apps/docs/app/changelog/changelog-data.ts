@@ -31,6 +31,7 @@ export const changelogVersions: ChangelogVersion[] = [
       {
         title: "Added",
         items: [
+          `Alert Dialog — confirmation modal with alertdialog semantics, non-dismissible overlay, and Cancel/Action patterns for destructive work.`,
           `Data Table — searchable, sortable dashboard tables with row selection, column visibility, pagination, and loading/empty states composed from existing primitives.`,
           `Pagination — composable page navigation with previous/next, page links, ellipsis, and accessible current-page semantics for tables and lists.`,
           `Resizable — horizontal and vertical panel layouts with keyboard-accessible handles, nested groups, and composite docs examples.`,

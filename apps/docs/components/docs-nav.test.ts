@@ -150,6 +150,7 @@ describe("documentation navigation", () => {
         ?.filter((item) => item.indicator === "new")
         .map((item) => item.title),
     ).toEqual([
+      "Alert Dialog",
       "Data Table",
       "Drag & Drop",
       "Pagination",
