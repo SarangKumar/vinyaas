@@ -25,7 +25,7 @@ import { ThemeControls } from "./theme-controls";
 
 export function ThemesPlayground() {
   const [presetId, setPresetId] = useState<ThemePresetId>("default");
-  const [radius, setRadius] = useState<RadiusOptionValue>("0.5rem");
+  const [radius, setRadius] = useState<RadiusOptionValue>("0.75rem");
   const mode = useSiteColorScheme();
   usePrintFromScroll(true);
 

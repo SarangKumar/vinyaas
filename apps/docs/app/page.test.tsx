@@ -42,16 +42,8 @@ describe("homepage", () => {
       "href",
       "/components",
     );
-    expect(
-      screen.getAllByRole("link", { name: "Companions" })[0],
-    ).toHaveAttribute("href", "/companion");
-    expect(screen.getByRole("link", { name: "Themes" })).toHaveAttribute(
-      "href",
-      "/themes",
-    );
-    expect(screen.getByRole("link", { name: "Typeset" })).toHaveAttribute(
-      "href",
-      "/typeset/playground",
+    expect(document.body.textContent).not.toContain(
+      "Explore Companions, Themes, and Typeset playgrounds",
     );
     expect(document.body.textContent).toContain("vinyaas init");
     expect(document.querySelector("[data-home-brand]")).toBeTruthy();

@@ -3,13 +3,11 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
-import { typesetPlaygroundPath } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 import logo from "@/components/logo.png";
 
 const primaryLink = `bg-primary text-primary-foreground inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium no-underline ${focusRing}`;
 const secondaryLink = `border-border bg-background text-foreground hover:bg-muted inline-flex h-9 items-center justify-center rounded-md border px-4 text-sm font-medium no-underline ${focusRing}`;
-const creditLink = `text-primary inline underline underline-offset-4 ${focusRing}`;
 
 /**
  * Showcase is a separate client-heavy chunk (recharts, companion, dnd-kit, …).
@@ -60,7 +58,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="flex w-full min-w-0 flex-col">
-      <section className="mx-auto flex w-full max-w-5xl flex-col items-center px-6 pt-16 pb-12 text-center sm:pt-20 sm:pb-14">
+      <section className="mx-auto flex w-full max-w-5xl flex-col items-center px-6 pt-14 pb-6 text-center sm:pt-16 sm:pb-8">
         <div
           data-home-brand
           className="border-border/80 bg-card/40 flex size-16 items-center justify-center rounded-2xl border shadow-[0_0_40px_-12px_#A7B3FF66] sm:size-20"
@@ -80,12 +78,12 @@ export default function Home() {
         <h1 className="text-foreground mt-4 max-w-full text-[clamp(1.875rem,8vw,3rem)] leading-[1.15] font-semibold tracking-tight text-balance sm:whitespace-nowrap">
           Build. Ship. Beautifully.
         </h1>
-        <p className="text-muted-foreground mt-4 max-w-136 text-sm leading-6 sm:text-base sm:leading-7">
+        <p className="text-muted-foreground mt-4 max-w-xl text-base leading-7 text-balance text-pretty sm:max-w-2xl sm:text-lg sm:leading-8">
           A registry-driven component library for React and Tailwind CSS v4. Run{" "}
           <code className="font-mono text-[0.95em]">vinyaas init</code>, add the
           components you need, and keep the source in your project.
         </p>
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
           <Link href="/installation" className={primaryLink}>
             Get Started
           </Link>
@@ -93,21 +91,6 @@ export default function Home() {
             Components
           </Link>
         </div>
-        <p className="text-muted-foreground mt-5 text-sm">
-          Explore{" "}
-          <Link href="/companion" className={creditLink}>
-            Companions
-          </Link>
-          ,{" "}
-          <Link href="/themes" className={creditLink}>
-            Themes
-          </Link>
-          , and{" "}
-          <Link href={typesetPlaygroundPath} className={creditLink}>
-            Typeset
-          </Link>{" "}
-          playgrounds.
-        </p>
       </section>
       <HomeShowcase />
     </div>

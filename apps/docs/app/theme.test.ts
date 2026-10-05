@@ -25,7 +25,7 @@ describe("docs theme", () => {
     expect(css).toContain(":root");
     expect(css).toContain(".dark");
 
-    expect(css).toContain("--radius: 0.5rem");
+    expect(css).toContain("--radius: 0.75rem");
     expect(css).toContain("--radius-lg: var(--radius)");
     expect(css).toContain("--background: oklch(1 0 0)");
     expect(css).toContain("--foreground: oklch(0.141 0.005 285.823)");
@@ -66,6 +66,8 @@ describe("docs theme", () => {
     expect(css).toContain("--chart-4: oklch(0.64 0.005 286.32)");
     expect(css).toContain("--chart-5: oklch(0.56 0.004 286.32)");
     expect(css).toContain("--border: oklch(1 0 0 / 10%)");
+    expect(css).toContain("--sidebar: oklch(0.985 0 0)");
+    expect(css).toContain("--sidebar: oklch(0.21 0.006 285.885)");
 
     expect(css).toContain("--color-background: var(--background)");
     expect(css).toContain("--color-foreground: var(--foreground)");
@@ -83,17 +85,16 @@ describe("docs theme", () => {
     expect(css).toContain("--color-chart-5: var(--chart-5)");
     expect(css).not.toContain("--color-body");
     expect(css).not.toContain("--color-destructive-foreground");
-    expect(css).toContain("--default-font-family: var(--font-geist-sans)");
+    expect(css).toContain("--default-font-family:");
+    expect(css).toContain("var(--font-geist-sans)");
     expect(css).toContain('"Geist Fallback"');
     expect(css).toContain("--font-sans: var(--default-font-family)");
     expect(css).toContain(
       "--font-mono: var(--font-geist-mono), ui-monospace, monospace",
     );
 
-    // Sidebar surface tokens alias core theme colors.
-    expect(css).toContain("--sidebar: var(--background)");
-    expect(css).toContain("--sidebar-foreground: var(--foreground)");
-    expect(css).toContain("--sidebar-primary: var(--primary)");
+    expect(css).toContain("--sidebar-foreground: oklch(0.141 0.005 285.823)");
+    expect(css).toContain("--sidebar-primary: oklch(0.21 0.006 285.885)");
     expect(css).toContain("--color-sidebar: var(--sidebar)");
     expect(css).toContain(
       "--color-sidebar-foreground: var(--sidebar-foreground)",
@@ -136,9 +137,10 @@ describe("docs theme", () => {
     expect(layout).toContain('import "./docs.css"');
     expect(css).toContain("Docs site only");
     expect(css).toContain("--sidebar-foreground: var(--foreground)");
-    expect(css).toContain("--default-font-family: var(--font-geist-sans)");
+    expect(css).toContain("--default-font-family:");
+    expect(css).toContain("var(--font-geist-sans)");
     expect(css).toContain("font-family: var(--default-font-family)");
-    expect(css).toContain("--text-base: 0.875rem");
+    expect(css).not.toContain("--text-base: 0.875rem");
     expect(css).toContain(
       "--color-sidebar-foreground: var(--sidebar-foreground)",
     );

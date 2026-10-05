@@ -24,10 +24,11 @@ export type ThemePreset = {
 
 export const radiusOptions = [
   { label: "0", value: "0" },
-  { label: "0.3", value: "0.3rem" },
+  { label: "0.25", value: "0.25rem" },
   { label: "0.5", value: "0.5rem" },
   { label: "0.75", value: "0.75rem" },
-  { label: "1.0", value: "1rem" },
+  { label: "1", value: "1rem" },
+  { label: "1.25", value: "1.25rem" },
 ] as const;
 
 export type RadiusOptionValue = (typeof radiusOptions)[number]["value"];

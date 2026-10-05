@@ -163,15 +163,16 @@ describe("theme presets", () => {
   it("keeps radius options limited and non-mutating", () => {
     expect(radiusOptions.map((option) => option.label)).toEqual([
       "0",
-      "0.3",
+      "0.25",
       "0.5",
       "0.75",
-      "1.0",
+      "1",
+      "1.25",
     ]);
 
     const preset = getThemePreset("rose").theme;
-    const next = themeWithRadius(preset, "1rem");
-    expect(next.radius).toBe("1rem");
+    const next = themeWithRadius(preset, "1.25rem");
+    expect(next.radius).toBe("1.25rem");
     expect(preset.radius).toBe(createDefaultTheme().radius);
   });
 });

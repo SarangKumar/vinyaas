@@ -25,7 +25,7 @@ describe("theme playground model", () => {
   it("matches the current Vinyaas consumer baseline", () => {
     const theme = createDefaultTheme();
 
-    expect(theme.radius).toBe("0.5rem");
+    expect(theme.radius).toBe("0.75rem");
     expect(theme.fontSans).toBe("ui-sans-serif, system-ui, sans-serif");
     expect(theme.fontMono).toContain("ui-monospace");
     expect(theme.light.background).toBe("oklch(1 0 0)");

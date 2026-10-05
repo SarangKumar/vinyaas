@@ -148,7 +148,7 @@ function cloneModeColors(colors: ThemeModeColors): ThemeModeColors {
 /** Fresh default theme matching the current Vinyaas consumer baseline. */
 export function createDefaultTheme(): ThemeConfig {
   return {
-    radius: "0.5rem",
+    radius: "0.75rem",
     fontSans: DEFAULT_FONT_SANS,
     fontMono: DEFAULT_FONT_MONO,
     light: cloneModeColors(DEFAULT_LIGHT),

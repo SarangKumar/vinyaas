@@ -19,20 +19,6 @@
     sans-serif;
 
   /*
-   * Docs type scale ~2px smaller than Tailwind defaults. Declared on :root
-   * (outside @layer) so these win over @theme defaults while spacing stays put.
-   * Code blocks keep explicit px sizes.
-   */
-  --text-xs: 0.6875rem;
-  --text-sm: 0.75rem;
-  --text-base: 0.875rem;
-  --text-lg: 1rem;
-  --text-xl: 1.125rem;
-  --text-2xl: 1.375rem;
-  --text-3xl: 1.75rem;
-  --text-4xl: 2.125rem;
-
-  /*
    * Homepage playground rhythm. --gap is set from these on the shell
    * and shrinks on smaller viewports.
    * Aligns with Tailwind spacing: 4=1rem, 6=1.5rem, 8=2rem, 10=2.5rem.
