@@ -24,6 +24,9 @@ export type DatePickerProps = {
   /** Forwarded to Calendar `disabled` matcher. */
   disabledDates?: React.ComponentProps<typeof Calendar>["disabled"];
   "aria-label"?: string;
+  "aria-describedby"?: string;
+  "aria-invalid"?: boolean | "true" | "false";
+  "data-invalid"?: string;
 };
 
 /**
@@ -43,6 +46,9 @@ export function DatePicker({
   onOpenChange,
   disabledDates,
   "aria-label": ariaLabel,
+  "aria-describedby": ariaDescribedBy,
+  "aria-invalid": ariaInvalid,
+  "data-invalid": dataInvalid,
 }: DatePickerProps) {
   const [uncontrolled, setUncontrolled] = React.useState<Date | undefined>(
     defaultValue,
@@ -83,6 +89,9 @@ export function DatePicker({
           variant="outline"
           disabled={disabled}
           aria-label={accessibleName}
+          aria-describedby={ariaDescribedBy}
+          aria-invalid={ariaInvalid}
+          data-invalid={dataInvalid}
           data-empty={!selected ? "" : undefined}
           className={cn(
             "inline-flex w-full min-w-0 items-center justify-start gap-2 text-left font-normal",

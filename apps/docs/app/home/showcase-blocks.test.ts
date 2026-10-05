@@ -53,6 +53,8 @@ describe("homepage showcase blocks", () => {
     expect(showcaseBlockIds()).toContain("date-picker");
     expect(showcaseBlockIds()).toContain("combobox");
     expect(showcaseBlockIds()).toContain("empty-state");
+    expect(showcaseBlockIds()).toContain("form");
+    expect(showcaseBlockIds()).not.toContain("filter");
     expect(showcaseBlockIds()).not.toContain("project");
     expect(showcaseBlockIds()).not.toContain("notifications");
     expect(showcaseBlockIds()).not.toContain("invoice");

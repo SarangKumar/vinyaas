@@ -26,7 +26,8 @@
         "data-table",
         "calendar",
         "date-picker",
-        "empty-state"
+        "empty-state",
+        "form"
       ]
     }
   ]

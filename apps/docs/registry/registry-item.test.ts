@@ -830,15 +830,16 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).resolves.toBeUndefined();
     expect(newYork.some((item) => item.name === "select")).toBe(true);
-    expect(newYork).toHaveLength(52);
+    expect(newYork).toHaveLength(53);
   });
 
-  it("publishes Calendar, Date Picker, Combobox, and Empty State", async () => {
+  it("publishes Calendar, Date Picker, Combobox, Empty State, and Form", async () => {
     for (const name of [
       "calendar",
       "date-picker",
       "combobox",
       "empty-state",
+      "form",
     ] as const) {
       const outputPath = path.join(docsRoot, `public/r/new-york/${name}.json`);
       await expect(fs.access(outputPath)).resolves.toBeUndefined();
@@ -864,6 +865,10 @@ describe("registry build output", () => {
       "command",
       "popover",
     ]);
+
+    const form = newYork.find((item) => item.name === "form");
+    expect(form?.registryDependencies).toEqual(["label"]);
+    expect(form?.category).toBe("forms");
   });
 
   it("matches the json schema item types", () => {

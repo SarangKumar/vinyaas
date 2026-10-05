@@ -18,7 +18,8 @@
         "checkbox",
         "radio-group",
         "switch",
-        "slider"
+        "slider",
+        "form"
       ]
     },
     {
@@ -44,7 +45,8 @@
         "empty-state",
         "calendar",
         "date-picker",
-        "combobox"
+        "combobox",
+        "form"
       ]
     },
     {
@@ -105,7 +107,8 @@
         "data-table",
         "calendar",
         "date-picker",
-        "empty-state"
+        "empty-state",
+        "form"
       ]
     }
   ]

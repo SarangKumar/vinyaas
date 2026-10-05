@@ -67,7 +67,7 @@ export function NativeSelect({
         size={size}
         data-slot="native-select"
         className={cn(
-          "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background h-9 w-full min-w-0 rounded-md border py-2 pr-9 pl-3 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background box-border h-9 max-h-9 min-h-9 w-full min-w-0 rounded-md border py-0 pr-9 pl-3 text-sm leading-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           // appearance-none alone is not always enough on WebKit — keep the prefix.
           "appearance-none [-webkit-appearance:none]",
         )}

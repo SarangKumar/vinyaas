@@ -40,6 +40,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "radio-group",
       "switch",
       "slider",
+      "form",
     ],
   },
   {
@@ -67,6 +68,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "calendar",
       "date-picker",
       "combobox",
+      "form",
     ],
   },
   {
@@ -128,6 +130,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "calendar",
       "date-picker",
       "empty-state",
+      "form",
     ],
   },
 ] as const;
@@ -147,14 +150,14 @@ export function listComponentCatalogIds(): string[] {
  * Planned catalog members not yet in the registry (document only).
  * Do not invent fake registry items for these.
  *
- * form: form
+ * form: —
  * dashboard: —
  * navigation: —
  * feedback: —
  * application: —
  */
 export const plannedCatalogGaps: Readonly<Record<string, readonly string[]>> = {
-  form: ["form"],
+  form: [],
   dashboard: [],
   navigation: [],
   feedback: [],

@@ -18,7 +18,8 @@
         "checkbox",
         "radio-group",
         "switch",
-        "slider"
+        "slider",
+        "form"
       ]
     }
   ]

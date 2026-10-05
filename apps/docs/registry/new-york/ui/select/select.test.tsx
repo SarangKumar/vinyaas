@@ -52,10 +52,10 @@ describe("Select", () => {
   it("renders trigger with placeholder", () => {
     render(<TimezoneSelect />);
 
-    expect(screen.getByRole("combobox", { name: "Timezone" })).toHaveAttribute(
-      "aria-expanded",
-      "false",
-    );
+    const trigger = screen.getByRole("combobox", { name: "Timezone" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger).toHaveClass("h-9", "min-h-9", "max-h-9", "box-border");
+    expect(trigger).not.toHaveClass("h-10");
     expect(screen.getByText("Select a timezone")).toBeInTheDocument();
   });
 

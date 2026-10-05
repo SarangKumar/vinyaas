@@ -706,6 +706,20 @@ const items: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "form",
+    type: "registry:ui",
+    description:
+      "Accessible field structure for labels, descriptions, and validation messages.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["label"],
+    files: [
+      {
+        path: "ui/form/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
 
 export const registry: readonly RegistryItem[] = items.map((item) => {

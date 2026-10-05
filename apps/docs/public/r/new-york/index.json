@@ -163,6 +163,13 @@
       "category": "forms"
     },
     {
+      "name": "form",
+      "type": "registry:ui",
+      "description": "Accessible field structure for labels, descriptions, and validation messages.",
+      "docs": "https://vinyaas.vercel.app/components/form",
+      "category": "forms"
+    },
+    {
       "name": "hover-card",
       "type": "registry:ui",
       "description": "A preview that opens when a link or button is hovered or focused.",

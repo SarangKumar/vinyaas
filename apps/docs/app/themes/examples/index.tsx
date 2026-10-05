@@ -32,6 +32,14 @@ import {
   EmptyIcon,
   EmptyTitle,
 } from "@/registry/new-york/ui/empty-state";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/registry/new-york/ui/form";
 import { Input } from "@/registry/new-york/ui/input";
 import { Kbd } from "@/registry/new-york/ui/kbd";
 import { Label } from "@/registry/new-york/ui/label";
@@ -746,6 +754,31 @@ export const themeExamples: ThemeExample[] = [
           </Button>
         </EmptyActions>
       </Empty>
+    ),
+  },
+  {
+    id: "form",
+    title: "Form",
+    description: "Field labels, description, and a compact save action.",
+    preview: (
+      <Form className="min-w-0 gap-4">
+        <FormField name="theme-email">
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input
+                type="email"
+                defaultValue="ada@vinyaas.dev"
+                autoComplete="email"
+              />
+            </FormControl>
+            <FormDescription>Account notifications go here.</FormDescription>
+          </FormItem>
+        </FormField>
+        <Button type="button" size="sm">
+          Save changes
+        </Button>
+      </Form>
     ),
   },
 ];

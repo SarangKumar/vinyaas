@@ -23,13 +23,17 @@ describe("NativeSelect", () => {
     expect(select).toHaveAttribute("data-slot", "native-select");
     expect(select).toHaveClass(
       "h-9",
+      "min-h-9",
+      "max-h-9",
+      "box-border",
       "w-full",
       "min-w-0",
       "text-sm",
+      "leading-none",
       "pl-3",
       "pr-9",
-      "py-2",
     );
+    expect(select).not.toHaveClass("py-2");
     expect(select).toHaveClass("appearance-none");
     expect(select.className).toContain("[-webkit-appearance:none]");
     expect(select).not.toHaveClass("max-w-sm");

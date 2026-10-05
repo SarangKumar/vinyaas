@@ -174,6 +174,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Form",
+    slug: "form",
+    description:
+      "Accessible field structure for labels, descriptions, and validation.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Hover Card",
     slug: "hover-card",
     description: "A preview that opens on hover or focus.",

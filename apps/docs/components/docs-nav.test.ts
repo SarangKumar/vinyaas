@@ -157,6 +157,7 @@ describe("documentation navigation", () => {
       "Date Picker",
       "Drag & Drop",
       "Empty State",
+      "Form",
       "Navigation Menu",
       "Pagination",
       "Resizable",

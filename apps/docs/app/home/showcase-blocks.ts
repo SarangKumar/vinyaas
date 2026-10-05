@@ -10,7 +10,7 @@ import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { DataTableBlock } from "@/app/home/blocks/data-table-block";
 import { DatePickerBlock } from "@/app/home/blocks/date-picker-block";
 import { EmptyStateBlock } from "@/app/home/blocks/empty-state-block";
-import { FilterBlock } from "@/app/home/blocks/filter-block";
+import { FormBlock } from "@/app/home/blocks/form-block";
 import { SelectBlock } from "@/app/home/blocks/select-block";
 import { OtpBlock } from "@/app/home/blocks/otp-block";
 import { PaginationBlock } from "@/app/home/blocks/pagination-block";
@@ -44,8 +44,8 @@ import { components } from "@/components/component-meta";
  *
  * v1.3.0 note: Sheet replaced Invoice; Alert Dialog replaced Notifications;
  * Data Table replaced Project. Calendar, Date Picker, Combobox, and Empty
- * State replaced Login, Feedback, Security, and Profile. Navigation Menu /
- * Sidebar stay docs-only.
+ * State replaced Login, Feedback, Security, and Profile. Form replaced
+ * Filter. Navigation Menu / Sidebar stay docs-only.
  */
 
 /** Shell / nav primitives that are too dense for homepage masonry cards. */
@@ -119,6 +119,11 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     Block: EmptyStateBlock,
   },
   {
+    id: "form",
+    components: ["form", "input", "label", "button", "switch"],
+    Block: FormBlock,
+  },
+  {
     id: "resizable",
     components: ["resizable"],
     Block: ResizableBlock,
@@ -179,11 +184,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "tabs",
     components: ["tabs", "input", "button", "label"],
     Block: TabsSettingsBlock,
-  },
-  {
-    id: "filter",
-    components: ["drawer", "button", "badge"],
-    Block: FilterBlock,
   },
 ];
 

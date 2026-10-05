@@ -170,8 +170,11 @@ describe("homepage", () => {
       screen.getByRole("heading", { name: "Verify email" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Storefront" }),
+      screen.getByRole("heading", { name: "Profile form" }),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Storefront" }),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { name: "Sidebar" }),
     ).not.toBeInTheDocument();

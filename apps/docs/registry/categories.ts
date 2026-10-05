@@ -52,6 +52,7 @@ export const registryComponentCategories: Readonly<
   "dropdown-menu": "feedback",
   "date-picker": "forms",
   "empty-state": "feedback",
+  form: "forms",
   "file-upload": "forms",
   "hover-card": "feedback",
   input: "forms",

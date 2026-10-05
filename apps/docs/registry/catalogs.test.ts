@@ -61,7 +61,7 @@ describe("component catalogs", () => {
   });
 
   it("documents planned gaps separately from installable membership", () => {
-    expect(plannedCatalogGaps.form).toContain("form");
+    expect(plannedCatalogGaps.form).not.toContain("form");
     expect(getComponentCatalog("form")?.components).toContain("select");
     expect(plannedCatalogGaps.dashboard).not.toContain("data-table");
     expect(getComponentCatalog("dashboard")?.components).toContain(
@@ -91,6 +91,10 @@ describe("component catalogs", () => {
     expect(getComponentCatalog("form")?.components).toContain("calendar");
     expect(getComponentCatalog("form")?.components).toContain("date-picker");
     expect(getComponentCatalog("form")?.components).toContain("combobox");
+    expect(plannedCatalogGaps.form).not.toContain("form");
+    expect(getComponentCatalog("form")?.components).toContain("form");
+    expect(getComponentCatalog("dashboard")?.components).toContain("form");
+    expect(getComponentCatalog("application")?.components).toContain("form");
     expect(plannedCatalogGaps.navigation).not.toContain("navigation-menu");
     expect(getComponentCatalog("navigation")?.components).toContain(
       "navigation-menu",

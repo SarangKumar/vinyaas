@@ -45,6 +45,7 @@ export const changelogVersions: ChangelogVersion[] = [
           `Date Picker — button + popover + calendar composition for choosing a single date.`,
           `Combobox — searchable selection built from Popover and Command for filtering and choosing options.`,
           `Empty State — composable empty panel with icon, title, description, and actions for lists and dashboards.`,
+          `Form — accessible field structure that wires labels, descriptions, and validation messages to existing controls.`,
           `Named catalogs (form, dashboard, navigation, feedback, application) published under /r/catalogs/.`,
           `CLI catalog commands: vinyaas catalog list, vinyaas catalog info, and vinyaas add --catalog.`,
           `vinyaas add --dry-run for install previews without writing files.`,

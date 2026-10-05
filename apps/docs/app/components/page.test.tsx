@@ -29,6 +29,7 @@ describe("components catalog", () => {
       "date-picker",
       "drag-and-drop",
       "empty-state",
+      "form",
       "navigation-menu",
       "pagination",
       "resizable",

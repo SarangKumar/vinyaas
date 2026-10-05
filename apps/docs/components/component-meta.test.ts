@@ -46,6 +46,7 @@ describe("component metadata", () => {
       "Dropdown Menu",
       "Empty State",
       "File Upload",
+      "Form",
       "Hover Card",
       "Input",
       "Input Group",
@@ -107,6 +108,7 @@ describe("component metadata", () => {
       "date-picker",
       "drag-and-drop",
       "empty-state",
+      "form",
       "navigation-menu",
       "pagination",
       "resizable",
@@ -117,7 +119,7 @@ describe("component metadata", () => {
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 19);
+    ).toBe(components.length - 20);
     expect(
       newComponents()
         .map((component) => component.slug)
@@ -130,6 +132,7 @@ describe("component metadata", () => {
       "date-picker",
       "drag-and-drop",
       "empty-state",
+      "form",
       "navigation-menu",
       "pagination",
       "resizable",

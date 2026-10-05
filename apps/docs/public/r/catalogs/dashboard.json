@@ -24,7 +24,8 @@
         "empty-state",
         "calendar",
         "date-picker",
-        "combobox"
+        "combobox",
+        "form"
       ]
     }
   ]
