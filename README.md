@@ -275,10 +275,14 @@ pnpm verify
 Useful scripts:
 
 - `pnpm dev` — docs app
-- `pnpm registry:build` — rebuild `apps/docs/public/r`
+- `pnpm registry:build` — rebuild `apps/docs/public/r` (uses `REGISTRY_BASE_PATH` / `.env`)
+- `pnpm registry:schema:local` — rebuild from production, then point only `$schema` URLs at `http://localhost:3000/r` (local testing; docs URLs stay production)
+- `pnpm registry:schema:production` — rebuild registry JSON with production `$schema` URLs under `https://vinyaas.vercel.app/r`
 - `pnpm cli:build` — bundle the CLI
 - `pnpm format` / `pnpm format:check` — Prettier
 - `pnpm test:watch` — docs Vitest watch mode
+
+`registry:schema:*` only changes generated `$schema` URLs via a full registry rebuild. It does not rewrite docs, npm, or GitHub links. `pnpm cli:release-check` fails if localhost registry URLs are present in generated JSON — restore with `pnpm registry:schema:production` before releasing.
 
 ### CLI release preparation
 

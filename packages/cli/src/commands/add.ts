@@ -475,10 +475,24 @@ async function resolveAddTargetNames({
       env,
       ...(fetchImpl ? { fetch: fetchImpl } : {}),
     });
+    const components = uniqueNames(resolvedCatalog.components);
+
+    if (components.length === 0) {
+      throw new CliError(
+        [
+          `Catalog "${resolvedCatalog.id}" has no installable components.`,
+          "",
+          "No files were changed.",
+        ].join("\n"),
+      );
+    }
 
     return {
-      names: [...resolvedCatalog.components],
-      catalogInstall: resolvedCatalog,
+      names: components,
+      catalogInstall: {
+        ...resolvedCatalog,
+        components,
+      },
     };
   }
 

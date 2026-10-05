@@ -73,7 +73,10 @@ describe("theme presets", () => {
       }
       if (preset.id !== "default") {
         expect(preset.theme.light.ring).toBe(preset.theme.light.primary);
-        expect(preset.theme.dark.ring).toBe(preset.theme.dark.primary);
+        // Green source palette uses a dedicated dark ring (not equal to primary).
+        if (preset.id !== "green") {
+          expect(preset.theme.dark.ring).toBe(preset.theme.dark.primary);
+        }
       }
       expect(preset.theme.dark.card).not.toBe(preset.theme.dark.background);
     }
@@ -120,15 +123,20 @@ describe("theme presets", () => {
     expect(orange.light.ring).toBe(orange.light.primary);
   });
 
-  it("gives Green a bright primary on a lightly tinted dark surface", () => {
+  it("applies the Green source palette tokens", () => {
     const green = getThemePreset("green").theme;
 
-    expect(green.light.primary).toBe("oklch(0.55 0.17 150)");
-    expect(green.dark.background).toBe("oklch(0.145 0.006 150)");
-    expect(green.dark.primary).toBe("oklch(0.76 0.16 150)");
-    expect(green.dark.card).not.toBe(green.dark.background);
-    expect(green.light.destructive).toContain("27.325");
-    expect(green.light.chart2).not.toBe(green.light.primary);
+    expect(green.light.primary).toBe("oklch(0.723 0.219 149.579)");
+    expect(green.light.primaryForeground).toBe("oklch(0.982 0.018 155.826)");
+    expect(green.light.foreground).toBe("oklch(0.141 0.005 285.823)");
+    expect(green.light.ring).toBe(green.light.primary);
+    expect(green.light.destructive).toBe("oklch(0.577 0.245 27.325)");
+    expect(green.dark.background).toBe("oklch(0.141 0.005 285.823)");
+    expect(green.dark.card).toBe("oklch(0.21 0.006 285.885)");
+    expect(green.dark.primary).toBe("oklch(0.696 0.17 162.48)");
+    expect(green.dark.primaryForeground).toBe("oklch(0.393 0.095 152.535)");
+    expect(green.dark.ring).toBe("oklch(0.527 0.154 150.069)");
+    expect(green.dark.chart2).toBe(green.dark.primary);
   });
 
   it("gives Blue a clear primary on a lightly tinted dark surface", () => {

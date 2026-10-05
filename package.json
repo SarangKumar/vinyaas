@@ -19,6 +19,8 @@
     "format:write": "prettier --write .",
     "format:check": "prettier --check .",
     "registry:build": "tsx scripts/build-registry.ts",
+    "registry:schema:local": "tsx scripts/registry-schema.ts local",
+    "registry:schema:production": "tsx scripts/registry-schema.ts production",
     "registry:integration": "node packages/cli/integration/registry.mjs",
     "cli:build": "pnpm --filter vinyaas build",
     "cli:pack": "pnpm --filter vinyaas exec npm pack",

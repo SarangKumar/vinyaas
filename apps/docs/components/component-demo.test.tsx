@@ -55,7 +55,7 @@ export function SaveButton() {
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
     expect(
       document.querySelector(".bg-background.min-h-40")?.parentElement,
-    ).toHaveClass("overflow-hidden", "rounded-md", "border");
+    ).toHaveClass("border-border", "rounded-md", "border");
     expect(document.querySelector("[data-code-frame]")).toHaveClass(
       "rounded-b-md",
     );

@@ -44,6 +44,56 @@ function run(command, args, options = {}) {
   return result;
 }
 
+function findLocalhostRegistryFiles(directory, localhostBase) {
+  /** @type {string[]} */
+  const hits = [];
+
+  function walk(current) {
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      const fullPath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        walk(fullPath);
+        continue;
+      }
+      if (!entry.name.endsWith(".json")) {
+        continue;
+      }
+      const source = fs.readFileSync(fullPath, "utf8");
+      if (source.includes(localhostBase)) {
+        hits.push(path.relative(root, fullPath));
+      }
+    }
+  }
+
+  walk(directory);
+  return hits;
+}
+
+const registryRoot = path.join(root, "apps/docs/public/r");
+const localhostBeforeBuild = findLocalhostRegistryFiles(
+  registryRoot,
+  LOCALHOST_REGISTRY,
+);
+if (localhostBeforeBuild.length > 0) {
+  console.error(
+    [
+      "Release check failed: localhost registry URLs found in generated registry JSON.",
+      "Local schema mode is for development only and must not be present during release.",
+      "Restore production schema URLs first:",
+      "",
+      "  pnpm registry:schema:production",
+      "",
+      ...localhostBeforeBuild.slice(0, 10).map((file) => `  ${file}`),
+      localhostBeforeBuild.length > 10
+        ? `  …and ${localhostBeforeBuild.length - 10} more`
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n"),
+  );
+  process.exit(1);
+}
+
 run("pnpm", ["cli:release-build"]);
 
 const pkg = JSON.parse(
@@ -63,6 +113,26 @@ if (!bundle.includes(PRODUCTION_REGISTRY)) {
 }
 if (bundle.includes(LOCALHOST_REGISTRY)) {
   console.error("Release check failed: localhost registry path found in CLI bundle.");
+  process.exit(1);
+}
+
+const localhostAfterBuild = findLocalhostRegistryFiles(
+  registryRoot,
+  LOCALHOST_REGISTRY,
+);
+if (localhostAfterBuild.length > 0) {
+  console.error(
+    [
+      "Release check failed: localhost registry URLs remain after release build.",
+      "",
+      ...localhostAfterBuild.slice(0, 10).map((file) => `  ${file}`),
+      localhostAfterBuild.length > 10
+        ? `  …and ${localhostAfterBuild.length - 10} more`
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n"),
+  );
   process.exit(1);
 }
 

@@ -149,6 +149,8 @@ const registryItems = {
 
 function createFetch(options = {}) {
   const includeFormComponent = options.includeFormComponent === true;
+  const catalogs = options.catalogs ?? catalogIndex.items;
+  const items = options.items ?? registryItems;
 
   return async (url) => {
     const href = String(url);
@@ -158,13 +160,16 @@ function createFetch(options = {}) {
         ok: true,
         status: 200,
         async json() {
-          return catalogIndex;
+          return {
+            type: "catalogs",
+            items: catalogs,
+          };
         },
       };
     }
 
     if (href.endsWith("/new-york/index.json")) {
-      const items = Object.values(registryItems).filter(
+      const listed = Object.values(items).filter(
         (item) => includeFormComponent || item.name !== "form",
       );
 
@@ -174,7 +179,7 @@ function createFetch(options = {}) {
         async json() {
           return {
             style: "new-york",
-            items: items.map((item) => ({
+            items: listed.map((item) => ({
               name: item.name,
               type: item.type,
               description: item.description,
@@ -191,7 +196,7 @@ function createFetch(options = {}) {
     const item =
       itemName === "form" && !includeFormComponent
         ? undefined
-        : registryItems[itemName];
+        : items[itemName];
 
     if (!item) {
       return {
@@ -403,6 +408,9 @@ describe("vinyaas add --catalog", () => {
     assert.match(result.stdout, /dashboard/);
     assert.match(result.stdout, /card/);
     assert.match(result.stdout, /badge/);
+    assert.match(result.stdout, /Dependencies/);
+    assert.match(result.stdout, /clsx/);
+    assert.match(result.stdout, /Registry dependencies/);
     assert.match(result.stdout, /No changes made\./);
     await assert.rejects(() =>
       access(join(cwd, "components/ui/card/index.tsx")),
@@ -507,5 +515,233 @@ describe("vinyaas add --catalog", () => {
         return true;
       },
     );
+  });
+
+  it("rejects an empty catalog without writing files", async () => {
+    const cwd = await writeProject();
+    const fetchImpl = createFetch({
+      catalogs: [
+        {
+          id: "empty",
+          name: "Empty",
+          description: "A catalog with no installable members for tests.",
+          components: [],
+        },
+      ],
+    });
+
+    await assert.rejects(
+      () =>
+        executeAdd({
+          name: "",
+          catalog: "empty",
+          cwd,
+          fetch: fetchImpl,
+          runPackageManager: async () => {
+            throw new Error("should not install packages");
+          },
+        }),
+      (error) => {
+        assert.ok(error instanceof CliError);
+        assert.match(
+          error.message,
+          /Catalog "empty" has no installable components/,
+        );
+        return true;
+      },
+    );
+  });
+
+  it("deduplicates catalog members before install", async () => {
+    const cwd = await writeProject();
+    const counts = { button: 0, input: 0, label: 0 };
+    const baseFetch = createFetch({
+      catalogs: [
+        {
+          id: "form",
+          name: "Form",
+          description: "Core form controls for building inputs and actions.",
+          components: ["button", "button", "input", "label"],
+        },
+      ],
+    });
+
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      const response = await baseFetch(url);
+
+      if (href.endsWith("/button.json")) {
+        counts.button += 1;
+      }
+      if (href.endsWith("/input.json")) {
+        counts.input += 1;
+      }
+      if (href.endsWith("/label.json")) {
+        counts.label += 1;
+      }
+
+      return response;
+    };
+
+    await executeAdd({
+      name: "",
+      catalog: "form",
+      cwd,
+      yes: true,
+      fetch: fetchImpl,
+      runPackageManager: async () => {},
+    });
+
+    assert.equal(counts.button, 1);
+    assert.equal(counts.input, 1);
+    assert.equal(counts.label, 1);
+    await access(join(cwd, "components/ui/button/index.tsx"));
+  });
+
+  it("installs catalog registry dependencies through the shared pipeline", async () => {
+    const cwd = await writeProject();
+    const counts = { alert: 0, button: 0 };
+    const baseFetch = createFetch({
+      catalogs: [
+        {
+          id: "alerts",
+          name: "Alerts",
+          description: "Feedback primitives that depend on shared UI.",
+          components: ["alert"],
+        },
+      ],
+      items: {
+        ...registryItems,
+        alert: {
+          $schema: "https://vinyaas.vercel.app/schema/registry-item.json",
+          name: "alert",
+          type: "registry:ui",
+          description: "An alert that depends on button for actions.",
+          dependencies: ["clsx"],
+          registryDependencies: ["button"],
+          files: [
+            {
+              path: "ui/alert/index.tsx",
+              content: "export function Alert() { return null; }\n",
+              type: "registry:ui",
+            },
+          ],
+          docs: "https://vinyaas.vercel.app/components/alert",
+        },
+      },
+    });
+
+    const fetchImpl = async (url) => {
+      const href = String(url);
+      const response = await baseFetch(url);
+
+      if (href.endsWith("/alert.json")) {
+        counts.alert += 1;
+      }
+      if (href.endsWith("/button.json")) {
+        counts.button += 1;
+      }
+
+      return response;
+    };
+
+    const result = await captureLogs(() =>
+      executeAdd({
+        name: "",
+        catalog: "alerts",
+        cwd,
+        yes: true,
+        fetch: fetchImpl,
+        runPackageManager: async () => {},
+      }),
+    );
+
+    assert.equal(counts.alert, 1);
+    assert.equal(counts.button, 1);
+    assert.match(result.stdout, /Registry dependencies/);
+    assert.match(result.stdout, /button/);
+    await access(join(cwd, "components/ui/alert/index.tsx"));
+    await access(join(cwd, "components/ui/button/index.tsx"));
+  });
+
+  it("installs shared npm dependencies once for catalog members", async () => {
+    const cwd = await writeProject();
+    const installs = [];
+
+    await executeAdd({
+      name: "",
+      catalog: "form",
+      cwd,
+      yes: true,
+      fetch: createFetch(),
+      runPackageManager: async (command) => {
+        installs.push(command.args.slice());
+      },
+    });
+
+    assert.equal(installs.length, 1);
+    assert.ok(installs[0]?.includes("clsx"));
+  });
+
+  it("uses the same overwrite/skip behavior as component installs", async () => {
+    const cwd = await writeProject();
+
+    await executeAdd({
+      name: "button",
+      cwd,
+      yes: true,
+      fetch: createFetch(),
+      runPackageManager: async () => {},
+    });
+
+    const result = await captureLogs(() =>
+      executeAdd({
+        name: "",
+        catalog: "form",
+        cwd,
+        yes: true,
+        fetch: createFetch(),
+        runPackageManager: async () => {},
+      }),
+    );
+
+    assert.match(result.stdout, /Skipped/);
+    assert.match(result.stdout, /button \(already exists\)/);
+    await access(join(cwd, "components/ui/input/index.tsx"));
+    await access(join(cwd, "components/ui/label/index.tsx"));
+  });
+
+  it("matches individual component install when catalog members are added alone", async () => {
+    const catalogCwd = await writeProject();
+    const componentCwd = await writeProject();
+
+    await executeAdd({
+      name: "",
+      catalog: "dashboard",
+      cwd: catalogCwd,
+      yes: true,
+      fetch: createFetch(),
+      runPackageManager: async () => {},
+    });
+
+    await executeAdd({
+      name: "card",
+      names: ["card", "badge"],
+      cwd: componentCwd,
+      yes: true,
+      fetch: createFetch(),
+      runPackageManager: async () => {},
+    });
+
+    const { readFile } = await import("node:fs/promises");
+    const catalogButton = await readFile(
+      join(catalogCwd, "components/ui/card/index.tsx"),
+      "utf8",
+    );
+    const componentButton = await readFile(
+      join(componentCwd, "components/ui/card/index.tsx"),
+      "utf8",
+    );
+    assert.equal(catalogButton, componentButton);
   });
 });

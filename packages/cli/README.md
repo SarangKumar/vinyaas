@@ -82,6 +82,7 @@ vinyaas add --catalog dashboard --dry-run
 
 - One or more component names install in a single run.
 - Catalog installs require `--catalog <id>` and confirm with `[Y/n]` (default Yes) unless `--yes` is set. Bare names never expand to catalogs.
+- There is exactly one catalog install syntax: `vinyaas add --catalog <id>` (not `vinyaas catalog add`).
 - Already-installed components are skipped unless `--force` is set.
 - `--dry-run` prints components, files, npm dependencies, and registry dependencies without writing files or installing packages.
 - Multi-component installs prompt for confirmation unless `--yes` is set.
