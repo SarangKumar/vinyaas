@@ -76,7 +76,7 @@ export function DashboardPaginationDemo() {
   const total = 8;
 
   return (
-    <div className="flex w-full max-w-lg flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-medium">Invoices</p>
@@ -194,7 +194,7 @@ export function GalleryPaginationDemo() {
         <p className="text-muted-foreground text-xs">
           Page {page} of {totalPages}
         </p>
-        <Pagination className="mx-0 w-auto justify-start sm:justify-end">
+        <Pagination>
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious

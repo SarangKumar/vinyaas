@@ -21,8 +21,8 @@ export function ComponentDemo({
   return (
     <div className="border-border rounded-md border">
       <div className="bg-background flex min-h-40 items-center justify-center overflow-visible px-4 py-8 text-sm sm:min-h-48 sm:px-6 sm:py-10">
-        {/* p-1 keeps focus rings inside the preview; overflow stays visible for menus */}
-        <div className="flex w-full max-w-full min-w-0 flex-wrap items-center justify-center gap-3 overflow-visible p-1">
+        {/* Avoid min-w-0/flex-wrap so single-row controls like Pagination are not clipped */}
+        <div className="flex w-full items-center justify-center overflow-visible p-1">
           {preview}
         </div>
       </div>

@@ -22,17 +22,19 @@ export function PaginationBlock() {
       title="Pagination"
       description="Page through a long result set without leaving the list."
     >
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-col items-center gap-3">
+        <div className="flex w-full items-center justify-between gap-2">
           <p className="text-sm font-medium">Results</p>
           <p className="text-muted-foreground text-xs tabular-nums">
             Page {page} of {total}
           </p>
         </div>
-        <Pagination className="mx-0 w-full max-w-full justify-start overflow-x-auto">
-          <PaginationContent className="flex-wrap">
+        <Pagination>
+          <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
+                size="icon"
+                className="[&>span]:hidden"
                 disabled={page <= 1}
                 onClick={() => setPage((current) => Math.max(1, current - 1))}
               />
@@ -65,6 +67,8 @@ export function PaginationBlock() {
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
+                size="icon"
+                className="[&>span]:hidden"
                 disabled={page >= total}
                 onClick={() =>
                   setPage((current) => Math.min(total, current + 1))

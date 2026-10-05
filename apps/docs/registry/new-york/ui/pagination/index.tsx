@@ -28,7 +28,7 @@ export function PaginationContent({
     <ul
       data-slot="pagination-content"
       className={cn(
-        "flex flex-row flex-wrap items-center justify-center gap-1",
+        "flex flex-row flex-nowrap items-center justify-center gap-1",
         className,
       )}
       {...props}
@@ -40,7 +40,11 @@ export type PaginationItemProps = React.ComponentProps<"li">;
 
 export function PaginationItem({ className, ...props }: PaginationItemProps) {
   return (
-    <li data-slot="pagination-item" className={cn("", className)} {...props} />
+    <li
+      data-slot="pagination-item"
+      className={cn("shrink-0", className)}
+      {...props}
+    />
   );
 }
 
@@ -137,7 +141,7 @@ export function PaginationPrevious({
     <PaginationLink
       aria-label="Go to previous page"
       size={size}
-      className={cn("gap-1 px-2.5 sm:pl-2.5", className)}
+      className={cn("gap-1", size === "default" && "px-2.5", className)}
       {...props}
     >
       <ChevronLeftIcon className="size-4" />
@@ -157,7 +161,7 @@ export function PaginationNext({
     <PaginationLink
       aria-label="Go to next page"
       size={size}
-      className={cn("gap-1 px-2.5 sm:pr-2.5", className)}
+      className={cn("gap-1", size === "default" && "px-2.5", className)}
       {...props}
     >
       <span className="hidden sm:inline">Next</span>
