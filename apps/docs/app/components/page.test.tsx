@@ -22,6 +22,7 @@ describe("components catalog", () => {
 
     const newlyIntroduced = newComponents();
     expect(newlyIntroduced.map((component) => component.slug).sort()).toEqual([
+      "data-table",
       "drag-and-drop",
       "pagination",
       "resizable",

@@ -218,6 +218,28 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "data-table",
+    type: "registry:ui",
+    description:
+      "A dashboard table with search, sorting, selection, column visibility, and pagination.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: [
+      "table",
+      "pagination",
+      "checkbox",
+      "input",
+      "button",
+      "dropdown-menu",
+      "skeleton",
+    ],
+    files: [
+      {
+        path: "ui/data-table/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "tooltip",
     type: "registry:ui",
     description: "A short floating label shown on hover or focus.",

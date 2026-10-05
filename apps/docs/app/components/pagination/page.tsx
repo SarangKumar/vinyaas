@@ -378,8 +378,8 @@ export default async function PaginationPage() {
           <p>
             On narrow viewports, Previous and Next keep an accessible name while
             the visible label collapses to an icon so controls stay usable
-            without horizontal overflow. Pair with galleries, lists, or tables;
-            leave Data Table for a later release.
+            without horizontal overflow. Pair with galleries, lists, tables, or
+            Data Table.
           </p>
           <p>
             Install with <code>vinyaas add pagination</code> or via{" "}

@@ -35,6 +35,7 @@ describe("component metadata", () => {
       "Chart",
       "Checkbox",
       "Command",
+      "Data Table",
       "Dialog",
       "Drag & Drop",
       "Drawer",
@@ -92,6 +93,7 @@ describe("component metadata", () => {
         .map((component) => component.slug)
         .sort(),
     ).toEqual([
+      "data-table",
       "drag-and-drop",
       "pagination",
       "resizable",
@@ -101,12 +103,13 @@ describe("component metadata", () => {
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 11);
+    ).toBe(components.length - 12);
     expect(
       newComponents()
         .map((component) => component.slug)
         .sort(),
     ).toEqual([
+      "data-table",
       "drag-and-drop",
       "pagination",
       "resizable",

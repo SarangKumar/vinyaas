@@ -649,6 +649,63 @@ describe("registry build output", () => {
     },
   );
 
+  it("keeps the new-york data-table artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/data-table.json");
+    const source = await fs.readFile(
+      path.join(docsRoot, "registry/new-york/ui/data-table/index.tsx"),
+      "utf8",
+    );
+    const rawOutput = await fs.readFile(outputPath, "utf8");
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      registryDependencies?: string[];
+      files: { path: string; content: string }[];
+    };
+    const item = newYork.find((entry) => entry.name === "data-table");
+
+    if (!item) {
+      throw new Error("Expected a data-table registry item");
+    }
+
+    const files = await readRegistryItemFiles(item, async (relativePath) => {
+      expect(relativePath).toBe("ui/data-table/index.tsx");
+      return source;
+    });
+    const payload = serializeBuiltItem(item, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.name).toBe("data-table");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(generated.registryDependencies).toEqual([
+      "table",
+      "pagination",
+      "checkbox",
+      "input",
+      "button",
+      "dropdown-menu",
+      "skeleton",
+    ]);
+    expect(item.registryDependencies).toEqual([
+      "table",
+      "pagination",
+      "checkbox",
+      "input",
+      "button",
+      "dropdown-menu",
+      "skeleton",
+    ]);
+    expect(generated.files).toHaveLength(1);
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain("DataTable");
+    expect(generated.files[0]?.content).toContain('from "../table"');
+    expect(generated.files[0]?.content).toContain('from "../pagination"');
+    expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
+  });
+
   it("keeps the new-york sidebar artifact aligned with the source item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/sidebar.json");
     const source = await fs.readFile(
@@ -709,7 +766,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).resolves.toBeUndefined();
     expect(newYork.some((item) => item.name === "select")).toBe(true);
-    expect(newYork).toHaveLength(44);
+    expect(newYork).toHaveLength(45);
   });
 
   it("matches the json schema item types", () => {

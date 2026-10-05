@@ -31,6 +31,7 @@
         "progress",
         "skeleton",
         "table",
+        "data-table",
         "pagination",
         "scroll-area",
         "separator",
@@ -83,7 +84,8 @@
         "resizable",
         "sidebar",
         "drag-and-drop",
-        "pagination"
+        "pagination",
+        "data-table"
       ]
     }
   ]

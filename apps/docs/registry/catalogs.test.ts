@@ -63,7 +63,13 @@ describe("component catalogs", () => {
   it("documents planned gaps separately from installable membership", () => {
     expect(plannedCatalogGaps.form).toContain("form");
     expect(getComponentCatalog("form")?.components).toContain("select");
-    expect(plannedCatalogGaps.dashboard).toContain("data-table");
+    expect(plannedCatalogGaps.dashboard).not.toContain("data-table");
+    expect(getComponentCatalog("dashboard")?.components).toContain(
+      "data-table",
+    );
+    expect(getComponentCatalog("application")?.components).toContain(
+      "data-table",
+    );
     expect(getComponentCatalog("dashboard")?.components).toContain("sidebar");
     expect(getComponentCatalog("navigation")?.components).toContain("sidebar");
     expect(getComponentCatalog("application")?.components).toContain("sidebar");

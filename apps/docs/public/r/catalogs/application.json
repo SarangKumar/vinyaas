@@ -18,7 +18,8 @@
         "resizable",
         "sidebar",
         "drag-and-drop",
-        "pagination"
+        "pagination",
+        "data-table"
       ]
     }
   ]

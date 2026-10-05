@@ -106,6 +106,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Data Table",
+    slug: "data-table",
+    description:
+      "A dashboard table with search, sorting, selection, and pagination.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Dialog",
     slug: "dialog",
     description: "A modal panel for a focused task.",

@@ -69,6 +69,7 @@ export const registryComponentCategories: Readonly<
   spinner: "feedback",
   switch: "forms",
   table: "data-display",
+  "data-table": "data-display",
   tabs: "navigation",
   textarea: "forms",
   toast: "feedback",

@@ -4,6 +4,7 @@ import { ChartBlock } from "@/app/home/blocks/chart-block";
 import { ChatBlock } from "@/app/home/blocks/chat-block";
 import { CommandSearchBlock } from "@/app/home/blocks/command-search-block";
 import { CompanionBlock } from "@/app/home/blocks/companion-block";
+import { DataTableBlock } from "@/app/home/blocks/data-table-block";
 import { FilterBlock } from "@/app/home/blocks/filter-block";
 import { InvoiceBlock } from "@/app/home/blocks/invoice-block";
 import { LoginBlock } from "@/app/home/blocks/login-block";
@@ -13,7 +14,6 @@ import { NotificationSettingsBlock } from "@/app/home/blocks/notification-settin
 import { PaginationBlock } from "@/app/home/blocks/pagination-block";
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
 import { ProfileBlock } from "@/app/home/blocks/profile-block";
-import { ProjectBlock } from "@/app/home/blocks/project-block";
 import { DragAndDropBlock } from "@/app/home/blocks/drag-and-drop-block";
 import { ResizableBlock } from "@/app/home/blocks/resizable-block";
 import { SecurityBlock } from "@/app/home/blocks/security-block";
@@ -40,7 +40,7 @@ import { components } from "@/components/component-meta";
  * Cards round-robin into exactly that many stacks so mixed heights pack
  * like Pinterest without a spare column wrapping underneath.
  *
- * v1.3.0 note: Pagination replaced Account so the list stays at 20.
+ * v1.3.0 note: Data Table replaced Project so the list stays at 20.
  */
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
@@ -64,6 +64,19 @@ const registrySlugs = new Set(components.map((component) => component.slug));
  */
 export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   { id: "chart", components: ["chart"], Block: ChartBlock },
+  {
+    id: "data-table",
+    components: [
+      "data-table",
+      "table",
+      "pagination",
+      "checkbox",
+      "input",
+      "badge",
+      "dropdown-menu",
+    ],
+    Block: DataTableBlock,
+  },
   { id: "resizable", components: ["resizable"], Block: ResizableBlock },
   { id: "sidebar", components: ["sidebar"], Block: SidebarBlock },
   {
@@ -147,11 +160,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "invoice",
     components: ["card", "badge", "button", "separator"],
     Block: InvoiceBlock,
-  },
-  {
-    id: "project",
-    components: ["card", "badge", "button", "progress", "dropdown-menu"],
-    Block: ProjectBlock,
   },
   {
     id: "notifications",

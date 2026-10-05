@@ -86,6 +86,13 @@
       "category": "navigation"
     },
     {
+      "name": "data-table",
+      "type": "registry:ui",
+      "description": "A dashboard table with search, sorting, selection, column visibility, and pagination.",
+      "docs": "https://vinyaas.vercel.app/components/data-table",
+      "category": "data-display"
+    },
+    {
       "name": "dialog",
       "type": "registry:ui",
       "description": "A composable dialog component for confirmations, forms, and interactive workflows.",
