@@ -45,43 +45,43 @@
 
   /*
    * CodeBlock theme — same neutral hue as globals (~286), dual-mode.
-   * Light: soft paper with brighter, more visible syntax tokens.
-   * Dark: nested charcoal. Calm syntax with enough chroma to read.
+   * Light: bright, high-chroma tokens on soft paper.
+   * Dark: nested charcoal with readable mid-lightness syntax.
    */
-  --syntax-editor: oklch(0.975 0.003 286);
-  --syntax-chrome: oklch(0.955 0.003 286);
-  --syntax-border: oklch(0.9 0.004 286);
-  --syntax-plain: oklch(0.26 0.014 286);
-  --syntax-comment: oklch(0.5 0.016 286);
-  --syntax-keyword: oklch(0.46 0.14 285);
-  --syntax-fn: oklch(0.44 0.13 250);
-  --syntax-string: oklch(0.44 0.12 155);
-  --syntax-number: oklch(0.48 0.12 50);
-  --syntax-param: oklch(0.34 0.03 286);
-  --syntax-type: oklch(0.44 0.11 200);
-  --syntax-tag: oklch(0.44 0.13 250);
-  --syntax-attribute: oklch(0.44 0.1 200);
-  --syntax-punct: oklch(0.46 0.02 286);
+  --syntax-editor: oklch(0.98 0.004 286);
+  --syntax-chrome: oklch(0.96 0.004 286);
+  --syntax-border: oklch(0.9 0.008 286);
+  --syntax-plain: oklch(0.32 0.02 286);
+  --syntax-comment: oklch(0.52 0.03 286);
+  --syntax-keyword: oklch(0.52 0.22 300);
+  --syntax-fn: oklch(0.5 0.2 255);
+  --syntax-string: oklch(0.5 0.18 150);
+  --syntax-number: oklch(0.54 0.18 45);
+  --syntax-param: oklch(0.4 0.05 286);
+  --syntax-type: oklch(0.5 0.16 195);
+  --syntax-tag: oklch(0.5 0.2 255);
+  --syntax-attribute: oklch(0.52 0.16 210);
+  --syntax-punct: oklch(0.5 0.03 286);
 }
 
 .dark {
   --sidebar-foreground: var(--foreground);
 
-  /* Nested against --background 0.141 / --card 0.21 */
+  /* Nested against --background 0.141 / --card 0.21 — brighter syntax */
   --syntax-editor: oklch(0.185 0.005 286);
   --syntax-chrome: oklch(0.22 0.005 286);
   --syntax-border: oklch(1 0 0 / 10%);
-  --syntax-plain: oklch(0.88 0.008 286);
-  --syntax-comment: oklch(0.58 0.012 286);
-  --syntax-keyword: oklch(0.74 0.055 285);
-  --syntax-fn: oklch(0.76 0.05 245);
-  --syntax-string: oklch(0.76 0.05 155);
-  --syntax-number: oklch(0.74 0.05 55);
-  --syntax-param: oklch(0.84 0.008 286);
-  --syntax-type: oklch(0.76 0.04 200);
-  --syntax-tag: oklch(0.75 0.045 245);
-  --syntax-attribute: oklch(0.74 0.035 200);
-  --syntax-punct: oklch(0.65 0.01 286);
+  --syntax-plain: oklch(0.94 0.01 286);
+  --syntax-comment: oklch(0.68 0.02 286);
+  --syntax-keyword: oklch(0.84 0.12 300);
+  --syntax-fn: oklch(0.84 0.11 255);
+  --syntax-string: oklch(0.84 0.12 150);
+  --syntax-number: oklch(0.84 0.12 55);
+  --syntax-param: oklch(0.9 0.02 286);
+  --syntax-type: oklch(0.84 0.1 195);
+  --syntax-tag: oklch(0.84 0.11 255);
+  --syntax-attribute: oklch(0.84 0.1 210);
+  --syntax-punct: oklch(0.76 0.02 286);
 }
 
 @theme inline {
