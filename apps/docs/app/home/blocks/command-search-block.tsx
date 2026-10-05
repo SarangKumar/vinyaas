@@ -1,7 +1,6 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
-import { Badge } from "@/registry/new-york/ui/badge";
 import {
   Command,
   CommandEmpty,
@@ -13,19 +12,16 @@ import {
 } from "@/registry/new-york/ui/command";
 import { Kbd } from "@/registry/new-york/ui/kbd";
 
+/**
+ * Compact command search — no app-shell header or navbar.
+ */
 export function CommandSearchBlock() {
   return (
-    <PlayBlock
-      title="Search"
-      description="Jump to pages, components, and commands."
-    >
-      <div className="flex min-w-0 flex-wrap items-center gap-2">
-        <Badge variant="outline">Recent</Badge>
-        <span className="text-muted-foreground text-xs">
-          Press <Kbd>⌘</Kbd>
-          <Kbd>K</Kbd>
-        </span>
-      </div>
+    <PlayBlock title="Search" description="Jump to a page or run a command.">
+      <p className="text-muted-foreground text-xs">
+        Press <Kbd>⌘</Kbd>
+        <Kbd>K</Kbd>
+      </p>
       <Command className="bg-secondary border-border rounded-md border">
         <CommandInput
           aria-label="Search components"
@@ -33,7 +29,7 @@ export function CommandSearchBlock() {
         />
         <CommandList>
           <CommandEmpty>No results.</CommandEmpty>
-          <CommandGroup heading="Recent pages">
+          <CommandGroup heading="Pages">
             <CommandItem value="Button docs">
               Button docs
               <CommandShortcut>B</CommandShortcut>

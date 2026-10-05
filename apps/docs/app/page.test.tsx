@@ -137,29 +137,41 @@ describe("homepage", () => {
     expect(document.querySelector("[data-playground-blur]")).toBeTruthy();
 
     expect(
-      screen.getByRole("heading", { name: "Navigation Menu" }),
-    ).toBeInTheDocument();
-    expect(
       screen.getByRole("heading", { name: "Traffic" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Resizable" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("separator", { name: "Resize sidebar" }),
+      screen.getByRole("separator", { name: "Resize panels" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Sidebar" }),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText("Main content").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Outline").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Preview").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("heading", { name: "Sign in" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Search" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Select" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Timezone" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Invoices" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Verify email" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Send feedback" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Storefront" }),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Sidebar" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Navigation Menu" }),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Drag & Drop" }),
     ).toBeInTheDocument();

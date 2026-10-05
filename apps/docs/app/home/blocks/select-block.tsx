@@ -1,6 +1,7 @@
 "use client";
 
 import { PlayBlock } from "@/app/home/play-block";
+import { Button } from "@/registry/new-york/ui/button";
 import { Label } from "@/registry/new-york/ui/label";
 import {
   Select,
@@ -12,11 +13,14 @@ import {
   SelectValue,
 } from "@/registry/new-york/ui/select";
 
+/**
+ * Compact timezone picker with a single action — stays light in the masonry.
+ */
 export function SelectBlock() {
   return (
     <PlayBlock
-      title="Select"
-      description="Searchable timezone picker with grouped options."
+      title="Timezone"
+      description="Choose a default timezone for the workspace."
     >
       <div className="grid gap-2">
         <Label htmlFor="home-timezone">Timezone</Label>
@@ -38,6 +42,9 @@ export function SelectBlock() {
           </SelectContent>
         </Select>
       </div>
+      <Button type="button" size="sm" className="w-fit">
+        Save preference
+      </Button>
     </PlayBlock>
   );
 }

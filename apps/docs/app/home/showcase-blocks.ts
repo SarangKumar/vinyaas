@@ -6,10 +6,11 @@ import { ChatBlock } from "@/app/home/blocks/chat-block";
 import { CommandSearchBlock } from "@/app/home/blocks/command-search-block";
 import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { DataTableBlock } from "@/app/home/blocks/data-table-block";
+import { FeedbackBlock } from "@/app/home/blocks/feedback-block";
 import { FilterBlock } from "@/app/home/blocks/filter-block";
 import { LoginBlock } from "@/app/home/blocks/login-block";
 import { SelectBlock } from "@/app/home/blocks/select-block";
-import { NavigationMenuBlock } from "@/app/home/blocks/navigation-menu-block";
+import { OtpBlock } from "@/app/home/blocks/otp-block";
 import { PaginationBlock } from "@/app/home/blocks/pagination-block";
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
 import { ProfileBlock } from "@/app/home/blocks/profile-block";
@@ -17,7 +18,6 @@ import { DragAndDropBlock } from "@/app/home/blocks/drag-and-drop-block";
 import { ResizableBlock } from "@/app/home/blocks/resizable-block";
 import { SecurityBlock } from "@/app/home/blocks/security-block";
 import { SheetBlock } from "@/app/home/blocks/sheet-block";
-import { SidebarBlock } from "@/app/home/blocks/sidebar-block";
 import { TableBlock } from "@/app/home/blocks/table-block";
 import { TabsSettingsBlock } from "@/app/home/blocks/tabs-settings-block";
 import { components } from "@/components/component-meta";
@@ -34,15 +34,23 @@ import { components } from "@/components/component-meta";
  *    coverage, overly generic, or low teaching value) — never grow past 20.
  * 4. Do not remove important single-representation components just because
  *    they are older.
+ * 5. Keep cards light. Avoid Sidebar, Navigation Menu, and other full app
+ *    chrome shells — those belong on docs pages, not the masonry.
  *
  * Layout (homepage, shadcn-style grid of flex columns):
  * 1 · md:2 · lg:3 · min-[1400px]:4 · min-[1900px]:5
  * Cards round-robin into exactly that many stacks so mixed heights pack
  * like Pinterest without a spare column wrapping underneath.
  *
- * v1.3.0 note: Navigation Menu replaced Messages; Sheet replaced Invoice;
- * Alert Dialog replaced Notifications; Data Table replaced Project.
+ * v1.3.0 note: Sheet replaced Invoice; Alert Dialog replaced Notifications;
+ * Data Table replaced Project. Navigation Menu / Sidebar stay docs-only.
  */
+
+/** Shell / nav primitives that are too dense for homepage masonry cards. */
+export const homepageExcludedNewComponents = [
+  "navigation-menu",
+  "sidebar",
+] as const;
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
 export const SHOWCASE_BLOCK_COUNT = 20;
@@ -66,11 +74,6 @@ const registrySlugs = new Set(components.map((component) => component.slug));
 export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   { id: "chart", components: ["chart"], Block: ChartBlock },
   {
-    id: "navigation-menu",
-    components: ["navigation-menu", "card", "badge", "button"],
-    Block: NavigationMenuBlock,
-  },
-  {
     id: "sheet",
     components: ["sheet", "button", "input", "label", "switch", "badge"],
     Block: SheetBlock,
@@ -93,8 +96,16 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     ],
     Block: DataTableBlock,
   },
-  { id: "resizable", components: ["resizable"], Block: ResizableBlock },
-  { id: "sidebar", components: ["sidebar"], Block: SidebarBlock },
+  {
+    id: "resizable",
+    components: ["resizable"],
+    Block: ResizableBlock,
+  },
+  {
+    id: "otp",
+    components: ["input-otp", "badge", "button"],
+    Block: OtpBlock,
+  },
   {
     id: "drag-and-drop",
     components: ["drag-and-drop"],
@@ -102,12 +113,12 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   },
   {
     id: "select",
-    components: ["select"],
+    components: ["select", "label", "button"],
     Block: SelectBlock,
   },
   {
     id: "pagination",
-    components: ["pagination"],
+    components: ["pagination", "badge"],
     Block: PaginationBlock,
   },
   {
@@ -134,7 +145,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   { id: "companion", components: [], Block: CompanionBlock },
   {
     id: "command",
-    components: ["command", "kbd", "badge"],
+    components: ["command", "kbd"],
     Block: CommandSearchBlock,
   },
   {
@@ -156,6 +167,11 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     id: "filter",
     components: ["drawer", "button", "badge"],
     Block: FilterBlock,
+  },
+  {
+    id: "feedback",
+    components: ["textarea", "button", "label", "toast"],
+    Block: FeedbackBlock,
   },
   {
     id: "security",

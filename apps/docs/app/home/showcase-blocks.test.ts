@@ -6,6 +6,7 @@ import {
   SHOWCASE_BLOCK_COUNT,
   distributeShowcaseBlocks,
   filterShowcaseBlocks,
+  homepageExcludedNewComponents,
   showcaseBlockIds,
   showcaseBlocks,
   showcaseComponentSlugs,
@@ -23,38 +24,41 @@ describe("homepage showcase blocks", () => {
   it("references valid registry component slugs", () => {
     expect(showcaseComponentsAreValid()).toBe(true);
     expect(showcaseComponentSlugs()).toContain("resizable");
-    expect(showcaseComponentSlugs()).toContain("sidebar");
     expect(showcaseComponentSlugs()).toContain("drag-and-drop");
     expect(showcaseComponentSlugs()).toContain("button");
+    expect(showcaseComponentSlugs()).not.toContain("sidebar");
+    expect(showcaseComponentSlugs()).not.toContain("navigation-menu");
     expect(showcaseComponentSlugs()).not.toContain("");
   });
 
   it("prioritizes new v1.3.0 components in the showcase list", () => {
     const resizable = showcaseBlocks.find((block) => block.id === "resizable");
-    const sidebar = showcaseBlocks.find((block) => block.id === "sidebar");
     const dragAndDrop = showcaseBlocks.find(
       (block) => block.id === "drag-and-drop",
     );
     expect(resizable).toBeTruthy();
     expect(resizable?.components).toContain("resizable");
-    expect(sidebar).toBeTruthy();
-    expect(sidebar?.components).toContain("sidebar");
     expect(dragAndDrop).toBeTruthy();
     expect(dragAndDrop?.components).toContain("drag-and-drop");
     expect(showcaseBlockIds()).not.toContain("signup");
     expect(showcaseBlockIds()).not.toContain("upload");
     expect(showcaseBlockIds()).not.toContain("account");
+    expect(showcaseBlockIds()).not.toContain("sidebar");
+    expect(showcaseBlockIds()).not.toContain("navigation-menu");
     expect(showcaseBlockIds()).toContain("pagination");
     expect(showcaseBlockIds()).toContain("data-table");
     expect(showcaseBlockIds()).toContain("alert-dialog");
     expect(showcaseBlockIds()).toContain("sheet");
-    expect(showcaseBlockIds()).toContain("navigation-menu");
     expect(showcaseBlockIds()).not.toContain("project");
     expect(showcaseBlockIds()).not.toContain("notifications");
     expect(showcaseBlockIds()).not.toContain("invoice");
     expect(showcaseBlockIds()).not.toContain("messages");
 
+    const excluded = new Set<string>(homepageExcludedNewComponents);
     for (const component of newComponents()) {
+      if (excluded.has(component.slug)) {
+        continue;
+      }
       expect(
         showcaseBlocks.some((block) =>
           block.components.includes(component.slug),
