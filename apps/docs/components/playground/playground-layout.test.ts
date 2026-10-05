@@ -46,14 +46,12 @@ describe("playground layout utilities", () => {
     expect(playgroundShowcaseGridClassName).toContain("xl:max-w-[1600px]");
     expect(playgroundShowcaseGridClassName).toContain("2xl:max-w-[1900px]");
     expect(playgroundShowcaseColumnClassName.base).toContain("flex-col");
-    expect(playgroundShowcaseColumnClassName.md).toContain("md:flex");
-    expect(playgroundShowcaseColumnClassName.lg).toContain("lg:flex");
-    expect(playgroundShowcaseColumnClassName.wide).toContain(
-      "min-[1400px]:flex",
-    );
-    expect(playgroundShowcaseColumnClassName.ultra).toContain(
-      "min-[1900px]:flex",
-    );
+    expect(playgroundShowcaseColumnClassName.md).toContain("flex-col");
+    expect(playgroundShowcaseColumnClassName.lg).toContain("flex-col");
+    expect(playgroundShowcaseColumnClassName.wide).toContain("flex-col");
+    expect(playgroundShowcaseColumnClassName.ultra).toContain("flex-col");
+    expect(playgroundShowcaseColumnClassName.md).not.toContain("hidden");
+    expect(playgroundShowcaseColumnClassName.lg).not.toContain("hidden");
   });
 
   it("shows Typeset inline options above 1400px", () => {

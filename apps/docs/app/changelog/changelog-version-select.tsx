@@ -3,9 +3,12 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/registry/new-york/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select";
 
 import { changelogVersions, resolveChangelogVersionId } from "./changelog-data";
 
@@ -26,27 +29,34 @@ export function ChangelogVersionSelect({ selectedId }: { selectedId: string }) {
       >
         Version
       </label>
-      <NativeSelect
-        id="changelog-version"
-        aria-label="Changelog version"
+      <Select
         value={selected}
-        className="w-full sm:w-56"
-        onChange={(event) => {
+        searchable
+        onValueChange={(value) => {
           const next = new URLSearchParams(searchParams.toString());
-          const value = resolveChangelogVersionId(event.target.value);
-          next.set("v", value);
+          const resolved = resolveChangelogVersionId(value);
+          next.set("v", resolved);
           const query = next.toString();
           router.replace(query ? `${pathname}?${query}` : pathname, {
             scroll: false,
           });
         }}
       >
-        {changelogVersions.map((version) => (
-          <NativeSelectOption key={version.id} value={version.id}>
-            {version.label}
-          </NativeSelectOption>
-        ))}
-      </NativeSelect>
+        <SelectTrigger
+          id="changelog-version"
+          aria-label="Changelog version"
+          className="w-full sm:w-56"
+        >
+          <SelectValue placeholder="Select a version" />
+        </SelectTrigger>
+        <SelectContent searchPlaceholder="Search versions…">
+          {changelogVersions.map((version) => (
+            <SelectItem key={version.id} value={version.id}>
+              {version.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }

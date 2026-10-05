@@ -29,9 +29,26 @@ export function BasicSelectDemo() {
   );
 }
 
+export function SearchableSelectDemo() {
+  return (
+    <Select searchable defaultValue="react">
+      <SelectTrigger className="w-full max-w-sm" aria-label="Framework">
+        <SelectValue placeholder="Select a framework" />
+      </SelectTrigger>
+      <SelectContent searchPlaceholder="Search frameworks…">
+        <SelectItem value="next">Next.js</SelectItem>
+        <SelectItem value="react">React</SelectItem>
+        <SelectItem value="vite">Vite</SelectItem>
+        <SelectItem value="remix">Remix</SelectItem>
+        <SelectItem value="astro">Astro</SelectItem>
+      </SelectContent>
+    </Select>
+  );
+}
+
 export function GroupedTimezoneDemo() {
   return (
-    <Select defaultValue="est">
+    <Select searchable defaultValue="est">
       <SelectTrigger className="w-full max-w-md" aria-label="Timezone">
         <SelectValue placeholder="Select a timezone" />
       </SelectTrigger>
@@ -47,6 +64,22 @@ export function GroupedTimezoneDemo() {
           <SelectItem value="ist">India Standard Time (IST)</SelectItem>
           <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
         </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+}
+
+export function ChangelogStyleSelectDemo() {
+  return (
+    <Select searchable defaultValue="1.3.0">
+      <SelectTrigger className="w-full max-w-xs" aria-label="Version">
+        <SelectValue placeholder="Select a version" />
+      </SelectTrigger>
+      <SelectContent searchPlaceholder="Search versions…">
+        <SelectItem value="1.3.0">v1.3.0</SelectItem>
+        <SelectItem value="1.2.0">v1.2.0</SelectItem>
+        <SelectItem value="1.1.0">v1.1.0</SelectItem>
+        <SelectItem value="1.0.0">v1.0.0</SelectItem>
       </SelectContent>
     </Select>
   );
@@ -85,7 +118,7 @@ const longOptions = Array.from({ length: 40 }, (_, index) => ({
 
 export function LongListSelectDemo() {
   return (
-    <Select defaultValue="city-0">
+    <Select searchable defaultValue="city-0">
       <SelectTrigger className="w-full max-w-sm" aria-label="City">
         <SelectValue placeholder="Pick a city" />
       </SelectTrigger>

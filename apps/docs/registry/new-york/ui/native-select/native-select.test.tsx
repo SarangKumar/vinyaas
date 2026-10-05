@@ -174,4 +174,34 @@ describe("NativeSelect", () => {
       select.parentElement?.querySelector("[data-slot='native-select-icon']"),
     ).toBeNull();
   });
+
+  it("does not override native Tab or arrow keyboard handling", () => {
+    render(
+      <div>
+        <button type="button">Before</button>
+        <label htmlFor="locale">Locale</label>
+        <NativeSelect id="locale" defaultValue="en">
+          <NativeSelectOption value="en">English</NativeSelectOption>
+          <NativeSelectOption value="hi">Hindi</NativeSelectOption>
+        </NativeSelect>
+        <button type="button">After</button>
+      </div>,
+    );
+
+    const select = screen.getByRole("combobox", { name: "Locale" });
+    expect(select.tagName).toBe("SELECT");
+    expect(select).toHaveClass("focus-visible:ring-2");
+
+    select.focus();
+    expect(select).toHaveFocus();
+
+    // Native selects keep browser Tab/Arrow behavior — we must not preventDefault.
+    const tab = fireEvent.keyDown(select, { key: "Tab" });
+    expect(tab).toBe(true);
+    const arrow = fireEvent.keyDown(select, { key: "ArrowDown" });
+    expect(arrow).toBe(true);
+
+    fireEvent.change(select, { target: { value: "hi" } });
+    expect(select).toHaveValue("hi");
+  });
 });

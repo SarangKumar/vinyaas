@@ -60,8 +60,8 @@ export default function ComponentsPage() {
                     {item.name}
                     <span
                       data-nav-indicator="new"
-                      className="bg-muted-foreground size-1.5 shrink-0 rounded-full"
-                      aria-hidden="true"
+                      className="bg-foreground/70 size-1.5 shrink-0 rounded-full"
+                      aria-label="New"
                     />
                     <span className="text-muted-foreground text-xs font-normal">
                       v{item.introducedIn}

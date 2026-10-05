@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 
 import { DocsFeatureCard } from "@/components/docs-feature-card";
 import { DocsNavLinks } from "@/components/docs-nav-links";
-import { DocsPageFeedback } from "@/components/docs-page-feedback";
 import { TableOfContents } from "@/components/table-of-contents";
 
 /**
@@ -68,7 +67,6 @@ export function DocsFrame({ children }: { children: ReactNode }) {
       <aside className="relative z-0 hidden min-h-0 overflow-y-auto overscroll-y-contain xl:block print:hidden">
         <div className="flex min-h-full flex-col pb-8">
           <TableOfContents />
-          <DocsPageFeedback />
           <div className="mt-4 px-5">
             <DocsFeatureCard />
           </div>

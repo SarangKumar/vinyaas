@@ -9,6 +9,7 @@ import { focusRing } from "@/components/focus-ring";
 import { Kbd } from "@/registry/new-york/ui/kbd";
 import {
   Command,
+  CommandFooter,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -27,6 +28,8 @@ type SearchPage = {
   description: string;
   group: "Getting Started" | "Components";
 };
+
+export type DocsSearchPage = SearchPage;
 
 const pages: SearchPage[] = [
   {
@@ -276,7 +279,16 @@ export function DocsSearchField() {
     >
       <SearchIcon className="size-4 shrink-0" />
       <span className="truncate">Search documentation...</span>
-      <Kbd className="ml-auto">{hint}</Kbd>
+      <Kbd className="ml-auto gap-1">
+        {hint === "⌘K" ? (
+          <>
+            <span>⌘</span>
+            <span>K</span>
+          </>
+        ) : (
+          hint
+        )}
+      </Kbd>
     </button>
   );
 }
@@ -297,9 +309,64 @@ export function DocsSearchIcon() {
 }
 
 function matchesQuery(page: SearchPage, query: string) {
-  const haystack = `${page.title} ${page.description}`.toLowerCase();
+  const title = page.title.toLowerCase();
+  const description = page.description.toLowerCase();
 
-  return haystack.includes(query);
+  return title.includes(query) || description.includes(query);
+}
+
+/**
+ * Lower score = stronger match. Title matches outrank description-only hits.
+ * 0 exact title · 1 title prefix · 2 title contains · 3 description only
+ */
+export function searchRank(
+  page: Pick<SearchPage, "title" | "description">,
+  query: string,
+): number {
+  const title = page.title.toLowerCase();
+  const description = page.description.toLowerCase();
+  const q = query.trim().toLowerCase();
+
+  if (!q) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  if (title === q) {
+    return 0;
+  }
+
+  if (title.startsWith(q)) {
+    return 1;
+  }
+
+  if (title.includes(q)) {
+    return 2;
+  }
+
+  if (description.includes(q)) {
+    return 3;
+  }
+
+  return Number.POSITIVE_INFINITY;
+}
+
+export function rankSearchPages(
+  pagesToRank: SearchPage[],
+  query: string,
+): SearchPage[] {
+  const q = query.trim().toLowerCase();
+
+  return [...pagesToRank]
+    .filter((page) => matchesQuery(page, q))
+    .sort((a, b) => {
+      const rankDiff = searchRank(a, q) - searchRank(b, q);
+
+      if (rankDiff !== 0) {
+        return rankDiff;
+      }
+
+      return pagesToRank.indexOf(a) - pagesToRank.indexOf(b);
+    });
 }
 
 function SearchDialog() {
@@ -307,9 +374,7 @@ function SearchDialog() {
   const { open, setOpen } = useDocsSearch();
   const [query, setQuery] = useState("");
   const normalized = query.trim().toLowerCase();
-  const results = normalized
-    ? pages.filter((page) => matchesQuery(page, normalized))
-    : [];
+  const results = normalized ? rankSearchPages(pages, normalized) : [];
 
   return (
     <Dialog
@@ -322,14 +387,14 @@ function SearchDialog() {
         }
       }}
     >
-      <DialogContent className="border-border bg-secondary max-w-lg gap-0 overflow-hidden border p-0 shadow-sm">
+      <DialogContent className="border-border/80 bg-popover max-w-lg gap-0 overflow-hidden rounded-xl border p-0 shadow-md">
         <DialogTitle className="sr-only">Search documentation</DialogTitle>
         <DialogDescription className="sr-only">
           Search pages and components, then press Enter to open a result.
         </DialogDescription>
         <Command
           onQueryChange={setQuery}
-          className="bg-secondary rounded-none border-0 shadow-none"
+          className="bg-popover rounded-none border-0 shadow-none"
         >
           <CommandInput
             aria-label="Search documentation"
@@ -388,6 +453,23 @@ function SearchDialog() {
               })
             )}
           </CommandList>
+          <CommandFooter>
+            <span className="inline-flex items-center gap-1.5">
+              <Kbd className="gap-1">
+                <span>↑</span>
+                <span>↓</span>
+              </Kbd>
+              <span>Navigate</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Kbd>↵</Kbd>
+              <span>Open</span>
+            </span>
+            <span className="ml-auto inline-flex items-center gap-1.5">
+              <Kbd>Esc</Kbd>
+              <span>Close</span>
+            </span>
+          </CommandFooter>
         </Command>
       </DialogContent>
     </Dialog>

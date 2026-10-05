@@ -11,11 +11,13 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 import {
   BasicSelectDemo,
+  ChangelogStyleSelectDemo,
   DashboardFilterDemo,
   DisabledSelectDemo,
   FormSelectDemo,
   GroupedTimezoneDemo,
   LongListSelectDemo,
+  SearchableSelectDemo,
 } from "./select-demos";
 
 export const metadata: Metadata = componentPageMetadata("select");
@@ -23,25 +25,20 @@ export const metadata: Metadata = componentPageMetadata("select");
 const usage = `import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 
-export function TimezoneField() {
+export function PageField() {
   return (
-    <Select defaultValue="est">
-      <SelectTrigger aria-label="Timezone">
-        <SelectValue placeholder="Select a timezone" />
+    <Select defaultValue="docs">
+      <SelectTrigger aria-label="Page">
+        <SelectValue placeholder="Select a page" />
       </SelectTrigger>
-      <SelectContent searchPlaceholder="Search timezones">
-        <SelectGroup>
-          <SelectLabel>North America</SelectLabel>
-          <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
-          <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
-        </SelectGroup>
+      <SelectContent>
+        <SelectItem value="docs">Documentation</SelectItem>
+        <SelectItem value="components">Components</SelectItem>
       </SelectContent>
     </Select>
   );
@@ -76,7 +73,7 @@ export function WorkspacePreferences() {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="timezone">Timezone</Label>
-        <Select name="timezone" defaultValue="America/Los_Angeles">
+        <Select searchable name="timezone" defaultValue="America/Los_Angeles">
           <SelectTrigger id="timezone">
             <SelectValue placeholder="Select a timezone" />
           </SelectTrigger>
@@ -115,6 +112,12 @@ const api: ApiRow[] = [
     description: "Called when the user selects an option.",
   },
   {
+    prop: "searchable",
+    type: "boolean",
+    description:
+      "When true, shows a built-in search field and filters options. Off by default.",
+  },
+  {
     prop: "open / onOpenChange",
     type: "boolean",
     description: "Control the dropdown open state.",
@@ -132,7 +135,7 @@ const api: ApiRow[] = [
   {
     prop: "SelectContent searchPlaceholder",
     type: "string",
-    description: "Placeholder for the built-in search field.",
+    description: "Placeholder for the search field when searchable is set.",
   },
 ];
 
@@ -140,7 +143,8 @@ const examples: ComponentExample[] = [
   {
     id: "basic",
     title: "Basic",
-    description: "Searchable Select with a compact option list.",
+    description:
+      "Default Select without search — behaves like a conventional picker.",
     preview: <BasicSelectDemo />,
     code: `<Select defaultValue="docs">
   <SelectTrigger className="w-full max-w-sm" aria-label="Page">
@@ -153,11 +157,28 @@ const examples: ComponentExample[] = [
 </Select>`,
   },
   {
+    id: "searchable",
+    title: "Searchable",
+    description: "Pass searchable to enable built-in filtering.",
+    preview: <SearchableSelectDemo />,
+    code: `<Select searchable defaultValue="react">
+  <SelectTrigger aria-label="Framework">
+    <SelectValue placeholder="Select a framework" />
+  </SelectTrigger>
+  <SelectContent searchPlaceholder="Search frameworks…">
+    <SelectItem value="next">Next.js</SelectItem>
+    <SelectItem value="react">React</SelectItem>
+    <SelectItem value="vite">Vite</SelectItem>
+  </SelectContent>
+</Select>`,
+  },
+  {
     id: "grouped",
-    title: "Grouped options",
-    description: "Group labels with timezone-style regions.",
+    title: "Grouped searchable",
+    description:
+      "Timezone-style groups. Matching options keep their group labels; empty groups hide.",
     preview: <GroupedTimezoneDemo />,
-    code: `<Select defaultValue="est">
+    code: `<Select searchable defaultValue="est">
   <SelectTrigger aria-label="Timezone">
     <SelectValue placeholder="Select a timezone" />
   </SelectTrigger>
@@ -170,6 +191,21 @@ const examples: ComponentExample[] = [
       <SelectLabel>Asia</SelectLabel>
       <SelectItem value="ist">India Standard Time (IST)</SelectItem>
     </SelectGroup>
+  </SelectContent>
+</Select>`,
+  },
+  {
+    id: "version",
+    title: "Version selector",
+    description: "Compact searchable selector for long version lists.",
+    preview: <ChangelogStyleSelectDemo />,
+    code: `<Select searchable defaultValue="1.3.0">
+  <SelectTrigger aria-label="Version">
+    <SelectValue placeholder="Select a version" />
+  </SelectTrigger>
+  <SelectContent searchPlaceholder="Search versions…">
+    <SelectItem value="1.3.0">v1.3.0</SelectItem>
+    <SelectItem value="1.2.0">v1.2.0</SelectItem>
   </SelectContent>
 </Select>`,
   },
@@ -192,7 +228,7 @@ const examples: ComponentExample[] = [
     title: "Long list",
     description: "Scroll and search across many options.",
     preview: <LongListSelectDemo />,
-    code: `<Select defaultValue="city-0">
+    code: `<Select searchable defaultValue="city-0">
   <SelectTrigger aria-label="City">
     <SelectValue placeholder="Pick a city" />
   </SelectTrigger>
@@ -239,7 +275,7 @@ const examples: ComponentExample[] = [
 
 const inPractice: ComponentInPractice = {
   description:
-    "Pair Select with Label for locale and timezone preferences in a realistic settings form.",
+    "Pair Select with Label for locale and timezone preferences. Use searchable only when the list benefits from filtering.",
   preview: <FormSelectDemo />,
   code: inPracticeSource,
 };
@@ -253,12 +289,13 @@ export default async function SelectPage() {
   return (
     <ComponentReference
       title="Select"
-      description="A searchable custom select with grouped options, keyboard navigation, and accessible listbox behavior."
+      description="A custom select with optional built-in search, grouped options, and accessible listbox behavior."
       overview={
         <>
           <p>
-            Select is a custom dropdown for styled surfaces. It includes
-            built-in search, grouped options, and listbox keyboard support.
+            Select is a custom dropdown for styled surfaces. By default it
+            behaves like a conventional picker with no search field. Pass{" "}
+            <code>searchable</code> when you need built-in filtering.
           </p>
           <p>
             Use{" "}
@@ -283,16 +320,17 @@ export default async function SelectPage() {
             <code>role=&quot;option&quot;</code> and <code>aria-selected</code>.
           </p>
           <p>
-            Open with Enter, Space, or Arrow Down on the trigger. Filter with
-            the search field, move highlights with Arrow Up/Down, select with
-            Enter or click, and close with Escape. Focus returns to the trigger
-            when the list closes.
+            Open with Enter, Space, or Arrow Down on the trigger. In searchable
+            mode the search field receives focus; otherwise the first option is
+            focused. Move with Arrow Up/Down, select with Enter or click, and
+            close with Escape. Focus returns to the trigger when the list
+            closes.
           </p>
         </>
       }
       source={source}
     >
-      <GroupedTimezoneDemo />
+      <BasicSelectDemo />
     </ComponentReference>
   );
 }

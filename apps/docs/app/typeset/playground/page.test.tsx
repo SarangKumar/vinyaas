@@ -63,9 +63,8 @@ describe("Typeset playground page", () => {
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText("Typeset options")).toBeInTheDocument();
     expect(within(dialog).getByLabelText("Measure")).toBeInTheDocument();
-    fireEvent.change(within(dialog).getByLabelText("Measure"), {
-      target: { value: "60ch" },
-    });
+    fireEvent.click(within(dialog).getByLabelText("Measure"));
+    fireEvent.click(screen.getByRole("option", { name: "60ch" }));
     expect(document.querySelector("[data-typeset-playground]")).toHaveAttribute(
       "data-typeset-measure",
       "60ch",
@@ -80,9 +79,8 @@ describe("Typeset playground page", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Options" }));
     const options = await screen.findByRole("dialog");
-    fireEvent.change(within(options).getByLabelText("Measure"), {
-      target: { value: "60ch" },
-    });
+    fireEvent.click(within(options).getByLabelText("Measure"));
+    fireEvent.click(screen.getByRole("option", { name: "60ch" }));
     fireEvent.click(within(options).getByRole("button", { name: "Done" }));
 
     await waitFor(() => {

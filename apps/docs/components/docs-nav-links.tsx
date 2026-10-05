@@ -12,7 +12,7 @@ function NavIndicator({ kind }: { kind: "beta" | "new" }) {
   return (
     <span
       data-nav-indicator={kind}
-      className="bg-muted-foreground size-1.5 shrink-0 rounded-full"
+      className="bg-foreground/70 size-1.5 shrink-0 rounded-full"
       aria-label={label}
       title={label}
     />
@@ -31,7 +31,7 @@ function NavLink({
   const comfortable = density === "comfortable";
   const base = comfortable
     ? "flex min-h-12 cursor-pointer items-center gap-2 rounded-md px-3 py-3 text-base"
-    : "flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 text-sm";
+    : "flex min-h-8 cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-sm leading-[1.3125rem]";
 
   return (
     <Link
@@ -83,8 +83,8 @@ export function DocsNavLinks({
             <p
               className={
                 comfortable
-                  ? "text-muted-foreground px-3 pt-1 pb-2 text-sm font-medium tracking-[0.12em] uppercase"
-                  : "text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium"
+                  ? "text-muted-foreground px-3 pt-1 pb-2 text-sm font-semibold tracking-[0.12em] uppercase"
+                  : "text-muted-foreground px-2 pt-2 pb-1 text-xs font-semibold"
               }
             >
               {group.title}

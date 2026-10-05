@@ -25,20 +25,21 @@ export const playgroundShowcaseGridClassName =
   "relative z-10 mx-auto grid gap-(--gap) **:data-[slot=card]:w-full min-[1400px]:grid-cols-4! min-[1900px]:grid-cols-5! md:max-w-3xl md:grid-cols-2 lg:max-w-none lg:grid-cols-3 xl:max-w-[1600px] 2xl:max-w-[1900px]";
 
 /**
- * Homepage column stacks. Hidden columns use `display: none` so they leave
- * the grid track (same progressive reveal as shadcn).
+ * Homepage column stacks. All columns stay in the layout so every showcase
+ * card remains visible; the grid breakpoint classes control how many tracks
+ * are used (1 → 2 → 3 → 4 → 5).
  */
 export const playgroundShowcaseColumnClassName = {
-  /** Always visible (column 1). */
+  /** Column 1. */
   base: "flex flex-col items-start gap-(--gap)",
-  /** From `lg` (column 2). */
-  lg: "hidden flex-col gap-(--gap) lg:flex",
-  /** From 1400px (column 3). */
-  wide: "hidden flex-col gap-(--gap) min-[1400px]:flex",
-  /** From `md` (column 4 in DOM order; second track at md). */
-  md: "hidden flex-col gap-(--gap) md:flex",
-  /** From 1900px (column 5). */
-  ultra: "hidden flex-col gap-(--gap) min-[1900px]:flex",
+  /** Column 2. */
+  lg: "flex flex-col gap-(--gap)",
+  /** Column 3. */
+  wide: "flex flex-col gap-(--gap)",
+  /** Column 4. */
+  md: "flex flex-col gap-(--gap)",
+  /** Column 5. */
+  ultra: "flex flex-col gap-(--gap)",
 } as const;
 
 /** @deprecated Use `playgroundShowcaseGridClassName`. */

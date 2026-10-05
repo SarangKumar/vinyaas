@@ -54,9 +54,17 @@ describe("Changelog page", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: "Changelog" }),
     ).toBeInTheDocument();
-    expect(
+    await waitFor(() => {
+      expect(
+        screen.getByRole("combobox", { name: "Changelog version" }),
+      ).toHaveTextContent("v1.3.0");
+    });
+    expect(screen.queryByPlaceholderText("Search versions…")).toBeNull();
+    fireEvent.click(
       screen.getByRole("combobox", { name: "Changelog version" }),
-    ).toHaveValue("1.3.0");
+    );
+    expect(screen.getByPlaceholderText("Search versions…")).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.getByRole("heading", { name: "v1.3.0" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "v1.2.0" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "v0.1" })).toBeNull();
@@ -79,9 +87,11 @@ describe("Changelog page", () => {
       }),
     );
 
-    expect(
-      screen.getByRole("combobox", { name: "Changelog version" }),
-    ).toHaveValue("1.2.0");
+    await waitFor(() => {
+      expect(
+        screen.getByRole("combobox", { name: "Changelog version" }),
+      ).toHaveTextContent("v1.2.0");
+    });
     expect(screen.getByRole("heading", { name: "v1.2.0" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "v1.3.0" })).toBeNull();
     expect(document.body.textContent).toContain("Companions");
@@ -94,12 +104,10 @@ describe("Changelog page", () => {
   it("updates the URL when the version selector changes", async () => {
     render(await ChangelogPage({ searchParams: Promise.resolve({}) }));
 
-    fireEvent.change(
+    fireEvent.click(
       screen.getByRole("combobox", { name: "Changelog version" }),
-      {
-        target: { value: "0.1" },
-      },
     );
+    fireEvent.click(screen.getByRole("option", { name: "v0.1" }));
 
     await waitFor(() => {
       expect(navigation.replace).toHaveBeenCalledWith("/changelog?v=0.1", {

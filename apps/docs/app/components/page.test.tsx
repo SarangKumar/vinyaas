@@ -39,7 +39,7 @@ describe("components catalog", () => {
     expect(resizable.textContent).toMatch(/v1\.3\.0/);
     expect(
       resizable.querySelector('[data-nav-indicator="new"]'),
-    ).toHaveAttribute("aria-hidden", "true");
+    ).toHaveAttribute("aria-label", "New");
     expect(resizable.textContent).toMatch(/accessible handles/i);
 
     const sidebar = within(newSection!).getByRole("link", {
@@ -48,8 +48,8 @@ describe("components catalog", () => {
     expect(sidebar).toHaveAttribute("href", "/components/sidebar");
     expect(sidebar.textContent).toMatch(/v1\.3\.0/);
     expect(sidebar.querySelector('[data-nav-indicator="new"]')).toHaveAttribute(
-      "aria-hidden",
-      "true",
+      "aria-label",
+      "New",
     );
 
     const lists = [...document.querySelectorAll("ul")];

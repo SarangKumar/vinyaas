@@ -186,3 +186,45 @@ export function showcaseComponentsAreValid() {
     block.components.every((slug) => registrySlugs.has(slug)),
   );
 }
+
+/**
+ * Filter showcase cards by id/title/component slug.
+ * Empty/whitespace filter returns the full list (no-filter = show everything).
+ * Non-empty filter with no matches returns [] for empty-state UI.
+ */
+export function filterShowcaseBlocks(
+  blocks: readonly ShowcaseBlockDefinition[],
+  filter?: string | null,
+): ShowcaseBlockDefinition[] {
+  const needle = filter?.trim().toLowerCase() ?? "";
+
+  if (!needle) {
+    return [...blocks];
+  }
+
+  return blocks.filter((block) => {
+    if (block.id.toLowerCase().includes(needle)) {
+      return true;
+    }
+
+    return block.components.some((slug) => slug.toLowerCase().includes(needle));
+  });
+}
+
+/** Round-robin cards into a fixed number of masonry columns. */
+export function distributeShowcaseBlocks(
+  blocks: readonly ShowcaseBlockDefinition[],
+  columnCount: number,
+): ShowcaseBlockDefinition[][] {
+  const count = Math.max(1, columnCount);
+  const columns: ShowcaseBlockDefinition[][] = Array.from(
+    { length: count },
+    () => [],
+  );
+
+  blocks.forEach((block, index) => {
+    columns[index % count]?.push(block);
+  });
+
+  return columns;
+}

@@ -21,9 +21,12 @@ import { Input } from "@/registry/new-york/ui/input";
 import { Kbd } from "@/registry/new-york/ui/kbd";
 import { Label } from "@/registry/new-york/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/registry/new-york/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select";
 import { Progress } from "@/registry/new-york/ui/progress";
 import {
   ResizableHandle,
@@ -172,15 +175,19 @@ export const themeExamples: ThemeExample[] = [
               <p className="truncate text-sm font-medium">{name}</p>
               <p className="text-muted-foreground truncate text-xs">{email}</p>
             </div>
-            <NativeSelect
-              aria-label={`${name} role`}
-              defaultValue={role}
-              className="w-23 shrink-0"
-            >
-              <NativeSelectOption value="owner">Owner</NativeSelectOption>
-              <NativeSelectOption value="editor">Editor</NativeSelectOption>
-              <NativeSelectOption value="viewer">Viewer</NativeSelectOption>
-            </NativeSelect>
+            <Select defaultValue={role}>
+              <SelectTrigger
+                aria-label={`${name} role`}
+                className="w-23 shrink-0"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="owner">Owner</SelectItem>
+                <SelectItem value="editor">Editor</SelectItem>
+                <SelectItem value="viewer">Viewer</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         ))}
       </div>
@@ -449,11 +456,16 @@ export const themeExamples: ThemeExample[] = [
       <form className="grid gap-3" onSubmit={(event) => event.preventDefault()}>
         <div className="grid gap-1.5">
           <Label htmlFor="fb-area">Area</Label>
-          <NativeSelect id="fb-area" defaultValue="themes">
-            <NativeSelectOption value="themes">Themes</NativeSelectOption>
-            <NativeSelectOption value="typeset">Typeset</NativeSelectOption>
-            <NativeSelectOption value="print">Print / SEO</NativeSelectOption>
-          </NativeSelect>
+          <Select defaultValue="themes">
+            <SelectTrigger id="fb-area">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="themes">Themes</SelectItem>
+              <SelectItem value="typeset">Typeset</SelectItem>
+              <SelectItem value="print">Print / SEO</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="grid gap-1.5">
           <Label htmlFor="fb-note">What felt off?</Label>
@@ -542,14 +554,15 @@ export const themeExamples: ThemeExample[] = [
             placeholder="teammate@studio.dev"
             className="min-w-0 flex-1"
           />
-          <NativeSelect
-            aria-label="Role"
-            defaultValue="editor"
-            className="w-full sm:w-28"
-          >
-            <NativeSelectOption value="editor">Editor</NativeSelectOption>
-            <NativeSelectOption value="viewer">Viewer</NativeSelectOption>
-          </NativeSelect>
+          <Select defaultValue="editor">
+            <SelectTrigger aria-label="Role" className="w-full sm:w-28">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="editor">Editor</SelectItem>
+              <SelectItem value="viewer">Viewer</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <Button type="button" size="sm" className="w-full sm:w-fit">
           Send invite

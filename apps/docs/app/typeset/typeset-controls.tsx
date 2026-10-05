@@ -20,9 +20,12 @@ import {
 } from "@/registry/new-york/ui/drawer";
 import { Label } from "@/registry/new-york/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/registry/new-york/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select";
 
 import {
   bodyFonts,
@@ -60,18 +63,18 @@ function Field({
       >
         {label}
       </Label>
-      <NativeSelect
-        id={id}
-        value={value}
-        aria-label={label}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        {options.map((option) => (
-          <NativeSelectOption key={option.value} value={option.value}>
-            {option.label}
-          </NativeSelectOption>
-        ))}
-      </NativeSelect>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger id={id} aria-label={label}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }

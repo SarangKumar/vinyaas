@@ -16,11 +16,13 @@ function TimezoneSelect({
   defaultValue,
   onValueChange,
   disabled,
+  searchable = false,
 }: {
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   disabled?: boolean;
+  searchable?: boolean;
 }) {
   return (
     <Select
@@ -28,6 +30,7 @@ function TimezoneSelect({
       defaultValue={defaultValue}
       onValueChange={onValueChange}
       disabled={disabled}
+      searchable={searchable}
     >
       <SelectTrigger aria-label="Timezone">
         <SelectValue placeholder="Select a timezone" />
@@ -59,21 +62,39 @@ describe("Select", () => {
     expect(screen.getByText("Select a timezone")).toBeInTheDocument();
   });
 
-  it("opens dropdown and shows grouped options", async () => {
+  it("shows the selected label before the list opens", async () => {
+    render(<TimezoneSelect value="est" />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Eastern Standard Time (EST)"),
+      ).toBeInTheDocument();
+    });
+    expect(screen.queryByRole("listbox")).toBeNull();
+  });
+
+  it("opens without a search field by default", async () => {
     render(<TimezoneSelect />);
 
     fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
 
-    expect(screen.getByRole("combobox")).toHaveAttribute(
-      "aria-expanded",
-      "true",
-    );
     expect(screen.getByRole("listbox")).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("Search timezones")).toBeNull();
     expect(screen.getByText("North America")).toBeInTheDocument();
-    expect(
-      screen.getByRole("option", { name: /India Standard Time/ }),
-    ).toBeInTheDocument();
 
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Eastern Standard Time/ }),
+      ).toHaveFocus();
+    });
+  });
+
+  it("shows search when searchable is set", async () => {
+    render(<TimezoneSelect searchable />);
+
+    fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
+
+    expect(screen.getByPlaceholderText("Search timezones")).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByPlaceholderText("Search timezones")).toHaveFocus();
     });
@@ -111,8 +132,8 @@ describe("Select", () => {
     expect(screen.getByText("Japan Standard Time (JST)")).toBeInTheDocument();
   });
 
-  it("filters options with case-insensitive search", () => {
-    render(<TimezoneSelect />);
+  it("filters options with case-insensitive search when searchable", () => {
+    render(<TimezoneSelect searchable />);
 
     fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
     fireEvent.change(screen.getByPlaceholderText("Search timezones"), {
@@ -129,8 +150,8 @@ describe("Select", () => {
     expect(screen.queryByText("North America")).toBeNull();
   });
 
-  it("shows empty state when search matches nothing", () => {
-    render(<TimezoneSelect />);
+  it("shows empty state when searchable search matches nothing", () => {
+    render(<TimezoneSelect searchable />);
 
     fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
     fireEvent.change(screen.getByPlaceholderText("Search timezones"), {
@@ -184,15 +205,160 @@ describe("Select", () => {
     });
   });
 
-  it("navigates options with arrow keys", () => {
+  it("navigates options with arrow keys", async () => {
     render(<TimezoneSelect />);
 
     fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Eastern Standard Time/ }),
+      ).toHaveFocus();
+    });
     fireEvent.keyDown(document, { key: "ArrowDown" });
 
     expect(
-      screen.getByRole("option", { name: /Eastern Standard Time/ }),
+      screen.getByRole("option", { name: /Central Standard Time/ }),
     ).toHaveAttribute("data-highlighted");
+    expect(
+      screen.getByRole("option", { name: /Central Standard Time/ }),
+    ).toHaveFocus();
+  });
+
+  it("is reachable by Tab and opens with keyboard", () => {
+    render(
+      <div>
+        <button type="button">Before</button>
+        <TimezoneSelect />
+        <button type="button">After</button>
+      </div>,
+    );
+
+    const trigger = screen.getByRole("combobox", { name: "Timezone" });
+    const before = screen.getByRole("button", { name: "Before" });
+
+    before.focus();
+    expect(before).toHaveFocus();
+    trigger.focus();
+    expect(trigger).toHaveFocus();
+
+    fireEvent.keyDown(trigger, { key: "Enter" });
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+  });
+
+  it("selects with Enter and restores focus on Escape", async () => {
+    render(<TimezoneSelect />);
+    const trigger = screen.getByRole("combobox", { name: "Timezone" });
+
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Eastern Standard Time/ }),
+      ).toHaveAttribute("data-highlighted");
+    });
+
+    fireEvent.keyDown(document, { key: "ArrowDown" });
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Central Standard Time/ }),
+      ).toHaveAttribute("data-highlighted");
+    });
+
+    fireEvent.keyDown(document, { key: "Enter" });
+
+    await waitFor(() => {
+      expect(screen.queryByRole("listbox")).toBeNull();
+      expect(
+        screen.getByText("Central Standard Time (CST)"),
+      ).toBeInTheDocument();
+      expect(trigger).toHaveFocus();
+    });
+
+    fireEvent.keyDown(trigger, { key: "Enter" });
+    await waitFor(() => {
+      expect(screen.getByRole("listbox")).toBeInTheDocument();
+    });
+    fireEvent.keyDown(document, { key: "Escape" });
+    await waitFor(() => {
+      expect(screen.queryByRole("listbox")).toBeNull();
+      expect(trigger).toHaveFocus();
+    });
+  });
+
+  it("lets Tab leave the select without trapping focus", async () => {
+    render(
+      <div>
+        <TimezoneSelect />
+        <button type="button">After</button>
+      </div>,
+    );
+
+    const trigger = screen.getByRole("combobox", { name: "Timezone" });
+    const after = screen.getByRole("button", { name: "After" });
+
+    fireEvent.click(trigger);
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Eastern Standard Time/ }),
+      ).toHaveFocus();
+    });
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Central Standard Time/ }),
+      ).toHaveAttribute("data-highlighted");
+    });
+
+    // Advance to the last option, then Tab past it to leave without a trap.
+    fireEvent.keyDown(document, { key: "End" });
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Japan Standard Time/ }),
+      ).toHaveAttribute("data-highlighted");
+    });
+
+    fireEvent.keyDown(document, { key: "Tab" });
+
+    await waitFor(() => {
+      expect(screen.queryByRole("listbox")).toBeNull();
+    });
+
+    after.focus();
+    expect(after).toHaveFocus();
+    expect(trigger).not.toHaveFocus();
+  });
+
+  it("moves through options with Tab and Shift+Tab while open", async () => {
+    render(<TimezoneSelect />);
+
+    fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Eastern Standard Time/ }),
+      ).toHaveFocus();
+    });
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Central Standard Time/ }),
+      ).toHaveAttribute("data-highlighted");
+    });
+
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Eastern Standard Time/ }),
+      ).toHaveAttribute("data-highlighted");
+    });
+
+    fireEvent.keyDown(document, { key: "Home" });
+    fireEvent.keyDown(document, { key: "End" });
+    await waitFor(() => {
+      expect(
+        screen.getByRole("option", { name: /Japan Standard Time/ }),
+      ).toHaveAttribute("data-highlighted");
+    });
   });
 
   it("renders a scrollable list for long option sets", () => {

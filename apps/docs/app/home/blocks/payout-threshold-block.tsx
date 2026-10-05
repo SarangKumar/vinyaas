@@ -3,9 +3,12 @@
 import { PlayBlock } from "@/app/home/play-block";
 import { Label } from "@/registry/new-york/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/registry/new-york/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select";
 import { Separator } from "@/registry/new-york/ui/separator";
 
 export function PayoutThresholdBlock() {
@@ -13,17 +16,16 @@ export function PayoutThresholdBlock() {
     <PlayBlock title="Payout Threshold">
       <div className="grid min-w-0 gap-1.5">
         <Label htmlFor="play-payout-currency">Currency</Label>
-        <NativeSelect
-          id="play-payout-currency"
-          aria-label="Currency"
-          defaultValue="usd"
-        >
-          <NativeSelectOption value="usd">USD — US Dollar</NativeSelectOption>
-          <NativeSelectOption value="eur">EUR — Euro</NativeSelectOption>
-          <NativeSelectOption value="inr">
-            INR — Indian Rupee
-          </NativeSelectOption>
-        </NativeSelect>
+        <Select defaultValue="usd">
+          <SelectTrigger id="play-payout-currency" aria-label="Currency">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="usd">USD — US Dollar</SelectItem>
+            <SelectItem value="eur">EUR — Euro</SelectItem>
+            <SelectItem value="inr">INR — Indian Rupee</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <Separator />
       <div className="flex min-w-0 items-end justify-between gap-3">

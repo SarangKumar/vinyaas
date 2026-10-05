@@ -77,6 +77,11 @@ describe("homepage", () => {
       "data-showcase-count",
       String(SHOWCASE_BLOCK_COUNT),
     );
+    expect(document.querySelector("[data-playground]")).toHaveAttribute(
+      "data-showcase-filter",
+      "none",
+    );
+    expect(document.querySelector("[data-showcase-empty]")).toBeNull();
     expect(document.querySelectorAll("[data-play-block]")).toHaveLength(
       SHOWCASE_BLOCK_COUNT,
     );
@@ -143,9 +148,12 @@ describe("homepage", () => {
       screen.getAllByRole("button", { name: /Continue with GitHub/i }).length,
     ).toBeGreaterThan(0);
 
-    fireEvent.change(screen.getByRole("textbox", { name: "Search people" }), {
+    fireEvent.change(screen.getByRole("textbox", { name: "Search projects" }), {
       target: { value: "Priya" },
     });
-    expect(screen.getByText("1 people")).toBeInTheDocument();
+    expect(screen.getByText("1 projects")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Open Vinyaas Docs" }),
+    ).toBeInTheDocument();
   });
 });

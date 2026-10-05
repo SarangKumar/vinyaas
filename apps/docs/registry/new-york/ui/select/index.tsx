@@ -18,12 +18,18 @@ import { cn } from "@/lib/utils";
 type Align = "start" | "center" | "end";
 type Side = "top" | "bottom";
 
+type SetOpenOptions = {
+  /** When false, closing does not move focus back to the trigger (e.g. Tab). */
+  restoreFocus?: boolean;
+};
+
 type SelectContextValue = {
   value: string | undefined;
   setValue: (next: string) => void;
   open: boolean;
-  setOpen: (open: boolean) => void;
+  setOpen: (open: boolean, options?: SetOpenOptions) => void;
   disabled: boolean;
+  searchable: boolean;
   triggerRef: React.RefObject<HTMLElement | null>;
   contentId: string;
   listboxId: string;
@@ -118,6 +124,7 @@ export function Select({
   defaultOpen = false,
   onOpenChange,
   disabled = false,
+  searchable = false,
   name,
 }: {
   children: React.ReactNode;
@@ -128,6 +135,8 @@ export function Select({
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
+  /** When true, show a built-in search field and filter options. Off by default. */
+  searchable?: boolean;
   /** Optional form field name (hidden input). */
   name?: string;
 }) {
@@ -135,7 +144,7 @@ export function Select({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const [query, setQuery] = useState("");
   const [activeValue, setActiveValue] = useState<string | undefined>();
-  const labelsRef = useRef(new Map<string, string>());
+  const [labels, setLabels] = useState(() => new Map<string, string>());
   const triggerRef = useRef<HTMLElement>(null);
   const contentId = useId();
   const listboxId = useId();
@@ -158,7 +167,7 @@ export function Select({
   );
 
   const setOpen = useCallback(
-    (next: boolean) => {
+    (next: boolean, options?: SetOpenOptions) => {
       if (!isOpenControlled) {
         setUncontrolledOpen(next);
       }
@@ -168,27 +177,51 @@ export function Select({
       if (!next) {
         setQuery("");
         setActiveValue(undefined);
-        triggerRef.current?.focus();
+
+        if (options?.restoreFocus !== false) {
+          queueMicrotask(() => {
+            triggerRef.current?.focus();
+          });
+        }
       }
     },
     [isOpenControlled, onOpenChange],
   );
 
   const registerLabel = useCallback((itemValue: string, label: string) => {
-    labelsRef.current.set(itemValue, label);
+    setLabels((prev) => {
+      if (prev.get(itemValue) === label) {
+        return prev;
+      }
+
+      const next = new Map(prev);
+      next.set(itemValue, label);
+      return next;
+    });
   }, []);
 
   const unregisterLabel = useCallback((itemValue: string) => {
-    labelsRef.current.delete(itemValue);
+    setLabels((prev) => {
+      if (!prev.has(itemValue)) {
+        return prev;
+      }
+
+      const next = new Map(prev);
+      next.delete(itemValue);
+      return next;
+    });
   }, []);
 
-  const labelFor = useCallback((itemValue: string | undefined) => {
-    if (!itemValue) {
-      return undefined;
-    }
+  const labelFor = useCallback(
+    (itemValue: string | undefined) => {
+      if (!itemValue) {
+        return undefined;
+      }
 
-    return labelsRef.current.get(itemValue);
-  }, []);
+      return labels.get(itemValue);
+    },
+    [labels],
+  );
 
   const context = useMemo(
     () => ({
@@ -197,6 +230,7 @@ export function Select({
       open: isOpen,
       setOpen,
       disabled,
+      searchable,
       triggerRef,
       contentId,
       listboxId,
@@ -216,6 +250,7 @@ export function Select({
       isOpen,
       setOpen,
       disabled,
+      searchable,
       contentId,
       listboxId,
       searchId,
@@ -246,12 +281,15 @@ export function SelectTrigger({
   className,
   children,
   ref,
+  onClick,
+  onKeyDown,
   ...props
 }: TriggerProps) {
   const {
     open,
     setOpen,
     disabled,
+    searchable,
     triggerRef,
     contentId,
     listboxId,
@@ -267,7 +305,7 @@ export function SelectTrigger({
       aria-expanded={open}
       aria-controls={open ? listboxId : undefined}
       aria-haspopup="listbox"
-      aria-autocomplete="list"
+      aria-autocomplete={searchable ? "list" : "none"}
       disabled={disabled}
       data-slot="select-trigger"
       className={cn(
@@ -278,15 +316,16 @@ export function SelectTrigger({
         triggerRef.current = node;
         assignRef(ref, node);
       }}
+      {...props}
       onClick={(event) => {
-        props.onClick?.(event);
+        onClick?.(event);
 
         if (!event.defaultPrevented && !disabled) {
           setOpen(!open);
         }
       }}
       onKeyDown={(event) => {
-        props.onKeyDown?.(event);
+        onKeyDown?.(event);
 
         if (event.defaultPrevented || disabled) {
           return;
@@ -294,6 +333,7 @@ export function SelectTrigger({
 
         if (
           event.key === "ArrowDown" ||
+          event.key === "ArrowUp" ||
           event.key === "Enter" ||
           event.key === " "
         ) {
@@ -301,7 +341,6 @@ export function SelectTrigger({
           setOpen(true);
         }
       }}
-      {...props}
     >
       <span className="flex min-w-0 flex-1 items-center truncate text-left">
         {children}
@@ -487,7 +526,6 @@ export function SelectContent({
   const select = useSelect();
   const contentRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const wasOpen = useRef(false);
   const [point, setPoint] = useState<{
     top: number;
     left: number;
@@ -501,9 +539,13 @@ export function SelectContent({
   }, [children, select]);
 
   const filteredChildren = useMemo(() => {
+    if (!select.searchable || !select.query.trim()) {
+      return children;
+    }
+
     const filtered = filterSelectChildren(children, select.query);
     return stripOrphanLabels(filtered);
-  }, [children, select.query]);
+  }, [children, select.query, select.searchable]);
 
   const hasVisibleItems =
     React.Children.toArray(filteredChildren).some(
@@ -607,19 +649,45 @@ export function SelectContent({
   }, [select.open, align, side, select.triggerRef, select.query, children]);
 
   useEffect(() => {
-    if (wasOpen.current && !select.open) {
-      select.triggerRef.current?.focus();
-    }
-
-    wasOpen.current = select.open;
-
     if (!select.open || select.disabled) {
       return;
     }
 
     const timeout = window.setTimeout(() => {
-      searchRef.current?.focus();
+      if (select.searchable) {
+        searchRef.current?.focus();
+        return;
+      }
+
+      const options = [
+        ...(contentRef.current?.querySelectorAll<HTMLElement>(
+          '[role="option"]:not([aria-disabled="true"])',
+        ) ?? []),
+      ];
+      const selected =
+        options.find(
+          (option) => option.getAttribute("aria-selected") === "true",
+        ) ?? options[0];
+
+      if (selected) {
+        select.setActiveValue(selected.dataset.value);
+        selected.focus();
+      } else {
+        contentRef.current?.focus();
+      }
     }, 0);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+    // Intentionally only when the list opens — not on every activeValue change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- open/disabled/searchable gate initial focus
+  }, [select.open, select.disabled, select.searchable]);
+
+  useEffect(() => {
+    if (!select.open || select.disabled) {
+      return;
+    }
 
     function options() {
       return [
@@ -629,8 +697,18 @@ export function SelectContent({
       ];
     }
 
+    function highlight(option: HTMLElement | undefined) {
+      if (!option) {
+        return;
+      }
+
+      select.setActiveValue(option.dataset.value);
+      option.focus();
+      option.scrollIntoView?.({ block: "nearest" });
+    }
+
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape" || event.key === "Tab") {
+      if (event.key === "Escape") {
         event.preventDefault();
         select.setOpen(false);
         return;
@@ -641,19 +719,73 @@ export function SelectContent({
         (option) => option.dataset.value === select.activeValue,
       );
       const index = active ? list.indexOf(active) : -1;
+      const searchFocused =
+        select.searchable && document.activeElement === searchRef.current;
+
+      if (event.key === "Tab") {
+        // Move through options while open. At either end, close without
+        // restoring focus so the browser continues normal Tab order.
+        if (event.shiftKey) {
+          if (searchFocused) {
+            select.setOpen(false, { restoreFocus: false });
+            return;
+          }
+
+          if (index <= 0) {
+            if (select.searchable) {
+              event.preventDefault();
+              searchRef.current?.focus();
+              return;
+            }
+
+            select.setOpen(false, { restoreFocus: false });
+            return;
+          }
+
+          event.preventDefault();
+          highlight(list[index - 1]);
+          return;
+        }
+
+        if (searchFocused) {
+          if (list.length === 0) {
+            select.setOpen(false, { restoreFocus: false });
+            return;
+          }
+
+          event.preventDefault();
+          highlight(list[0]);
+          return;
+        }
+
+        if (index >= list.length - 1) {
+          select.setOpen(false, { restoreFocus: false });
+          return;
+        }
+
+        event.preventDefault();
+        highlight(list[index + 1]);
+        return;
+      }
 
       if (event.key === "ArrowDown") {
         event.preventDefault();
-        const next = list[index + 1] ?? list[0];
-        select.setActiveValue(next?.dataset.value);
-        next?.scrollIntoView?.({ block: "nearest" });
+        highlight(list[index + 1] ?? list[0]);
       }
 
       if (event.key === "ArrowUp") {
         event.preventDefault();
-        const next = list[index - 1] ?? list[list.length - 1];
-        select.setActiveValue(next?.dataset.value);
-        next?.scrollIntoView?.({ block: "nearest" });
+        highlight(list[index - 1] ?? list[list.length - 1]);
+      }
+
+      if (event.key === "Home") {
+        event.preventDefault();
+        highlight(list[0]);
+      }
+
+      if (event.key === "End") {
+        event.preventDefault();
+        highlight(list[list.length - 1]);
       }
 
       if (event.key === "Enter" && select.activeValue) {
@@ -684,7 +816,6 @@ export function SelectContent({
     document.addEventListener("pointerdown", onPointerDown);
 
     return () => {
-      window.clearTimeout(timeout);
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("pointerdown", onPointerDown);
     };
@@ -707,35 +838,38 @@ export function SelectContent({
         minWidth: point?.width,
       }}
       className={cn(
-        "border-border bg-popover text-popover-foreground z-50 flex max-h-[min(20rem,calc(100dvh-2rem))] flex-col overflow-hidden rounded-md border p-0 text-sm shadow-md motion-reduce:transition-none",
+        "border-border/80 bg-popover text-popover-foreground z-50 flex max-h-[min(20rem,calc(100dvh-2rem))] flex-col overflow-hidden rounded-md border p-0 text-sm shadow-md motion-reduce:transition-none",
         className,
       )}
+      tabIndex={select.searchable ? undefined : -1}
     >
-      <div className="border-border border-b px-3 py-2">
-        <label htmlFor={select.searchId} className="sr-only">
-          {searchPlaceholder}
-        </label>
-        <input
-          ref={searchRef}
-          id={select.searchId}
-          type="search"
-          autoComplete="off"
-          placeholder={searchPlaceholder}
-          value={select.query}
-          onChange={(event) => select.setQuery(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "ArrowDown") {
-              event.preventDefault();
-              const first = contentRef.current?.querySelector<HTMLElement>(
-                '[role="option"]:not([aria-disabled="true"])',
-              );
-              select.setActiveValue(first?.dataset.value);
-              first?.focus();
-            }
-          }}
-          className="border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-ring h-9 w-full rounded-md border px-3 text-sm focus-visible:ring-2 focus-visible:outline-none"
-        />
-      </div>
+      {select.searchable ? (
+        <div className="border-border/80 border-b px-3 py-2">
+          <label htmlFor={select.searchId} className="sr-only">
+            {searchPlaceholder}
+          </label>
+          <input
+            ref={searchRef}
+            id={select.searchId}
+            type="search"
+            autoComplete="off"
+            placeholder={searchPlaceholder}
+            value={select.query}
+            onChange={(event) => select.setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                const first = contentRef.current?.querySelector<HTMLElement>(
+                  '[role="option"]:not([aria-disabled="true"])',
+                );
+                select.setActiveValue(first?.dataset.value);
+                first?.focus();
+              }
+            }}
+            className="border-input bg-muted/40 text-foreground placeholder:text-muted-foreground/80 focus-visible:ring-ring h-9 w-full rounded-md border px-3 text-sm focus-visible:ring-2 focus-visible:outline-none"
+          />
+        </div>
+      ) : null}
       <div
         id={select.listboxId}
         role="listbox"

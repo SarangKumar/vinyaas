@@ -5,9 +5,12 @@ import { Badge } from "@/registry/new-york/ui/badge";
 import { Button } from "@/registry/new-york/ui/button";
 import { Label } from "@/registry/new-york/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/registry/new-york/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select";
 import { Separator } from "@/registry/new-york/ui/separator";
 
 const metrics = [
@@ -29,15 +32,16 @@ export function AnalyticsBlock() {
         <Label htmlFor="play-analytics-range" className="sr-only">
           Date range
         </Label>
-        <NativeSelect
-          id="play-analytics-range"
-          aria-label="Date range"
-          defaultValue="30"
-        >
-          <NativeSelectOption value="7">Last 7 days</NativeSelectOption>
-          <NativeSelectOption value="30">Last 30 days</NativeSelectOption>
-          <NativeSelectOption value="90">Last quarter</NativeSelectOption>
-        </NativeSelect>
+        <Select defaultValue="30">
+          <SelectTrigger id="play-analytics-range" aria-label="Date range">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="7">Last 7 days</SelectItem>
+            <SelectItem value="30">Last 30 days</SelectItem>
+            <SelectItem value="90">Last quarter</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="grid min-w-0 grid-cols-3 gap-2">
         {metrics.map((metric) => (

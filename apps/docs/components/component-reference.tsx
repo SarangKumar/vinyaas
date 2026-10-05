@@ -11,7 +11,7 @@ import { cliCommands } from "@/components/package-managers";
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 const subsectionHeading =
-  "text-foreground scroll-mt-8 text-base font-medium tracking-tight";
+  "text-foreground scroll-mt-8 text-base font-semibold tracking-tight";
 
 export type ComponentExample = {
   id: string;

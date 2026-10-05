@@ -20,7 +20,7 @@ export function SelectBlock() {
     >
       <div className="grid gap-2">
         <Label htmlFor="home-timezone">Timezone</Label>
-        <Select defaultValue="ist">
+        <Select searchable defaultValue="ist">
           <SelectTrigger id="home-timezone" className="w-full">
             <SelectValue placeholder="Select a timezone" />
           </SelectTrigger>

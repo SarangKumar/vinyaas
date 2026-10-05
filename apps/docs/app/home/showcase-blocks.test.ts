@@ -4,6 +4,8 @@ import { isNewComponent, newComponents } from "@/components/component-meta";
 
 import {
   SHOWCASE_BLOCK_COUNT,
+  distributeShowcaseBlocks,
+  filterShowcaseBlocks,
   showcaseBlockIds,
   showcaseBlocks,
   showcaseComponentSlugs,
@@ -58,5 +60,37 @@ describe("homepage showcase blocks", () => {
     expect(showcaseBlockIds()).toContain("primitives");
     expect(showcaseBlockIds()).toContain("command");
     expect(showcaseBlocks).toHaveLength(SHOWCASE_BLOCK_COUNT);
+  });
+
+  it("shows every showcase card when no filter is active", () => {
+    expect(filterShowcaseBlocks(showcaseBlocks)).toHaveLength(
+      SHOWCASE_BLOCK_COUNT,
+    );
+    expect(filterShowcaseBlocks(showcaseBlocks, "   ")).toHaveLength(
+      SHOWCASE_BLOCK_COUNT,
+    );
+    expect(filterShowcaseBlocks(showcaseBlocks, null)).toHaveLength(
+      SHOWCASE_BLOCK_COUNT,
+    );
+
+    const columns = distributeShowcaseBlocks(showcaseBlocks, 5);
+    expect(columns).toHaveLength(5);
+    expect(columns.flat()).toHaveLength(SHOWCASE_BLOCK_COUNT);
+  });
+
+  it("filters showcase cards when a query is active", () => {
+    const filtered = filterShowcaseBlocks(showcaseBlocks, "select");
+    expect(filtered.length).toBeGreaterThan(0);
+    expect(filtered.length).toBeLessThan(SHOWCASE_BLOCK_COUNT);
+    expect(
+      filtered.every(
+        (block) =>
+          block.id.includes("select") || block.components.includes("select"),
+      ),
+    ).toBe(true);
+  });
+
+  it("returns an empty list when the filter matches nothing", () => {
+    expect(filterShowcaseBlocks(showcaseBlocks, "zzz-no-match")).toEqual([]);
   });
 });
