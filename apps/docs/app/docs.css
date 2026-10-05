@@ -4,7 +4,33 @@
  */
 
 :root {
-  --sidebar-foreground: var(--muted-foreground);
+  /*
+   * Docs chrome nav uses foreground (not muted). Consumer globals.css already
+   * aliases --sidebar-foreground to --foreground; keep that here too.
+   */
+  --sidebar-foreground: var(--foreground);
+
+  /*
+   * Site default sans: Geist via next/font CSS variables.
+   * Prefer var(--default-font-family) over scattering font-family declarations.
+   */
+  --default-font-family:
+    var(--font-geist-sans), "Geist Fallback", ui-sans-serif, system-ui,
+    sans-serif;
+
+  /*
+   * Docs type scale ~2px smaller than Tailwind defaults. Declared on :root
+   * (outside @layer) so these win over @theme defaults while spacing stays put.
+   * Code blocks keep explicit px sizes.
+   */
+  --text-xs: 0.6875rem;
+  --text-sm: 0.75rem;
+  --text-base: 0.875rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.375rem;
+  --text-3xl: 1.75rem;
+  --text-4xl: 2.125rem;
 
   /*
    * Homepage playground rhythm. --gap is set from these on the shell
@@ -34,7 +60,7 @@
 }
 
 .dark {
-  --sidebar-foreground: var(--muted-foreground);
+  --sidebar-foreground: var(--foreground);
 
   --syntax-plain: oklch(0.92 0.02 286);
   --syntax-keyword: oklch(0.84 0.14 303);
@@ -47,6 +73,7 @@
 }
 
 @theme inline {
+  --font-sans: var(--default-font-family);
   --color-sidebar-foreground: var(--sidebar-foreground);
 
   --spacing-playground-gap: var(--playground-gap);
@@ -57,11 +84,15 @@
   /*
    * Playground composition ladder (homepage / Themes / Typeset / dense chrome).
    * Themes/Typeset (CSS columns): 1 → md:2 → lg:3 → xl:4
-   * Homepage (shadcn grid of flex columns): 1 → md:2 → lg:3 → 1400:4 → 1900:5
+   * Homepage (grid of flex columns): 1 → md:2 → lg:3 → 1400:4 → 1900:5
    * Dense chrome / Typeset inline options: min-[1400px].
    */
   --breakpoint-playground: 87.5rem; /* 1400px */
   --breakpoint-playground-wide: 118.75rem; /* 1900px */
+}
+
+body {
+  font-family: var(--default-font-family);
 }
 
 /*

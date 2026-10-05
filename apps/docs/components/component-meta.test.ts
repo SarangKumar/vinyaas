@@ -36,6 +36,7 @@ describe("component metadata", () => {
       "Checkbox",
       "Command",
       "Dialog",
+      "Drag & Drop",
       "Drawer",
       "Dropdown Menu",
       "File Upload",
@@ -88,16 +89,16 @@ describe("component metadata", () => {
         .filter((component) => component.introducedIn === "1.3.0")
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["resizable", "sidebar"]);
+    ).toEqual(["drag-and-drop", "resizable", "sidebar"]);
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 8);
+    ).toBe(components.length - 9);
     expect(
       newComponents()
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["resizable", "sidebar"]);
+    ).toEqual(["drag-and-drop", "resizable", "sidebar"]);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "resizable")!,

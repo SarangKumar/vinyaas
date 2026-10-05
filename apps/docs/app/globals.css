@@ -81,7 +81,10 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --default-font-family:
+    var(--font-geist-sans), "Geist Fallback", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-sans: var(--default-font-family);
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --radius-sm: calc(var(--radius) - 4px);

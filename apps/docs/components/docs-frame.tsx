@@ -64,7 +64,23 @@ export function DocsFrame({ children }: { children: ReactNode }) {
         </main>
       </div>
       <aside className="relative z-0 hidden min-h-0 overflow-y-auto overscroll-y-contain xl:block print:hidden">
-        <TableOfContents />
+        <div className="flex min-h-full flex-col">
+          <TableOfContents />
+          <div className="mt-auto px-5 pb-8">
+            <div
+              data-docs-feature-card
+              className="border-border bg-card/70 hover:bg-card text-card-foreground rounded-md border p-3 transition-colors"
+            >
+              <p className="text-foreground text-sm font-medium">
+                What&apos;s new
+              </p>
+              <p className="text-muted-foreground mt-1.5 text-xs leading-5">
+                Build dashboards faster with Resizable, Sidebar, Drag &amp;
+                Drop, catalogs, and accessible primitives.
+              </p>
+            </div>
+          </div>
+        </div>
       </aside>
     </div>
   );

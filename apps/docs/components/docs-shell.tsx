@@ -23,7 +23,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { CompanionProvider } from "@/components/companion/companion-provider";
 import { Toaster } from "@/registry/new-york/ui/toast";
 
-const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-sidebar-foreground hover:text-foreground ${focusRing}`;
+const headerLink = `text-foreground hover:text-foreground/80 cursor-pointer rounded-md px-2 py-1 text-sm ${focusRing}`;
 
 /**
  * Site chrome. Mobile header: Menu · Home · Search · Theme · GitHub.

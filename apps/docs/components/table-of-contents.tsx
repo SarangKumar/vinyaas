@@ -41,7 +41,7 @@ export function TableOfContents() {
           <li key={item.id} className={item.level === 3 ? "pl-5" : undefined}>
             <a
               href={`#${item.id}`}
-              className={`text-sidebar-foreground hover:text-foreground block rounded-md py-0.5 text-sm leading-6 ${focusRing}`}
+              className={`text-foreground/80 hover:text-foreground block rounded-md py-0.5 text-sm leading-6 ${focusRing}`}
               onClick={(event) => {
                 scrollArticleTo(item.id, event);
               }}

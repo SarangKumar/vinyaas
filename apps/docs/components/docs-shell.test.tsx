@@ -75,6 +75,19 @@ describe("DocsShell", () => {
     expect(
       await within(onThisPage).findByRole("link", { name: "Notes" }),
     ).toHaveAttribute("href", "#notes");
+    expect(document.querySelector("[data-docs-feature-card]")).toBeTruthy();
+    expect(
+      document.querySelector("[data-docs-feature-card]")?.textContent,
+    ).toContain("What's new");
+    expect(
+      document.querySelector("[data-docs-feature-card]")?.textContent,
+    ).toContain("Resizable");
+    const homeNav = within(
+      document.querySelector("[data-header-section='start']") as HTMLElement,
+    ).getByRole("link", { name: "Home" });
+    expect(homeNav.className).toContain("text-foreground");
+    const docsSidebarLink = screen.getAllByRole("link", { name: "Button" })[0]!;
+    expect(docsSidebarLink.className).toMatch(/text-foreground/);
     const start = document.querySelector("[data-header-section='start']");
     const end = document.querySelector("[data-header-section='end']");
 

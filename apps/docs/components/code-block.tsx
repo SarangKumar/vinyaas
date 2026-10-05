@@ -174,6 +174,10 @@ function LanguageTabs({
   );
 }
 
+/** Collapsed peek height; expanded code scrolls inside this max. */
+const collapsedMaxClass = "max-h-44";
+const expandedMaxClass = "max-h-80";
+
 function CodeFrame({
   code,
   language,
@@ -195,11 +199,11 @@ function CodeFrame({
     <div
       className={
         attached
-          ? "border-border bg-card text-card-foreground overflow-hidden border-t"
-          : "border-border bg-card text-card-foreground overflow-hidden rounded-md border"
+          ? "border-border bg-card/70 text-card-foreground overflow-hidden border-t shadow-[inset_0_-12px_24px_-18px_oklch(0_0_0/0.35)]"
+          : "border-border bg-card/70 text-card-foreground overflow-hidden rounded-md border shadow-[inset_0_-12px_24px_-18px_oklch(0_0_0/0.35)]"
       }
     >
-      <div className="border-border bg-muted/60 flex items-center justify-between gap-3 border-b px-3 py-1.5">
+      <div className="border-border bg-muted/40 flex items-center justify-between gap-3 border-b px-3 py-1.5">
         {leading ? (
           leading
         ) : language ? (
@@ -211,14 +215,30 @@ function CodeFrame({
         )}
         <CopyButton value={code} />
       </div>
-      <div className="bg-card relative">
+      <div
+        data-code-panel={
+          collapsed ? "collapsed" : expanded ? "expanded" : "open"
+        }
+        className={
+          collapsed
+            ? "bg-card/50 relative"
+            : expanded
+              ? "bg-card/80 relative"
+              : "bg-card relative"
+        }
+      >
         <pre
+          tabIndex={expanded ? 0 : undefined}
           className={
             collapsed
-              ? "m-0 max-h-72 overflow-hidden font-mono text-[13px] leading-6"
-              : numbered
-                ? "m-0 overflow-x-auto font-mono text-[13px] leading-6"
-                : "m-0 overflow-x-auto px-0 py-4 font-mono text-[13px] leading-6"
+              ? `m-0 ${collapsedMaxClass} overflow-hidden font-mono text-[13px] leading-6`
+              : expanded
+                ? numbered
+                  ? `m-0 ${expandedMaxClass} overflow-auto font-mono text-[13px] leading-6`
+                  : `m-0 ${expandedMaxClass} overflow-auto px-0 py-4 font-mono text-[13px] leading-6`
+                : numbered
+                  ? "m-0 overflow-x-auto font-mono text-[13px] leading-6"
+                  : "m-0 overflow-x-auto px-0 py-4 font-mono text-[13px] leading-6"
           }
         >
           {numbered ? (
@@ -232,33 +252,29 @@ function CodeFrame({
         {collapsed ? (
           <div
             data-code-fade
-            className="from-card absolute inset-x-0 bottom-0 flex h-24 items-end justify-center bg-gradient-to-t to-transparent pb-3"
+            className="from-background/90 via-background/45 pointer-events-none absolute inset-x-0 bottom-0 flex h-28 items-end justify-center bg-gradient-to-t to-transparent pb-3 shadow-[0_10px_24px_-12px_oklch(0_0_0/0.45)]"
           >
             <Button
               type="button"
               variant="outline"
               size="sm"
               aria-expanded={false}
+              aria-label="View full code example"
+              className="bg-background/90 pointer-events-auto shadow-sm"
               onClick={() => setExpanded(true)}
             >
               View code
             </Button>
           </div>
         ) : null}
+        {expanded ? (
+          <div
+            aria-hidden="true"
+            data-code-fade="expanded"
+            className="from-background/70 pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t to-transparent"
+          />
+        ) : null}
       </div>
-      {expanded ? (
-        <div className="border-border flex justify-center border-t px-4 py-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            aria-expanded
-            onClick={() => setExpanded(false)}
-          >
-            Hide code
-          </Button>
-        </div>
-      ) : null}
     </div>
   );
 }

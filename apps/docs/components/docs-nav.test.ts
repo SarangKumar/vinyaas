@@ -149,8 +149,11 @@ describe("documentation navigation", () => {
       items
         ?.filter((item) => item.indicator === "new")
         .map((item) => item.title),
-    ).toEqual(["Resizable", "Sidebar"]);
+    ).toEqual(["Drag & Drop", "Resizable", "Sidebar"]);
     expect(items?.find((item) => item.title === "Sidebar")?.indicator).toBe(
+      "new",
+    );
+    expect(items?.find((item) => item.title === "Drag & Drop")?.indicator).toBe(
       "new",
     );
   });

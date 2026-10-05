@@ -56,7 +56,7 @@ describe("CodeBlock", () => {
     ).toHaveClass("border-b");
     expect(
       document.querySelector("pre")?.parentElement?.previousElementSibling,
-    ).toHaveClass("bg-muted/60");
+    ).toHaveClass("bg-muted/40");
     expect(
       screen.queryByRole("tablist", { name: "Component example language" }),
     ).toBeNull();
@@ -65,7 +65,7 @@ describe("CodeBlock", () => {
     ).toBeInTheDocument();
   });
 
-  it("collapses long source, fades the preview, and can expand it", () => {
+  it("collapses long source, fades the preview, and expands to a fixed scroll area", () => {
     renderWithStore(<CodeBlock code={longCode} language="tsx" />);
 
     expect(screen.getByRole("tab", { name: "TSX" })).toHaveAttribute(
@@ -79,32 +79,33 @@ describe("CodeBlock", () => {
     expect(document.querySelector("[data-line-numbers]")).toHaveClass(
       "bg-muted",
     );
-    expect(
-      document.querySelector("[data-line-numbers]")?.closest("pre")
-        ?.parentElement?.parentElement,
-    ).toHaveClass("bg-card");
-    expect(document.querySelector("[data-code-fade]")).toBeInTheDocument();
-    expect(document.querySelector("pre")).toHaveClass("m-0", "max-h-72");
-    expect(
-      document.querySelector("[data-line-numbers]")?.parentElement,
-    ).not.toHaveClass("py-3");
-    expect(document.querySelector("[data-line-numbers]")).not.toHaveClass(
-      "py-3",
+    expect(document.querySelector("[data-code-panel]")).toHaveAttribute(
+      "data-code-panel",
+      "collapsed",
     );
+    expect(document.querySelector("[data-code-fade]")).toBeInTheDocument();
+    expect(document.querySelector("pre")).toHaveClass("m-0", "max-h-44");
+    expect(document.querySelector("pre")).toHaveClass("overflow-hidden");
+    expect(
+      screen.getByRole("button", { name: "View full code example" }),
+    ).toHaveAttribute("aria-expanded", "false");
     expect(document.querySelector("code")?.textContent).toContain("line 20");
-    fireEvent.click(screen.getByRole("button", { name: "View code" }));
-    expect(screen.getByRole("button", { name: "Hide code" })).toHaveAttribute(
-      "aria-expanded",
-      "true",
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "View full code example" }),
     );
-    expect(document.querySelector("[data-code-fade]")).toBeNull();
-    expect(document.querySelector("pre")).toHaveClass("overflow-x-auto");
-    fireEvent.click(screen.getByRole("button", { name: "Hide code" }));
-    expect(screen.getByRole("button", { name: "View code" })).toHaveAttribute(
-      "aria-expanded",
-      "false",
+
+    expect(screen.queryByRole("button", { name: "Hide code" })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "View full code example" }),
+    ).toBeNull();
+    expect(document.querySelector("[data-code-panel]")).toHaveAttribute(
+      "data-code-panel",
+      "expanded",
     );
-    expect(document.querySelector("[data-code-fade]")).toBeInTheDocument();
+    expect(document.querySelector("pre")).toHaveClass("max-h-80");
+    expect(document.querySelector("pre")).toHaveClass("overflow-auto");
+    expect(document.querySelector("pre")).toHaveAttribute("tabindex", "0");
   });
 
   it("highlights TypeScript and Bash without injecting HTML", () => {

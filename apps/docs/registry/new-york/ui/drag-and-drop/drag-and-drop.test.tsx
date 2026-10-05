@@ -216,7 +216,9 @@ describe("DragDrop", () => {
               </DragDropItem>
             ))}
           </DragDropList>
-          <DragDropList id="done" items={items.done} className="min-h-24" />
+          <DragDropList id="done" items={items.done} className="min-h-24">
+            {null}
+          </DragDropList>
         </DragDrop>
       );
     }

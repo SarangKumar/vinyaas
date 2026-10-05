@@ -40,7 +40,7 @@ function NavLink({
       className={
         current
           ? `bg-muted text-foreground font-medium ${base} ${focusRing}`
-          : `text-sidebar-foreground hover:bg-muted hover:text-foreground ${base} ${focusRing}`
+          : `text-foreground hover:bg-muted hover:text-foreground ${base} ${focusRing}`
       }
     >
       <span className="min-w-0 truncate">{item.title}</span>

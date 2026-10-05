@@ -83,6 +83,9 @@ describe("docs theme", () => {
     expect(css).toContain("--color-chart-5: var(--chart-5)");
     expect(css).not.toContain("--color-body");
     expect(css).not.toContain("--color-destructive-foreground");
+    expect(css).toContain("--default-font-family: var(--font-geist-sans)");
+    expect(css).toContain('"Geist Fallback"');
+    expect(css).toContain("--font-sans: var(--default-font-family)");
     expect(css).toContain(
       "--font-mono: var(--font-geist-mono), ui-monospace, monospace",
     );
@@ -132,7 +135,10 @@ describe("docs theme", () => {
     expect(layout).toContain('import "./globals.css"');
     expect(layout).toContain('import "./docs.css"');
     expect(css).toContain("Docs site only");
-    expect(css).toContain("--sidebar-foreground: var(--muted-foreground)");
+    expect(css).toContain("--sidebar-foreground: var(--foreground)");
+    expect(css).toContain("--default-font-family: var(--font-geist-sans)");
+    expect(css).toContain("font-family: var(--default-font-family)");
+    expect(css).toContain("--text-base: 0.875rem");
     expect(css).toContain(
       "--color-sidebar-foreground: var(--sidebar-foreground)",
     );
