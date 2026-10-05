@@ -49,14 +49,15 @@ describe("CodeBlock", () => {
       "py-4",
       "font-mono",
     );
-    expect(
-      document.querySelector("code")?.closest("[class*=bg-card]")
-        ?.previousElementSibling ??
-        document.querySelector("pre")?.parentElement?.previousElementSibling,
-    ).toHaveClass("border-b");
+    expect(document.querySelector("[data-code-frame]")).toBeTruthy();
+    expect(document.querySelector("[data-code-chrome]")).toBeTruthy();
+    expect(document.querySelector("[data-code-panel]")).toHaveAttribute(
+      "data-code-panel",
+      "open",
+    );
     expect(
       document.querySelector("pre")?.parentElement?.previousElementSibling,
-    ).toHaveClass("bg-muted/40");
+    ).toHaveAttribute("data-code-chrome");
     expect(
       screen.queryByRole("tablist", { name: "Component example language" }),
     ).toBeNull();
@@ -76,8 +77,8 @@ describe("CodeBlock", () => {
       "data-language",
       "tsx",
     );
-    expect(document.querySelector("[data-line-numbers]")).toHaveClass(
-      "bg-muted",
+    expect(document.querySelector("[data-line-numbers]")).toHaveAttribute(
+      "data-line-numbers",
     );
     expect(document.querySelector("[data-code-panel]")).toHaveAttribute(
       "data-code-panel",

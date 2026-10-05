@@ -44,30 +44,43 @@
   --playground-pad-xl: 3rem;
 
   /*
-   * Syntax colors for CodeBlock — brighter than body copy so tokens
-   * separate clearly inside muted card surfaces.
+   * CodeBlock theme — same neutral hue as globals (~286), dual-mode.
+   * Light: soft muted paper. Dark: nested charcoal. Calm, low-chroma syntax.
    */
-  --syntax-plain: oklch(0.28 0.02 286);
-  --syntax-keyword: oklch(0.42 0.18 303);
-  --syntax-fn: oklch(0.4 0.16 255);
-  --syntax-string: oklch(0.4 0.14 160);
-  --syntax-param: oklch(0.45 0.14 55);
-  --syntax-number: oklch(0.45 0.15 35);
-  --syntax-comment: oklch(0.55 0.02 286);
-  --syntax-punct: oklch(0.42 0.02 286);
+  --syntax-editor: oklch(0.975 0.003 286);
+  --syntax-chrome: oklch(0.955 0.003 286);
+  --syntax-border: oklch(0.9 0.004 286);
+  --syntax-plain: oklch(0.28 0.012 286);
+  --syntax-comment: oklch(0.55 0.012 286);
+  --syntax-keyword: oklch(0.42 0.06 285);
+  --syntax-fn: oklch(0.4 0.055 250);
+  --syntax-string: oklch(0.4 0.055 155);
+  --syntax-number: oklch(0.45 0.055 50);
+  --syntax-param: oklch(0.34 0.02 286);
+  --syntax-type: oklch(0.4 0.05 200);
+  --syntax-tag: oklch(0.4 0.055 250);
+  --syntax-attribute: oklch(0.4 0.04 200);
+  --syntax-punct: oklch(0.48 0.01 286);
 }
 
 .dark {
   --sidebar-foreground: var(--foreground);
 
-  --syntax-plain: oklch(0.92 0.02 286);
-  --syntax-keyword: oklch(0.84 0.14 303);
-  --syntax-fn: oklch(0.82 0.12 250);
-  --syntax-string: oklch(0.84 0.13 160);
-  --syntax-param: oklch(0.86 0.1 55);
-  --syntax-number: oklch(0.86 0.11 35);
-  --syntax-comment: oklch(0.68 0.02 286);
-  --syntax-punct: oklch(0.78 0.02 286);
+  /* Nested against --background 0.141 / --card 0.21 */
+  --syntax-editor: oklch(0.185 0.005 286);
+  --syntax-chrome: oklch(0.22 0.005 286);
+  --syntax-border: oklch(1 0 0 / 10%);
+  --syntax-plain: oklch(0.88 0.008 286);
+  --syntax-comment: oklch(0.58 0.012 286);
+  --syntax-keyword: oklch(0.74 0.055 285);
+  --syntax-fn: oklch(0.76 0.05 245);
+  --syntax-string: oklch(0.76 0.05 155);
+  --syntax-number: oklch(0.74 0.05 55);
+  --syntax-param: oklch(0.84 0.008 286);
+  --syntax-type: oklch(0.76 0.04 200);
+  --syntax-tag: oklch(0.75 0.045 245);
+  --syntax-attribute: oklch(0.74 0.035 200);
+  --syntax-punct: oklch(0.65 0.01 286);
 }
 
 @theme inline {
@@ -128,24 +141,69 @@ body {
   color: var(--foreground);
 }
 
+/* Surfaces follow theme tokens; nearly opaque so code stays stable. */
+[data-code-frame] {
+  background: color-mix(in oklch, var(--syntax-editor) 96%, transparent);
+  border-color: var(--syntax-border);
+  color: var(--syntax-plain);
+}
+
+[data-code-chrome] {
+  background: var(--syntax-chrome);
+  border-color: var(--syntax-border);
+  color: var(--syntax-comment);
+}
+
+[data-code-panel] {
+  background: var(--syntax-editor);
+}
+
+[data-code-frame] [data-line-numbers] {
+  background: var(--syntax-chrome);
+  border-color: var(--syntax-border);
+  color: var(--syntax-comment);
+}
+
+[data-code-fade] {
+  background: linear-gradient(
+    to top,
+    color-mix(in oklch, var(--syntax-editor) 94%, var(--background)) 0%,
+    color-mix(in oklch, var(--syntax-editor) 50%, transparent) 55%,
+    transparent 100%
+  );
+  box-shadow: 0 10px 24px -12px oklch(0 0 0 / 0.35);
+}
+
+[data-code-fade="expanded"] {
+  background: linear-gradient(
+    to top,
+    color-mix(in oklch, var(--syntax-editor) 75%, transparent),
+    transparent
+  );
+  box-shadow: none;
+}
+
 code[data-language] {
   color: var(--syntax-plain);
   font-family: var(--font-mono), ui-monospace, monospace;
 }
 
 code[data-language] .hljs-keyword,
-code[data-language] .hljs-selector-tag,
-code[data-language] .hljs-built_in,
-code[data-language] .hljs-type {
+code[data-language] .hljs-selector-tag {
   color: var(--syntax-keyword);
+  font-weight: 400;
+}
+
+code[data-language] .hljs-built_in,
+code[data-language] .hljs-type,
+code[data-language] .hljs-title.class_ {
+  color: var(--syntax-type);
   font-weight: 400;
 }
 
 code[data-language] .hljs-title,
 code[data-language] .hljs-title.function_,
-code[data-language] .hljs-title.class_,
-code[data-language] .hljs-function,
-code[data-language] .hljs-name {
+code[data-language] .hljs-function {
   color: var(--syntax-fn);
   font-weight: 400;
 }
@@ -157,15 +215,19 @@ code[data-language] .hljs-template-variable {
   color: var(--syntax-string);
 }
 
-code[data-language] .hljs-attr,
-code[data-language] .hljs-attribute,
 code[data-language] .hljs-params,
 code[data-language] .hljs-variable {
   color: var(--syntax-param);
 }
 
-code[data-language] .hljs-tag {
-  color: var(--syntax-punct);
+code[data-language] .hljs-attr,
+code[data-language] .hljs-attribute {
+  color: var(--syntax-attribute);
+}
+
+code[data-language] .hljs-tag,
+code[data-language] .hljs-name {
+  color: var(--syntax-tag);
 }
 
 code[data-language] .hljs-comment,

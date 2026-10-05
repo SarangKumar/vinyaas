@@ -152,6 +152,10 @@ describe("docs theme", () => {
     expect(css).toContain("--breakpoint-playground: 87.5rem");
     expect(css).toContain("--breakpoint-playground-wide: 118.75rem");
     expect(css).toContain("--syntax-plain:");
+    expect(css).toContain("--syntax-editor:");
+    expect(css).toContain("--syntax-chrome:");
+    expect(css).toContain("--syntax-border:");
+    expect(css).toContain("[data-code-frame]");
     expect(css).toContain("code[data-language]");
     expect(css).toContain(":not(pre) > code:not([data-language])");
     expect(css).toContain(".typeset-docs");

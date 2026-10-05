@@ -161,8 +161,8 @@ function LanguageTabs({
             aria-selected={active}
             className={
               active
-                ? `bg-muted text-foreground cursor-pointer rounded-md px-2 py-1 text-xs font-medium ${focusRing}`
-                : `text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-md px-2 py-1 text-xs ${focusRing}`
+                ? `cursor-pointer rounded-md bg-[color-mix(in_oklch,var(--syntax-plain)_10%,transparent)] px-2 py-1 text-xs font-medium text-[var(--syntax-plain)] ${focusRing}`
+                : `cursor-pointer rounded-md px-2 py-1 text-xs text-[var(--syntax-comment)] hover:bg-[color-mix(in_oklch,var(--syntax-plain)_6%,transparent)] hover:text-[var(--syntax-plain)] ${focusRing}`
             }
             onClick={() => onSelect(item)}
           >
@@ -197,19 +197,21 @@ function CodeFrame({
 
   return (
     <div
+      data-code-frame
       className={
         attached
-          ? "border-border bg-card/70 text-card-foreground overflow-hidden border-t shadow-[inset_0_-12px_24px_-18px_oklch(0_0_0/0.35)]"
-          : "border-border bg-card/70 text-card-foreground overflow-hidden rounded-md border shadow-[inset_0_-12px_24px_-18px_oklch(0_0_0/0.35)]"
+          ? "overflow-hidden rounded-b-md border-t shadow-[inset_0_-12px_24px_-18px_oklch(0_0_0/0.28)]"
+          : "overflow-hidden rounded-md border shadow-[inset_0_-12px_24px_-18px_oklch(0_0_0/0.28)]"
       }
     >
-      <div className="border-border bg-muted/40 flex items-center justify-between gap-3 border-b px-3 py-1.5">
+      <div
+        data-code-chrome
+        className="flex items-center justify-between gap-3 border-b px-3 py-1.5"
+      >
         {leading ? (
           leading
         ) : language ? (
-          <span className="text-muted-foreground font-mono text-xs">
-            {language}
-          </span>
+          <span className="font-mono text-xs opacity-80">{language}</span>
         ) : (
           <span />
         )}
@@ -219,13 +221,7 @@ function CodeFrame({
         data-code-panel={
           collapsed ? "collapsed" : expanded ? "expanded" : "open"
         }
-        className={
-          collapsed
-            ? "bg-card/50 relative"
-            : expanded
-              ? "bg-card/80 relative"
-              : "bg-card relative"
-        }
+        className="relative"
       >
         <pre
           tabIndex={expanded ? 0 : undefined}
@@ -252,7 +248,7 @@ function CodeFrame({
         {collapsed ? (
           <div
             data-code-fade
-            className="from-background/90 via-background/45 pointer-events-none absolute inset-x-0 bottom-0 flex h-28 items-end justify-center bg-gradient-to-t to-transparent pb-3 shadow-[0_10px_24px_-12px_oklch(0_0_0/0.45)]"
+            className="pointer-events-none absolute inset-x-0 bottom-0 flex h-28 items-end justify-center pb-3"
           >
             <Button
               type="button"
@@ -271,7 +267,7 @@ function CodeFrame({
           <div
             aria-hidden="true"
             data-code-fade="expanded"
-            className="from-background/70 pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-8"
           />
         ) : null}
       </div>
@@ -293,7 +289,7 @@ function NumberedSource({
       <div
         data-line-numbers
         aria-hidden="true"
-        className="text-muted-foreground border-border bg-muted sticky left-0 shrink-0 self-stretch border-r py-0 pr-2 pl-3 text-right tabular-nums select-none"
+        className="sticky left-0 shrink-0 self-stretch border-r py-0 pr-2 pl-3 text-right tabular-nums select-none"
       >
         {lines.map((_, index) => (
           <div key={index} className="h-6 leading-6">

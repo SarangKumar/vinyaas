@@ -26,175 +26,194 @@ type SearchPage = {
   title: string;
   href: string;
   description: string;
-  group: "Getting Started" | "Components";
+  group: "Pages" | "Components";
 };
 
 export type DocsSearchPage = SearchPage;
 
-const pages: SearchPage[] = [
+const docPages: SearchPage[] = [
+  {
+    title: "Home",
+    href: "/",
+    description: "Vinyaas homepage and component showcase.",
+    group: "Pages",
+  },
   {
     title: "Introduction",
     href: "/introduction",
     description: "What Vinyaas is and how the docs are organized.",
-    group: "Getting Started",
+    group: "Pages",
+  },
+  {
+    title: "Components",
+    href: "/components",
+    description: "Browse the full catalog of installable UI primitives.",
+    group: "Pages",
   },
   {
     title: "Installation",
     href: "/installation",
     description:
       "Choose Next.js, React + Vite, or React, then install Vinyaas as source.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Install with Next.js",
     href: "/installation/nextjs",
     description:
       "Install Vinyaas in a Next.js App Router project with fresh, existing, or shadcn-style setup paths.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Install with React + Vite",
     href: "/installation/vite",
     description:
       "Install Vinyaas in a Vite + React project with fresh, existing, or shadcn-style setup paths.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Install with React",
     href: "/installation/react",
     description:
       "Install Vinyaas in other React projects with fresh, existing, or shadcn-style setup paths.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "CLI",
     href: "/cli",
     description:
       "init, doctor, add, categories, status, list, search, and info for source installs.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Companions",
     href: "/companion",
     description:
       "Meet Ember, Soul, and Moss — tiny Vinyaas companions separate from UI components.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Companion Installation",
     href: "/companion/installation",
     description:
       "How companions will be installed. CLI companion commands are planned, not available yet.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "companion.json",
     href: "/companion/configuration",
     description:
       "Companion identity, animations, personality, capabilities, and interaction metadata.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Custom Companion",
     href: "/companion/custom",
     description:
       "Planned workflow for creating custom companions with assets and companion.json.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "components.json",
     href: "/components-json",
     description:
       "Local project config for style, aliases, and Tailwind paths used by vinyaas init and add.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Theming",
     href: "/theming",
     description:
       "CSS variables, semantic colors, radius, dark mode, and theme customization.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Themes playground",
     href: "/themes",
     description:
       "Visual theme playground: curated presets, radius, and real UI compositions.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Typeset",
     href: "/typeset",
     description:
       "Markdown-first content typography docs. Distinct from the Typography component.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Typeset playground",
     href: "/typeset/playground",
     description:
       "Experiment with measure, fonts, size, leading, and flow on Markdown-style content.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Package Import",
     href: "/package-import",
     description:
       "Import installed Vinyaas components via project aliases and local source paths.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Dark Mode",
     href: "/dark-mode",
     description:
       "Choose a framework, then enable light and dark themes with the class strategy.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Dark Mode with Next.js",
     href: "/dark-mode/nextjs",
     description: "Wire Vinyaas dark class tokens in a Next.js App Router app.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Dark Mode with React + Vite",
     href: "/dark-mode/vite",
     description: "Wire Vinyaas dark class tokens in a Vite + React app.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Dark Mode with React",
     href: "/dark-mode/react",
     description: "Wire Vinyaas dark class tokens in a generic React app.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Changelog",
     href: "/changelog",
     description: "What shipped through v1.3.0.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Catalogs",
     href: "/catalogs",
     description: "Named registry catalogs for discovery and bulk install.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Accessibility",
     href: "/accessibility",
     description: "Release-wide accessibility contract for registry components.",
-    group: "Getting Started",
+    group: "Pages",
   },
-  ...components.map((component) => ({
-    title: component.name,
-    href: componentHref(component.slug),
-    description: component.description,
-    group: "Components" as const,
-  })),
 ];
 
-const groupOrder = ["Components", "Getting Started"] as const;
+/** Component results — one entry per registry metadata item (no manual duplicates). */
+const componentPages: SearchPage[] = components.map((component) => ({
+  title: component.name,
+  href: componentHref(component.slug),
+  description: component.description,
+  group: "Components" as const,
+}));
+
+const pages: SearchPage[] = [...docPages, ...componentPages];
+
+/** Full search index (pages + metadata-backed components). Exported for tests. */
+export const docsSearchPages: readonly DocsSearchPage[] = pages;
+
+const groupOrder = ["Pages", "Components"] as const;
 
 type DocsSearchContextValue = {
   open: boolean;
@@ -428,7 +447,7 @@ function SearchDialog() {
                           router.push(page.href);
                         }}
                       >
-                        {page.group === "Getting Started" ? (
+                        {page.group === "Pages" ? (
                           <BookIcon className="text-muted-foreground size-4 shrink-0" />
                         ) : (
                           <ComponentIcon className="text-muted-foreground size-4 shrink-0" />

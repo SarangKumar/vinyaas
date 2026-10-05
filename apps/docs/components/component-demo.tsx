@@ -19,8 +19,8 @@ export function ComponentDemo({
   language?: CodeLanguage;
 }) {
   return (
-    <div className="border-border rounded-md border">
-      <div className="bg-background flex min-h-40 items-center justify-center rounded-t-md px-4 py-8 text-sm sm:min-h-48 sm:px-6 sm:py-10">
+    <div className="border-border overflow-hidden rounded-md border">
+      <div className="bg-background flex min-h-40 items-center justify-center px-4 py-8 text-sm sm:min-h-48 sm:px-6 sm:py-10">
         {/* p-1 keeps focus rings inside the preview; avoid overflow clipping */}
         <div className="flex w-full max-w-full min-w-0 flex-wrap items-center justify-center gap-3 p-1">
           {preview}
