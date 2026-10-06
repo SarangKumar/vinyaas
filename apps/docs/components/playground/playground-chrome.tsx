@@ -53,7 +53,7 @@ export function PlaygroundOptionStrip({
 }: {
   label: string;
   children: ReactNode;
-  /** Right-end actions (Copy code, Shuffle, …) — top-aligned with options. */
+  /** Right-end actions (Copy code, Shuffle, …). Bottom-right on phones; top-aligned from sm. */
   actions?: ReactNode;
 }) {
   return (
@@ -66,7 +66,7 @@ export function PlaygroundOptionStrip({
         {children}
       </div>
       {actions ? (
-        <div className="flex shrink-0 items-start justify-end gap-2">
+        <div className="flex shrink-0 items-end justify-end gap-2 self-end sm:items-start sm:self-start">
           {actions}
         </div>
       ) : null}
