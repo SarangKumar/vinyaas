@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
+import { companionPath } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 import logo from "@/components/logo.png";
 
 const primaryLink = `bg-primary text-primary-foreground inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium no-underline ${focusRing}`;
 const secondaryLink = `border-border bg-background text-foreground hover:bg-muted inline-flex h-9 items-center justify-center rounded-md border px-4 text-sm font-medium no-underline ${focusRing}`;
+const companionBadge = `border-border bg-background text-foreground hover:bg-muted inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium no-underline ${focusRing}`;
 
 /**
  * Showcase is a separate client-heavy chunk (recharts, companion, dnd-kit, …).
@@ -75,6 +77,17 @@ export default function Home() {
         <p className="text-muted-foreground mt-5 text-sm font-medium tracking-[0.16em] uppercase">
           Vinyaas
         </p>
+        <Link
+          href={companionPath}
+          className={`${companionBadge} mt-4`}
+          aria-label="Open Companions page"
+        >
+          <span
+            aria-hidden="true"
+            className="bg-foreground/70 size-1.5 shrink-0 rounded-full"
+          />
+          Meet the companions
+        </Link>
         <h1 className="text-foreground mt-4 max-w-full text-[clamp(1.875rem,8vw,3rem)] leading-[1.15] font-semibold tracking-tight text-balance sm:whitespace-nowrap">
           Build. Ship. Beautifully.
         </h1>

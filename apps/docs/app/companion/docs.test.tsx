@@ -34,9 +34,7 @@ describe("Companion docs pages", () => {
     expect(
       screen.getByRole("heading", { name: "Architecture" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Schema" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Schema" })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Animations" }),
     ).toBeInTheDocument();
@@ -65,8 +63,11 @@ describe("Companion docs pages", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: "Custom Companion" }),
     ).toBeInTheDocument();
-    expect(document.body.textContent).toContain("not implemented yet");
+    expect(document.body.textContent).toContain("not shipped yet");
     expect(document.body.textContent).toContain("companion.json");
     expect(document.body.textContent).toContain("Species vs instances");
+    expect(document.body.textContent).toMatch(/Flint|Bubble|Rime|Jab|Volt/);
+    expect(document.body.textContent).toContain("fall");
+    expect(document.body.textContent).toContain("puff");
   });
 });

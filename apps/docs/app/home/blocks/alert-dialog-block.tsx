@@ -59,8 +59,8 @@ export function AlertDialogBlock() {
               <Button
                 type="button"
                 variant="destructive"
-                size="icon-sm"
-                className="sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3"
+                size="sm"
+                className="max-sm:size-8 max-sm:max-h-8 max-sm:max-w-8 max-sm:min-w-8 max-sm:p-0"
                 aria-label="Delete vinyaas-web"
               >
                 <span className="sm:hidden">

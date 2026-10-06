@@ -457,7 +457,6 @@ export function engineEndDrag(
 export function engineEnterDead(
   snapshot: CompanionEngineSnapshot,
   config: CompanionConfig,
-  _nowMs = Date.now(),
 ): CompanionEngineSnapshot {
   return applyState(
     {
@@ -655,7 +654,7 @@ export function engineTick(
     const budget =
       next.interactionDurationMs > 0 ? next.interactionDurationMs : 480;
     if (next.animation.finished || next.ambientElapsedMs >= budget) {
-      return engineEnterDead(next, config, nowMs);
+      return engineEnterDead(next, config);
     }
     return next;
   }
@@ -764,7 +763,7 @@ export function engineTick(
       let vy = next.physics.velocity.y + 0.55 * frame;
       let y = next.physics.position.y + vy * frame;
       let vx = next.physics.velocity.x * 0.9;
-      let x = next.physics.position.x + vx * frame;
+      const x = next.physics.position.x + vx * frame;
 
       if (y >= settleY && vy >= 0) {
         y = settleY;

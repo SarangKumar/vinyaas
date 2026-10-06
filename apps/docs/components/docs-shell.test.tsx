@@ -84,7 +84,11 @@ describe("DocsShell", () => {
     ).toMatch(/Select|Resizable|Sidebar|Drag & Drop/);
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
+    ).toMatch(/Flint|Bubble|Rime|Jab|Volt/);
+    expect(
+      document.querySelector("[data-docs-feature-card]")?.textContent,
     ).toContain("View changelog");
+    expect(document.querySelector("[data-docs-feature-card] ul")).toBeNull();
     expect(document.querySelector("[data-docs-page-feedback]")).toBeNull();
     const homeNav = within(
       document.querySelector("[data-header-section='start']") as HTMLElement,

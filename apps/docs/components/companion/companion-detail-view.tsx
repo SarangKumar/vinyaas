@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 import { CompanionSprite } from "@/components/companion/companion-sprite";
 import { getCatalogEntry } from "@/components/companion/catalog";
@@ -24,13 +24,11 @@ import {
   elementTypeForCompanion,
   formatLifetime,
   formatUnlockRequirement,
-  getCompanionBond,
   isMoveUnlocked,
   unlockRequirementForMove,
-  unlockedIdsForEmber,
   xpToNextBond,
-  type CompanionBondRecord,
 } from "@/components/companion/progression";
+import { useCompanionBond } from "@/components/companion/use-companion-bond";
 import { focusRing } from "@/components/focus-ring";
 import { companionPath } from "@/components/docs-nav";
 import { cn } from "@/lib/utils";
@@ -81,39 +79,22 @@ function isStarterMove(moveId: string): boolean {
 export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
   const entry = getCatalogEntry(companionId);
   const companions = useCompanionsOptional();
-  const [bond, setBond] = useState<CompanionBondRecord | null>(null);
-
-  useEffect(() => {
-    setBond(getCompanionBond(companionId));
-    function refresh() {
-      setBond(getCompanionBond(companionId));
-    }
-    window.addEventListener("vinyaas:companion-bond", refresh);
-    window.addEventListener("storage", refresh);
-    return () => {
-      window.removeEventListener("vinyaas:companion-bond", refresh);
-      window.removeEventListener("storage", refresh);
-    };
-  }, [companionId]);
+  const bond = useCompanionBond(companionId);
 
   const element = elementTypeForCompanion(companionId, entry?.meta.type);
   const matchup = ELEMENT_MATCHUPS[element] ?? {
     strongAgainst: [] as const,
     weakAgainst: [] as const,
   };
-  const interactions = entry?.meta.interactions ?? [];
-  const bondRank = bond?.bond ?? 1;
-  const lifetimeMs = bond?.lifetimeMs ?? 0;
+  const bondRank = bond.bond;
+  const lifetimeMs = bond.lifetimeMs;
   const unlockedSet = useMemo(
-    () =>
-      new Set(
-        bond?.unlockedInteractionIds ??
-          unlockedIdsForEmber(bondRank, lifetimeMs),
-      ),
-    [bond, bondRank, lifetimeMs],
+    () => new Set(bond.unlockedInteractionIds),
+    [bond.unlockedInteractionIds],
   );
 
   const sortedMoves = useMemo(() => {
+    const interactions = entry?.meta.interactions ?? [];
     const withState = interactions.map((item) => {
       const unlocked =
         companionId !== "ember" ||
@@ -134,7 +115,13 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
       };
       return rank(a) - rank(b);
     });
-  }, [interactions, unlockedSet, companionId, bondRank, lifetimeMs]);
+  }, [
+    entry?.meta.interactions,
+    unlockedSet,
+    companionId,
+    bondRank,
+    lifetimeMs,
+  ]);
 
   const count = companions?.countByType(companionId) ?? 0;
   const atLimit = count >= MAX_COMPANION_INSTANCES_PER_TYPE;
@@ -154,7 +141,10 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
     return (
       <p className="text-muted-foreground text-base">
         Unknown companion.{" "}
-        <Link href={companionPath} className={`text-primary underline ${focusRing}`}>
+        <Link
+          href={companionPath}
+          className={`text-primary underline ${focusRing}`}
+        >
           Back to companions
         </Link>
       </p>
@@ -261,16 +251,16 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
           />
           <StatTile
             label="XP"
-            value={String(bond?.xp ?? 0)}
-            hint={`${bond?.interactionCount ?? 0} interactions`}
+            value={String(bond.xp)}
+            hint={`${bond.interactionCount} interactions`}
             surfaceId={`${companionId}-stat-xp`}
           />
           <StatTile
             label="Fatal falls"
-            value={String(bond?.deaths ?? 0)}
+            value={String(bond.deaths)}
             hint={
-              (bond?.evolutionStage ?? 0) > 0
-                ? `Evolution stage ${bond?.evolutionStage}`
+              bond.evolutionStage > 0
+                ? `Evolution stage ${bond.evolutionStage}`
                 : "Base form"
             }
             surfaceId={`${companionId}-stat-falls`}
@@ -425,7 +415,7 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
         <h2 className="text-foreground text-xl font-semibold tracking-tight">
           Animation clips
         </h2>
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 sm:gap-4">
+        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 sm:gap-4 md:grid-cols-5 lg:grid-cols-6">
           {(["idle", "happy", "sleep", "fall", "puff"] as const).map((role) => {
             const clip = entry.clips[role];
             if (!clip) {
@@ -444,7 +434,9 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
                   fps={clip.fps}
                   size={72}
                 />
-                <span className="text-foreground font-mono text-xs">{role}</span>
+                <span className="text-foreground font-mono text-xs">
+                  {role}
+                </span>
                 <span className="text-muted-foreground text-[0.7rem]">
                   {clip.frames.length} frames
                 </span>

@@ -55,21 +55,24 @@ export default async function ChangelogPage({
           {version.label}
         </h2>
         <p className={body}>{version.summary}</p>
-        {version.sections.map((section) => (
-          <div key={section.title} className="flex flex-col gap-3">
-            <h3
-              id={`${version.id}-${section.title.toLowerCase()}`}
-              className={subheading}
-            >
-              {section.title}
-            </h3>
-            <ul className={list}>
-              {section.items.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {version.sections.map((section) => {
+          const sectionId = `${version.id}-${section.title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "")}`;
+          return (
+            <div key={section.title} className="flex flex-col gap-3">
+              <h3 id={sectionId} className={subheading}>
+                {section.title}
+              </h3>
+              <ul className={list}>
+                {section.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
       </section>
     </DocsArticle>
   );

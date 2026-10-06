@@ -70,6 +70,9 @@ describe("homepage", () => {
     expect(document.body.textContent).toContain("vinyaas init");
     expect(document.querySelector("[data-home-brand]")).toBeTruthy();
     expect(screen.getByRole("img", { name: "Vinyaas" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Open Companions page" }),
+    ).toHaveAttribute("href", "/companion");
 
     await waitFor(() => {
       expect(document.querySelector("[data-playground]")).toBeTruthy();

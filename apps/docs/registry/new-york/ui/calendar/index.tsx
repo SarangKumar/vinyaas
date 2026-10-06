@@ -46,9 +46,13 @@ export function Calendar({
           "relative flex flex-col gap-4 sm:flex-row",
           classNames?.months,
         ),
-        month: cn("flex w-full flex-col gap-3", classNames?.month),
+        month: cn(
+          // Exactly seven size-9 day columns — caption must fit this width.
+          "flex w-[15.75rem] flex-col gap-3",
+          classNames?.month,
+        ),
         month_caption: cn(
-          "relative flex h-9 w-full items-center justify-center px-9",
+          "relative flex h-9 w-full items-center justify-center gap-1.5 px-8",
           classNames?.month_caption,
         ),
         caption_label: cn(
@@ -56,17 +60,16 @@ export function Calendar({
           classNames?.caption_label,
         ),
         dropdowns: cn(
-          // Above the nav hit-target so month/year selects stay clickable.
-          "relative z-30 flex h-9 items-center justify-center gap-2",
+          // Single caption row with nav arrows; stay above the nav overlay.
+          "relative z-30 flex h-9 min-w-0 flex-1 items-center justify-center gap-1.5",
           classNames?.dropdowns,
         ),
-        dropdown_root: cn("relative", classNames?.dropdown_root),
+        dropdown_root: cn("relative min-w-0", classNames?.dropdown_root),
         dropdown: cn(classNames?.dropdown),
         months_dropdown: cn(classNames?.months_dropdown),
         years_dropdown: cn(classNames?.years_dropdown),
         nav: cn(
-          // Full-width overlay — must not steal clicks from the selects.
-          "pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between",
+          "pointer-events-none absolute inset-x-0 top-0 z-20 flex h-9 items-center justify-between",
           classNames?.nav,
         ),
         button_previous: cn(
@@ -79,15 +82,16 @@ export function Calendar({
           "pointer-events-auto relative z-20 size-8 shrink-0",
           classNames?.button_next,
         ),
-        month_grid: cn("w-full border-collapse", classNames?.month_grid),
-        weekdays: cn("flex w-full", classNames?.weekdays),
+        month_grid: cn("w-[15.75rem] border-collapse", classNames?.month_grid),
+        weekdays: cn("flex w-[15.75rem]", classNames?.weekdays),
         weekday: cn(
-          "text-muted-foreground flex-1 rounded-md text-center text-xs font-normal",
+          "text-muted-foreground size-9 shrink-0 text-center text-xs font-normal",
           classNames?.weekday,
         ),
-        week: cn("mt-1.5 flex w-full", classNames?.week),
+        week: cn("mt-1.5 flex w-[15.75rem]", classNames?.week),
         day: cn(
-          "relative flex-1 p-0 text-center text-sm focus-within:relative focus-within:z-20",
+          // Fixed square cell — keeps selected/hover fills the same size.
+          "relative size-9 shrink-0 p-0 text-center text-sm focus-within:relative focus-within:z-20",
           "[&:has([aria-selected])]:bg-accent [&:has([aria-selected])]:rounded-md",
           "[&:has([aria-selected].day-range-end)]:rounded-r-md",
           "[&:has([aria-selected].day-range-start)]:rounded-l-md",
@@ -96,8 +100,10 @@ export function Calendar({
           classNames?.day,
         ),
         day_button: cn(
-          buttonVariants({ variant: "ghost", size: "icon-sm" }),
-          "h-9 w-full min-w-0 rounded-md p-0 font-normal aria-selected:opacity-100",
+          buttonVariants({ variant: "ghost" }),
+          // Explicit square — avoid icon-sm max-* clamps that fight size-9.
+          "size-9 min-h-9 min-w-9 max-h-9 max-w-9 rounded-md p-0 font-normal aria-selected:opacity-100",
+          "hover:bg-accent hover:text-accent-foreground",
           "focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           classNames?.day_button,
         ),
@@ -172,8 +178,9 @@ export function Calendar({
 }
 
 /**
- * Native month/year <select>. Wider than the day grid caption used to allow,
- * with reserved chevron space so labels never sit under the icon.
+ * Native month/year <select> for the caption row.
+ * Widths are tuned so "Sep"/"2026" never clip beside the chevron,
+ * while still fitting between the prev/next buttons on a 7×size-9 grid.
  */
 function CalendarDropdown({
   options,
@@ -188,10 +195,10 @@ function CalendarDropdown({
     <div
       data-slot={isYear ? "calendar-year-select" : "calendar-month-select"}
       className={cn(
-        // Width wins over any DayPicker className so labels stay readable.
+        "border-input bg-background relative inline-flex h-8 shrink-0 items-center rounded-md border",
         className,
-        "border-input bg-background relative inline-flex h-8 shrink-0 items-center overflow-hidden rounded-md border",
-        isYear ? "w-[5.5rem]" : "w-[6.5rem]",
+        // Force readable widths after any DayPicker-injected className.
+        isYear ? "w-[5.5rem]" : "w-[5rem]",
       )}
     >
       <select
@@ -201,8 +208,10 @@ function CalendarDropdown({
           value === undefined || value === null ? undefined : String(value)
         }
         className={cn(
-          "text-foreground h-full w-full min-w-0 cursor-pointer bg-transparent py-0 pr-8 pl-2.5 text-sm outline-none",
+          "text-foreground h-full w-full cursor-pointer bg-transparent py-0 text-sm outline-none",
+          // Reserve chevron gutter; keep label fully visible.
           "appearance-none [-moz-appearance:none] [-webkit-appearance:none]",
+          "pr-6 pl-2.5",
           "focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
           "disabled:cursor-not-allowed disabled:opacity-50",
         )}
@@ -219,7 +228,7 @@ function CalendarDropdown({
       </select>
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 flex w-8 items-center justify-center"
+        className="pointer-events-none absolute inset-y-0 right-0 flex w-6 items-center justify-center"
       >
         <ChevronDownIcon className="text-muted-foreground size-3.5 opacity-70" />
       </span>

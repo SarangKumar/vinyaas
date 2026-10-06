@@ -68,12 +68,22 @@ describe("Changelog page", () => {
     expect(screen.getByRole("heading", { name: "v1.3.0" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "v1.2.0" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "v0.1" })).toBeNull();
-    expect(screen.getByRole("heading", { name: "Added" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Improved" }),
+      screen.getByRole("heading", { name: "Components" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Companions" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "CLI & catalogs" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Docs & accessibility" }),
     ).toBeInTheDocument();
     expect(document.body.textContent).toContain("Resizable");
     expect(document.body.textContent).toContain("Drag & Drop");
+    expect(document.body.textContent).toContain("Flint");
+    expect(document.body.textContent).toContain("vinyaas catalog list");
     expect(document.body.textContent).toContain(`v${currentVersion}`);
     expect(document.body.textContent).not.toContain("ui.shadcn.com");
     expect(document.body.textContent).not.toContain("Not in this version");

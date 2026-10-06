@@ -5,11 +5,22 @@ import {
   currentVersion,
   newComponents,
 } from "@/components/component-meta";
-import { changelogPath } from "@/components/docs-nav";
+import { changelogPath, companionPath } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 
+/** Companions introduced after the v1.2 Ember / Soul / Moss set. */
+const NEW_COMPANIONS = [
+  { id: "flint", name: "Flint" },
+  { id: "bubble", name: "Bubble" },
+  { id: "rime", name: "Rime" },
+  { id: "jab", name: "Jab" },
+  { id: "volt", name: "Volt" },
+] as const;
+
+const inlineLink = `text-foreground underline underline-offset-4 ${focusRing} rounded-sm`;
+
 /**
- * Compact right-rail card listing current-release components.
+ * Compact right-rail card listing current-release components and companions.
  * Uses the same newComponents() source as nav indicators.
  */
 export function DocsFeatureCard() {
@@ -26,31 +37,46 @@ export function DocsFeatureCard() {
         </p>
         <p className="text-muted-foreground text-xs">v{currentVersion}</p>
       </div>
-      <p className="text-muted-foreground mt-1.5 text-sm leading-snug">
-        {newlyIntroduced.length} components shipped in this release.
-      </p>
       {newlyIntroduced.length > 0 ? (
-        <ul className="mt-2.5 flex flex-col gap-1">
-          {newlyIntroduced.map((component) => (
-            <li key={component.slug}>
-              <Link
-                href={componentHref(component.slug)}
-                className={`text-muted-foreground hover:text-foreground/80 inline-flex items-center gap-1.5 text-sm underline-offset-4 hover:underline ${focusRing} rounded-sm`}
-              >
-                <span
-                  data-nav-indicator="new"
-                  className="bg-foreground/70 size-1.5 shrink-0 rounded-full"
-                  aria-hidden="true"
-                />
+        <p className="text-muted-foreground mt-2 text-sm leading-6">
+          New components:{" "}
+          {newlyIntroduced.map((component, index) => (
+            <span key={component.slug}>
+              {index > 0 ? ", " : null}
+              <Link href={componentHref(component.slug)} className={inlineLink}>
                 {component.name}
               </Link>
-            </li>
+            </span>
           ))}
-        </ul>
-      ) : null}
+          .
+        </p>
+      ) : (
+        <p className="text-muted-foreground mt-2 text-sm leading-6">
+          No new components in this release.
+        </p>
+      )}
+      <p className="text-muted-foreground mt-2 text-sm leading-6">
+        New companions:{" "}
+        {NEW_COMPANIONS.map((companion, index) => (
+          <span key={companion.id}>
+            {index > 0 ? ", " : null}
+            <Link
+              href={`${companionPath}/${companion.id}`}
+              className={inlineLink}
+            >
+              {companion.name}
+            </Link>
+          </span>
+        ))}
+        .{" "}
+        <Link href={companionPath} className={inlineLink}>
+          Meet them all
+        </Link>
+        .
+      </p>
       <Link
         href={changelogPath}
-        className={`text-muted-foreground hover:text-foreground mt-2.5 inline-flex text-xs underline-offset-4 hover:underline ${focusRing} rounded-sm`}
+        className={`text-muted-foreground hover:text-foreground mt-2.5 inline-flex text-xs underline underline-offset-4 ${focusRing} rounded-sm`}
       >
         View changelog
       </Link>

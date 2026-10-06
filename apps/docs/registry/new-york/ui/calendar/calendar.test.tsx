@@ -174,9 +174,9 @@ describe("Calendar", () => {
     const yearWrap = container.querySelector(
       '[data-slot="calendar-year-select"]',
     );
-    expect(monthWrap?.className).toMatch(/w-\[6\.5rem\]/);
+    expect(monthWrap?.className).toMatch(/w-\[5rem\]/);
     expect(yearWrap?.className).toMatch(/w-\[5\.5rem\]/);
-    expect(month.className).toMatch(/pr-8/);
+    expect(month.className).toMatch(/pr-6/);
     expect(month.className).not.toMatch(/leading-none/);
   });
 
@@ -197,7 +197,7 @@ describe("Calendar", () => {
     expect(dropdowns).toBeTruthy();
   });
 
-  it("keeps rounded focus and selected day shapes", () => {
+  it("keeps square day buttons for selected and hover fills", () => {
     render(
       <Calendar
         mode="single"
@@ -207,10 +207,12 @@ describe("Calendar", () => {
     );
 
     const day = screen.getByRole("button", { name: /15/ });
+    expect(day.className).toMatch(/size-9/);
     expect(day.className).toMatch(/rounded-md/);
     expect(day.className).toMatch(
       /focus-visible:rounded-md|focus-visible:ring/,
     );
+    expect(day.className).not.toMatch(/\bw-full\b/);
   });
 
   it("supports keyboard focus on day buttons", () => {

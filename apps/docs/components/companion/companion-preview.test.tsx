@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { CompanionPreview } from "./companion-preview";
@@ -42,10 +42,9 @@ describe("CompanionCard", () => {
     expect(screen.getByRole("heading", { name: "Ember" })).toBeInTheDocument();
     expect(screen.getByText(/^fire$/i)).toBeInTheDocument();
     expect(screen.getByText(/moves/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open Ember detail page/i })).toHaveAttribute(
-      "href",
-      "/companion/ember",
-    );
+    expect(
+      screen.getByRole("link", { name: /Open Ember detail page/i }),
+    ).toHaveAttribute("href", "/companion/ember");
     expect(screen.queryByText(ember!.meta.description)).toBeTruthy();
   });
 

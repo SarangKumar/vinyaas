@@ -129,9 +129,10 @@ export const EMBER_UNLOCK_TIERS: EmberUnlockTier[] = [
 ];
 
 /** @deprecated Prefer EMBER_UNLOCK_TIERS — kept for older call sites. */
-export const EMBER_UNLOCK_BY_BOND: Record<number, string[]> = Object.fromEntries(
-  EMBER_UNLOCK_TIERS.map((tier) => [tier.bond, tier.moveIds]),
-);
+export const EMBER_UNLOCK_BY_BOND: Record<number, string[]> =
+  Object.fromEntries(
+    EMBER_UNLOCK_TIERS.map((tier) => [tier.bond, tier.moveIds]),
+  );
 
 export type MoveUnlockRequirement = {
   bond: number;
@@ -202,7 +203,11 @@ export function elementTypeForCompanion(
   if (companionId === "flint" || rawType === "pebble") {
     return "rock";
   }
-  if (companionId === "bubble" || rawType === "bubble" || rawType === "droplet") {
+  if (
+    companionId === "bubble" ||
+    rawType === "bubble" ||
+    rawType === "droplet"
+  ) {
     return "water";
   }
   if (companionId === "rime" || rawType === "fox") {
@@ -228,10 +233,7 @@ export function bondRankFromXp(xp: number): number {
   return Math.min(5, rank);
 }
 
-export function unlockedIdsForEmber(
-  bond: number,
-  lifetimeMs = 0,
-): string[] {
+export function unlockedIdsForEmber(bond: number, lifetimeMs = 0): string[] {
   const ids: string[] = [];
   for (const tier of EMBER_UNLOCK_TIERS) {
     if (bond >= tier.bond && lifetimeMs >= tier.lifetimeMs) {
@@ -241,10 +243,16 @@ export function unlockedIdsForEmber(
   return ids;
 }
 
+const defaultBondCache = new Map<string, CompanionBondRecord>();
+
 export function defaultBondRecord(companionId: string): CompanionBondRecord {
+  const cached = defaultBondCache.get(companionId);
+  if (cached) {
+    return cached;
+  }
   const bond = 1;
   const lifetimeMs = 0;
-  return {
+  const record: CompanionBondRecord = {
     companionId,
     bond,
     xp: 0,
@@ -254,8 +262,11 @@ export function defaultBondRecord(companionId: string): CompanionBondRecord {
     evolutionStage: 0,
     unlockedInteractionIds:
       companionId === "ember" ? unlockedIdsForEmber(bond, lifetimeMs) : [],
-    updatedAt: Date.now(),
+    // Stable for useSyncExternalStore — real saves stamp Date.now().
+    updatedAt: 0,
   };
+  defaultBondCache.set(companionId, record);
+  return record;
 }
 
 function readAll(): Record<string, CompanionBondRecord> {
@@ -306,9 +317,7 @@ export function recordCompanionInteraction(
   const unlocked =
     companionId === "ember"
       ? unlockedIdsForEmber(bond, current.lifetimeMs)
-      : Array.from(
-          new Set([...current.unlockedInteractionIds, interactionId]),
-        );
+      : Array.from(new Set([...current.unlockedInteractionIds, interactionId]));
 
   const next: CompanionBondRecord = {
     ...current,
@@ -340,7 +349,8 @@ export function recordCompanionLifetime(
       companionId === "ember"
         ? unlockedIdsForEmber(bond, lifetimeMs)
         : current.unlockedInteractionIds,
-    evolutionStage: bond >= 5 ? Math.max(1, current.evolutionStage) : current.evolutionStage,
+    evolutionStage:
+      bond >= 5 ? Math.max(1, current.evolutionStage) : current.evolutionStage,
   };
   saveCompanionBond(next);
   return next;

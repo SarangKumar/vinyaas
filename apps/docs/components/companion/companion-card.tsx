@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { CompanionSprite } from "@/components/companion/companion-sprite";
 import type { CompanionCatalogEntry } from "@/components/companion/catalog";
@@ -14,11 +14,8 @@ import {
   ElementTypeBadge,
   SpawnIcon,
 } from "@/components/companion/element-type";
-import {
-  elementTypeForCompanion,
-  getCompanionBond,
-  type CompanionBondRecord,
-} from "@/components/companion/progression";
+import { elementTypeForCompanion } from "@/components/companion/progression";
+import { useCompanionBond } from "@/components/companion/use-companion-bond";
 import { focusRing } from "@/components/focus-ring";
 import { cn } from "@/lib/utils";
 
@@ -49,20 +46,7 @@ export function CompanionCard({ entry, size = 112 }: CompanionCardProps) {
     companions.spawnFeedback.reason === "limit";
   const element = elementTypeForCompanion(entry.meta.id, entry.meta.type);
   const detailHref = `/companion/${entry.meta.id}`;
-  const [bond, setBond] = useState<CompanionBondRecord | null>(null);
-
-  useEffect(() => {
-    setBond(getCompanionBond(entry.meta.id));
-    function onStorage() {
-      setBond(getCompanionBond(entry.meta.id));
-    }
-    window.addEventListener("storage", onStorage);
-    window.addEventListener("vinyaas:companion-bond", onStorage);
-    return () => {
-      window.removeEventListener("storage", onStorage);
-      window.removeEventListener("vinyaas:companion-bond", onStorage);
-    };
-  }, [entry.meta.id]);
+  const bond = useCompanionBond(entry.meta.id);
 
   useEffect(() => {
     if (!showReject || !companions) {
@@ -72,8 +56,8 @@ export function CompanionCard({ entry, size = 112 }: CompanionCardProps) {
     return () => window.clearTimeout(id);
   }, [showReject, companions, companions?.spawnFeedback?.at]);
 
-  const unlocked = bond?.unlockedInteractionIds.length ?? 0;
-  const bondRank = bond?.bond ?? 1;
+  const unlocked = bond.unlockedInteractionIds.length;
+  const bondRank = bond.bond;
 
   return (
     <article
@@ -105,7 +89,7 @@ export function CompanionCard({ entry, size = 112 }: CompanionCardProps) {
             {entry.meta.id === "ember" ? (
               <StatPill label={`${unlocked} unlocked`} />
             ) : null}
-            {bond && bond.deaths > 0 ? (
+            {bond.deaths > 0 ? (
               <StatPill label={`${bond.deaths} falls`} />
             ) : null}
           </div>

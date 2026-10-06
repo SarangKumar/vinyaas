@@ -1,7 +1,7 @@
 import { components, currentVersion } from "@/components/component-meta";
 
 export type ChangelogSection = {
-  title: "Added" | "Improved" | "Fixed";
+  title: string;
   items: string[];
 };
 
@@ -29,47 +29,51 @@ export const changelogVersions: ChangelogVersion[] = [
     summary: `v${currentVersion} ships dashboard and form primitives, richer Companions, registry catalogs, CLI catalog installs, and stronger accessibility and release checks.`,
     sections: [
       {
-        title: "Added",
+        title: "Components",
         items: [
           `Alert Dialog — confirmation modal with alertdialog semantics, non-dismissible overlay, and Cancel/Action patterns for destructive work.`,
           `Sheet — side modal for settings, details, filters, and mobile navigation with accessible focus management.`,
           `Navigation Menu — composable site navigation with rich mega-menu panels that accept arbitrary React content.`,
-          `Data Table — searchable, sortable dashboard tables with row selection, column visibility, pagination, and loading/empty states composed from existing primitives.`,
-          `Pagination — composable page navigation with previous/next, page links, ellipsis, and accessible current-page semantics for tables and lists.`,
-          `Resizable — horizontal and vertical panel layouts with keyboard-accessible handles, nested groups, and composite docs examples.`,
-          `Sidebar — composable dashboard navigation with expanded and collapsed desktop modes, mobile Drawer composition, and accessible collapsed labels.`,
-          `Drag & Drop — sortable and reorderable lists and boards via @dnd-kit, with handles, keyboard and touch support, drop indicators, and multiple containers.`,
+          `Data Table — searchable, sortable dashboard tables with row selection, column visibility, pagination, and loading/empty states.`,
+          `Pagination — composable page navigation with previous/next, page links, ellipsis, and accessible current-page semantics.`,
+          `Resizable — horizontal and vertical panel layouts with keyboard-accessible handles, nested groups, and improved handle affordances.`,
+          `Sidebar — composable dashboard navigation with expanded/collapsed desktop modes and mobile Drawer composition.`,
+          `Drag & Drop — sortable and reorderable lists and boards via @dnd-kit, with handles, keyboard/touch support, and multiple containers.`,
           `Select — custom dropdown with grouped options, keyboard listbox navigation, and form-friendly hidden input support.`,
-          `Select documentation with basic, grouped, disabled, long-list, form, and dashboard examples.`,
-          `Calendar — accessible month calendar for single-date selection with keyboard navigation, disabled dates, and native month/year selects.`,
+          `Calendar — accessible month calendar with keyboard navigation, disabled dates, and native month/year selects.`,
           `Date Picker — button + popover + calendar composition for choosing a single date.`,
-          `Combobox — searchable selection built from Popover and Command for filtering and choosing options.`,
-          `Empty State — composable empty panel with icon, title, description, and actions for lists and dashboards.`,
+          `Combobox — searchable selection built from Popover and Command.`,
+          `Empty State — composable empty panel with icon, title, description, and actions.`,
           `Form — accessible field structure that wires labels, descriptions, and validation messages to existing controls.`,
-          `Companions roster expanded: Ember, Soul, Moss, Flint (rock), Bubble (water), Rime (ice), Jab (fighting), and Volt (electric), each with companion.json, pixel clips, and type badges.`,
-          `Companion cards with Spawn and Know more actions, plus Pokédex-style detail pages at /companion/[id] (Bond, unlocked moves, type chart).`,
-          `Companion landing surfaces and interactions: perch on declared surfaces/buttons/selects/code blocks, fatal fall when dropping more than 70vh above the surface below (puff, no respawn), max one instance per type.`,
-          `Companion Animations docs page with clip and move tables.`,
+        ],
+      },
+      {
+        title: "Companions",
+        items: [
+          `Roster expanded to Ember, Soul, Moss, Flint (rock), Bubble (water), Rime (ice), Jab (fighting), and Volt (electric), each with companion.json, pixel clips, and type badges.`,
+          `Species cards with Spawn and Know more actions, plus Pokédex-style detail pages at /companion/[id] (Bond, unlocked moves, type chart).`,
+          `Landing surfaces and interactions: perch on declared surfaces/buttons/selects/code blocks; fatal fall when dropping more than 70vh above the surface below (puff, no respawn); max one instance per type.`,
+          `Companion Animations docs with clip and move tables; Custom Companion docs updated for the fall/puff layout.`,
+        ],
+      },
+      {
+        title: "CLI & catalogs",
+        items: [
           `Named catalogs (form, dashboard, navigation, feedback, application) published under /r/catalogs/.`,
-          `CLI catalog commands: vinyaas catalog list, vinyaas catalog info, and vinyaas add --catalog.`,
+          `vinyaas catalog list, vinyaas catalog info, and vinyaas add --catalog.`,
           `vinyaas add --dry-run for install previews without writing files.`,
-          `New-component indicator in docs navigation for the current release, plus a New Components section on the catalog page.`,
-          `Red theme preset in the Themes playground (light and dark surfaces, charts, and radius).`,
-          `Accessibility checklist and registry test conventions for keyboard, focus, ARIA, touch targets, and reduced motion.`,
           `pnpm verify and release scripts that require the production registry URL.`,
         ],
       },
       {
-        title: "Improved",
+        title: "Docs & accessibility",
         items: [
-          `Resizable handle affordances: orientation-aware grips, cursors, and expanded hit targets.`,
-          `Homepage showcase packing and spacing across progressive columns, with compact Resizable, Sidebar, and Drag & Drop examples.`,
-          `Theme contrast polish across presets; Progress fill follows bg-primary.`,
-          `Docs chrome: Home in navbar and sidebar, faster showcase first paint, and cleaner Sidebar demo shells.`,
-          `Documentation sidebar: wider right rail, compact on-page links, helpful feedback actions, and a What's new feature card below feedback.`,
-          `Site polish: lighter structural borders, navbar without a bottom divider, faded left sidebar edge, ~1px smaller docs type scale, and homepage Select showcase.`,
-          `Docs search and companion landing copy updated for the full companion roster and detail routes.`,
-          `CLI install path: catalog-aware add flows and dry-run previews for safer registry installs.`,
+          `New-component indicator in docs navigation, plus a New Components section on the catalog page.`,
+          `What's new right-rail card with inline links for new components and companions.`,
+          `Homepage companion badge above the tagline, plus showcase polish for Resizable, Sidebar, Drag & Drop, and Select.`,
+          `Red theme preset in the Themes playground (light and dark surfaces, charts, and radius).`,
+          `Accessibility checklist and registry test conventions for keyboard, focus, ARIA, touch targets, and reduced motion.`,
+          `Docs chrome: Home in navbar and sidebar, lighter structural borders, compact type scale, and a clearer right rail.`,
         ],
       },
     ],

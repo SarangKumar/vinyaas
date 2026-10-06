@@ -3,7 +3,10 @@
  * Generic for all companions.
  */
 
-import { executeInteractionAction, type ActionResult } from "@/components/companion/runtime/actions";
+import {
+  executeInteractionAction,
+  type ActionResult,
+} from "@/components/companion/runtime/actions";
 import {
   moodPreferredIdleInteractionId,
   type ResolvedCompanionPersonality,
@@ -111,11 +114,7 @@ export function executeTriggeredInteraction(args: {
     );
 
     // Mood can prefer a specific idle_timeout interaction when multiple match.
-    if (
-      args.request.trigger === "idle_timeout" &&
-      args.mood &&
-      interaction
-    ) {
+    if (args.request.trigger === "idle_timeout" && args.mood && interaction) {
       const preferredId = moodPreferredIdleInteractionId(args.mood);
       if (preferredId) {
         const preferred = args.config.interactions.find(
@@ -144,10 +143,7 @@ export function executeTriggeredInteraction(args: {
     return null;
   }
 
-  const actionResult = executeInteractionAction(
-    interaction,
-    args.currentState,
-  );
+  const actionResult = executeInteractionAction(interaction, args.currentState);
   if (!actionResult) {
     return null;
   }
@@ -160,11 +156,7 @@ export function executeTriggeredInteraction(args: {
 
   return {
     effect,
-    cooldowns: markInteractionCooldown(
-      args.cooldowns,
-      interaction,
-      args.nowMs,
-    ),
+    cooldowns: markInteractionCooldown(args.cooldowns, interaction, args.nowMs),
   };
 }
 
@@ -208,10 +200,7 @@ export function pickClickInteractionId(config: CompanionConfig): string | null {
   return click?.id ?? null;
 }
 
-export function pickAmbientInteractionId(
-  config: CompanionConfig,
-  _random = Math.random,
-): string {
+export function pickAmbientInteractionId(config: CompanionConfig): string {
   const idle = config.interactions.find(
     (item) => item.trigger === "idle_timeout",
   );
@@ -221,7 +210,4 @@ export function pickAmbientInteractionId(
 /** No-ops kept for older tests that reset handler registries. */
 export function clearInteractionHandlers() {}
 export function installDefaultInteractionHandlers() {}
-export function registerInteractionHandler(
-  _id: string,
-  _handler: unknown,
-) {}
+export function registerInteractionHandler() {}
