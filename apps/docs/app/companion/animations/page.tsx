@@ -106,11 +106,9 @@ export default function CompanionAnimationsPage() {
             </thead>
             <tbody>
               {CLIP_ROLES.map((clip) => {
-                const frames =
-                  ember && clip.id in ember.clips
-                    ? ember.clips[clip.id as keyof typeof ember.clips].frames
-                        .length
-                    : "—";
+                const clipFrames =
+                  ember?.clips[clip.id as keyof typeof ember.clips];
+                const frames = clipFrames ? clipFrames.frames.length : "—";
                 return (
                   <tr key={clip.id} className="border-border border-b">
                     <td className="py-3 pr-3 align-top">
