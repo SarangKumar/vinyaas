@@ -112,6 +112,52 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "resizable",
+    type: "registry:ui",
+    description:
+      "Resizable panel layouts with accessible drag handles for dashboards.",
+    dependencies: ["react-resizable-panels", "clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/resizable/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "drag-and-drop",
+    type: "registry:ui",
+    description:
+      "Sortable and reorderable drag-and-drop for lists, cards, and boards.",
+    dependencies: [
+      "@dnd-kit/core",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
+      "clsx",
+      "tailwind-merge",
+    ],
+    files: [
+      {
+        path: "ui/drag-and-drop/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "sidebar",
+    type: "registry:ui",
+    description:
+      "Composable dashboard sidebar with expanded, collapsed, and mobile navigation.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["drawer", "tooltip"],
+    files: [
+      {
+        path: "ui/sidebar/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "separator",
     type: "registry:ui",
     description: "A horizontal or vertical divider between content.",
@@ -172,6 +218,28 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "data-table",
+    type: "registry:ui",
+    description:
+      "A dashboard table with search, sorting, selection, column visibility, and pagination.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: [
+      "table",
+      "pagination",
+      "checkbox",
+      "input",
+      "button",
+      "dropdown-menu",
+      "skeleton",
+    ],
+    files: [
+      {
+        path: "ui/data-table/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "tooltip",
     type: "registry:ui",
     description: "A short floating label shown on hover or focus.",
@@ -196,6 +264,19 @@ const items: readonly RegistryItem[] = [
     files: [
       {
         path: "ui/native-select/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "select",
+    type: "registry:ui",
+    description:
+      "A custom select with grouped options, keyboard navigation, and accessible listbox behavior.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/select/index.tsx",
         type: "registry:ui",
       },
     ],
@@ -254,6 +335,20 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "pagination",
+    type: "registry:ui",
+    description:
+      "Composable page navigation with previous, next, page links, and ellipsis.",
+    dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/pagination/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "card",
     type: "registry:ui",
     description: "A bordered container for related content.",
@@ -305,6 +400,24 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "alert-dialog",
+    type: "registry:ui",
+    description:
+      "A modal confirmation dialog for important or destructive actions.",
+    dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/alert-dialog/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/alert-dialog/alert-dialog.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "dialog",
     type: "registry:ui",
     description:
@@ -338,6 +451,40 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "sheet",
+    type: "registry:ui",
+    description:
+      "A side modal for settings, details, filters, and mobile navigation.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/sheet/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/sheet/sheet.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "navigation-menu",
+    type: "registry:ui",
+    description:
+      "A composable site navigation menu with rich mega-menu content panels.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/navigation-menu/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/navigation-menu/navigation-menu.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "chart",
     type: "registry:ui",
     description: "Themed charts for dashboards and product analytics.",
@@ -357,6 +504,10 @@ const items: readonly RegistryItem[] = [
     files: [
       {
         path: "ui/accordion/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/accordion/accordion.css",
         type: "registry:ui",
       },
     ],
@@ -490,6 +641,81 @@ const items: readonly RegistryItem[] = [
     files: [
       {
         path: "ui/dropdown-menu/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "calendar",
+    type: "registry:ui",
+    description:
+      "An accessible month calendar for selecting and displaying dates.",
+    dependencies: [
+      "react-day-picker",
+      "date-fns",
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge",
+    ],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/calendar/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "date-picker",
+    type: "registry:ui",
+    description:
+      "A button-triggered calendar popover for choosing a single date.",
+    dependencies: ["date-fns", "clsx", "tailwind-merge"],
+    registryDependencies: ["button", "calendar", "popover"],
+    files: [
+      {
+        path: "ui/date-picker/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "combobox",
+    type: "registry:ui",
+    description:
+      "A searchable selection control for filtering and choosing from options.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["button", "command", "popover"],
+    files: [
+      {
+        path: "ui/combobox/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "empty-state",
+    type: "registry:ui",
+    description:
+      "A composable empty state for lists, tables, and dashboard panels.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/empty-state/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "form",
+    type: "registry:ui",
+    description:
+      "Accessible field structure for labels, descriptions, and validation messages.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["label"],
+    files: [
+      {
+        path: "ui/form/index.tsx",
         type: "registry:ui",
       },
     ],

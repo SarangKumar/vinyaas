@@ -7,3 +7,5 @@ export * from "@/components/companion/runtime/actions";
 export * from "@/components/companion/runtime/personality";
 export * from "@/components/companion/runtime/interactions";
 export * from "@/components/companion/runtime/engine";
+export * from "@/components/companion/runtime/surfaces";
+export * from "@/components/companion/runtime/spawn";

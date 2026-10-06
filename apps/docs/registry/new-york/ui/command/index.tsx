@@ -81,8 +81,9 @@ export function Command({
       }}
     >
       <div
+        data-slot="command"
         className={cn(
-          "border-border bg-popover text-popover-foreground flex w-full flex-col overflow-hidden rounded-lg border shadow-[0_14px_32px_-10px_oklch(0_0_0/0.28)] dark:shadow-[0_14px_32px_-10px_oklch(0_0_0/0.55)]",
+          "border-border/80 bg-popover text-popover-foreground flex w-full flex-col overflow-hidden rounded-xl border shadow-md dark:shadow-[0_14px_32px_-10px_oklch(0_0_0/0.4)]",
           className,
         )}
         {...props}
@@ -98,17 +99,51 @@ export type CommandInputProps = React.ComponentProps<"input">;
 export function CommandInput({ className, ...props }: CommandInputProps) {
   const command = useCommand();
 
-  function move(direction: 1 | -1) {
-    const options = visibleOptions(document.getElementById(command.listId));
-    const index = options.findIndex((option) => option.id === command.activeId);
+  function options() {
+    return visibleOptions(document.getElementById(command.listId));
+  }
+
+  function move(direction: 1 | -1, { wrap = true } = {}) {
+    const list = options();
+    if (list.length === 0) {
+      return false;
+    }
+
+    const index = list.findIndex((option) => option.id === command.activeId);
+    const nextIndex = index + direction;
+
+    if (nextIndex < 0 || nextIndex >= list.length) {
+      if (!wrap) {
+        return false;
+      }
+    }
+
     const next =
-      options[index + direction] ??
-      options[direction === 1 ? 0 : options.length - 1];
+      list[
+        nextIndex < 0
+          ? list.length - 1
+          : nextIndex >= list.length
+            ? 0
+            : nextIndex
+      ];
 
     if (next) {
       command.setActiveId(next.id);
       next.scrollIntoView?.({ block: "nearest" });
+      return true;
     }
+
+    return false;
+  }
+
+  function focusOption(option: HTMLElement | undefined) {
+    if (!option) {
+      return;
+    }
+
+    command.setActiveId(option.id);
+    option.focus();
+    option.scrollIntoView?.({ block: "nearest" });
   }
 
   function activate() {
@@ -116,75 +151,86 @@ export function CommandInput({ className, ...props }: CommandInputProps) {
       return;
     }
 
-    visibleOptions(document.getElementById(command.listId))
+    options()
       .find((option) => option.id === command.activeId)
       ?.click();
   }
 
   return (
-    <div className="border-border bg-popover flex items-center gap-2 border-b px-3">
-      <SearchGlyph />
-      <input
-        {...props}
-        id={command.inputId}
-        role="combobox"
-        aria-expanded="true"
-        aria-controls={command.listId}
-        aria-autocomplete="list"
-        aria-activedescendant={command.activeId || undefined}
-        value={command.query}
-        className={cn(
-          "placeholder:text-muted-foreground text-foreground h-11 w-full min-w-0 bg-transparent text-sm outline-none",
-          className,
-        )}
-        onChange={(event) => {
-          command.setQuery(event.currentTarget.value);
-          props.onChange?.(event);
-        }}
-        onKeyDown={(event) => {
-          if (event.key === "ArrowDown") {
-            event.preventDefault();
-            move(1);
-          }
-
-          if (event.key === "ArrowUp") {
-            event.preventDefault();
-            move(-1);
-          }
-
-          if (event.key === "Home") {
-            const first = visibleOptions(
-              document.getElementById(command.listId),
-            )[0];
-
-            if (first) {
+    <div className="p-px">
+      <div className="border-border/80 bg-muted/40 focus-within:border-ring/50 focus-within:ring-ring/30 m-0.5 flex items-center gap-2 rounded-lg border px-3 focus-within:ring-1">
+        <SearchGlyph />
+        <input
+          {...props}
+          id={command.inputId}
+          role="combobox"
+          aria-expanded="true"
+          aria-controls={command.listId}
+          aria-autocomplete="list"
+          aria-activedescendant={command.activeId || undefined}
+          value={command.query}
+          className={cn(
+            "placeholder:text-muted-foreground/70 text-foreground h-10 w-full min-w-0 bg-transparent text-sm outline-none",
+            className,
+          )}
+          onChange={(event) => {
+            command.setQuery(event.currentTarget.value);
+            props.onChange?.(event);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown") {
               event.preventDefault();
-              command.setActiveId(first.id);
-              first.scrollIntoView?.({ block: "nearest" });
+              move(1);
             }
-          }
 
-          if (event.key === "End") {
-            const options = visibleOptions(
-              document.getElementById(command.listId),
-            );
-            const last = options[options.length - 1];
-
-            if (last) {
+            if (event.key === "ArrowUp") {
               event.preventDefault();
-              command.setActiveId(last.id);
-              last.scrollIntoView?.({ block: "nearest" });
+              move(-1);
             }
-          }
 
-          if (event.key === "Enter" && command.activeId) {
-            event.preventDefault();
-            activate();
-          }
+            if (event.key === "Home") {
+              const first = options()[0];
 
-          props.onKeyDown?.(event);
-        }}
-      />
+              if (first) {
+                event.preventDefault();
+                command.setActiveId(first.id);
+                first.scrollIntoView?.({ block: "nearest" });
+              }
+            }
+
+            if (event.key === "End") {
+              const list = options();
+              const last = list[list.length - 1];
+
+              if (last) {
+                event.preventDefault();
+                command.setActiveId(last.id);
+                last.scrollIntoView?.({ block: "nearest" });
+              }
+            }
+
+            if (event.key === "Enter" && command.activeId) {
+              event.preventDefault();
+              activate();
+            }
+
+            // Tab into the result list only when results exist; otherwise leave
+            // the control so page Tab order continues normally.
+            if (event.key === "Tab" && !event.shiftKey) {
+              const list = options();
+              if (list.length > 0) {
+                event.preventDefault();
+                focusOption(
+                  list.find((option) => option.id === command.activeId) ??
+                    list[0],
+                );
+              }
+            }
+
+            props.onKeyDown?.(event);
+          }}
+        />
+      </div>
     </div>
   );
 }
@@ -277,7 +323,7 @@ export function CommandGroup({
       )}
       {...props}
     >
-      <p className="text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium">
+      <p className="text-muted-foreground px-2 pt-2 pb-1 text-xs font-semibold">
         {heading}
       </p>
       {children}
@@ -323,13 +369,13 @@ export function CommandItem({
       id={id}
       type="button"
       role="option"
-      tabIndex={disabled ? -1 : 0}
+      tabIndex={-1}
       aria-selected={selected}
       aria-disabled={disabled || undefined}
       disabled={disabled}
       data-selected={selected ? "" : undefined}
       className={cn(
-        "text-foreground data-selected:bg-accent data-selected:text-accent-foreground hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:ring-ring data-selected:hover:bg-accent flex w-full cursor-pointer items-start gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 [&>svg]:mt-0.5 [&>svg]:shrink-0",
+        "text-foreground data-selected:bg-accent data-selected:text-accent-foreground hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground data-selected:hover:bg-accent flex w-full cursor-pointer items-start gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>svg]:mt-0.5 [&>svg]:shrink-0",
         className,
       )}
       onMouseEnter={(event) => {
@@ -341,17 +387,75 @@ export function CommandItem({
         onFocus?.(event);
       }}
       onKeyDown={(event) => {
+        const list = visibleOptions(document.getElementById(command.listId));
+        const index = list.findIndex((option) => option.id === id);
+
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           event.preventDefault();
-          const options = visibleOptions(
-            document.getElementById(command.listId),
-          );
-          const index = options.findIndex((option) => option.id === id);
           const direction = event.key === "ArrowDown" ? 1 : -1;
           const next =
-            options[index + direction] ??
-            options[direction === 1 ? 0 : options.length - 1];
+            list[index + direction] ??
+            list[direction === 1 ? 0 : list.length - 1];
 
+          if (next) {
+            command.setActiveId(next.id);
+            next.focus();
+          }
+        }
+
+        if (event.key === "Home") {
+          event.preventDefault();
+          const first = list[0];
+          if (first) {
+            command.setActiveId(first.id);
+            first.focus();
+          }
+        }
+
+        if (event.key === "End") {
+          event.preventDefault();
+          const last = list[list.length - 1];
+          if (last) {
+            command.setActiveId(last.id);
+            last.focus();
+          }
+        }
+
+        if (event.key === "Enter") {
+          event.preventDefault();
+          event.currentTarget.click();
+        }
+
+        if (event.key === "Escape") {
+          event.preventDefault();
+          document.getElementById(command.inputId)?.focus();
+        }
+
+        // Tab through results while open; leave the list at the ends so the
+        // browser resumes normal document Tab order (no focus trap).
+        if (event.key === "Tab") {
+          if (event.shiftKey) {
+            if (index <= 0) {
+              event.preventDefault();
+              document.getElementById(command.inputId)?.focus();
+              return;
+            }
+
+            event.preventDefault();
+            const previous = list[index - 1];
+            if (previous) {
+              command.setActiveId(previous.id);
+              previous.focus();
+            }
+            return;
+          }
+
+          if (index >= list.length - 1) {
+            return;
+          }
+
+          event.preventDefault();
+          const next = list[index + 1];
           if (next) {
             command.setActiveId(next.id);
             next.focus();
@@ -374,6 +478,22 @@ export function CommandShortcut({ className, ...props }: CommandShortcutProps) {
     <span
       className={cn(
         "bg-muted text-muted-foreground mt-0.5 ml-auto shrink-0 rounded px-1.5 py-0.5 font-mono text-[0.6875rem] leading-none",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export type CommandFooterProps = React.ComponentProps<"div">;
+
+/** Compact action/footer strip below Command results. */
+export function CommandFooter({ className, ...props }: CommandFooterProps) {
+  return (
+    <div
+      data-slot="command-footer"
+      className={cn(
+        "border-border/80 bg-muted/30 text-muted-foreground flex items-center gap-3 border-t px-3 py-2 text-xs",
         className,
       )}
       {...props}

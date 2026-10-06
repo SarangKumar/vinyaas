@@ -1,0 +1,115 @@
+{
+  "type": "catalogs",
+  "items": [
+    {
+      "id": "form",
+      "name": "Form",
+      "description": "Core form controls for building inputs, choices, and actions.",
+      "components": [
+        "button",
+        "input",
+        "label",
+        "textarea",
+        "native-select",
+        "select",
+        "combobox",
+        "calendar",
+        "date-picker",
+        "checkbox",
+        "radio-group",
+        "switch",
+        "slider",
+        "form"
+      ]
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard",
+      "description": "Primitives commonly used in dashboards and application surfaces.",
+      "components": [
+        "card",
+        "badge",
+        "tabs",
+        "breadcrumb",
+        "tooltip",
+        "progress",
+        "skeleton",
+        "table",
+        "data-table",
+        "pagination",
+        "scroll-area",
+        "separator",
+        "resizable",
+        "sidebar",
+        "drag-and-drop",
+        "empty-state",
+        "calendar",
+        "date-picker",
+        "combobox",
+        "form"
+      ]
+    },
+    {
+      "id": "navigation",
+      "name": "Navigation",
+      "description": "Navigation and command patterns for application shells.",
+      "components": [
+        "breadcrumb",
+        "tabs",
+        "dropdown-menu",
+        "command",
+        "combobox",
+        "sidebar",
+        "sheet",
+        "navigation-menu",
+        "pagination"
+      ]
+    },
+    {
+      "id": "feedback",
+      "name": "Feedback",
+      "description": "Alerts, overlays, and progress cues for user feedback.",
+      "components": [
+        "alert",
+        "alert-dialog",
+        "dialog",
+        "drawer",
+        "sheet",
+        "toast",
+        "skeleton",
+        "progress",
+        "spinner",
+        "empty-state"
+      ]
+    },
+    {
+      "id": "application",
+      "name": "Application",
+      "description": "A starter set of application-shell and content primitives.",
+      "components": [
+        "command",
+        "combobox",
+        "alert-dialog",
+        "dialog",
+        "sheet",
+        "dropdown-menu",
+        "navigation-menu",
+        "popover",
+        "tooltip",
+        "tabs",
+        "card",
+        "badge",
+        "breadcrumb",
+        "resizable",
+        "sidebar",
+        "drag-and-drop",
+        "pagination",
+        "data-table",
+        "calendar",
+        "date-picker",
+        "empty-state",
+        "form"
+      ]
+    }
+  ]
+}

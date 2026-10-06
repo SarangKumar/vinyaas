@@ -25,7 +25,7 @@ describe("docs theme", () => {
     expect(css).toContain(":root");
     expect(css).toContain(".dark");
 
-    expect(css).toContain("--radius: 0.5rem");
+    expect(css).toContain("--radius: 0.75rem");
     expect(css).toContain("--radius-lg: var(--radius)");
     expect(css).toContain("--background: oklch(1 0 0)");
     expect(css).toContain("--foreground: oklch(0.141 0.005 285.823)");
@@ -43,8 +43,8 @@ describe("docs theme", () => {
     expect(css).toContain("--card-foreground: oklch(0.141 0.005 285.823)");
     expect(css).toContain("--popover: oklch(1 0 0)");
     expect(css).toContain("--popover-foreground: oklch(0.141 0.005 285.823)");
-    expect(css).toContain("--border: oklch(0.92 0.004 286.32)");
-    expect(css).toContain("--input: oklch(0.92 0.004 286.32)");
+    expect(css).toContain("--border: oklch(0.945 0.003 286.32)");
+    expect(css).toContain("--input: oklch(0.945 0.003 286.32)");
     expect(css).toContain("--ring: oklch(0.705 0.015 286.067)");
     expect(css).toContain("--chart-1: oklch(0.32 0.012 285.885)");
     expect(css).toContain("--chart-2: oklch(0.42 0.01 285.885)");
@@ -65,7 +65,9 @@ describe("docs theme", () => {
     expect(css).toContain("--chart-3: oklch(0.72 0.006 286.32)");
     expect(css).toContain("--chart-4: oklch(0.64 0.005 286.32)");
     expect(css).toContain("--chart-5: oklch(0.56 0.004 286.32)");
-    expect(css).toContain("--border: oklch(1 0 0 / 10%)");
+    expect(css).toContain("--border: oklch(1 0 0 / 8%)");
+    expect(css).toContain("--sidebar: oklch(0.985 0 0)");
+    expect(css).toContain("--sidebar: oklch(0.21 0.006 285.885)");
 
     expect(css).toContain("--color-background: var(--background)");
     expect(css).toContain("--color-foreground: var(--foreground)");
@@ -83,17 +85,25 @@ describe("docs theme", () => {
     expect(css).toContain("--color-chart-5: var(--chart-5)");
     expect(css).not.toContain("--color-body");
     expect(css).not.toContain("--color-destructive-foreground");
+    expect(css).toContain("--default-font-family:");
+    expect(css).toContain("var(--font-geist-sans)");
+    expect(css).toContain('"Geist Fallback"');
+    expect(css).toContain("--font-sans: var(--default-font-family)");
     expect(css).toContain(
       "--font-mono: var(--font-geist-mono), ui-monospace, monospace",
     );
 
+    expect(css).toContain("--sidebar-foreground: oklch(0.141 0.005 285.823)");
+    expect(css).toContain("--sidebar-primary: oklch(0.21 0.006 285.885)");
+    expect(css).toContain("--color-sidebar: var(--sidebar)");
+    expect(css).toContain(
+      "--color-sidebar-foreground: var(--sidebar-foreground)",
+    );
+
     // No docs chrome or component/prose styling in the consumer theme.
-    expect(css).not.toContain("--sidebar-primary");
-    expect(css).not.toContain("--color-sidebar:");
     expect(css).not.toContain("--subtle-foreground");
     expect(css).not.toContain("--palette-");
     expect(css).not.toContain("--new:");
-    expect(css).not.toContain("--sidebar-foreground");
     expect(css).not.toContain("--playground-");
     expect(css).not.toContain("--syntax-");
     expect(css).not.toContain(".typeset-docs");
@@ -104,9 +114,11 @@ describe("docs theme", () => {
     expect(css).not.toContain("@keyframes vinyaas-toast-");
     expect(css).not.toContain("@keyframes vinyaas-dialog-");
     expect(css).not.toContain("@keyframes vinyaas-tooltip-");
+    expect(css).not.toContain("@keyframes vinyaas-accordion-");
     expect(css).not.toContain(".vinyaas-toast-in");
     expect(css).not.toContain(".vinyaas-dialog-in");
     expect(css).not.toContain(".vinyaas-tooltip-in");
+    expect(css).not.toContain(".vinyaas-accordion-down");
 
     await expect(
       fs.access(path.join(docsRoot, "tailwind.config.ts")),
@@ -126,7 +138,11 @@ describe("docs theme", () => {
     expect(layout).toContain('import "./globals.css"');
     expect(layout).toContain('import "./docs.css"');
     expect(css).toContain("Docs site only");
-    expect(css).toContain("--sidebar-foreground: var(--muted-foreground)");
+    expect(css).toContain("--sidebar-foreground: var(--foreground)");
+    expect(css).toContain("--default-font-family:");
+    expect(css).toContain("var(--font-geist-sans)");
+    expect(css).toContain("font-family: var(--default-font-family)");
+    expect(css).toContain("--text-base: 0.9375rem");
     expect(css).toContain(
       "--color-sidebar-foreground: var(--sidebar-foreground)",
     );
@@ -135,7 +151,13 @@ describe("docs theme", () => {
     expect(css).toContain("--playground-gap: 1rem");
     expect(css).toContain("--playground-gap-2xl: 2.5rem");
     expect(css).toContain("--spacing-playground-gap: var(--playground-gap)");
+    expect(css).toContain("--breakpoint-playground: 87.5rem");
+    expect(css).toContain("--breakpoint-playground-wide: 118.75rem");
     expect(css).toContain("--syntax-plain:");
+    expect(css).toContain("--syntax-editor:");
+    expect(css).toContain("--syntax-chrome:");
+    expect(css).toContain("--syntax-border:");
+    expect(css).toContain("[data-code-frame]");
     expect(css).toContain("code[data-language]");
     expect(css).toContain(":not(pre) > code:not([data-language])");
     expect(css).toContain(".typeset-docs");

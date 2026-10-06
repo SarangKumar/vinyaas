@@ -2,19 +2,24 @@ import type { CSSProperties, ReactNode } from "react";
 
 import { Skeleton } from "@/registry/new-york/ui/skeleton";
 
+const railClassName =
+  "absolute top-0 grid w-(--rail-width) grid-cols-[repeat(2,var(--rail-column))] gap-(--gap) opacity-50 [--rail-column:20rem] [--rail-width:calc(var(--rail-column)*2+var(--gap))]";
+
 /**
- * Ultra-wide decorative rails (≥2200px).
- *
- * fade ← [2 skeleton cols] | main masonry (5 cols) | [2 skeleton cols] → fade
+ * Ultra-wide decorative rails (≥2200px), absolute like ui.shadcn.com.
+ * Anchored to half of the 1900px showcase max-width (`950px`).
  */
 export function PlaygroundSideRails() {
   return (
     <div
       aria-hidden="true"
       data-playground-rails
-      className="pointer-events-none absolute inset-x-0 top-(--playground-pad) z-10 hidden min-[1900px]:top-(--playground-pad-xl) min-[2200px]:block xl:top-(--playground-pad-xl)"
+      className="pointer-events-none absolute inset-x-0 top-12 z-10 hidden min-[2200px]:block [&_[data-slot=skeleton]:nth-child(even)]:hidden"
     >
-      <Rail side="left">
+      <div
+        data-playground-side="left"
+        className={`${railClassName} left-[calc(50%-950px-var(--rail-width)-var(--gap))]`}
+      >
         <RailColumn>
           <FormSkeletonCard />
           <MetricsSkeletonCard />
@@ -27,8 +32,11 @@ export function PlaygroundSideRails() {
           <FieldsSkeletonCard />
           <EmptySkeletonCard />
         </RailColumn>
-      </Rail>
-      <Rail side="right">
+      </div>
+      <div
+        data-playground-side="right"
+        className={`${railClassName} right-[calc(50%-950px-var(--rail-width)-var(--gap))]`}
+      >
         <RailColumn>
           <FieldsSkeletonCard />
           <ProgressSkeletonCard />
@@ -42,28 +50,7 @@ export function PlaygroundSideRails() {
           <EmptySkeletonCard />
           <ChecklistSkeletonCard />
         </RailColumn>
-      </Rail>
-    </div>
-  );
-}
-
-function Rail({
-  side,
-  children,
-}: {
-  side: "left" | "right";
-  children: ReactNode;
-}) {
-  return (
-    <div
-      data-playground-side={side}
-      className={
-        side === "left"
-          ? "absolute top-0 left-[calc(50%-950px-var(--rail-width)-var(--gap))] grid w-(--rail-width) grid-cols-[repeat(2,var(--rail-column))] gap-(--gap) opacity-50 [--rail-column:20rem] [--rail-width:calc(var(--rail-column)*2+var(--gap))]"
-          : "absolute top-0 right-[calc(50%-950px-var(--rail-width)-var(--gap))] grid w-(--rail-width) grid-cols-[repeat(2,var(--rail-column))] gap-(--gap) opacity-50 [--rail-column:20rem] [--rail-width:calc(var(--rail-column)*2+var(--gap))]"
-      }
-    >
-      {children}
+      </div>
     </div>
   );
 }

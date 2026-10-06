@@ -165,6 +165,10 @@ describe("installable accordion registry", () => {
           join(cwd, "components/ui/accordion/index.tsx"),
           "utf8",
         );
+        const animationCss = await readFile(
+          join(cwd, "components/ui/accordion/accordion.css"),
+          "utf8",
+        );
         const utils = await readFile(join(cwd, "lib/utils.ts"), "utf8");
         const config = await readFile(join(cwd, "components.json"), "utf8");
         const packageJson = JSON.parse(
@@ -172,7 +176,13 @@ describe("installable accordion registry", () => {
         );
 
         assert.match(card, /from "@\/lib\/utils"/);
+        assert.match(card, /import "\.\/accordion\.css"/);
         assert.match(card, /AccordionTrigger/);
+        assert.doesNotMatch(card, /dangerouslySetInnerHTML/);
+        assert.doesNotMatch(card, /<style/);
+        assert.match(animationCss, /@keyframes vinyaas-accordion-down/);
+        assert.match(animationCss, /@keyframes vinyaas-accordion-up/);
+        assert.match(animationCss, /prefers-reduced-motion: reduce/);
         assert.match(utils, /export function cn/);
         assert.match(config, /"style": "new-york"/);
         assert.deepEqual(

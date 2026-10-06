@@ -564,8 +564,21 @@ describe("registry build output", () => {
       ["ui/drawer/index.tsx", "ui/drawer/drawer.css"],
       'role="dialog"',
     ],
+    ["sheet", ["ui/sheet/index.tsx", "ui/sheet/sheet.css"], 'role="dialog"'],
+    [
+      "navigation-menu",
+      [
+        "ui/navigation-menu/index.tsx",
+        "ui/navigation-menu/navigation-menu.css",
+      ],
+      "NavigationMenuViewport",
+    ],
     ["chart", ["ui/chart/index.tsx"], "ChartContainer"],
-    ["accordion", ["ui/accordion/index.tsx"], "aria-expanded"],
+    [
+      "accordion",
+      ["ui/accordion/index.tsx", "ui/accordion/accordion.css"],
+      "aria-expanded",
+    ],
     ["breadcrumb", ["ui/breadcrumb/index.tsx"], "breadcrumb"],
     ["scroll-area", ["ui/scroll-area/index.tsx"], "data-scroll-area"],
     ["slider", ["ui/slider/index.tsx"], 'type="range"'],
@@ -645,6 +658,166 @@ describe("registry build output", () => {
     },
   );
 
+  it("keeps the new-york alert-dialog artifact aligned with the source item", async () => {
+    const outputPath = path.join(
+      docsRoot,
+      "public/r/new-york/alert-dialog.json",
+    );
+    const sourceTsx = await fs.readFile(
+      path.join(docsRoot, "registry/new-york/ui/alert-dialog/index.tsx"),
+      "utf8",
+    );
+    const sourceCss = await fs.readFile(
+      path.join(docsRoot, "registry/new-york/ui/alert-dialog/alert-dialog.css"),
+      "utf8",
+    );
+    const rawOutput = await fs.readFile(outputPath, "utf8");
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      registryDependencies?: string[];
+      files: { path: string; content: string }[];
+    };
+    const item = newYork.find((entry) => entry.name === "alert-dialog");
+
+    if (!item) {
+      throw new Error("Expected an alert-dialog registry item");
+    }
+
+    const files = await readRegistryItemFiles(item, async (relativePath) => {
+      if (relativePath === "ui/alert-dialog/index.tsx") {
+        return sourceTsx;
+      }
+
+      expect(relativePath).toBe("ui/alert-dialog/alert-dialog.css");
+      return sourceCss;
+    });
+    const payload = serializeBuiltItem(item, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.name).toBe("alert-dialog");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual([
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge",
+    ]);
+    expect(generated.registryDependencies).toEqual(["button"]);
+    expect(item.registryDependencies).toEqual(["button"]);
+    expect(generated.files).toHaveLength(2);
+    expect(generated.files[0]?.content).toBe(sourceTsx);
+    expect(generated.files[0]?.content).toContain('role="alertdialog"');
+    expect(generated.files[0]?.content).toContain('from "../button"');
+    expect(generated.files[1]?.content).toBe(sourceCss);
+  });
+
+  it("keeps the new-york data-table artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/data-table.json");
+    const source = await fs.readFile(
+      path.join(docsRoot, "registry/new-york/ui/data-table/index.tsx"),
+      "utf8",
+    );
+    const rawOutput = await fs.readFile(outputPath, "utf8");
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      registryDependencies?: string[];
+      files: { path: string; content: string }[];
+    };
+    const item = newYork.find((entry) => entry.name === "data-table");
+
+    if (!item) {
+      throw new Error("Expected a data-table registry item");
+    }
+
+    const files = await readRegistryItemFiles(item, async (relativePath) => {
+      expect(relativePath).toBe("ui/data-table/index.tsx");
+      return source;
+    });
+    const payload = serializeBuiltItem(item, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.name).toBe("data-table");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(generated.registryDependencies).toEqual([
+      "table",
+      "pagination",
+      "checkbox",
+      "input",
+      "button",
+      "dropdown-menu",
+      "skeleton",
+    ]);
+    expect(item.registryDependencies).toEqual([
+      "table",
+      "pagination",
+      "checkbox",
+      "input",
+      "button",
+      "dropdown-menu",
+      "skeleton",
+    ]);
+    expect(generated.files).toHaveLength(1);
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain("DataTable");
+    expect(generated.files[0]?.content).toContain('from "../table"');
+    expect(generated.files[0]?.content).toContain('from "../pagination"');
+    expect(generated.files[0]?.content).toContain('from "@/lib/utils"');
+  });
+
+  it("keeps the new-york sidebar artifact aligned with the source item", async () => {
+    const outputPath = path.join(docsRoot, "public/r/new-york/sidebar.json");
+    const source = await fs.readFile(
+      path.join(docsRoot, "registry/new-york/ui/sidebar/index.tsx"),
+      "utf8",
+    );
+    const rawOutput = await fs.readFile(outputPath, "utf8");
+    const generated = JSON.parse(rawOutput) as {
+      $schema: string;
+      name: string;
+      type: string;
+      dependencies: string[];
+      registryDependencies?: string[];
+      files: { path: string; content: string }[];
+      docs?: string;
+      category?: string;
+    };
+    const item = newYork.find((entry) => entry.name === "sidebar");
+
+    if (!item) {
+      throw new Error("Expected a sidebar registry item");
+    }
+
+    const files = await readRegistryItemFiles(item, async (relativePath) => {
+      expect(relativePath).toBe("ui/sidebar/index.tsx");
+      return source;
+    });
+    const payload = serializeBuiltItem(item, files, generated.$schema);
+
+    expect(generated).toEqual(payload);
+    expect(generated.name).toBe("sidebar");
+    expect(generated.type).toBe("registry:ui");
+    expect(generated.dependencies).toEqual(["clsx", "tailwind-merge"]);
+    expect(generated.registryDependencies).toEqual(["drawer", "tooltip"]);
+    expect(item.registryDependencies).toEqual(["drawer", "tooltip"]);
+    expect(generated.files).toHaveLength(1);
+    expect(generated.files[0]?.path).toBe("ui/sidebar/index.tsx");
+    expect(generated.files[0]?.content).toBe(source);
+    expect(generated.files[0]?.content).toContain("SidebarProvider");
+    expect(generated.files[0]?.content).toContain('from "../drawer"');
+    expect(generated.files[0]?.content).toContain('from "../tooltip"');
+    expect(generated.files[0]?.content).not.toContain("next/link");
+    expect(generated.files[0]?.content).not.toContain("next/navigation");
+    expect(generated.files[0]?.content).not.toContain("react-router");
+    expect(generated.docs).toMatch(/\/components\/sidebar$/);
+    expect(generated.category).toBe("navigation");
+  });
+
   it("does not publish utils as a registry item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/utils.json");
 
@@ -652,12 +825,50 @@ describe("registry build output", () => {
     expect(newYork.some((item) => item.name === "utils")).toBe(false);
   });
 
-  it("does not publish a Select registry item", async () => {
+  it("publishes the Select registry item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/select.json");
 
-    await expect(fs.access(outputPath)).rejects.toThrow();
-    expect(newYork.some((item) => item.name === "select")).toBe(false);
-    expect(newYork).toHaveLength(39);
+    await expect(fs.access(outputPath)).resolves.toBeUndefined();
+    expect(newYork.some((item) => item.name === "select")).toBe(true);
+    expect(newYork).toHaveLength(53);
+  });
+
+  it("publishes Calendar, Date Picker, Combobox, Empty State, and Form", async () => {
+    for (const name of [
+      "calendar",
+      "date-picker",
+      "combobox",
+      "empty-state",
+      "form",
+    ] as const) {
+      const outputPath = path.join(docsRoot, `public/r/new-york/${name}.json`);
+      await expect(fs.access(outputPath)).resolves.toBeUndefined();
+      expect(newYork.some((item) => item.name === name)).toBe(true);
+    }
+
+    const calendar = newYork.find((item) => item.name === "calendar");
+    expect(calendar?.dependencies).toEqual(
+      expect.arrayContaining(["react-day-picker", "date-fns"]),
+    );
+    expect(calendar?.registryDependencies).toEqual(["button"]);
+
+    const datePicker = newYork.find((item) => item.name === "date-picker");
+    expect(datePicker?.registryDependencies).toEqual([
+      "button",
+      "calendar",
+      "popover",
+    ]);
+
+    const combobox = newYork.find((item) => item.name === "combobox");
+    expect(combobox?.registryDependencies).toEqual([
+      "button",
+      "command",
+      "popover",
+    ]);
+
+    const form = newYork.find((item) => item.name === "form");
+    expect(form?.registryDependencies).toEqual(["label"]);
+    expect(form?.category).toBe("forms");
   });
 
   it("matches the json schema item types", () => {

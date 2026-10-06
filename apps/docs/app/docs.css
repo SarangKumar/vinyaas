@@ -4,7 +4,31 @@
  */
 
 :root {
-  --sidebar-foreground: var(--muted-foreground);
+  /*
+   * Docs chrome nav uses foreground (not muted). Consumer globals.css already
+   * aliases --sidebar-foreground to --foreground; keep that here too.
+   */
+  --sidebar-foreground: var(--foreground);
+
+  /*
+   * Site default sans: Geist via next/font CSS variables.
+   * Prefer var(--default-font-family) over scattering font-family declarations.
+   */
+  --default-font-family:
+    var(--font-geist-sans), "Geist Fallback", ui-sans-serif, system-ui,
+    sans-serif;
+
+  /*
+   * Docs type scale ~1px smaller than Tailwind defaults (outside @layer).
+   */
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.1875rem;
+  --text-2xl: 1.3125rem;
+  --text-3xl: 1.6875rem;
+  --text-4xl: 2.0625rem;
 
   /*
    * Homepage playground rhythm. --gap is set from these on the shell
@@ -20,39 +44,88 @@
   --playground-pad-xl: 3rem;
 
   /*
-   * Syntax colors for CodeBlock — brighter than body copy so tokens
-   * separate clearly inside muted card surfaces.
+   * CodeBlock theme — same neutral hue as globals (~286), dual-mode.
+   * Light: bright, high-chroma tokens on soft paper.
+   * Dark: nested charcoal with readable mid-lightness syntax.
    */
-  --syntax-plain: oklch(0.28 0.02 286);
-  --syntax-keyword: oklch(0.42 0.18 303);
-  --syntax-fn: oklch(0.4 0.16 255);
-  --syntax-string: oklch(0.4 0.14 160);
-  --syntax-param: oklch(0.45 0.14 55);
-  --syntax-number: oklch(0.45 0.15 35);
-  --syntax-comment: oklch(0.55 0.02 286);
-  --syntax-punct: oklch(0.42 0.02 286);
+  --syntax-editor: oklch(0.98 0.004 286);
+  --syntax-chrome: oklch(0.96 0.004 286);
+  --syntax-border: oklch(0.9 0.008 286);
+  --syntax-plain: oklch(0.32 0.02 286);
+  --syntax-comment: oklch(0.52 0.03 286);
+  --syntax-keyword: oklch(0.52 0.22 300);
+  --syntax-fn: oklch(0.5 0.2 255);
+  --syntax-string: oklch(0.5 0.18 150);
+  --syntax-number: oklch(0.54 0.18 45);
+  --syntax-param: oklch(0.4 0.05 286);
+  --syntax-type: oklch(0.5 0.16 195);
+  --syntax-tag: oklch(0.5 0.2 255);
+  --syntax-attribute: oklch(0.52 0.16 210);
+  --syntax-punct: oklch(0.5 0.03 286);
 }
 
 .dark {
-  --sidebar-foreground: var(--muted-foreground);
+  --sidebar-foreground: var(--foreground);
 
-  --syntax-plain: oklch(0.92 0.02 286);
-  --syntax-keyword: oklch(0.84 0.14 303);
-  --syntax-fn: oklch(0.82 0.12 250);
-  --syntax-string: oklch(0.84 0.13 160);
-  --syntax-param: oklch(0.86 0.1 55);
-  --syntax-number: oklch(0.86 0.11 35);
+  /* Nested against --background 0.141 / --card 0.21 — brighter syntax */
+  --syntax-editor: oklch(0.185 0.005 286);
+  --syntax-chrome: oklch(0.22 0.005 286);
+  --syntax-border: oklch(1 0 0 / 10%);
+  --syntax-plain: oklch(0.94 0.01 286);
   --syntax-comment: oklch(0.68 0.02 286);
-  --syntax-punct: oklch(0.78 0.02 286);
+  --syntax-keyword: oklch(0.84 0.12 300);
+  --syntax-fn: oklch(0.84 0.11 255);
+  --syntax-string: oklch(0.84 0.12 150);
+  --syntax-number: oklch(0.84 0.12 55);
+  --syntax-param: oklch(0.9 0.02 286);
+  --syntax-type: oklch(0.84 0.1 195);
+  --syntax-tag: oklch(0.84 0.11 255);
+  --syntax-attribute: oklch(0.84 0.1 210);
+  --syntax-punct: oklch(0.76 0.02 286);
 }
 
 @theme inline {
+  --font-sans: var(--default-font-family);
   --color-sidebar-foreground: var(--sidebar-foreground);
 
   --spacing-playground-gap: var(--playground-gap);
   --spacing-playground-gap-md: var(--playground-gap-md);
   --spacing-playground-gap-xl: var(--playground-gap-xl);
   --spacing-playground-gap-2xl: var(--playground-gap-2xl);
+
+  /*
+   * Playground composition ladder (homepage / Themes / Typeset / dense chrome).
+   * Themes/Typeset (CSS columns): 1 → md:2 → lg:3 → xl:4
+   * Homepage (CSS columns masonry): 1 → md:2 → lg:3 → 1400:4 → 1900:5
+   * Dense chrome / Typeset inline options: min-[1400px].
+   */
+  --breakpoint-playground: 87.5rem; /* 1400px */
+  --breakpoint-playground-wide: 118.75rem; /* 1900px */
+}
+
+body {
+  font-family: var(--default-font-family);
+}
+
+[data-docs-sidebar] {
+  position: relative;
+}
+
+[data-docs-sidebar]::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--border) 12%,
+    var(--border) 88%,
+    transparent
+  );
 }
 
 /*
@@ -65,8 +138,50 @@
   background: var(--muted);
   padding: 0.125rem 0.375rem;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: calc(0.875em - 2px);
+  font-size: calc(0.875em - 1px);
   color: var(--foreground);
+}
+
+/* Surfaces follow theme tokens; nearly opaque so code stays stable. */
+[data-code-frame] {
+  background: color-mix(in oklch, var(--syntax-editor) 96%, transparent);
+  border-color: var(--syntax-border);
+  color: var(--syntax-plain);
+}
+
+[data-code-chrome] {
+  background: var(--syntax-chrome);
+  border-color: var(--syntax-border);
+  color: var(--syntax-comment);
+}
+
+[data-code-panel] {
+  background: var(--syntax-editor);
+}
+
+[data-code-frame] [data-line-numbers] {
+  background: var(--syntax-chrome);
+  border-color: var(--syntax-border);
+  color: var(--syntax-comment);
+}
+
+[data-code-fade] {
+  background: linear-gradient(
+    to top,
+    color-mix(in oklch, var(--syntax-editor) 94%, var(--background)) 0%,
+    color-mix(in oklch, var(--syntax-editor) 50%, transparent) 55%,
+    transparent 100%
+  );
+  box-shadow: 0 10px 24px -12px oklch(0 0 0 / 0.35);
+}
+
+[data-code-fade="expanded"] {
+  background: linear-gradient(
+    to top,
+    color-mix(in oklch, var(--syntax-editor) 75%, transparent),
+    transparent
+  );
+  box-shadow: none;
 }
 
 code[data-language] {
@@ -75,18 +190,21 @@ code[data-language] {
 }
 
 code[data-language] .hljs-keyword,
-code[data-language] .hljs-selector-tag,
-code[data-language] .hljs-built_in,
-code[data-language] .hljs-type {
+code[data-language] .hljs-selector-tag {
   color: var(--syntax-keyword);
+  font-weight: 400;
+}
+
+code[data-language] .hljs-built_in,
+code[data-language] .hljs-type,
+code[data-language] .hljs-title.class_ {
+  color: var(--syntax-type);
   font-weight: 400;
 }
 
 code[data-language] .hljs-title,
 code[data-language] .hljs-title.function_,
-code[data-language] .hljs-title.class_,
-code[data-language] .hljs-function,
-code[data-language] .hljs-name {
+code[data-language] .hljs-function {
   color: var(--syntax-fn);
   font-weight: 400;
 }
@@ -98,15 +216,19 @@ code[data-language] .hljs-template-variable {
   color: var(--syntax-string);
 }
 
-code[data-language] .hljs-attr,
-code[data-language] .hljs-attribute,
 code[data-language] .hljs-params,
 code[data-language] .hljs-variable {
   color: var(--syntax-param);
 }
 
-code[data-language] .hljs-tag {
-  color: var(--syntax-punct);
+code[data-language] .hljs-attr,
+code[data-language] .hljs-attribute {
+  color: var(--syntax-attribute);
+}
+
+code[data-language] .hljs-tag,
+code[data-language] .hljs-name {
+  color: var(--syntax-tag);
 }
 
 code[data-language] .hljs-comment,
@@ -155,7 +277,7 @@ code[data-language] .hljs-operator {
   border-radius: var(--radius-sm);
   background: var(--muted);
   padding: 0.125rem 0.375rem;
-  font-size: calc(0.875em - 2px);
+  font-size: calc(0.875em - 1px);
   color: var(--foreground);
 }
 
@@ -189,7 +311,8 @@ code[data-language] .hljs-operator {
     column-fill: auto !important;
   }
 
-  [data-playground-block] {
+  [data-playground-block],
+  [data-play-block] {
     break-inside: avoid;
     page-break-inside: avoid;
     margin-bottom: 1rem;

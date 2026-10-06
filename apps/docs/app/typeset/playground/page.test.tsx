@@ -41,11 +41,14 @@ describe("Typeset playground page", () => {
     ).toBeInTheDocument();
     expect(typesetExamples.length).toBeGreaterThanOrEqual(16);
     expect(document.querySelector("[data-playground-content]")).toBeTruthy();
-    expect(document.querySelector("[data-playground-grid]")).toHaveAttribute(
-      "data-playground-columns",
+    expect(document.querySelector("[data-playground-grid]")?.className).toMatch(
+      /xl:columns-4/,
     );
     expect(
-      document.querySelectorAll("[data-playground-column]").length,
+      document.querySelector("[data-playground-grid]")?.className,
+    ).not.toMatch(/columns-5/);
+    expect(
+      document.querySelectorAll("[data-playground-item]").length,
     ).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("Design manifesto")).toBeInTheDocument();
     expect(screen.getByText("Contrast formula")).toBeInTheDocument();
@@ -60,9 +63,8 @@ describe("Typeset playground page", () => {
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText("Typeset options")).toBeInTheDocument();
     expect(within(dialog).getByLabelText("Measure")).toBeInTheDocument();
-    fireEvent.change(within(dialog).getByLabelText("Measure"), {
-      target: { value: "60ch" },
-    });
+    fireEvent.click(within(dialog).getByLabelText("Measure"));
+    fireEvent.click(screen.getByRole("option", { name: "60ch" }));
     expect(document.querySelector("[data-typeset-playground]")).toHaveAttribute(
       "data-typeset-measure",
       "60ch",
@@ -77,9 +79,8 @@ describe("Typeset playground page", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Options" }));
     const options = await screen.findByRole("dialog");
-    fireEvent.change(within(options).getByLabelText("Measure"), {
-      target: { value: "60ch" },
-    });
+    fireEvent.click(within(options).getByLabelText("Measure"));
+    fireEvent.click(screen.getByRole("option", { name: "60ch" }));
     fireEvent.click(within(options).getByRole("button", { name: "Done" }));
 
     await waitFor(() => {

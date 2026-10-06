@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { components } from "./component-meta";
 import {
+  accessibilityPath,
+  catalogsPath,
   changelogPath,
   cliPath,
   companionAnimationsPath,
@@ -36,6 +38,8 @@ describe("documentation navigation", () => {
     expect(componentsJsonPath).toBe("/components-json");
     expect(installationPath).toBe("/installation");
     expect(cliPath).toBe("/cli");
+    expect(catalogsPath).toBe("/catalogs");
+    expect(accessibilityPath).toBe("/accessibility");
     expect(companionPath).toBe("/companion");
     expect(companionInstallationPath).toBe("/companion/installation");
     expect(companionJsonPath).toBe("/companion/configuration");
@@ -53,11 +57,11 @@ describe("documentation navigation", () => {
     expect(changelogPath).toBe("/changelog");
     expect(docsNav.map((group) => group.title)).toEqual([
       "SECTIONS",
-      "COMPANION",
       "COMPONENTS",
+      "COMPANION",
       "GET STARTED",
     ]);
-    expect(docsNav[2]?.layout).toBe("names");
+    expect(docsNav[1]?.layout).toBe("names");
 
     const sections = docsNav[0]?.items;
     expect(sections?.map((item) => item.title)).toEqual([
@@ -66,6 +70,8 @@ describe("documentation navigation", () => {
       "Components",
       "Installation",
       "CLI",
+      "Catalogs",
+      "Accessibility",
       "Theming",
       "Typeset",
       "Changelog",
@@ -80,7 +86,7 @@ describe("documentation navigation", () => {
     );
     expect(sections?.every((item) => !item.children?.length)).toBe(true);
 
-    const companion = docsNav[1];
+    const companion = docsNav[2];
     expect(companion?.items[0]?.indicator).toBe("beta");
     expect(companion?.items.map((item) => item.title)).toEqual([
       "Introduction",
@@ -123,7 +129,7 @@ describe("documentation navigation", () => {
     expect(JSON.stringify(docsNav)).not.toContain('"icon"');
   });
 
-  it("builds one alphabetical component list including Typography", () => {
+  it("builds one alphabetical component list with new indicators from metadata", () => {
     const items = docsNav.find((group) => group.title === "COMPONENTS")?.items;
 
     expect(items?.map((item) => item.title)).toEqual(
@@ -133,5 +139,40 @@ describe("documentation navigation", () => {
     );
     expect(items?.some((item) => item.title === "Typography")).toBe(true);
     expect(items?.every((item) => !("isNew" in item))).toBe(true);
+    expect(items?.find((item) => item.title === "Resizable")?.indicator).toBe(
+      "new",
+    );
+    expect(
+      items?.find((item) => item.title === "Button")?.indicator,
+    ).toBeUndefined();
+    expect(
+      items
+        ?.filter((item) => item.indicator === "new")
+        .map((item) => item.title),
+    ).toEqual([
+      "Alert Dialog",
+      "Calendar",
+      "Combobox",
+      "Data Table",
+      "Date Picker",
+      "Drag & Drop",
+      "Empty State",
+      "Form",
+      "Navigation Menu",
+      "Pagination",
+      "Resizable",
+      "Select",
+      "Sheet",
+      "Sidebar",
+    ]);
+    expect(items?.find((item) => item.title === "Select")?.indicator).toBe(
+      "new",
+    );
+    expect(items?.find((item) => item.title === "Sidebar")?.indicator).toBe(
+      "new",
+    );
+    expect(items?.find((item) => item.title === "Drag & Drop")?.indicator).toBe(
+      "new",
+    );
   });
 });

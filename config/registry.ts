@@ -26,6 +26,12 @@ function readBuildTimeRegistryBasePath(): string | undefined {
   return trimmed || undefined;
 }
 
+/** Local development fallback when env and bake are unset. */
+export const localRegistryBasePath = "http://localhost:3000/r";
+
+/** Production registry root for release builds and publish validation. */
+export const productionRegistryBasePath = "https://vinyaas.vercel.app/r";
+
 /**
  * Default registry root when env is unset.
  *
@@ -36,10 +42,13 @@ function readBuildTimeRegistryBasePath(): string | undefined {
 export const defaultRegistryBasePath =
   typeof __VINYAAS_REGISTRY_BASE_PATH__ === "string"
     ? __VINYAAS_REGISTRY_BASE_PATH__
-    : "http://localhost:3000/r";
+    : localRegistryBasePath;
 
 /** @deprecated Prefer defaultRegistryBasePath. Site origin for the local fallback. */
-export const defaultRegistryBaseUrl = defaultRegistryBasePath.replace(/\/r$/, "");
+export const defaultRegistryBaseUrl = defaultRegistryBasePath.replace(
+  /\/r$/,
+  "",
+);
 
 export const registryItemSchemaRelativePath = "schema/registry-item.json";
 export const componentsSchemaRelativePath = "schema/components.json";

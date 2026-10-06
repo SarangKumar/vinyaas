@@ -5,13 +5,32 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DocsStoreProvider } from "@/lib/store/provider";
 import { getThemePreset } from "@/lib/theme-playground";
 
 import { themeExamples } from "./examples";
 import ThemesPage, { metadata } from "./page";
+
+beforeAll(() => {
+  class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+
+  Object.defineProperty(window, "ResizeObserver", {
+    writable: true,
+    configurable: true,
+    value: ResizeObserverMock,
+  });
+  Object.defineProperty(globalThis, "ResizeObserver", {
+    writable: true,
+    configurable: true,
+    value: ResizeObserverMock,
+  });
+});
 
 function renderThemes() {
   return render(
@@ -51,20 +70,47 @@ describe("Themes playground page", () => {
     expect(screen.getByText("CLI installs")).toBeInTheDocument();
     expect(screen.getByText("Registry traffic")).toBeInTheDocument();
     expect(screen.getByText("Workspace access")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Resizable" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Calendar" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Date picker" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Combobox" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Empty state" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Form" })).toBeInTheDocument();
+    expect(screen.queryByText("Hot components")).not.toBeInTheDocument();
     expect(screen.queryByText("June 2025")).not.toBeInTheDocument();
     expect(screen.queryByText("Total Revenue")).not.toBeInTheDocument();
     expect(document.querySelector("[data-playground-content]")).toBeTruthy();
-    expect(document.querySelector("[data-playground-grid]")).toHaveAttribute(
-      "data-playground-columns",
+    expect(document.querySelector("[data-playground-grid]")?.className).toMatch(
+      /xl:columns-4/,
     );
     expect(
-      document.querySelectorAll("[data-playground-column]").length,
+      document.querySelector("[data-playground-grid]")?.className,
+    ).not.toMatch(/columns-5/);
+    expect(document.querySelector("[data-playground-grid]")).toHaveAttribute(
+      "data-playground-mode",
+      "playground",
+    );
+    expect(
+      document.querySelectorAll("[data-playground-item]").length,
     ).toBeGreaterThanOrEqual(1);
     expect(screen.getByRole("button", { name: "Yellow" })).toHaveAttribute(
       "aria-label",
       "Yellow",
     );
     expect(screen.getByRole("button", { name: "Green" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Red" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Blue" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Violet" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Lavender" })).toBeNull();
   });
 

@@ -35,7 +35,7 @@ function SetupCard({ setup }: { setup: ProjectSetupOption }) {
     >
       <div className="flex flex-col gap-1.5">
         <h3 className={subsectionHeading}>{setup.title}</h3>
-        <p className="text-muted-foreground text-sm leading-6">
+        <p className="text-muted-foreground text-base leading-7">
           {setup.summary}
         </p>
       </div>

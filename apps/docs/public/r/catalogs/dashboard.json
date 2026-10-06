@@ -1,0 +1,32 @@
+{
+  "type": "catalogs",
+  "items": [
+    {
+      "id": "dashboard",
+      "name": "Dashboard",
+      "description": "Primitives commonly used in dashboards and application surfaces.",
+      "components": [
+        "card",
+        "badge",
+        "tabs",
+        "breadcrumb",
+        "tooltip",
+        "progress",
+        "skeleton",
+        "table",
+        "data-table",
+        "pagination",
+        "scroll-area",
+        "separator",
+        "resizable",
+        "sidebar",
+        "drag-and-drop",
+        "empty-state",
+        "calendar",
+        "date-picker",
+        "combobox",
+        "form"
+      ]
+    }
+  ]
+}

@@ -25,7 +25,7 @@ describe("theme playground model", () => {
   it("matches the current Vinyaas consumer baseline", () => {
     const theme = createDefaultTheme();
 
-    expect(theme.radius).toBe("0.5rem");
+    expect(theme.radius).toBe("0.75rem");
     expect(theme.fontSans).toBe("ui-sans-serif, system-ui, sans-serif");
     expect(theme.fontMono).toContain("ui-monospace");
     expect(theme.light.background).toBe("oklch(1 0 0)");
@@ -78,7 +78,7 @@ describe("generateThemeCss", () => {
     expect(css).toContain("--primary: oklch(0.21 0.006 285.885);");
     expect(css).toContain("--background: oklch(0.141 0.005 285.823);");
     expect(css).toContain("--primary: oklch(0.92 0.004 286.32);");
-    expect(css).toContain("--border: oklch(1 0 0 / 10%);");
+    expect(css).toContain("--border: oklch(1 0 0 / 8%);");
   });
 
   it("applies a custom primary color", () => {
@@ -131,11 +131,22 @@ describe("generateThemeCss", () => {
     expect(css).toContain("--color-destructive: var(--destructive);");
   });
 
+  it("emits sidebar tokens as aliases of core theme colors", () => {
+    const css = generateThemeCss(createDefaultTheme());
+
+    expect(css).toContain("--sidebar: var(--background);");
+    expect(css).toContain("--sidebar-foreground: var(--foreground);");
+    expect(css).toContain("--sidebar-primary: var(--primary);");
+    expect(css).toContain("--color-sidebar: var(--sidebar);");
+    expect(css).toContain(
+      "--color-sidebar-foreground: var(--sidebar-foreground);",
+    );
+  });
+
   it("does not emit docs-only or component animation CSS", () => {
     const css = generateThemeCss(createDefaultTheme());
 
     expect(css).not.toContain("--playground-");
-    expect(css).not.toContain("--sidebar-");
     expect(css).not.toContain("--syntax-");
     expect(css).not.toContain("--new:");
     expect(css).not.toContain("font-geist");

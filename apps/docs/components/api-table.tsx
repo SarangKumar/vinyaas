@@ -2,21 +2,32 @@ export type ApiRow = {
   prop: string;
   type: string;
   defaultValue?: string;
-  description: string;
+  /** Kept for authoring convenience; not shown in the table. */
+  description?: string;
 };
 
+/**
+ * Documentation API / props table.
+ * Width ownership: this renderer + `#docs-content table { width: 100% }` —
+ * not the shared Table primitive (homepage / product tables stay unchanged).
+ */
 export function ApiTable({ rows }: { rows: ApiRow[] }) {
   return (
-    <div className="border-border overflow-x-auto rounded-md border">
-      <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
+    <div
+      data-api-table=""
+      className="border-border w-full min-w-0 overflow-x-auto rounded-md border"
+    >
+      <table className="text-foreground w-full table-fixed border-collapse text-left text-base leading-7">
+        <colgroup>
+          <col className="w-[28%]" />
+          <col className="w-[44%]" />
+          <col className="w-[28%]" />
+        </colgroup>
         <thead>
           <tr className="border-border border-b">
             <th className="text-foreground px-3 py-2 font-medium">Prop</th>
             <th className="text-foreground px-3 py-2 font-medium">Type</th>
             <th className="text-foreground px-3 py-2 font-medium">Default</th>
-            <th className="text-foreground px-3 py-2 font-medium">
-              Description
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -25,17 +36,14 @@ export function ApiTable({ rows }: { rows: ApiRow[] }) {
               key={row.prop}
               className="border-border border-b last:border-b-0"
             >
-              <th className="text-foreground px-3 py-2.5 align-top font-normal">
+              <th className="text-foreground px-3 py-2.5 align-top font-normal break-words">
                 <code>{row.prop}</code>
               </th>
-              <td className="text-foreground px-3 py-2.5 align-top">
+              <td className="text-foreground px-3 py-2.5 align-top break-words">
                 <code>{row.type}</code>
               </td>
-              <td className="text-foreground px-3 py-2.5 align-top">
+              <td className="text-foreground px-3 py-2.5 align-top break-words">
                 {row.defaultValue ? <code>{row.defaultValue}</code> : "—"}
-              </td>
-              <td className="text-foreground px-3 py-2.5 align-top">
-                {row.description}
               </td>
             </tr>
           ))}

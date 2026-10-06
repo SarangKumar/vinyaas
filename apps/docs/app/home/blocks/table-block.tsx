@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { PlayBlock } from "@/app/home/play-block";
@@ -22,60 +23,113 @@ import {
   TableRow,
 } from "@/registry/new-york/ui/table";
 
-const people = [
-  ["AL", "Ada Lovelace", "Active", "Writer"],
-  ["PS", "Priya Shah", "Away", "Finance"],
-  ["RM", "Rahul Mehta", "Active", "Platform"],
-  ["SK", "Sarang Kumar", "Active", "Design"],
-];
+const projects = [
+  {
+    initials: "VP",
+    name: "Vinyaas Docs",
+    href: "/introduction",
+    owner: "Priya Shah",
+    status: "Active",
+    updated: "2h ago",
+  },
+  {
+    initials: "PL",
+    name: "Payments Ledger",
+    href: "/components/table",
+    owner: "Rahul Mehta",
+    status: "Review",
+    updated: "Yesterday",
+  },
+  {
+    initials: "DS",
+    name: "Design System",
+    href: "/themes",
+    owner: "Ada Lovelace",
+    status: "Active",
+    updated: "3d ago",
+  },
+  {
+    initials: "ON",
+    name: "Onboarding Kit",
+    href: "/installation",
+    owner: "Sarang Kumar",
+    status: "Paused",
+    updated: "1w ago",
+  },
+] as const;
 
 export function TableBlock() {
   const [query, setQuery] = useState("");
-  const rows = people.filter((person) =>
-    person.join(" ").toLowerCase().includes(query.toLowerCase()),
+  const rows = projects.filter((project) =>
+    `${project.name} ${project.owner} ${project.status}`
+      .toLowerCase()
+      .includes(query.toLowerCase()),
   );
 
   return (
-    <PlayBlock title="Directory" description="People across the workspace.">
+    <PlayBlock
+      title="Projects"
+      description="Workspace projects with owners, status, and quick links."
+    >
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
         <Input
-          aria-label="Search people"
-          placeholder="Search people"
+          aria-label="Search projects"
+          placeholder="Search projects"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           className="max-w-sm min-w-0"
         />
-        <p className="text-muted-foreground text-xs">{rows.length} people</p>
+        <p className="text-muted-foreground text-xs">{rows.length} projects</p>
       </div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Role</TableHead>
+            <TableHead>Project</TableHead>
+            <TableHead>Owner</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Updated</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {rows.map(([initials, name, status, role]) => (
-            <TableRow key={name}>
+          {rows.map((project) => (
+            <TableRow key={project.name}>
               <TableCell>
                 <span className="flex min-w-0 items-center gap-2">
                   <Avatar className="size-6">
                     <AvatarFallback className="text-[10px]">
-                      {initials}
+                      {project.initials}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate font-medium">{name}</span>
+                  <Link
+                    href={project.href}
+                    className="text-foreground hover:text-foreground/80 focus-visible:ring-ring truncate font-medium underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
+                    aria-label={`Open ${project.name}`}
+                  >
+                    {project.name}
+                  </Link>
                 </span>
               </TableCell>
-              <TableCell className="text-muted-foreground">{role}</TableCell>
+              <TableCell className="text-muted-foreground">
+                {project.owner}
+              </TableCell>
               <TableCell>
-                <Badge variant={status === "Away" ? "outline" : "secondary"}>
-                  {status}
+                <Badge
+                  variant={
+                    project.status === "Active"
+                      ? "secondary"
+                      : project.status === "Review"
+                        ? "outline"
+                        : "outline"
+                  }
+                >
+                  {project.status}
                 </Badge>
+              </TableCell>
+              <TableCell className="text-muted-foreground">
+                {project.updated}
               </TableCell>
               <TableCell>
                 <DropdownMenu>
@@ -84,14 +138,14 @@ export function TableBlock() {
                       type="button"
                       variant="ghost"
                       size="sm"
-                      aria-label={`Actions for ${name}`}
+                      aria-label={`Actions for ${project.name}`}
                     >
                       ···
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Message</DropdownMenuItem>
-                    <DropdownMenuItem>View profile</DropdownMenuItem>
+                    <DropdownMenuItem>View details</DropdownMenuItem>
+                    <DropdownMenuItem>Copy link</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

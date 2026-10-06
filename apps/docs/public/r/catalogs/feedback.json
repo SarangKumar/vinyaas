@@ -1,0 +1,22 @@
+{
+  "type": "catalogs",
+  "items": [
+    {
+      "id": "feedback",
+      "name": "Feedback",
+      "description": "Alerts, overlays, and progress cues for user feedback.",
+      "components": [
+        "alert",
+        "alert-dialog",
+        "dialog",
+        "drawer",
+        "sheet",
+        "toast",
+        "skeleton",
+        "progress",
+        "spinner",
+        "empty-state"
+      ]
+    }
+  ]
+}

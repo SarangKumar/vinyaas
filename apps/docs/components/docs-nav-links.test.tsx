@@ -30,12 +30,14 @@ describe("DocsNavLinks", () => {
     ).toBeNull();
 
     const sectionsStart = titles.indexOf("Home");
-    expect(titles.slice(sectionsStart, sectionsStart + 8)).toEqual([
+    expect(titles.slice(sectionsStart, sectionsStart + 10)).toEqual([
       "Home",
       "Introduction",
       "Components",
       "Installation",
       "CLI",
+      "Catalogs",
+      "Accessibility",
       "Theming",
       "Typeset",
       "Changelog",
@@ -45,7 +47,10 @@ describe("DocsNavLinks", () => {
       "/",
     );
 
-    const companionStart = titles.indexOf("Changelog") + 1;
+    // Companion follows the COMPONENTS name list (after Accordion…Typography).
+    const companionStart = titles.lastIndexOf("Introduction");
+    expect(companionStart).toBeGreaterThan(titles.indexOf("Changelog"));
+    expect(titles.indexOf("Accordion")).toBeLessThan(companionStart);
     expect(titles.slice(companionStart, companionStart + 8)).toEqual([
       "Introduction",
       "Installation",
@@ -57,17 +62,20 @@ describe("DocsNavLinks", () => {
       "Gallery",
     ]);
     expect(
-      within(nav).getAllByRole("link", { name: /Introduction/i })[1],
+      within(nav)
+        .getAllByRole("link", { name: /Introduction/i })
+        .at(-1),
     ).toHaveAttribute("href", "/companion");
     expect(
       within(nav)
-        .getAllByRole("link", { name: /Introduction/i })[1]
+        .getAllByRole("link", { name: /Introduction/i })
+        .at(-1)
         ?.querySelector('[data-nav-indicator="beta"]'),
     ).toBeTruthy();
     expect(
-      within(nav).getByText("COMPANION").querySelector(
-        '[data-nav-indicator="beta"]',
-      ),
+      within(nav)
+        .getByText("COMPANION")
+        .querySelector('[data-nav-indicator="beta"]'),
     ).toBeNull();
     expect(
       within(nav).getAllByRole("link", { name: "Installation" })[1],
@@ -84,12 +92,14 @@ describe("DocsNavLinks", () => {
     expect(
       within(nav).getByRole("link", { name: "Custom Companion" }),
     ).toHaveAttribute("href", "/companion/custom");
-    expect(
-      within(nav).getByRole("link", { name: "Examples" }),
-    ).toHaveAttribute("href", "/companion/examples");
-    expect(
-      within(nav).getByRole("link", { name: "Gallery" }),
-    ).toHaveAttribute("href", "/companion/gallery");
+    expect(within(nav).getByRole("link", { name: "Examples" })).toHaveAttribute(
+      "href",
+      "/companion/examples",
+    );
+    expect(within(nav).getByRole("link", { name: "Gallery" })).toHaveAttribute(
+      "href",
+      "/companion/gallery",
+    );
 
     const componentsStart = titles.indexOf(componentNames[0]!);
     expect(
@@ -123,6 +133,18 @@ describe("DocsNavLinks", () => {
     );
     expect(within(nav).queryByText(", new")).toBeNull();
     expect(nav.querySelector(".bg-primary")).toBeNull();
+
+    const resizable = within(nav).getByRole("link", { name: /Resizable/i });
+    expect(resizable).toHaveAttribute("href", "/components/resizable");
+    expect(
+      resizable.querySelector('[data-nav-indicator="new"]'),
+    ).toHaveAttribute("aria-label", "New");
+    expect(
+      within(nav)
+        .getByRole("link", { name: "Button" })
+        .querySelector('[data-nav-indicator="new"]'),
+    ).toBeNull();
+
     expect(within(nav).getByRole("link", { name: "Input" })).toHaveAttribute(
       "aria-current",
       "page",

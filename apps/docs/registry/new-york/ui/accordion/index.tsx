@@ -1,8 +1,17 @@
 "use client";
 
-import React, { useContext, useEffect, useId, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
+
+import "./accordion.css";
 
 type AccordionContextValue = {
   type: "single" | "multiple";
@@ -45,7 +54,7 @@ function useItem() {
   return context;
 }
 
-function reducedMotion() {
+function prefersReducedMotion() {
   return (
     typeof window !== "undefined" &&
     typeof window.matchMedia === "function" &&
@@ -226,7 +235,7 @@ export function AccordionTrigger({
       aria-expanded={item.open}
       aria-controls={item.contentId}
       className={cn(
-        "flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm font-medium underline-offset-4 hover:underline focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "flex w-full items-center justify-between gap-3 px-3 py-3 text-left text-sm font-medium underline-offset-4 hover:underline focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
@@ -247,7 +256,7 @@ export function AccordionTrigger({
         fill="none"
         aria-hidden="true"
         className={cn(
-          "size-4 shrink-0 transition-transform duration-200 ease-out motion-reduce:transition-none",
+          "size-4 shrink-0 transition-transform duration-[320ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
           item.open && "rotate-180",
         )}
       >
@@ -263,43 +272,90 @@ export function AccordionTrigger({
   );
 }
 
+const ACCORDION_MS = 320;
+
+type PanelMotion = "idle" | "down" | "up";
+
 export function AccordionContent({
   className,
   children,
+  style,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   const item = useItem();
-  const [shown, setShown] = useState(item.open);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+  const [trackedOpen, setTrackedOpen] = useState(item.open);
+  const [motion, setMotion] = useState<PanelMotion>("idle");
 
-  useEffect(() => {
-    if (item.open) {
-      const timeout = window.setTimeout(() => setShown(true), 0);
+  if (item.open !== trackedOpen) {
+    setTrackedOpen(item.open);
+    setMotion(prefersReducedMotion() ? "idle" : item.open ? "down" : "up");
+  }
 
-      return () => window.clearTimeout(timeout);
+  useLayoutEffect(() => {
+    const inner = innerRef.current;
+
+    if (!inner) {
+      return;
     }
 
-    const timeout = window.setTimeout(
-      () => setShown(false),
-      reducedMotion() ? 0 : 200,
-    );
+    const measure = () => {
+      const next = inner.scrollHeight;
+
+      if (next > 0) {
+        setContentHeight(next);
+      }
+    };
+
+    measure();
+
+    if (typeof ResizeObserver === "undefined") {
+      return;
+    }
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(inner);
+
+    return () => observer.disconnect();
+  }, [children, item.open]);
+
+  useEffect(() => {
+    if (motion === "idle") {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => setMotion("idle"), ACCORDION_MS);
 
     return () => window.clearTimeout(timeout);
-  }, [item.open]);
+  }, [motion]);
+
+  // Keep panel reachable until the close animation finishes.
+  const revealed = item.open || motion === "up";
 
   return (
     <div
+      {...props}
       id={item.contentId}
       data-accordion-panel=""
       data-state={item.open ? "open" : "closed"}
-      hidden={!shown && !item.open}
+      aria-hidden={!revealed}
+      inert={!revealed}
       className={cn(
-        "grid overflow-hidden px-3 text-sm transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none",
-        item.open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        "vinyaas-accordion-panel overflow-hidden",
+        motion === "down" && "vinyaas-accordion-down",
+        motion === "up" && "vinyaas-accordion-up",
         className,
       )}
-      {...props}
+      style={
+        {
+          "--vinyaas-accordion-content-height": `${contentHeight}px`,
+          ...(motion === "idle" ? { height: item.open ? "auto" : 0 } : null),
+          ...style,
+        } as React.CSSProperties
+      }
     >
-      <div className={cn("min-h-0 overflow-hidden", item.open && "pb-3")}>
+      <div ref={innerRef} className="px-3 pb-3 text-sm">
         {children}
       </div>
     </div>

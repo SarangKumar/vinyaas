@@ -12,9 +12,9 @@ export type ComponentCategory = RegistryCategory;
 export { formatRegistryCategoryLabel };
 
 /** The current docs/website release version. */
-export const currentVersion = "1.2.0";
+export const currentVersion = "1.3.0";
 
-export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0" | "1.2.0";
+export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0" | "1.2.0" | "1.3.0";
 
 type ComponentMetaSource = {
   name: string;
@@ -44,6 +44,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     slug: "alert",
     description: "A notice for a status that should be announced.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Alert Dialog",
+    slug: "alert-dialog",
+    description: "A confirmation modal for important or destructive actions.",
+    introducedIn: "1.3.0",
   },
   {
     name: "Aspect Ratio",
@@ -82,6 +88,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "0.1",
   },
   {
+    name: "Calendar",
+    slug: "calendar",
+    description: "An accessible month calendar for selecting dates.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Card",
     slug: "card",
     description: "A bordered container for related content.",
@@ -100,16 +112,42 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Combobox",
+    slug: "combobox",
+    description: "A searchable control for filtering and choosing options.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Command",
     slug: "command",
     description: "A searchable list of actions and pages.",
     introducedIn: "1.0.0",
   },
   {
+    name: "Data Table",
+    slug: "data-table",
+    description:
+      "A dashboard table with search, sorting, selection, and pagination.",
+    introducedIn: "1.3.0",
+  },
+  {
+    name: "Date Picker",
+    slug: "date-picker",
+    description: "A calendar popover for choosing a single date.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Dialog",
     slug: "dialog",
     description: "A modal panel for a focused task.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Drag & Drop",
+    slug: "drag-and-drop",
+    description:
+      "Sortable and reorderable drag-and-drop for lists, cards, and boards.",
+    introducedIn: "1.3.0",
   },
   {
     name: "Drawer",
@@ -124,10 +162,23 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Empty State",
+    slug: "empty-state",
+    description: "A composable empty state for lists and dashboard panels.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "File Upload",
     slug: "file-upload",
     description: "A native file picker with drag and drop.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Form",
+    slug: "form",
+    description:
+      "Accessible field structure for labels, descriptions, and validation.",
+    introducedIn: "1.3.0",
   },
   {
     name: "Hover Card",
@@ -178,6 +229,20 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Navigation Menu",
+    slug: "navigation-menu",
+    description:
+      "A composable site navigation menu with rich mega-menu content panels.",
+    introducedIn: "1.3.0",
+  },
+  {
+    name: "Pagination",
+    slug: "pagination",
+    description:
+      "Composable page navigation with previous, next, links, and ellipsis.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Popover",
     slug: "popover",
     description: "A floating panel with interactive content.",
@@ -196,16 +261,44 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Resizable",
+    slug: "resizable",
+    description:
+      "Resizable panel layouts with accessible handles for dashboards.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Scroll Area",
     slug: "scroll-area",
     description: "A native scroll container with a thin scrollbar.",
     introducedIn: "1.0.0",
   },
   {
+    name: "Select",
+    slug: "select",
+    description:
+      "A custom select with grouped options and keyboard-friendly listbox behavior.",
+    introducedIn: "1.3.0",
+  },
+  {
     name: "Separator",
     slug: "separator",
     description: "A horizontal or vertical divider between content.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Sheet",
+    slug: "sheet",
+    description:
+      "A side modal for settings, details, filters, and mobile navigation.",
+    introducedIn: "1.3.0",
+  },
+  {
+    name: "Sidebar",
+    slug: "sidebar",
+    description:
+      "Composable dashboard sidebar with collapsed and mobile navigation.",
+    introducedIn: "1.3.0",
   },
   {
     name: "Skeleton",
@@ -297,4 +390,17 @@ export function componentsInCategory(category: ComponentCategory) {
 
 export function componentHref(slug: string) {
   return `/components/${slug}`;
+}
+
+/** Components introduced in the current docs/website release. */
+export function isNewComponent(component: ComponentMeta) {
+  return component.introducedIn === currentVersion;
+}
+
+/** Sorted new components for nav indicators and the New Components section. */
+export function newComponents() {
+  return components
+    .filter(isNewComponent)
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name));
 }

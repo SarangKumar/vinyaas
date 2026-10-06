@@ -134,7 +134,16 @@ describe("ComponentReference", () => {
     expect(
       screen.getByRole("columnheader", { name: "Prop" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Visual style.")).toBeInTheDocument();
+    expect(
+      screen.getByRole("columnheader", { name: "Type" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("columnheader", { name: "Default" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("columnheader", { name: "Description" }),
+    ).toBeNull();
+    expect(screen.getByText("variant")).toBeInTheDocument();
   });
 
   it("places In practice immediately before API", () => {

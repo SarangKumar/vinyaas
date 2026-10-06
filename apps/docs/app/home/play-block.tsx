@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Showcase card for the Pinterest masonry.
- * break-inside-avoid keeps cards whole; mb uses --gap so vertical rhythm
- * matches the column gutter.
+ * Showcase card for the homepage playground masonry.
+ * Vertical rhythm comes from the column-item `mb-(--gap)` wrapper in
+ * {@link Playground} — do not also add margin-bottom on the card.
  */
 export function PlayBlock({
   title,
@@ -22,8 +22,10 @@ export function PlayBlock({
     <section
       data-slot="card"
       data-play-block
+      data-companion-surface=""
+      data-companion-surface-id={title ? `play-${title}` : undefined}
       className={cn(
-        "border-border/80 bg-card text-card-foreground mb-(--gap) flex w-full min-w-0 break-inside-avoid flex-col gap-5 overflow-hidden rounded-2xl border p-5 shadow-[0_1px_0_oklch(1_0_0/0.04)_inset] sm:gap-6 sm:p-6",
+        "border-border/80 bg-card text-card-foreground flex w-full max-w-full min-w-0 flex-col gap-5 overflow-hidden rounded-2xl border p-5 shadow-[0_1px_0_oklch(1_0_0/0.04)_inset] sm:gap-6 sm:p-6",
         className,
       )}
     >
@@ -39,7 +41,8 @@ export function PlayBlock({
           ) : null}
         </header>
       ) : null}
-      <div className="flex max-w-full min-w-0 flex-col gap-4 text-sm sm:gap-5">
+      {/* p-0.5 keeps focus rings (ring + offset) from clipping at the card edge */}
+      <div className="flex max-w-full min-w-0 flex-col gap-4 p-0.5 text-sm sm:gap-5">
         {children}
       </div>
     </section>

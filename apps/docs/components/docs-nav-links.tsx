@@ -6,13 +6,15 @@ import { usePathname } from "next/navigation";
 import { docsNav, type DocsNavItem } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 
-function BetaDot() {
+function NavIndicator({ kind }: { kind: "beta" | "new" }) {
+  const label = kind === "beta" ? "Beta" : "New";
+
   return (
     <span
-      data-nav-indicator="beta"
-      className="bg-muted-foreground size-1.5 shrink-0 rounded-full"
-      aria-label="Beta"
-      title="Beta"
+      data-nav-indicator={kind}
+      className="bg-foreground/70 size-1.5 shrink-0 rounded-full"
+      aria-label={label}
+      title={label}
     />
   );
 }
@@ -29,7 +31,7 @@ function NavLink({
   const comfortable = density === "comfortable";
   const base = comfortable
     ? "flex min-h-12 cursor-pointer items-center gap-2 rounded-md px-3 py-3 text-base"
-    : "flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 text-sm";
+    : "flex min-h-8 cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-sm leading-[1.3125rem]";
 
   return (
     <Link
@@ -38,11 +40,11 @@ function NavLink({
       className={
         current
           ? `bg-muted text-foreground font-medium ${base} ${focusRing}`
-          : `text-sidebar-foreground hover:bg-muted hover:text-foreground ${base} ${focusRing}`
+          : `text-foreground hover:bg-muted hover:text-foreground ${base} ${focusRing}`
       }
     >
       <span className="min-w-0 truncate">{item.title}</span>
-      {item.indicator === "beta" ? <BetaDot /> : null}
+      {item.indicator ? <NavIndicator kind={item.indicator} /> : null}
     </Link>
   );
 }
@@ -81,8 +83,8 @@ export function DocsNavLinks({
             <p
               className={
                 comfortable
-                  ? "text-muted-foreground px-3 pt-1 pb-2 text-sm font-medium tracking-[0.12em] uppercase"
-                  : "text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium"
+                  ? "text-muted-foreground px-3 pt-1 pb-2 text-sm font-semibold tracking-[0.12em] uppercase"
+                  : "text-muted-foreground px-2 pt-2 pb-1 text-xs font-semibold"
               }
             >
               {group.title}
@@ -102,7 +104,9 @@ export function DocsNavLinks({
             {group.items.map((item) => (
               <li
                 key={`${group.title}-${item.href}`}
-                className={group.label ? (comfortable ? "pl-1" : "pl-2") : undefined}
+                className={
+                  group.label ? (comfortable ? "pl-1" : "pl-2") : undefined
+                }
               >
                 <NavLink
                   item={item}

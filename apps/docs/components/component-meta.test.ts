@@ -11,6 +11,8 @@ import {
   components,
   componentsInCategory,
   currentVersion,
+  isNewComponent,
+  newComponents,
 } from "./component-meta";
 
 describe("component metadata", () => {
@@ -23,20 +25,28 @@ describe("component metadata", () => {
     expect(names).toEqual([
       "Accordion",
       "Alert",
+      "Alert Dialog",
       "Aspect Ratio",
       "Attachment",
       "Avatar",
       "Badge",
       "Breadcrumb",
       "Button",
+      "Calendar",
       "Card",
       "Chart",
       "Checkbox",
+      "Combobox",
       "Command",
+      "Data Table",
+      "Date Picker",
       "Dialog",
+      "Drag & Drop",
       "Drawer",
       "Dropdown Menu",
+      "Empty State",
       "File Upload",
+      "Form",
       "Hover Card",
       "Input",
       "Input Group",
@@ -45,11 +55,17 @@ describe("component metadata", () => {
       "Label",
       "Marker",
       "Native Select",
+      "Navigation Menu",
+      "Pagination",
       "Popover",
       "Progress",
       "Radio Group",
+      "Resizable",
       "Scroll Area",
+      "Select",
       "Separator",
+      "Sheet",
+      "Sidebar",
       "Skeleton",
       "Slider",
       "Spinner",
@@ -63,8 +79,8 @@ describe("component metadata", () => {
     ]);
   });
 
-  it("tracks introduction versions without marking a current new set", () => {
-    expect(currentVersion).toBe("1.2.0");
+  it("tracks introduction versions and derives the current new set", () => {
+    expect(currentVersion).toBe("1.3.0");
     expect(
       components
         .filter((component) => component.introducedIn === "0.1")
@@ -80,9 +96,70 @@ describe("component metadata", () => {
       components.filter((component) => component.introducedIn === "1.2.0"),
     ).toHaveLength(0);
     expect(
+      components
+        .filter((component) => component.introducedIn === "1.3.0")
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual([
+      "alert-dialog",
+      "calendar",
+      "combobox",
+      "data-table",
+      "date-picker",
+      "drag-and-drop",
+      "empty-state",
+      "form",
+      "navigation-menu",
+      "pagination",
+      "resizable",
+      "select",
+      "sheet",
+      "sidebar",
+    ]);
+    expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 6);
+    ).toBe(components.length - 20);
+    expect(
+      newComponents()
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual([
+      "alert-dialog",
+      "calendar",
+      "combobox",
+      "data-table",
+      "date-picker",
+      "drag-and-drop",
+      "empty-state",
+      "form",
+      "navigation-menu",
+      "pagination",
+      "resizable",
+      "select",
+      "sheet",
+      "sidebar",
+    ]);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "pagination")!,
+      ),
+    ).toBe(true);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "resizable")!,
+      ),
+    ).toBe(true);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "sidebar")!,
+      ),
+    ).toBe(true);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "button")!,
+      ),
+    ).toBe(false);
   });
 
   it("derives docs categories from the registry category map", () => {

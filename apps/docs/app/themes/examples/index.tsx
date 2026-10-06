@@ -17,24 +17,47 @@ import {
   type ChartConfig,
 } from "@/registry/new-york/ui/chart";
 import { Checkbox } from "@/registry/new-york/ui/checkbox";
+import { Calendar } from "@/registry/new-york/ui/calendar";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxTrigger,
+} from "@/registry/new-york/ui/combobox";
+import { DatePicker } from "@/registry/new-york/ui/date-picker";
+import {
+  Empty,
+  EmptyActions,
+  EmptyDescription,
+  EmptyIcon,
+  EmptyTitle,
+} from "@/registry/new-york/ui/empty-state";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/registry/new-york/ui/form";
 import { Input } from "@/registry/new-york/ui/input";
 import { Kbd } from "@/registry/new-york/ui/kbd";
 import { Label } from "@/registry/new-york/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/registry/new-york/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select";
 import { Progress } from "@/registry/new-york/ui/progress";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/registry/new-york/ui/resizable";
 import { Separator } from "@/registry/new-york/ui/separator";
 import { Switch } from "@/registry/new-york/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/registry/new-york/ui/table";
 import {
   Tabs,
   TabsContent,
@@ -175,15 +198,19 @@ export const themeExamples: ThemeExample[] = [
               <p className="truncate text-sm font-medium">{name}</p>
               <p className="text-muted-foreground truncate text-xs">{email}</p>
             </div>
-            <NativeSelect
-              aria-label={`${name} role`}
-              defaultValue={role}
-              className="w-23 shrink-0"
-            >
-              <NativeSelectOption value="owner">Owner</NativeSelectOption>
-              <NativeSelectOption value="editor">Editor</NativeSelectOption>
-              <NativeSelectOption value="viewer">Viewer</NativeSelectOption>
-            </NativeSelect>
+            <Select defaultValue={role}>
+              <SelectTrigger
+                aria-label={`${name} role`}
+                className="w-23 shrink-0"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="owner">Owner</SelectItem>
+                <SelectItem value="editor">Editor</SelectItem>
+                <SelectItem value="viewer">Viewer</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         ))}
       </div>
@@ -320,12 +347,19 @@ export const themeExamples: ThemeExample[] = [
     title: "Ship checklist",
     description: "Before tagging the docs release.",
     preview: (
-      <div className="grid gap-3">
+      <div className="grid min-w-0 gap-3">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-muted-foreground text-xs">3 of 5 done</span>
+          <span className="text-muted-foreground text-xs tabular-nums">
+            3 of 5 done · 60%
+          </span>
           <Badge>v1.1</Badge>
         </div>
-        <Progress aria-label="Ship progress" value={60} />
+        <Progress
+          aria-label="Ship progress"
+          value={3}
+          max={5}
+          className="w-full min-w-0"
+        />
         <ul className="grid gap-2">
           {[
             ["ship-themes", "Themes playground scoped", true],
@@ -350,58 +384,26 @@ export const themeExamples: ThemeExample[] = [
     ),
   },
   {
-    id: "component-table",
-    title: "Hot components",
-    description: "Most installed this week.",
+    id: "resizable-split",
+    title: "Resizable",
+    description: "Sidebar and content with a drag handle.",
     preview: (
-      <div className="grid min-w-0 gap-3">
-        <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
-          <Input
-            aria-label="Filter components"
-            placeholder="Filter…"
-            className="min-w-0 flex-1"
-          />
-          <NativeSelect
-            aria-label="Sort"
-            defaultValue="installs"
-            className="w-full sm:w-32"
-          >
-            <NativeSelectOption value="installs">Installs</NativeSelectOption>
-            <NativeSelectOption value="name">Name</NativeSelectOption>
-          </NativeSelect>
-        </div>
-        <div className="w-full min-w-0 overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Adds</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {[
-                ["Button", "Stable", "428"],
-                ["Dialog", "Stable", "301"],
-                ["Chart", "New", "186"],
-                ["Drawer", "New", "142"],
-              ].map(([name, status, adds]) => (
-                <TableRow key={name}>
-                  <TableCell className="font-medium">{name}</TableCell>
-                  <TableCell>
-                    <Badge variant={status === "New" ? "secondary" : "outline"}>
-                      {status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right tabular-nums">
-                    {adds}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+      <ResizablePanelGroup
+        orientation="horizontal"
+        className="border-border bg-background min-h-[140px] w-full overflow-hidden rounded-md border"
+      >
+        <ResizablePanel defaultSize="36%" minSize="24%" maxSize="50%">
+          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
+            Sidebar
+          </div>
+        </ResizablePanel>
+        <ResizableHandle withHandle aria-label="Resize sidebar" />
+        <ResizablePanel defaultSize="64%" minSize="40%">
+          <div className="text-muted-foreground flex h-full items-center justify-center p-3 text-sm">
+            Content
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     ),
   },
   {
@@ -484,11 +486,16 @@ export const themeExamples: ThemeExample[] = [
       <form className="grid gap-3" onSubmit={(event) => event.preventDefault()}>
         <div className="grid gap-1.5">
           <Label htmlFor="fb-area">Area</Label>
-          <NativeSelect id="fb-area" defaultValue="themes">
-            <NativeSelectOption value="themes">Themes</NativeSelectOption>
-            <NativeSelectOption value="typeset">Typeset</NativeSelectOption>
-            <NativeSelectOption value="print">Print / SEO</NativeSelectOption>
-          </NativeSelect>
+          <Select defaultValue="themes">
+            <SelectTrigger id="fb-area">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="themes">Themes</SelectItem>
+              <SelectItem value="typeset">Typeset</SelectItem>
+              <SelectItem value="print">Print / SEO</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="grid gap-1.5">
           <Label htmlFor="fb-note">What felt off?</Label>
@@ -549,7 +556,7 @@ export const themeExamples: ThemeExample[] = [
           <div className="min-w-0">
             <p className="text-sm font-medium">Preview surface</p>
             <p className="text-muted-foreground text-xs">
-              Uses <code className="text-[0.7rem]">--radius</code>
+              Uses <code>--radius</code>
             </p>
           </div>
           <Button type="button" size="sm">
@@ -577,14 +584,15 @@ export const themeExamples: ThemeExample[] = [
             placeholder="teammate@studio.dev"
             className="min-w-0 flex-1"
           />
-          <NativeSelect
-            aria-label="Role"
-            defaultValue="editor"
-            className="w-full sm:w-28"
-          >
-            <NativeSelectOption value="editor">Editor</NativeSelectOption>
-            <NativeSelectOption value="viewer">Viewer</NativeSelectOption>
-          </NativeSelect>
+          <Select defaultValue="editor">
+            <SelectTrigger aria-label="Role" className="w-full sm:w-28">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="editor">Editor</SelectItem>
+              <SelectItem value="viewer">Viewer</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <Button type="button" size="sm" className="w-full sm:w-fit">
           Send invite
@@ -611,17 +619,22 @@ export const themeExamples: ThemeExample[] = [
     id: "upload-token",
     title: "Upload tokens",
     preview: (
-      <div className="grid gap-3">
+      <div className="grid min-w-0 gap-3">
         <div className="border-border flex min-w-0 items-center justify-between gap-3 rounded-lg border border-dashed p-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">brand-tokens.css</p>
             <p className="text-muted-foreground text-xs">94 KB · mapping…</p>
           </div>
-          <Badge variant="secondary" className="shrink-0">
+          <Badge variant="secondary" className="shrink-0 tabular-nums">
             58%
           </Badge>
         </div>
-        <Progress aria-label="Upload" value={58} />
+        <Progress
+          aria-label="Upload"
+          value={58}
+          max={100}
+          className="w-full min-w-0"
+        />
         <div className="flex flex-wrap gap-2">
           <Button type="button" size="sm" variant="outline">
             Cancel
@@ -659,6 +672,113 @@ export const themeExamples: ThemeExample[] = [
           </Button>
         </div>
       </div>
+    ),
+  },
+  {
+    id: "calendar",
+    title: "Calendar",
+    description: "Selected range, today accents, and month navigation.",
+    preview: (
+      <Calendar
+        mode="range"
+        defaultMonth={new Date(2026, 2, 1)}
+        selected={{
+          from: new Date(2026, 2, 10),
+          to: new Date(2026, 2, 16),
+        }}
+        className="rounded-md border"
+      />
+    ),
+  },
+  {
+    id: "date-picker",
+    title: "Date picker",
+    description: "Calendar icon with spaced selected-date label.",
+    preview: (
+      <div className="grid min-w-0 gap-2">
+        <Label htmlFor="theme-deploy-date">Deployment date</Label>
+        <DatePicker
+          id="theme-deploy-date"
+          defaultValue={new Date(2026, 3, 8)}
+          placeholder="Pick a date"
+        />
+      </div>
+    ),
+  },
+  {
+    id: "combobox",
+    title: "Combobox",
+    description: "Searchable assignee filter with a selected value.",
+    preview: (
+      <div className="grid min-w-0 gap-2">
+        <Label htmlFor="theme-assignee">Assignee</Label>
+        <Combobox defaultValue="maya">
+          <ComboboxTrigger id="theme-assignee" placeholder="Select assignee" />
+          <ComboboxContent searchPlaceholder="Search people…">
+            <ComboboxItem value="maya">Maya Chen</ComboboxItem>
+            <ComboboxItem value="jordan">Jordan Lee</ComboboxItem>
+            <ComboboxItem value="sam">Sam Rivera</ComboboxItem>
+            <ComboboxItem value="priya">Priya Nair</ComboboxItem>
+          </ComboboxContent>
+        </Combobox>
+      </div>
+    ),
+  },
+  {
+    id: "empty-state",
+    title: "Empty state",
+    description: "Icon, title, description, and primary action.",
+    preview: (
+      <Empty size="sm" className="min-w-0">
+        <EmptyIcon>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="size-5"
+          >
+            <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+          </svg>
+        </EmptyIcon>
+        <EmptyTitle>No projects yet</EmptyTitle>
+        <EmptyDescription>
+          Create your first project to start organizing work.
+        </EmptyDescription>
+        <EmptyActions>
+          <Button type="button" size="sm">
+            Create project
+          </Button>
+        </EmptyActions>
+      </Empty>
+    ),
+  },
+  {
+    id: "form",
+    title: "Form",
+    description: "Field labels, description, and a compact save action.",
+    preview: (
+      <Form className="min-w-0 gap-4">
+        <FormField name="theme-email">
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input
+                type="email"
+                defaultValue="ada@vinyaas.dev"
+                autoComplete="email"
+              />
+            </FormControl>
+            <FormDescription>Account notifications go here.</FormDescription>
+          </FormItem>
+        </FormField>
+        <Button type="button" size="sm">
+          Save changes
+        </Button>
+      </Form>
     ),
   },
 ];

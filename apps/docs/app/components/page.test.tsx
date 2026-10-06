@@ -1,12 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { components } from "@/components/component-meta";
+import { components, newComponents } from "@/components/component-meta";
 
 import ComponentsPage from "./page";
 
 describe("components catalog", () => {
-  it("lists names in a responsive grid without cards, descriptions, or new markers", () => {
+  it("lists new components from metadata, then the full name grid", () => {
     render(<ComponentsPage />);
 
     const headings = screen.getAllByRole("heading").map((heading) => ({
@@ -16,46 +16,91 @@ describe("components catalog", () => {
 
     expect(headings).toEqual([
       { name: "Components", id: "" },
+      { name: "New Components", id: "new-components" },
       { name: "All Components", id: "all-components" },
     ]);
+
+    const newlyIntroduced = newComponents();
+    expect(newlyIntroduced.map((component) => component.slug).sort()).toEqual([
+      "alert-dialog",
+      "calendar",
+      "combobox",
+      "data-table",
+      "date-picker",
+      "drag-and-drop",
+      "empty-state",
+      "form",
+      "navigation-menu",
+      "pagination",
+      "resizable",
+      "select",
+      "sheet",
+      "sidebar",
+    ]);
+
+    const newSection = screen.getByRole("heading", {
+      name: "New Components",
+    }).parentElement;
+    expect(newSection).toBeTruthy();
+    const resizable = within(newSection!).getByRole("link", {
+      name: /Resizable/i,
+    });
+    expect(resizable).toHaveAttribute("href", "/components/resizable");
+    expect(resizable.textContent).toMatch(/v1\.3\.0/);
     expect(
-      screen.queryByRole("heading", { name: "New Components" }),
-    ).toBeNull();
+      resizable.querySelector('[data-nav-indicator="new"]'),
+    ).toHaveAttribute("aria-label", "New");
+    expect(resizable.textContent).toMatch(/accessible handles/i);
+
+    const sidebar = within(newSection!).getByRole("link", {
+      name: /Sidebar/i,
+    });
+    expect(sidebar).toHaveAttribute("href", "/components/sidebar");
+    expect(sidebar.textContent).toMatch(/v1\.3\.0/);
+    expect(sidebar.querySelector('[data-nav-indicator="new"]')).toHaveAttribute(
+      "aria-label",
+      "New",
+    );
 
     const lists = [...document.querySelectorAll("ul")];
-
-    expect(lists).toHaveLength(1);
-    expect(lists[0]).toHaveClass(
+    // New Components list + All Components grid
+    expect(lists.length).toBeGreaterThanOrEqual(2);
+    const allGrid = lists.at(-1)!;
+    expect(allGrid).toHaveClass(
       "grid",
-      "grid-cols-1",
-      "sm:grid-cols-2",
+      "grid-cols-2",
       "md:grid-cols-3",
     );
-    expect(lists[0]!.querySelectorAll(".bg-primary").length).toBe(0);
-    expect(lists[0]!.querySelector("svg")).toBeNull();
+    expect(allGrid.querySelectorAll(".bg-primary").length).toBe(0);
+    expect(allGrid.querySelector("svg")).toBeNull();
 
     const all = [...components]
       .map((component) => component.name)
       .sort((a, b) => a.localeCompare(b));
 
-    expect(names(lists[0]!)).toEqual(all);
+    expect(names(allGrid)).toEqual(all);
     expect(all).toContain("Button");
     expect(all).toHaveLength(components.length);
+    const selectLink = allGrid.querySelector(
+      'a[href="/components/select"]',
+    ) as HTMLElement | null;
+    expect(
+      selectLink?.querySelector('[data-nav-indicator="new"]'),
+    ).toHaveAttribute("aria-label", "New");
+    const buttonLink = allGrid.querySelector(
+      'a[href="/components/button"]',
+    ) as HTMLElement | null;
+    expect(buttonLink?.querySelector('[data-nav-indicator="new"]')).toBeNull();
     expect(document.body.textContent).toContain(
       `The catalog has ${components.length} independently installable`,
     );
-    expect(document.body.textContent).toContain("v1.2.0");
-    expect(document.body.textContent).not.toContain("marked new");
-    expect(
-      screen.queryByText(
-        "A versatile button primitive for actions and commands.",
-      ),
-    ).toBeNull();
+    expect(document.body.textContent).toContain("v1.3.0");
   });
 });
 
 function names(list: Element) {
-  return [...list.querySelectorAll("a")].map((link) =>
-    link.textContent?.trim(),
-  );
+  return [...list.querySelectorAll("a")].map((link) => {
+    const label = link.querySelector("span.min-w-0")?.textContent?.trim();
+    return label ?? link.textContent?.trim();
+  });
 }

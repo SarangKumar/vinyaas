@@ -19,9 +19,14 @@ export function ComponentDemo({
   language?: CodeLanguage;
 }) {
   return (
-    <div className="border-border overflow-hidden rounded-md border">
-      <div className="bg-background flex min-h-40 items-center justify-center px-4 py-8 text-sm sm:min-h-48 sm:px-6 sm:py-10">
-        <div className="flex w-full min-w-0 max-w-full flex-wrap items-center justify-center gap-3 overflow-x-auto">
+    <div
+      className="border-border rounded-md border"
+      data-companion-surface=""
+      data-companion-surface-id="component-demo"
+    >
+      <div className="bg-background flex min-h-40 items-center justify-center overflow-visible px-4 py-8 text-sm sm:min-h-48 sm:px-6 sm:py-10">
+        {/* Avoid min-w-0/flex-wrap so single-row controls like Pagination are not clipped */}
+        <div className="flex w-full items-center justify-center overflow-visible p-1">
           {preview}
         </div>
       </div>

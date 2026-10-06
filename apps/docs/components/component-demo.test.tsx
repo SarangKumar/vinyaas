@@ -53,6 +53,12 @@ export function SaveButton() {
     );
 
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    expect(
+      document.querySelector(".bg-background.min-h-40")?.parentElement,
+    ).toHaveClass("border-border", "rounded-md", "border");
+    expect(document.querySelector("[data-code-frame]")).toHaveClass(
+      "rounded-b-md",
+    );
     expect(document.querySelector(".bg-background.min-h-40")).toHaveClass(
       "text-sm",
       "px-4",
@@ -79,21 +85,20 @@ export function SaveButton() {
     expect(screen.queryByRole("button", { name: "View code" })).toBeNull();
   });
 
-  it("collapses long source and can show it again", () => {
+  it("expands long source into a fixed scroll area without a hide control", () => {
     renderDemo(
       <ComponentDemo preview={<span>Preview</span>} code={longSource} />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "View code" }));
-    expect(screen.getByRole("button", { name: "Hide code" })).toHaveAttribute(
-      "aria-expanded",
-      "true",
+    fireEvent.click(
+      screen.getByRole("button", { name: "View full code example" }),
     );
-    fireEvent.click(screen.getByRole("button", { name: "Hide code" }));
-    expect(screen.getByRole("button", { name: "View code" })).toHaveAttribute(
-      "aria-expanded",
-      "false",
-    );
+    expect(screen.queryByRole("button", { name: "Hide code" })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "View full code example" }),
+    ).toBeNull();
+    expect(document.querySelector("pre")).toHaveClass("max-h-80");
+    expect(document.querySelector("pre")).toHaveClass("overflow-auto");
   });
 
   it("switches TSX and JSX across demos and standalone blocks together", async () => {

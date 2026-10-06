@@ -41,7 +41,7 @@ export function ThemeControls({
               key={preset.id}
               selected={selected}
               aria-label={preset.label}
-              className="size-8 justify-center gap-0 px-0 sm:h-8 sm:w-auto sm:gap-1.5 sm:px-2.5"
+              className="size-8 justify-center gap-0 px-0 lg:h-8 lg:w-auto lg:gap-1.5 lg:px-2.5"
               onClick={() => onPresetChange(preset.id)}
             >
               <span
@@ -51,12 +51,12 @@ export function ThemeControls({
               >
                 {selected ? <PlaygroundCheckIcon /> : null}
               </span>
-              <span className="hidden sm:inline">{preset.label}</span>
+              <span className="hidden lg:inline">{preset.label}</span>
             </PlaygroundChip>
           );
         })}
       </PlaygroundOptionGroup>
-      <div className="bg-border hidden h-6 w-px sm:block" aria-hidden="true" />
+      <div className="bg-border hidden h-6 w-px lg:block" aria-hidden="true" />
       <PlaygroundOptionGroup label="Radius">
         {radiusOptions.map((option) => (
           <PlaygroundChip

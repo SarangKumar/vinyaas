@@ -5,6 +5,8 @@ import {
 
 import {
   registryItemTypes,
+  type ComponentCatalog,
+  type ComponentCatalogIndex,
   type RegistryCatalog,
   type RegistryCatalogItem,
   type RegistryCssVars,
@@ -262,6 +264,84 @@ export async function fetchRegistryCatalog({
   return parseRegistryCatalog(body);
 }
 
+export function buildComponentCatalogIndexUrl({
+  baseUrl,
+  basePath,
+}: {
+  /** @deprecated Prefer basePath (registry root ending with `/r`). */
+  baseUrl?: string;
+  basePath?: string;
+} = {}): string {
+  const registryPath = resolveRegistryBasePath({ basePath, baseUrl });
+
+  let url: URL;
+
+  try {
+    url = new URL("catalogs/index.json", `${registryPath}/`);
+  } catch (error) {
+    throw new RegistryError("Registry base URL is invalid.", { cause: error });
+  }
+
+  url.search = "";
+  url.hash = "";
+
+  return url.href;
+}
+
+export async function fetchComponentCatalogIndex({
+  baseUrl,
+  basePath,
+  env = process.env,
+  fetch: fetchImpl = fetch,
+}: {
+  /** @deprecated Prefer basePath. */
+  baseUrl?: string;
+  basePath?: string;
+  env?: Record<string, string | undefined>;
+  fetch?: typeof fetch;
+} = {}): Promise<ComponentCatalogIndex> {
+  const url = buildComponentCatalogIndexUrl({
+    basePath: basePath ?? (baseUrl ? undefined : getRegistryBasePath(env)),
+    ...(baseUrl ? { baseUrl } : {}),
+  });
+
+  let response: Response;
+
+  try {
+    response = await fetchImpl(url, { method: "GET" });
+  } catch (error) {
+    throw registryUnavailableError(`Could not reach ${url}`, {
+      cause: error,
+      env,
+    });
+  }
+
+  if (response.status === 404) {
+    throw registryUnavailableError(`Component catalogs not found: ${url}`, {
+      env,
+    });
+  }
+
+  if (!response.ok) {
+    throw registryUnavailableError(
+      `Failed to fetch component catalogs ${url} (HTTP ${response.status}).`,
+      { env },
+    );
+  }
+
+  let body: unknown;
+
+  try {
+    body = await response.json();
+  } catch (error) {
+    throw new RegistryError("The registry returned invalid JSON.", {
+      cause: error,
+    });
+  }
+
+  return parseComponentCatalogIndex(body);
+}
+
 export function parseRegistryItem(input: unknown): RegistryItem {
   const item = requireRecord(input, "Registry item");
 
@@ -340,6 +420,60 @@ export function parseRegistryCatalog(input: unknown): RegistryCatalog {
   return {
     style: requireString(catalog.style, "style"),
     items: sortCatalogItems(items),
+  };
+}
+
+const componentCatalogIndexFields = ["type", "items"] as const;
+const componentCatalogFields = [
+  "id",
+  "name",
+  "description",
+  "components",
+] as const;
+
+export function parseComponentCatalogIndex(
+  input: unknown,
+): ComponentCatalogIndex {
+  const catalog = requireRecord(input, "Component catalog index");
+
+  assertFields(
+    catalog,
+    componentCatalogIndexFields,
+    ["type", "items"],
+    "Component catalog index",
+  );
+
+  if (catalog.type !== "catalogs") {
+    throw new RegistryError('type must be "catalogs"');
+  }
+
+  if (!Array.isArray(catalog.items)) {
+    throw new RegistryError("items must be an array");
+  }
+
+  const items = catalog.items.map((entry, index) =>
+    parseComponentCatalog(entry, `items[${index}]`),
+  );
+
+  return {
+    type: "catalogs",
+    items: [...items].sort((left, right) => left.id.localeCompare(right.id)),
+  };
+}
+
+function parseComponentCatalog(
+  input: unknown,
+  label: string,
+): ComponentCatalog {
+  const item = requireRecord(input, label);
+
+  assertFields(item, componentCatalogFields, componentCatalogFields, label);
+
+  return {
+    id: requireString(item.id, `${label}.id`),
+    name: requireString(item.name, `${label}.name`),
+    description: requireString(item.description, `${label}.description`),
+    components: requireStringArray(item.components, `${label}.components`),
   };
 }
 

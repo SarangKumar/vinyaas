@@ -99,7 +99,9 @@ describe("companion schema", () => {
         animations: { idle: { frames: [] } },
       }).ok,
     ).toBe(false);
-    expect(() => assertCompanionConfig({ id: "bad" })).toThrow(/Invalid companion/);
+    expect(() => assertCompanionConfig({ id: "bad" })).toThrow(
+      /Invalid companion/,
+    );
   });
 
   it("rejects invalid interaction schema", () => {
@@ -270,22 +272,36 @@ describe("interaction system v0.1", () => {
 
   it("enforces cooldown handling", () => {
     const config = assertCompanionConfig(emberMeta);
+    const allowed = new Set(["react-click", "celebrate"]);
     const first = executeTriggeredInteraction({
       config,
       currentState: "idle",
       request: { trigger: "click" },
       cooldowns: {},
       nowMs: 1_000,
+      allowedInteractionIds: allowed,
     });
     expect(first).not.toBeNull();
     expect(first?.effect.interactionId).toBe("react-click");
 
-    const blocked = executeTriggeredInteraction({
+    // While react-click cools, celebrate (same trigger) can still fire.
+    const fallthrough = executeTriggeredInteraction({
       config,
       currentState: "idle",
       request: { trigger: "click" },
       cooldowns: first!.cooldowns,
       nowMs: 1_100,
+      allowedInteractionIds: allowed,
+    });
+    expect(fallthrough?.effect.interactionId).toBe("celebrate");
+
+    const blocked = executeTriggeredInteraction({
+      config,
+      currentState: "idle",
+      request: { trigger: "click" },
+      cooldowns: fallthrough!.cooldowns,
+      nowMs: 1_200,
+      allowedInteractionIds: allowed,
     });
     expect(blocked).toBeNull();
 
@@ -293,8 +309,9 @@ describe("interaction system v0.1", () => {
       config,
       currentState: "idle",
       request: { trigger: "click" },
-      cooldowns: first!.cooldowns,
-      nowMs: 2_000,
+      cooldowns: fallthrough!.cooldowns,
+      nowMs: 2_500,
+      allowedInteractionIds: allowed,
     });
     expect(readyAgain).not.toBeNull();
   });
@@ -307,15 +324,13 @@ describe("interaction system v0.1", () => {
       instanceProfileId: "ash",
     });
 
-    expect(engine.personality.idleTimeoutMs).toBe(4800);
+    expect(engine.personality.idleTimeoutMs).toBe(30000);
     expect(engine.mood).toBe("sleepy");
 
-    engine = engineTick(
-      engine,
-      config,
-      engine.personality.idleTimeoutMs + 1,
-      { width: 1000, height: 800 },
-    );
+    engine = engineTick(engine, config, engine.personality.idleTimeoutMs + 1, {
+      width: 1000,
+      height: 800,
+    });
 
     expect(engine.state).toBe("sleeping");
     expect(engine.animation.clipId).toBe("sleep");
@@ -347,12 +362,12 @@ describe("interaction system v0.1", () => {
 
     expect(spark.displayName).toBe("Spark");
     expect(spark.energy).toBe("high");
-    expect(spark.idleTimeoutMs).toBe(2000);
+    expect(spark.idleTimeoutMs).toBe(30000);
     expect(deriveCompanionMood("idle", spark)).toBe("excited");
 
     expect(ash.displayName).toBe("Ash");
     expect(ash.energy).toBe("calm");
-    expect(ash.idleTimeoutMs).toBe(4800);
+    expect(ash.idleTimeoutMs).toBe(30000);
     expect(deriveCompanionMood("idle", ash)).toBe("sleepy");
 
     let engine = createCompanionEngine({
@@ -416,34 +431,17 @@ describe("companion engine", () => {
     );
     expect(engine.physics.position.y).toBe(20);
 
-    engine = engineEndDrag(
-      engine,
-      config,
-      { width: 1000, height: 800 },
-      [],
-    );
+    engine = engineEndDrag(engine, config, { width: 1000, height: 800 }, []);
     expect(engine.state).toBe("falling");
 
     for (let i = 0; i < 300 && engine.state === "falling"; i++) {
-      engine = engineTick(
-        engine,
-        config,
-        16,
-        { width: 1000, height: 800 },
-        [],
-      );
+      engine = engineTick(engine, config, 16, { width: 1000, height: 800 }, []);
     }
 
     expect(["landing", "idle"]).toContain(engine.state);
 
     for (let i = 0; i < 100 && engine.state === "landing"; i++) {
-      engine = engineTick(
-        engine,
-        config,
-        50,
-        { width: 1000, height: 800 },
-        [],
-      );
+      engine = engineTick(engine, config, 50, { width: 1000, height: 800 }, []);
     }
 
     expect(engine.state).toBe("idle");

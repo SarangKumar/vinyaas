@@ -3,13 +3,16 @@ import { build } from "esbuild";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { getRegistryBasePath } from "../../../config/registry.ts";
+import {
+  getRegistryBasePath,
+  productionRegistryBasePath,
+} from "../../../config/registry.ts";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const packageRoot = path.resolve(here, "..");
 
-/** Production registry root used for npm release builds. */
-export const PRODUCTION_REGISTRY_BASE_PATH = "https://vinyaas.vercel.app/r";
+/** @deprecated Prefer productionRegistryBasePath from config/registry.ts */
+export const PRODUCTION_REGISTRY_BASE_PATH = productionRegistryBasePath;
 
 const isRelease =
   process.env.VINYAAS_RELEASE === "1" || process.env.NODE_ENV === "production";

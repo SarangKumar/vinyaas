@@ -32,16 +32,16 @@ export function CompanionSprite({
   className,
   alt,
 }: CompanionSpriteProps) {
-  const [frameIndex, setFrameIndex] = useState(0);
   const activeFrames = frames.length > 0 ? frames : [];
   const controlled = controlledFrame !== undefined;
+  const framesKey = activeFrames.join("\0");
+  const [frameIndex, setFrameIndex] = useState(0);
+  const [framesEpoch, setFramesEpoch] = useState(framesKey);
 
-  useEffect(() => {
-    if (controlled) {
-      return;
-    }
+  if (!controlled && framesEpoch !== framesKey) {
+    setFramesEpoch(framesKey);
     setFrameIndex(0);
-  }, [frames, controlled]);
+  }
 
   useEffect(() => {
     if (controlled || !playing || activeFrames.length <= 1) {

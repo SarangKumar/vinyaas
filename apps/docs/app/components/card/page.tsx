@@ -27,9 +27,12 @@ import {
   MarkerIcon,
 } from "@/registry/new-york/ui/marker";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/registry/new-york/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select";
 import { ScrollArea } from "@/registry/new-york/ui/scroll-area";
 import { Separator } from "@/registry/new-york/ui/separator";
 import { Switch } from "@/registry/new-york/ui/switch";
@@ -158,10 +161,15 @@ const examples: ComponentExample[] = [
         <Separator />
         <CardContent>
           <Label htmlFor="card-billing">Billing period</Label>
-          <NativeSelect id="card-billing" defaultValue="monthly">
-            <NativeSelectOption value="monthly">Monthly</NativeSelectOption>
-            <NativeSelectOption value="yearly">Yearly</NativeSelectOption>
-          </NativeSelect>
+          <Select defaultValue="monthly">
+            <SelectTrigger id="card-billing">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="yearly">Yearly</SelectItem>
+            </SelectContent>
+          </Select>
         </CardContent>
         <CardFooter className="gap-2">
           <Button size="sm">Manage subscription</Button>
@@ -175,7 +183,13 @@ const examples: ComponentExample[] = [
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
 export function SubscriptionCard() {
@@ -193,10 +207,15 @@ export function SubscriptionCard() {
       <Separator />
       <CardContent>
         <Label htmlFor="card-billing">Billing period</Label>
-        <NativeSelect id="card-billing" defaultValue="monthly">
-          <NativeSelectOption value="monthly">Monthly</NativeSelectOption>
-          <NativeSelectOption value="yearly">Yearly</NativeSelectOption>
-        </NativeSelect>
+        <Select defaultValue="monthly">
+          <SelectTrigger id="card-billing">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="monthly">Monthly</SelectItem>
+            <SelectItem value="yearly">Yearly</SelectItem>
+          </SelectContent>
+        </Select>
       </CardContent>
       <CardFooter className="gap-2">
         <Button size="sm">Manage subscription</Button>

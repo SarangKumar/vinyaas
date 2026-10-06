@@ -25,7 +25,7 @@ import { ThemeControls } from "./theme-controls";
 
 export function ThemesPlayground() {
   const [presetId, setPresetId] = useState<ThemePresetId>("default");
-  const [radius, setRadius] = useState<RadiusOptionValue>("0.5rem");
+  const [radius, setRadius] = useState<RadiusOptionValue>("0.75rem");
   const mode = useSiteColorScheme();
   usePrintFromScroll(true);
 
@@ -42,7 +42,7 @@ export function ThemesPlayground() {
       <PlaygroundContent>
         <PlaygroundHeader
           title="Themes"
-          description="Pick a preset and radius, then explore real compositions. Changes stay scoped to this playground."
+          description="Pick a preset and radius, then preview real UI. Changes stay on this page."
         />
         <ThemeControls
           presetId={presetId}

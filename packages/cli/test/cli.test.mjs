@@ -57,6 +57,7 @@ describe("vinyaas", () => {
     assert.match(result.stdout, /--help/);
     assert.match(result.stdout, /\binit\b/);
     assert.match(result.stdout, /\badd\b/);
+    assert.match(result.stdout, /\bcatalog\b/);
     assert.match(result.stdout, /\blist\b/);
     assert.match(result.stdout, /\bsearch\b/);
     assert.match(result.stdout, /\binfo\b/);
@@ -79,15 +80,18 @@ describe("vinyaas", () => {
     assert.match(add.stdout, /--cwd <path>/);
     assert.match(add.stdout, /--force/);
     assert.match(add.stdout, /--dry-run/);
+    assert.match(add.stdout, /--catalog <catalog>/);
     assert.match(add.stdout, /--category/);
     assert.match(list.stdout, /--category/);
     assert.match(search.stdout, /--category/);
     assert.match(add.stdout, /overwrite existing component files/i);
     assert.match(add.stdout, /\[name\.\.\.\]/);
-    assert.match(add.stdout, /vinyaas add button card/);
+    assert.match(add.stdout, /vinyaas add dialog card/);
+    assert.match(add.stdout, /vinyaas add --catalog form/);
     assert.match(add.stdout, /vinyaas add button --yes/);
     assert.match(add.stdout, /vinyaas add --category forms/);
     assert.match(add.stdout, /already-installed/i);
+    assert.match(add.stdout, /Catalog installs require an explicit --catalog/);
     assert.equal(list.exitCode, 0);
     assert.match(list.stdout, /--json/);
     assert.equal(search.exitCode, 0);
@@ -118,6 +122,13 @@ describe("vinyaas", () => {
 
     assert.notEqual(result.exitCode, 0);
     assert.match(result.stderr, /nope/);
+  });
+
+  it("suggests nearby commands for typos", async () => {
+    const result = await run(["docto"]);
+
+    assert.notEqual(result.exitCode, 0);
+    assert.match(result.stderr, /docto|doctor/i);
   });
 
   it("fails for an unknown option", async () => {

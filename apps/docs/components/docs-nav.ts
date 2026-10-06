@@ -1,6 +1,7 @@
 import {
   componentHref,
   components,
+  isNewComponent,
   type ComponentMeta,
 } from "@/components/component-meta";
 
@@ -19,6 +20,12 @@ export const componentsJsonPath = "/components-json";
 export const installationPath = "/installation";
 
 export const cliPath = "/cli";
+
+/** Named registry catalogs for discovery and bulk install. */
+export const catalogsPath = "/catalogs";
+
+/** Accessibility contract for registry components. */
+export const accessibilityPath = "/accessibility";
 
 /** Companion feature area (separate from registry UI components). */
 export const companionPath = "/companion";
@@ -60,8 +67,8 @@ export type DocsNavItem = {
   title: string;
   href: string;
   description?: string;
-  /** Subtle status mark (e.g. beta). */
-  indicator?: "beta";
+  /** Subtle status mark (beta feature, or newly released component). */
+  indicator?: "beta" | "new";
   /** Nested links. Prefer flat items — avoid third-level nesting. */
   children?: DocsNavItem[];
 };
@@ -79,6 +86,7 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
   return {
     title: component.name,
     href: componentHref(component.slug),
+    ...(isNewComponent(component) ? { indicator: "new" as const } : {}),
   };
 }
 
@@ -92,10 +100,20 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Components", href: componentsPath },
       { title: "Installation", href: installationPath },
       { title: "CLI", href: cliPath },
+      { title: "Catalogs", href: catalogsPath },
+      { title: "Accessibility", href: accessibilityPath },
       { title: "Theming", href: themingPath },
       { title: "Typeset", href: typesetPath },
       { title: "Changelog", href: changelogPath },
     ],
+  },
+  {
+    title: "COMPONENTS",
+    label: true,
+    layout: "names",
+    items: [...components]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(componentNavItem),
   },
   {
     title: "COMPANION",
@@ -110,14 +128,6 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Examples", href: companionExamplesPath },
       { title: "Gallery", href: companionGalleryPath },
     ],
-  },
-  {
-    title: "COMPONENTS",
-    label: true,
-    layout: "names",
-    items: [...components]
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(componentNavItem),
   },
   {
     title: "GET STARTED",

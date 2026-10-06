@@ -9,6 +9,7 @@ import { focusRing } from "@/components/focus-ring";
 import { Kbd } from "@/registry/new-york/ui/kbd";
 import {
   Command,
+  CommandFooter,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -25,161 +26,194 @@ type SearchPage = {
   title: string;
   href: string;
   description: string;
-  group: "Getting Started" | "Components";
+  group: "Pages" | "Components";
 };
 
-const pages: SearchPage[] = [
+export type DocsSearchPage = SearchPage;
+
+const docPages: SearchPage[] = [
+  {
+    title: "Home",
+    href: "/",
+    description: "Vinyaas homepage and component showcase.",
+    group: "Pages",
+  },
   {
     title: "Introduction",
     href: "/introduction",
     description: "What Vinyaas is and how the docs are organized.",
-    group: "Getting Started",
+    group: "Pages",
+  },
+  {
+    title: "Components",
+    href: "/components",
+    description: "Browse the full catalog of installable UI primitives.",
+    group: "Pages",
   },
   {
     title: "Installation",
     href: "/installation",
     description:
       "Choose Next.js, React + Vite, or React, then install Vinyaas as source.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Install with Next.js",
     href: "/installation/nextjs",
     description:
       "Install Vinyaas in a Next.js App Router project with fresh, existing, or shadcn-style setup paths.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Install with React + Vite",
     href: "/installation/vite",
     description:
       "Install Vinyaas in a Vite + React project with fresh, existing, or shadcn-style setup paths.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Install with React",
     href: "/installation/react",
     description:
       "Install Vinyaas in other React projects with fresh, existing, or shadcn-style setup paths.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "CLI",
     href: "/cli",
     description:
       "init, doctor, add, categories, status, list, search, and info for source installs.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Companions",
     href: "/companion",
     description:
-      "Meet Ember, Soul, and Moss — tiny Vinyaas companions separate from UI components.",
-    group: "Getting Started",
+      "Meet Ember, Soul, Moss, Flint, Bubble, Rime, Jab, and Volt — tiny Vinyaas companions separate from UI components.",
+    group: "Pages",
   },
   {
     title: "Companion Installation",
     href: "/companion/installation",
     description:
       "How companions will be installed. CLI companion commands are planned, not available yet.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "companion.json",
     href: "/companion/configuration",
     description:
       "Companion identity, animations, personality, capabilities, and interaction metadata.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Custom Companion",
     href: "/companion/custom",
     description:
       "Planned workflow for creating custom companions with assets and companion.json.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "components.json",
     href: "/components-json",
     description:
       "Local project config for style, aliases, and Tailwind paths used by vinyaas init and add.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Theming",
     href: "/theming",
     description:
       "CSS variables, semantic colors, radius, dark mode, and theme customization.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Themes playground",
     href: "/themes",
     description:
       "Visual theme playground: curated presets, radius, and real UI compositions.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Typeset",
     href: "/typeset",
     description:
       "Markdown-first content typography docs. Distinct from the Typography component.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Typeset playground",
     href: "/typeset/playground",
     description:
       "Experiment with measure, fonts, size, leading, and flow on Markdown-style content.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Package Import",
     href: "/package-import",
     description:
       "Import installed Vinyaas components via project aliases and local source paths.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Dark Mode",
     href: "/dark-mode",
     description:
       "Choose a framework, then enable light and dark themes with the class strategy.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Dark Mode with Next.js",
     href: "/dark-mode/nextjs",
     description: "Wire Vinyaas dark class tokens in a Next.js App Router app.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Dark Mode with React + Vite",
     href: "/dark-mode/vite",
     description: "Wire Vinyaas dark class tokens in a Vite + React app.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Dark Mode with React",
     href: "/dark-mode/react",
     description: "Wire Vinyaas dark class tokens in a generic React app.",
-    group: "Getting Started",
+    group: "Pages",
   },
   {
     title: "Changelog",
     href: "/changelog",
-    description: "What shipped in v0.1, v1.0.0, v1.1.0, and v1.2.0.",
-    group: "Getting Started",
+    description: "What shipped through v1.3.0.",
+    group: "Pages",
   },
-  ...components.map((component) => ({
-    title: component.name,
-    href: componentHref(component.slug),
-    description: component.description,
-    group: "Components" as const,
-  })),
+  {
+    title: "Catalogs",
+    href: "/catalogs",
+    description: "Named registry catalogs for discovery and bulk install.",
+    group: "Pages",
+  },
+  {
+    title: "Accessibility",
+    href: "/accessibility",
+    description: "Release-wide accessibility contract for registry components.",
+    group: "Pages",
+  },
 ];
 
-const groupOrder = ["Components", "Getting Started"] as const;
+/** Component results — one entry per registry metadata item (no manual duplicates). */
+const componentPages: SearchPage[] = components.map((component) => ({
+  title: component.name,
+  href: componentHref(component.slug),
+  description: component.description,
+  group: "Components" as const,
+}));
+
+const pages: SearchPage[] = [...docPages, ...componentPages];
+
+/** Full search index (pages + metadata-backed components). Exported for tests. */
+export const docsSearchPages: readonly DocsSearchPage[] = pages;
+
+const groupOrder = ["Pages", "Components"] as const;
 
 type DocsSearchContextValue = {
   open: boolean;
@@ -264,7 +298,16 @@ export function DocsSearchField() {
     >
       <SearchIcon className="size-4 shrink-0" />
       <span className="truncate">Search documentation...</span>
-      <Kbd className="ml-auto">{hint}</Kbd>
+      <Kbd className="ml-auto gap-1">
+        {hint === "⌘K" ? (
+          <>
+            <span>⌘</span>
+            <span>K</span>
+          </>
+        ) : (
+          hint
+        )}
+      </Kbd>
     </button>
   );
 }
@@ -285,9 +328,64 @@ export function DocsSearchIcon() {
 }
 
 function matchesQuery(page: SearchPage, query: string) {
-  const haystack = `${page.title} ${page.description}`.toLowerCase();
+  const title = page.title.toLowerCase();
+  const description = page.description.toLowerCase();
 
-  return haystack.includes(query);
+  return title.includes(query) || description.includes(query);
+}
+
+/**
+ * Lower score = stronger match. Title matches outrank description-only hits.
+ * 0 exact title · 1 title prefix · 2 title contains · 3 description only
+ */
+export function searchRank(
+  page: Pick<SearchPage, "title" | "description">,
+  query: string,
+): number {
+  const title = page.title.toLowerCase();
+  const description = page.description.toLowerCase();
+  const q = query.trim().toLowerCase();
+
+  if (!q) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  if (title === q) {
+    return 0;
+  }
+
+  if (title.startsWith(q)) {
+    return 1;
+  }
+
+  if (title.includes(q)) {
+    return 2;
+  }
+
+  if (description.includes(q)) {
+    return 3;
+  }
+
+  return Number.POSITIVE_INFINITY;
+}
+
+export function rankSearchPages(
+  pagesToRank: SearchPage[],
+  query: string,
+): SearchPage[] {
+  const q = query.trim().toLowerCase();
+
+  return [...pagesToRank]
+    .filter((page) => matchesQuery(page, q))
+    .sort((a, b) => {
+      const rankDiff = searchRank(a, q) - searchRank(b, q);
+
+      if (rankDiff !== 0) {
+        return rankDiff;
+      }
+
+      return pagesToRank.indexOf(a) - pagesToRank.indexOf(b);
+    });
 }
 
 function SearchDialog() {
@@ -295,9 +393,7 @@ function SearchDialog() {
   const { open, setOpen } = useDocsSearch();
   const [query, setQuery] = useState("");
   const normalized = query.trim().toLowerCase();
-  const results = normalized
-    ? pages.filter((page) => matchesQuery(page, normalized))
-    : [];
+  const results = normalized ? rankSearchPages(pages, normalized) : pages;
 
   return (
     <Dialog
@@ -310,25 +406,21 @@ function SearchDialog() {
         }
       }}
     >
-      <DialogContent className="border-border bg-secondary max-w-lg gap-0 overflow-hidden border p-0 shadow-sm">
+      <DialogContent className="border-border/80 bg-popover max-w-lg gap-0 overflow-hidden rounded-xl border p-0 shadow-md">
         <DialogTitle className="sr-only">Search documentation</DialogTitle>
         <DialogDescription className="sr-only">
           Search pages and components, then press Enter to open a result.
         </DialogDescription>
         <Command
           onQueryChange={setQuery}
-          className="bg-secondary rounded-none border-0 shadow-none"
+          className="bg-popover rounded-none border-0 shadow-none"
         >
           <CommandInput
             aria-label="Search documentation"
             placeholder="Search documentation..."
           />
           <CommandList>
-            {normalized === "" ? (
-              <p className="text-muted-foreground px-3 py-8 text-center text-sm">
-                Search components, docs and pages
-              </p>
-            ) : results.length === 0 ? (
+            {normalized !== "" && results.length === 0 ? (
               <div className="px-3 py-8 text-center text-sm">
                 <p>No results found.</p>
                 <p className="text-muted-foreground">
@@ -355,7 +447,7 @@ function SearchDialog() {
                           router.push(page.href);
                         }}
                       >
-                        {page.group === "Getting Started" ? (
+                        {page.group === "Pages" ? (
                           <BookIcon className="text-muted-foreground size-4 shrink-0" />
                         ) : (
                           <ComponentIcon className="text-muted-foreground size-4 shrink-0" />
@@ -376,6 +468,24 @@ function SearchDialog() {
               })
             )}
           </CommandList>
+          <CommandFooter>
+            <span className="inline-flex items-center gap-1.5">
+              <Kbd className="gap-1">
+                <span>Tab</span>
+                <span>↑</span>
+                <span>↓</span>
+              </Kbd>
+              <span>Navigate</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Kbd>↵</Kbd>
+              <span>Open</span>
+            </span>
+            <span className="ml-auto inline-flex items-center gap-1.5">
+              <Kbd>Esc</Kbd>
+              <span>Close</span>
+            </span>
+          </CommandFooter>
         </Command>
       </DialogContent>
     </Dialog>

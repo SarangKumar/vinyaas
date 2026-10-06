@@ -47,6 +47,11 @@ import {
   snapshotFiles,
   type FileSnapshot,
 } from "../lib/transaction/files.ts";
+import {
+  formatCatalogInstallPrompt,
+  getComponentCatalog,
+  listComponentCatalogs,
+} from "../lib/registry/catalogs.ts";
 import { RegistryError } from "../lib/registry/client.ts";
 import {
   getRegistryCatalog,
@@ -54,7 +59,7 @@ import {
 } from "../lib/registry/discover.ts";
 import { resolveRegistryGraph } from "../lib/registry/resolve.ts";
 import { formatUnknownComponentMessage } from "../lib/registry/suggest.ts";
-import type { RegistryItem } from "../lib/registry/types.ts";
+import type { ComponentCatalog, RegistryItem } from "../lib/registry/types.ts";
 
 const missingConfigMessage = [
   "components.json was not found.",
@@ -76,6 +81,10 @@ export function registerAddCommand(program: Command): void {
       "Resolve the install plan and print it without writing files or installing packages.",
     )
     .option(
+      "--catalog <catalog>",
+      "Install every component in a named registry catalog.",
+    )
+    .option(
       "--category <category>",
       "Install every component in a registry category.",
     )
@@ -84,17 +93,24 @@ export function registerAddCommand(program: Command): void {
       "after",
       [
         "",
+        "Usage:",
+        "  $ vinyaas add <component...>",
+        "  $ vinyaas add --catalog <catalog>",
+        "",
         "Examples:",
         "  $ vinyaas add button",
-        "  $ vinyaas add button card",
+        "  $ vinyaas add dialog card",
+        "  $ vinyaas add --catalog form",
+        "  $ vinyaas add --catalog dashboard --dry-run",
         "  $ vinyaas add button --yes",
         "  $ vinyaas add button --dry-run",
         "  $ vinyaas add --category forms",
         "  $ vinyaas add --category forms --yes",
         "  $ vinyaas add button --force",
-        "  $ vinyaas add button card --dry-run",
         "",
-        "Pass component names for a precise install. Use --category to install a group.",
+        "Component names always install components.",
+        "Catalog installs require an explicit --catalog option.",
+        "Catalog installs confirm with [Y/n] unless --yes is set.",
         "Multi-component and category installs confirm unless --yes is set.",
         "Already-installed components are skipped unless --force is set.",
       ].join("\n"),
@@ -106,6 +122,7 @@ export function registerAddCommand(program: Command): void {
           cwd?: string;
           force?: boolean;
           dryRun?: boolean;
+          catalog?: string;
           category?: string;
           yes?: boolean;
         },
@@ -119,6 +136,7 @@ export function registerAddCommand(program: Command): void {
             force: options.force === true,
             dryRun: options.dryRun === true,
             yes: options.yes === true,
+            ...(options.catalog ? { catalog: options.catalog } : {}),
             ...(options.category ? { category: options.category } : {}),
             env: process.env,
           });
@@ -168,6 +186,7 @@ export async function executeAdd({
   force = false,
   dryRun = false,
   yes = false,
+  catalog,
   category,
   from = process.cwd(),
   env = process.env,
@@ -182,6 +201,7 @@ export async function executeAdd({
   force?: boolean;
   dryRun?: boolean;
   yes?: boolean;
+  catalog?: string;
   category?: string;
   from?: string;
   env?: Record<string, string | undefined>;
@@ -197,6 +217,7 @@ export async function executeAdd({
     force,
     dryRun,
     yes,
+    ...(catalog ? { catalog } : {}),
     ...(category ? { category } : {}),
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
@@ -213,6 +234,7 @@ export async function runAdd({
   force = false,
   dryRun = false,
   yes = false,
+  catalog,
   category,
   env = process.env,
   fetch: fetchImpl,
@@ -226,6 +248,7 @@ export async function runAdd({
   force?: boolean;
   dryRun?: boolean;
   yes?: boolean;
+  catalog?: string;
   category?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
@@ -236,15 +259,19 @@ export async function runAdd({
   const selection = await resolveAddTargetNames({
     name,
     names,
+    catalog,
     category,
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
   });
 
+  const catalogInstall = selection.catalogInstall;
+  const targetNames = selection.names;
+
   const resolved = await resolveAdd({
     cwd,
-    name: selection.names[0] ?? name,
-    names: selection.names,
+    name: targetNames[0] ?? name,
+    names: targetNames,
     force,
     env,
     ...(fetchImpl ? { fetch: fetchImpl } : {}),
@@ -257,6 +284,14 @@ export async function runAdd({
         dependencyInstall: resolved.dependencyInstall,
         requested: resolved.requested,
         registryDependencies: resolved.registryDependencies,
+        ...(catalogInstall
+          ? {
+              catalog: {
+                id: catalogInstall.id,
+                description: catalogInstall.description,
+              },
+            }
+          : {}),
       }),
     );
     return resolved.plan;
@@ -274,38 +309,64 @@ export async function runAdd({
     return resolved.plan;
   }
 
+  const isCatalogInstall = catalogInstall !== undefined;
   const needsConfirmation =
     !yes &&
-    (selection.categoryInstall !== undefined || selection.names.length > 1);
+    (isCatalogInstall ||
+      selection.categoryInstall !== undefined ||
+      targetNames.length > 1);
 
   if (needsConfirmation) {
-    console.log(
-      selection.categoryInstall
-        ? formatCategoryInstallPrompt({
-            plan: resolved.plan,
-            dependencyInstall: resolved.dependencyInstall,
-            requested: resolved.requested,
-            registryDependencies: resolved.registryDependencies,
-            category: selection.categoryInstall,
-          })
-        : formatAddInstallPrompt({
-            plan: resolved.plan,
-            dependencyInstall: resolved.dependencyInstall,
-            requested: resolved.requested,
-            registryDependencies: resolved.registryDependencies,
-          }),
-    );
-    const accepted = await confirm("Continue? (y/N)");
+    if (catalogInstall) {
+      console.log(
+        formatCatalogInstallPrompt({
+          catalog: catalogInstall,
+          components: targetNames,
+        }),
+      );
+      const accepted = await confirm("Install these components? [Y/n]", {
+        defaultYes: true,
+      });
 
-    if (!accepted) {
-      console.log("Cancelled. No changes made.");
-      return {
-        ...resolved.plan,
-        entries: [],
-        items: [],
-        dependencies: [],
-        devDependencies: [],
-      };
+      if (!accepted) {
+        console.log("Cancelled. No changes made.");
+        return {
+          ...resolved.plan,
+          entries: [],
+          items: [],
+          dependencies: [],
+          devDependencies: [],
+        };
+      }
+    } else {
+      console.log(
+        selection.categoryInstall
+          ? formatCategoryInstallPrompt({
+              plan: resolved.plan,
+              dependencyInstall: resolved.dependencyInstall,
+              requested: resolved.requested,
+              registryDependencies: resolved.registryDependencies,
+              category: selection.categoryInstall,
+            })
+          : formatAddInstallPrompt({
+              plan: resolved.plan,
+              dependencyInstall: resolved.dependencyInstall,
+              requested: resolved.requested,
+              registryDependencies: resolved.registryDependencies,
+            }),
+      );
+      const accepted = await confirm("Continue? (y/N)");
+
+      if (!accepted) {
+        console.log("Cancelled. No changes made.");
+        return {
+          ...resolved.plan,
+          entries: [],
+          items: [],
+          dependencies: [],
+          devDependencies: [],
+        };
+      }
     }
   }
 
@@ -371,19 +432,69 @@ export async function runAdd({
 async function resolveAddTargetNames({
   name,
   names,
+  catalog,
   category,
   env,
   fetch: fetchImpl,
 }: {
   name: string;
   names?: readonly string[];
+  catalog?: string;
   category?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
-}): Promise<{ names: string[]; categoryInstall?: string }> {
+}): Promise<{
+  names: string[];
+  categoryInstall?: string;
+  catalogInstall?: ComponentCatalog;
+}> {
   const explicit = uniqueNames(
     names && names.length > 0 ? names : name.trim() ? [name] : [],
   );
+  const catalogId = catalog?.trim() ?? "";
+
+  if (catalogId && explicit.length > 0) {
+    throw new CliError(
+      [
+        "Pass either component names or --catalog, not both.",
+        "",
+        "Examples:",
+        "  $ vinyaas add button",
+        "  $ vinyaas add --catalog form",
+      ].join("\n"),
+    );
+  }
+
+  if (catalogId) {
+    if (category) {
+      console.warn("Ignoring --category because --catalog was provided.");
+    }
+
+    const resolvedCatalog = await getComponentCatalog({
+      id: catalogId,
+      env,
+      ...(fetchImpl ? { fetch: fetchImpl } : {}),
+    });
+    const components = uniqueNames(resolvedCatalog.components);
+
+    if (components.length === 0) {
+      throw new CliError(
+        [
+          `Catalog "${resolvedCatalog.id}" has no installable components.`,
+          "",
+          "No files were changed.",
+        ].join("\n"),
+      );
+    }
+
+    return {
+      names: components,
+      catalogInstall: {
+        ...resolvedCatalog,
+        components,
+      },
+    };
+  }
 
   if (explicit.length > 0) {
     if (category) {
@@ -398,10 +509,11 @@ async function resolveAddTargetNames({
   if (!category) {
     throw new CliError(
       [
-        "Specify component names or a category.",
+        "Specify component names, --catalog, or --category.",
         "",
         "Examples:",
         "  $ vinyaas add button",
+        "  $ vinyaas add --catalog form",
         "  $ vinyaas add --category forms",
       ].join("\n"),
     );
@@ -442,7 +554,7 @@ export async function resolveAdd({
   );
 
   if (requested.length === 0) {
-    throw new CliError("Specify component names or a category.");
+    throw new CliError("Specify component names, --catalog, or --category.");
   }
 
   const config = await readComponentsConfig(cwd);
@@ -640,19 +752,53 @@ async function unknownComponentsWithSuggestions(
     fetch?: typeof fetch;
   },
 ): Promise<RegistryError> {
-  let catalogNames: string[] = [];
+  let componentNames: string[] = [];
 
   try {
     const catalog = await getRegistryCatalog({
       env,
       ...(fetchImpl ? { fetch: fetchImpl } : {}),
     });
-    catalogNames = catalog.items.map((item) => item.name);
+    componentNames = catalog.items.map((item) => item.name);
   } catch {
-    catalogNames = [];
+    componentNames = [];
   }
 
-  const message = formatUnknownComponentMessage(names, catalogNames);
+  const unique = [...new Set(names.map((name) => name.trim()).filter(Boolean))];
+  const message = formatUnknownComponentMessage(unique, componentNames);
+
+  if (unique.length === 1) {
+    const candidate = unique[0] ?? "";
+    let matchingCatalog: ComponentCatalog | null = null;
+
+    try {
+      const catalogs = await listComponentCatalogs({
+        env,
+        ...(fetchImpl ? { fetch: fetchImpl } : {}),
+      });
+      matchingCatalog =
+        catalogs.find((entry) => entry.id === candidate.toLowerCase()) ?? null;
+    } catch {
+      matchingCatalog = null;
+    }
+
+    if (matchingCatalog) {
+      return new RegistryError(
+        [
+          `"${candidate}" is not an installable component.`,
+          "",
+          `Did you mean to install the "${matchingCatalog.id}" catalog?`,
+          "",
+          "Run:",
+          "",
+          `  vinyaas add --catalog ${matchingCatalog.id}`,
+          "",
+          "No files were changed.",
+        ].join("\n"),
+      );
+    }
+  }
+
   return new RegistryError(`${message}\n\nNo files were changed.`);
 }
 

@@ -18,7 +18,7 @@ export function PlaygroundContent({
       data-playground-content
       className={cn(
         "mx-auto flex w-full min-w-0 flex-col gap-5 md:gap-6",
-        "max-w-3xl lg:max-w-5xl xl:max-w-[1400px] 2xl:max-w-[1600px]",
+        "md:max-w-3xl lg:max-w-none xl:max-w-[1600px]",
         className,
       )}
     >
@@ -39,7 +39,7 @@ export function PlaygroundHeader({
       <h1 className="text-foreground shrink-0 text-[1.75rem] leading-tight font-semibold tracking-tight sm:text-3xl">
         {title}
       </h1>
-      <p className="text-muted-foreground max-w-md text-sm leading-6 text-pretty sm:max-w-xs sm:pb-0.5 sm:text-right sm:leading-6">
+      <p className="text-muted-foreground max-w-md text-base leading-7 text-pretty sm:max-w-xs sm:pb-0.5 sm:text-right">
         {description}
       </p>
     </header>

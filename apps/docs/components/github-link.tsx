@@ -94,16 +94,8 @@ export function GitHubLink({ variant = "default" }: GitHubLinkProps) {
         aria-label={label}
         title="GitHub"
         data-github-link="mobile"
-        className={`text-sidebar-foreground hover:bg-muted hover:text-foreground flex min-h-14 w-full flex-col justify-center gap-1 rounded-md px-3 py-3 text-left ${focusRing}`}
+        className={`text-sidebar-foreground hover:bg-muted hover:text-foreground flex min-h-14 w-full flex-col justify-center gap-1 rounded-md px-3 py-1 text-left ${focusRing}`}
       >
-        <span className="text-foreground flex items-center gap-2.5 text-base font-medium">
-          <StarIcon className="size-5" />
-          {stars !== null ? (
-            <span className="tabular-nums">{formatStarCount(stars)} stars</span>
-          ) : (
-            <span>GitHub</span>
-          )}
-        </span>
         <span className="text-muted-foreground flex items-center gap-2 text-sm">
           <GitHubIcon className="size-5" />
           View on GitHub
@@ -130,7 +122,7 @@ export function GitHubLink({ variant = "default" }: GitHubLinkProps) {
         {stars !== null ? (
           <span
             aria-hidden="true"
-            className="hidden tabular-nums text-sm min-[360px]:inline"
+            className="hidden text-sm tabular-nums min-[360px]:inline"
           >
             {formatStarCount(stars)}
           </span>

@@ -23,13 +23,17 @@ describe("NativeSelect", () => {
     expect(select).toHaveAttribute("data-slot", "native-select");
     expect(select).toHaveClass(
       "h-9",
+      "min-h-9",
+      "max-h-9",
+      "box-border",
       "w-full",
       "min-w-0",
       "text-sm",
+      "leading-none",
       "pl-3",
       "pr-9",
-      "py-2",
     );
+    expect(select).not.toHaveClass("py-2");
     expect(select).toHaveClass("appearance-none");
     expect(select.className).toContain("[-webkit-appearance:none]");
     expect(select).not.toHaveClass("max-w-sm");
@@ -173,5 +177,35 @@ describe("NativeSelect", () => {
     expect(
       select.parentElement?.querySelector("[data-slot='native-select-icon']"),
     ).toBeNull();
+  });
+
+  it("does not override native Tab or arrow keyboard handling", () => {
+    render(
+      <div>
+        <button type="button">Before</button>
+        <label htmlFor="locale">Locale</label>
+        <NativeSelect id="locale" defaultValue="en">
+          <NativeSelectOption value="en">English</NativeSelectOption>
+          <NativeSelectOption value="hi">Hindi</NativeSelectOption>
+        </NativeSelect>
+        <button type="button">After</button>
+      </div>,
+    );
+
+    const select = screen.getByRole("combobox", { name: "Locale" });
+    expect(select.tagName).toBe("SELECT");
+    expect(select).toHaveClass("focus-visible:ring-2");
+
+    select.focus();
+    expect(select).toHaveFocus();
+
+    // Native selects keep browser Tab/Arrow behavior — we must not preventDefault.
+    const tab = fireEvent.keyDown(select, { key: "Tab" });
+    expect(tab).toBe(true);
+    const arrow = fireEvent.keyDown(select, { key: "ArrowDown" });
+    expect(arrow).toBe(true);
+
+    fireEvent.change(select, { target: { value: "hi" } });
+    expect(select).toHaveValue("hi");
   });
 });

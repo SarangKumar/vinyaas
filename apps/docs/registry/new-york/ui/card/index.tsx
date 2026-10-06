@@ -20,7 +20,7 @@ export function Card({
     <div
       data-size={size}
       className={cn(
-        "border-border bg-card text-card-foreground flex flex-col rounded-md border",
+        "bg-card text-card-foreground border-border flex flex-col rounded-md border",
         cardSize[size],
         className,
       )}

@@ -12,6 +12,7 @@ import SpinnerPage from "./spinner/page";
 import KbdPage from "./kbd/page";
 import ProgressPage from "./progress/page";
 import NativeSelectPage from "./native-select/page";
+import SelectPage from "./select/page";
 import PopoverPage from "./popover/page";
 import RadioGroupPage from "./radio-group/page";
 import SeparatorPage from "./separator/page";
@@ -129,6 +130,12 @@ const pages = [
     title: "Native Select",
     command: "npx vinyaas add native-select",
     api: "multiple",
+  },
+  {
+    load: SelectPage,
+    title: "Select",
+    command: "npx vinyaas add select",
+    api: "onValueChange",
   },
   {
     load: ToastPage,
@@ -284,8 +291,11 @@ describe("composed examples", () => {
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Recent activity")).toBeInTheDocument();
     expect(screen.getAllByText("v1.0.0").length).toBeGreaterThan(0);
-    expect(document.body.textContent).not.toContain(
+    expect(document.body.textContent).toContain(
       'from "@/components/ui/select"',
+    );
+    expect(document.body.textContent).not.toContain(
+      'from "@/components/ui/native-select"',
     );
   });
 
@@ -490,14 +500,15 @@ describe("composed examples", () => {
     expect(screen.getAllByText("Esc").length).toBeGreaterThan(0);
     expect(document.body.textContent).toMatch(/visual only/i);
   });
-  it("renders spinner action preview and marker separator feed", async () => {
+  it("renders spinner preview and marker separator feed", async () => {
     renderDocs(await SpinnerPage());
-    expect(
-      screen.getAllByRole("button", { name: "Save changes" }).length,
-    ).toBeGreaterThan(0);
+    expect(screen.getAllByRole("status").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("heading", { name: "In a button" }),
     ).toHaveAttribute("id", "in-a-button");
+    expect(
+      screen.getAllByRole("button", { name: "Save changes" }).length,
+    ).toBeGreaterThan(0);
 
     renderDocs(await MarkerPage());
     expect(

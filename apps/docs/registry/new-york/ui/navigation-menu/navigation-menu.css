@@ -1,0 +1,36 @@
+@keyframes vinyaas-navigation-menu-in {
+  from {
+    opacity: 0.92;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vinyaas-navigation-menu-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+}
+
+.vinyaas-navigation-menu-in {
+  animation: vinyaas-navigation-menu-in 120ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vinyaas-navigation-menu-out {
+  animation: vinyaas-navigation-menu-out 100ms ease-in forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyaas-navigation-menu-in,
+  .vinyaas-navigation-menu-out {
+    animation: none;
+  }
+}

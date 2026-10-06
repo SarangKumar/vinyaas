@@ -87,3 +87,20 @@ export interface RegistryCatalog {
   style: string;
   items: RegistryCatalogItem[];
 }
+
+/**
+ * Named component group for `vinyaas catalog` / `vinyaas add <catalog>`.
+ * Members are registry component IDs only — no duplicated metadata.
+ */
+export interface ComponentCatalog {
+  id: string;
+  name: string;
+  description: string;
+  components: string[];
+}
+
+/** Built payload written to `public/r/catalogs/index.json`. */
+export interface ComponentCatalogIndex {
+  type: "catalogs";
+  items: ComponentCatalog[];
+}

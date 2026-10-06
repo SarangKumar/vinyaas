@@ -13,7 +13,7 @@ function renderWithStore(ui: React.ReactElement) {
 }
 
 describe("Companion landing page", () => {
-  it("showcases Ember, Soul, and Moss as a product feature area", () => {
+  it("showcases Ember, Soul, Moss, Flint, Bubble, Rime, Jab, Volt, and Drake with spawn and know-more actions", () => {
     renderWithStore(<CompanionPage />);
 
     expect(
@@ -22,28 +22,34 @@ describe("Companion landing page", () => {
         name: "Meet Vinyaas Companions",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Ember" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Soul" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Moss" })).toBeInTheDocument();
-    expect(screen.queryByRole("img", { name: "Skeleton" })).toBeNull();
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(screen.getByText(/Beta — unstable/i)).toBeInTheDocument();
+    expect(screen.getByText(/experimental docs feature/i)).toBeInTheDocument();
+    for (const name of [
+      "Ember",
+      "Soul",
+      "Moss",
+      "Flint",
+      "Bubble",
+      "Rime",
+      "Jab",
+      "Volt",
+      "Drake",
+    ]) {
+      expect(screen.getByRole("img", { name })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name })).toBeInTheDocument();
+    }
     expect(
-      screen.getByRole("heading", { name: "Ember" }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Soul" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Moss" })).toBeInTheDocument();
-    expect(document.querySelector("[data-companion-card-grid]")?.className).toContain(
-      "sm:grid-cols-2",
+      screen.getAllByRole("link", { name: /Open .* detail page/i }).length,
+    ).toBeGreaterThanOrEqual(9);
+    expect(
+      document.querySelector('[data-companion-surface-id="docs-demo-perch"]'),
+    ).toBeTruthy();
+    expect(screen.getByText(/Landing surfaces/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Animations" })).toHaveAttribute(
+      "href",
+      "/companion/animations",
     );
-    expect(
-      screen.getByRole("link", { name: "Installation" }),
-    ).toHaveAttribute("href", "/companion/installation");
-    expect(
-      screen.getByRole("link", { name: "companion.json" }),
-    ).toHaveAttribute("href", "/companion/configuration");
-    expect(
-      screen.getByRole("link", { name: "Custom Companion" }),
-    ).toHaveAttribute("href", "/companion/custom");
-    expect(document.body.textContent).not.toMatch(/\bAI\b/);
     expect(metadata.title).toBe("Companions");
     expect(metadata.alternates).toMatchObject({ canonical: "/companion" });
   });

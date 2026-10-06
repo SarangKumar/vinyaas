@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   Command,
   CommandEmpty,
+  CommandFooter,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -65,8 +66,8 @@ describe("Command", () => {
     const button = screen.getByRole("option", { name: "Button" });
     const dialog = screen.getByRole("option", { name: "Dialog" });
 
-    expect(button).toHaveAttribute("tabIndex", "0");
-    expect(dialog).toHaveAttribute("tabIndex", "0");
+    expect(button).toHaveAttribute("tabIndex", "-1");
+    expect(dialog).toHaveAttribute("tabIndex", "-1");
     expect(screen.getByRole("option", { name: "Input" })).toHaveAttribute(
       "tabIndex",
       "-1",
@@ -132,15 +133,118 @@ describe("Command", () => {
     );
 
     expect(
-      screen.getByRole("combobox", { name: "Search" }).parentElement
-        ?.parentElement,
+      screen.getByRole("combobox", { name: "Search" }).closest(".max-w-sm"),
     ).toHaveClass(
       "max-w-sm",
       "border",
+      "border-border/80",
       "bg-popover",
-      "rounded-lg",
-      "shadow-[0_14px_32px_-10px_oklch(0_0_0/0.28)]",
-      "dark:shadow-[0_14px_32px_-10px_oklch(0_0_0/0.55)]",
+      "rounded-xl",
+      "shadow-md",
+      "dark:shadow-[0_14px_32px_-10px_oklch(0_0_0/0.4)]",
     );
+  });
+
+  it("renders the search field as an inset bordered box", () => {
+    render(
+      <Command>
+        <CommandInput aria-label="Search" />
+        <CommandList>
+          <CommandItem value="Button">Button</CommandItem>
+        </CommandList>
+      </Command>,
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search" });
+    const field = input.parentElement;
+    const inset = field?.parentElement;
+
+    expect(inset).toHaveClass("p-px");
+    expect(field).toHaveClass("border", "border-border/80", "bg-muted/40");
+    expect(field?.className).not.toMatch(/border-b\b/);
+  });
+
+  it("renders a separated footer strip", () => {
+    render(
+      <Command>
+        <CommandInput aria-label="Search" />
+        <CommandList>
+          <CommandItem value="Button">Button</CommandItem>
+        </CommandList>
+        <CommandFooter>Navigate</CommandFooter>
+      </Command>,
+    );
+
+    const footer = document.querySelector("[data-slot=command-footer]");
+    expect(footer).toHaveTextContent("Navigate");
+    expect(footer).toHaveClass("border-t", "bg-muted/30");
+  });
+
+  it("supports Tab and Shift+Tab through results without trapping focus", () => {
+    const calls: string[] = [];
+
+    render(
+      <div>
+        <Command>
+          <CommandInput aria-label="Search" />
+          <CommandList>
+            <CommandItem value="Button" onClick={() => calls.push("button")}>
+              Button
+            </CommandItem>
+            <CommandItem value="Dialog" onClick={() => calls.push("dialog")}>
+              Dialog
+            </CommandItem>
+          </CommandList>
+        </Command>
+        <button type="button">After</button>
+      </div>,
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search" });
+    const button = screen.getByRole("option", { name: "Button" });
+    const dialog = screen.getByRole("option", { name: "Dialog" });
+    const after = screen.getByRole("button", { name: "After" });
+
+    fireEvent.keyDown(input, { key: "Tab" });
+    expect(button).toHaveFocus();
+    expect(button).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(button, { key: "Tab" });
+    expect(dialog).toHaveFocus();
+
+    fireEvent.keyDown(dialog, { key: "Tab", shiftKey: true });
+    expect(button).toHaveFocus();
+
+    fireEvent.keyDown(button, { key: "Tab", shiftKey: true });
+    expect(input).toHaveFocus();
+
+    fireEvent.keyDown(input, { key: "Home" });
+    fireEvent.keyDown(input, { key: "End" });
+    expect(dialog).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(input, { key: "Tab" });
+    fireEvent.keyDown(dialog, { key: "Tab" });
+    after.focus();
+    expect(after).toHaveFocus();
+  });
+
+  it("keeps empty results keyboard-safe", () => {
+    render(
+      <Command>
+        <CommandInput aria-label="Search" />
+        <CommandList>
+          <CommandEmpty>No matching pages.</CommandEmpty>
+          <CommandItem value="Button">Button</CommandItem>
+        </CommandList>
+      </Command>,
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search" });
+    fireEvent.change(input, { target: { value: "missing" } });
+    // No results: Tab is not intercepted so focus can leave the command.
+    const tabbed = fireEvent.keyDown(input, { key: "Tab" });
+    expect(tabbed).toBe(true);
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    expect(screen.queryByRole("option")).toBeNull();
   });
 });

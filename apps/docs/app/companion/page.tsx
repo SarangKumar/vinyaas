@@ -5,12 +5,18 @@ import { CompanionCard } from "@/components/companion/companion-card";
 import { companionCatalog } from "@/components/companion/catalog";
 import { DocsArticle } from "@/components/docs-article";
 import {
+  companionAnimationsPath,
   companionCustomPath,
   companionInstallationPath,
   companionJsonPath,
 } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 import { pageMetadata } from "@/lib/page-metadata";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/registry/new-york/ui/alert";
 
 export const metadata: Metadata = pageMetadata({
   title: "Companions",
@@ -24,30 +30,135 @@ const sectionHeading =
 const body = "text-foreground text-base leading-7";
 const linkClass = `text-primary underline underline-offset-4 ${focusRing}`;
 
+function InfoIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" strokeLinecap="round" />
+      <path d="M12 8h.01" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function CompanionPage() {
   return (
     <DocsArticle
       title="Meet Vinyaas Companions"
       description="Tiny customizable companions that bring your workspace to life."
     >
+      <Alert>
+        <InfoIcon />
+        <AlertTitle>Beta — unstable</AlertTitle>
+        <AlertDescription>
+          Companions are an experimental docs feature. APIs, clips, progression,
+          and behavior may change or break in future versions.
+        </AlertDescription>
+      </Alert>
+
       <section className="flex flex-col gap-4">
         <h2 id="showcase" className={sectionHeading}>
           Built-in companions
         </h2>
         <p className={body}>
-          Companions are a separate Vinyaas feature from registry UI components.
-          Each companion has its own metadata, pixel assets, animation sets, and
-          interaction definitions. The runtime and install CLI are still ahead —
-          this page is the product showcase.
+          Spawn one companion of each type onto the page. Use{" "}
+          <strong className="font-medium">Know more</strong> for a Pokédex-style
+          sheet (Bond, unlocked moves, type). Fatal falls puff the companion out
+          — Bond stats stay in local storage.
         </p>
         <div
           data-companion-card-grid
-          className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2"
+          className="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2"
         >
           {companionCatalog.map((entry) => (
-            <CompanionCard key={entry.meta.id} entry={entry} size={128} />
+            <CompanionCard key={entry.meta.id} entry={entry} size={112} />
           ))}
         </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="surfaces" className={sectionHeading}>
+          Landing surfaces
+        </h2>
+        <p className={body}>
+          Companions land on declared surfaces and interactive chrome — buttons,
+          selects, code blocks, cards, and playground panels. Dropping from more
+          than 70vh above the surface beneath causes a fall, then a puff on
+          impact. Perched companions scroll with their surface and tip off when
+          it hits the top of the viewport.
+        </p>
+        <div
+          data-companion-surface=""
+          data-companion-surface-id="docs-demo-perch"
+          className="border-border bg-card text-card-foreground rounded-md border p-5"
+        >
+          <p className={body}>
+            Drop a companion on this panel to perch. Nested controls inherit the
+            surface from this parent.
+          </p>
+          <button
+            type="button"
+            className={`border-border bg-background mt-3 inline-flex h-8 items-center rounded-md border px-3 text-sm ${focusRing}`}
+          >
+            Surface action
+          </button>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="interactions" className={sectionHeading}>
+          Interactions
+        </h2>
+        <ul className={`${body} list-disc space-y-2 pl-5`}>
+          <li>
+            <strong className="font-medium">Spawn</strong> — primary button on
+            each card (one of each type on screen).
+          </li>
+          <li>
+            <strong className="font-medium">Know more</strong> — opens the
+            companion sheet with Bond and move unlocks (Ember first).
+          </li>
+          <li>
+            <strong className="font-medium">Idle</strong> — after ~30 seconds
+            without interaction, ambient idle/sleep may fire.
+          </li>
+          <li>
+            <strong className="font-medium">Flint</strong> — rock-type pebble
+            with a spark still stuck in its cracks.
+          </li>
+          <li>
+            <strong className="font-medium">Bubble</strong> — water-type float
+            with a shiny soap-bubble look.
+          </li>
+          <li>
+            <strong className="font-medium">Rime</strong> — ice-type fox with a
+            glittering tail tip.
+          </li>
+          <li>
+            <strong className="font-medium">Jab</strong> — fighting-type spar
+            buddy in red gloves.
+          </li>
+          <li>
+            <strong className="font-medium">Volt</strong> — electric-type mouse
+            with spark cheeks.
+          </li>
+          <li>
+            <strong className="font-medium">Drake</strong> — dragon-type
+            hatchling with stubby wings.
+          </li>
+        </ul>
+        <p className={body}>
+          Full clip and move tables live on{" "}
+          <Link href={companionAnimationsPath} className={linkClass}>
+            Animations
+          </Link>
+          .
+        </p>
       </section>
 
       <section className="flex flex-col gap-4">

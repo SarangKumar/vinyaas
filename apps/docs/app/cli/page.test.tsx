@@ -13,7 +13,7 @@ function renderWithStore(ui: React.ReactElement) {
 }
 
 describe("CLI docs", () => {
-  it("renders the v1.2.0 CLI guide with setup, install, and discover sections", () => {
+  it("renders the v1.3.0 CLI guide with setup, install, and discover sections", () => {
     renderWithStore(<CliPage />);
 
     expect(
@@ -37,6 +37,9 @@ describe("CLI docs", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "--dry-run" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Catalog installation" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Category installation" }),
@@ -68,6 +71,11 @@ describe("CLI docs", () => {
     expect(body).toContain("vinyaas add button card badge");
     expect(body).toContain("vinyaas add button card --yes");
     expect(body).toContain("vinyaas add button --dry-run");
+    expect(body).toContain("vinyaas add --catalog form");
+    expect(body).toContain("vinyaas add --catalog dashboard --dry-run");
+    expect(body).toContain("vinyaas catalog list");
+    expect(body).toContain("vinyaas catalog info form");
+    expect(body).toContain("explicit");
     expect(body).toContain("vinyaas add --category forms");
     expect(body).toContain("vinyaas add --category forms --yes");
     expect(body).toContain("vinyaas status");
@@ -80,7 +88,7 @@ describe("CLI docs", () => {
     expect(body).toContain("vinyaas info button");
     expect(body).toContain("REGISTRY_BASE_PATH");
     expect(body).toContain("vinyaas --version");
-    expect(body).toContain("v1.2.0");
+    expect(body).toContain("v1.3.0");
     expect(body).not.toContain("dist/index.js vinyaas");
     expect(body).not.toMatch(/node packages\/cli\/dist\/index\.js vinyaas/);
     expect(body).not.toContain("vinyaas vinyaas");
@@ -93,7 +101,7 @@ describe("CLI docs", () => {
       screen.getByRole("link", { name: "components.json" }),
     ).toHaveAttribute("href", "/components-json");
     expect(metadata.title).toBe("CLI");
-    expect(metadata.description).toMatch(/v1\.2\.0/);
+    expect(metadata.description).toMatch(/v1\.3\.0/);
     expect(metadata.alternates).toMatchObject({ canonical: "/cli" });
   });
 });

@@ -23,11 +23,12 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { CompanionProvider } from "@/components/companion/companion-provider";
 import { Toaster } from "@/registry/new-york/ui/toast";
 
-const headerLink = `cursor-pointer rounded-md px-2 py-1 text-sm text-sidebar-foreground hover:text-foreground ${focusRing}`;
+const headerLink = `text-foreground hover:text-foreground/80 cursor-pointer rounded-md px-2 py-1 text-sm ${focusRing}`;
 
 /**
- * Site chrome. Mobile header: Menu · Vinyaas · Search · Theme · GitHub.
- * Desktop keeps the full site nav + search field + GitHub/Portfolio.
+ * Site chrome. Below lg: Menu · Home · Search · Theme · GitHub.
+ * At lg+: full site nav links + search field + GitHub/Portfolio.
+ * Nav links and the hamburger share the lg breakpoint so they never overlap.
  */
 export function DocsShell({ children }: { children: React.ReactNode }) {
   const portfolio = portfolioUrl();
@@ -36,39 +37,54 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
     <DocsSearchProvider>
       <CompanionProvider>
         <div className="bg-background text-foreground flex h-full min-h-0 flex-col">
-          <header className="border-border bg-background relative z-[60] h-12 shrink-0 border-b print:hidden">
+          <header className="bg-background relative z-[60] h-12 shrink-0 print:hidden">
             <div className="grid h-full grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-3 sm:gap-3 sm:px-4">
               <div
                 data-header-section="start"
                 className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-3"
               >
                 <DocsMobileNav />
-                <Link
-                  href={homePath}
-                  className={`text-foreground inline-flex shrink-0 items-center rounded-md text-sm font-medium ${focusRing}`}
-                >
-                  Vinyaas
-                </Link>
                 <nav
                   aria-label="Site"
-                  className="hidden shrink-0 items-center gap-1 md:flex"
+                  className="flex shrink-0 items-center gap-1"
                 >
-                  <Link href={introductionPath} className={headerLink}>
+                  <Link href={homePath} className={headerLink}>
+                    Home
+                  </Link>
+                  <Link
+                    href={introductionPath}
+                    className={`${headerLink} hidden lg:inline-flex`}
+                  >
                     Docs
                   </Link>
-                  <Link href={componentsPath} className={headerLink}>
+                  <Link
+                    href={componentsPath}
+                    className={`${headerLink} hidden lg:inline-flex`}
+                  >
                     Components
                   </Link>
-                  <Link href={companionPath} className={headerLink}>
+                  <Link
+                    href={companionPath}
+                    className={`${headerLink} hidden lg:inline-flex`}
+                  >
                     Companion
                   </Link>
-                  <Link href={installationPath} className={headerLink}>
+                  <Link
+                    href={installationPath}
+                    className={`${headerLink} hidden lg:inline-flex`}
+                  >
                     Installation
                   </Link>
-                  <Link href={themesPath} className={headerLink}>
+                  <Link
+                    href={themesPath}
+                    className={`${headerLink} hidden lg:inline-flex`}
+                  >
                     Themes
                   </Link>
-                  <Link href={typesetPlaygroundPath} className={headerLink}>
+                  <Link
+                    href={typesetPlaygroundPath}
+                    className={`${headerLink} hidden lg:inline-flex`}
+                  >
                     Typeset
                   </Link>
                 </nav>

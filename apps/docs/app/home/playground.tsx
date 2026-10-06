@@ -1,54 +1,68 @@
-import { AccountSettingsBlock } from "@/app/home/blocks/account-settings-block";
-import { ChartBlock } from "@/app/home/blocks/chart-block";
-import { ChatBlock } from "@/app/home/blocks/chat-block";
-import { CompanionBlock } from "@/app/home/blocks/companion-block";
-import { FilterBlock } from "@/app/home/blocks/filter-block";
-import { InvoiceBlock } from "@/app/home/blocks/invoice-block";
-import { LoginBlock } from "@/app/home/blocks/login-block";
-import { MediaControlsBlock } from "@/app/home/blocks/media-controls-block";
-import { MessagesBlock } from "@/app/home/blocks/messages-block";
-import { NotificationSettingsBlock } from "@/app/home/blocks/notification-settings-block";
-import { ProfileBlock } from "@/app/home/blocks/profile-block";
-import { ProjectBlock } from "@/app/home/blocks/project-block";
-import { SecurityBlock } from "@/app/home/blocks/security-block";
-import { SignupBlock } from "@/app/home/blocks/signup-block";
-import { TableBlock } from "@/app/home/blocks/table-block";
-import { TabsSettingsBlock } from "@/app/home/blocks/tabs-settings-block";
-import { UploadBlock } from "@/app/home/blocks/upload-block";
+"use client";
+
+import {
+  SHOWCASE_BLOCK_COUNT,
+  distributeShowcaseBlocks,
+  filterShowcaseBlocks,
+  showcaseBlocks,
+} from "@/app/home/showcase-blocks";
+import {
+  playgroundShowcaseColumnStackClassName,
+  playgroundShowcaseGridClassName,
+} from "@/components/playground/playground-layout";
+import { useShowcaseColumnCount } from "@/components/playground/use-showcase-column-count";
 
 /**
- * Centered masonry for the main showcase cards.
- * Side skeleton rails are absolute (see PlaygroundSideRails) and sit
- * outside this max-width band at ≥2200px.
+ * Homepage showcase — same pattern as ui.shadcn.com:
+ * a responsive CSS grid of flex columns (not one card per cell).
  *
- * Layout at ultra-wide:
- *   fade ← 2 skeleton cols | 5-column masonry | 2 skeleton cols → fade
- *
- * 1 · md:2 · lg:3 · min-1400:4 · min-1900:5
+ * Column stacks are rebuilt for the active breakpoint (1→2→3→4→5) so
+ * cards redistribute instead of wrapping a spare column under the grid.
+ * Cards keep `min-w-0` / `max-w-full` so demos shrink inside each track.
  */
-export function Playground() {
+export function Playground({
+  filter = null,
+}: {
+  /** Optional id/slug filter. Empty/absent = show the full showcase. */
+  filter?: string | null;
+}) {
+  const columnCount = useShowcaseColumnCount();
+  const visible = filterShowcaseBlocks(showcaseBlocks, filter);
+  const columns = distributeShowcaseBlocks(visible, columnCount);
+
   return (
     <div
       data-playground
-      className="relative z-10 mx-auto w-full columns-1 gap-(--gap) **:data-[slot=card]:w-full min-[1400px]:columns-4! min-[1900px]:columns-5! md:max-w-3xl md:columns-2 lg:max-w-none lg:columns-3 xl:max-w-[1600px] 2xl:max-w-[1900px]"
+      data-playground-grid
+      data-playground-mode="showcase"
+      data-showcase-count={visible.length}
+      data-showcase-columns={columnCount}
+      data-showcase-filter={filter?.trim() ? filter.trim() : "none"}
+      className={playgroundShowcaseGridClassName}
     >
-      <ChartBlock />
-      <LoginBlock />
-      <CompanionBlock />
-      <MediaControlsBlock />
-      <ChatBlock />
-      <UploadBlock />
-      <FilterBlock />
-      <SignupBlock />
-      <TabsSettingsBlock />
-      <MessagesBlock />
-      <ProfileBlock />
-      <TableBlock />
-      <InvoiceBlock />
-      <ProjectBlock />
-      <SecurityBlock />
-      <NotificationSettingsBlock />
-      <AccountSettingsBlock />
+      {visible.length === 0 ? (
+        <p
+          data-showcase-empty
+          className="text-muted-foreground col-span-full py-16 text-center text-sm"
+        >
+          No matching showcase cards.
+        </p>
+      ) : (
+        columns.map((blocks, index) => (
+          <div
+            key={index}
+            data-playground-column={index}
+            className={playgroundShowcaseColumnStackClassName}
+          >
+            {blocks.map(({ id, Block }) => (
+              <Block key={id} />
+            ))}
+          </div>
+        ))
+      )}
+      <span className="sr-only" data-showcase-total={SHOWCASE_BLOCK_COUNT}>
+        {SHOWCASE_BLOCK_COUNT} showcase cards available
+      </span>
     </div>
   );
 }

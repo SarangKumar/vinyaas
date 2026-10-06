@@ -1,0 +1,21 @@
+{
+  "type": "catalogs",
+  "items": [
+    {
+      "id": "navigation",
+      "name": "Navigation",
+      "description": "Navigation and command patterns for application shells.",
+      "components": [
+        "breadcrumb",
+        "tabs",
+        "dropdown-menu",
+        "command",
+        "combobox",
+        "sidebar",
+        "sheet",
+        "navigation-menu",
+        "pagination"
+      ]
+    }
+  ]
+}

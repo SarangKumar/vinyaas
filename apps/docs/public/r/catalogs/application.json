@@ -1,0 +1,34 @@
+{
+  "type": "catalogs",
+  "items": [
+    {
+      "id": "application",
+      "name": "Application",
+      "description": "A starter set of application-shell and content primitives.",
+      "components": [
+        "command",
+        "combobox",
+        "alert-dialog",
+        "dialog",
+        "sheet",
+        "dropdown-menu",
+        "navigation-menu",
+        "popover",
+        "tooltip",
+        "tabs",
+        "card",
+        "badge",
+        "breadcrumb",
+        "resizable",
+        "sidebar",
+        "drag-and-drop",
+        "pagination",
+        "data-table",
+        "calendar",
+        "date-picker",
+        "empty-state",
+        "form"
+      ]
+    }
+  ]
+}

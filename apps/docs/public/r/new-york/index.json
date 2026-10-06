@@ -16,6 +16,13 @@
       "category": "feedback"
     },
     {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "description": "A modal confirmation dialog for important or destructive actions.",
+      "docs": "https://vinyaas.vercel.app/components/alert-dialog",
+      "category": "feedback"
+    },
+    {
       "name": "aspect-ratio",
       "type": "registry:ui",
       "description": "A container that preserves a fixed width-to-height aspect ratio.",
@@ -58,6 +65,13 @@
       "category": "forms"
     },
     {
+      "name": "calendar",
+      "type": "registry:ui",
+      "description": "An accessible month calendar for selecting and displaying dates.",
+      "docs": "https://vinyaas.vercel.app/components/calendar",
+      "category": "forms"
+    },
+    {
       "name": "card",
       "type": "registry:ui",
       "description": "A bordered container for related content.",
@@ -79,6 +93,13 @@
       "category": "forms"
     },
     {
+      "name": "combobox",
+      "type": "registry:ui",
+      "description": "A searchable selection control for filtering and choosing from options.",
+      "docs": "https://vinyaas.vercel.app/components/combobox",
+      "category": "forms"
+    },
+    {
       "name": "command",
       "type": "registry:ui",
       "description": "A searchable list for pages and actions.",
@@ -86,11 +107,32 @@
       "category": "navigation"
     },
     {
+      "name": "data-table",
+      "type": "registry:ui",
+      "description": "A dashboard table with search, sorting, selection, column visibility, and pagination.",
+      "docs": "https://vinyaas.vercel.app/components/data-table",
+      "category": "data-display"
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "description": "A button-triggered calendar popover for choosing a single date.",
+      "docs": "https://vinyaas.vercel.app/components/date-picker",
+      "category": "forms"
+    },
+    {
       "name": "dialog",
       "type": "registry:ui",
       "description": "A composable dialog component for confirmations, forms, and interactive workflows.",
       "docs": "https://vinyaas.vercel.app/components/dialog",
       "category": "feedback"
+    },
+    {
+      "name": "drag-and-drop",
+      "type": "registry:ui",
+      "description": "Sortable and reorderable drag-and-drop for lists, cards, and boards.",
+      "docs": "https://vinyaas.vercel.app/components/drag-and-drop",
+      "category": "layout"
     },
     {
       "name": "drawer",
@@ -107,10 +149,24 @@
       "category": "feedback"
     },
     {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "description": "A composable empty state for lists, tables, and dashboard panels.",
+      "docs": "https://vinyaas.vercel.app/components/empty-state",
+      "category": "feedback"
+    },
+    {
       "name": "file-upload",
       "type": "registry:ui",
       "description": "A native file picker that also accepts a drag and drop.",
       "docs": "https://vinyaas.vercel.app/components/file-upload",
+      "category": "forms"
+    },
+    {
+      "name": "form",
+      "type": "registry:ui",
+      "description": "Accessible field structure for labels, descriptions, and validation messages.",
+      "docs": "https://vinyaas.vercel.app/components/form",
       "category": "forms"
     },
     {
@@ -170,6 +226,20 @@
       "category": "forms"
     },
     {
+      "name": "navigation-menu",
+      "type": "registry:ui",
+      "description": "A composable site navigation menu with rich mega-menu content panels.",
+      "docs": "https://vinyaas.vercel.app/components/navigation-menu",
+      "category": "navigation"
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "description": "Composable page navigation with previous, next, page links, and ellipsis.",
+      "docs": "https://vinyaas.vercel.app/components/pagination",
+      "category": "navigation"
+    },
+    {
       "name": "popover",
       "type": "registry:ui",
       "description": "A floating panel with interactive content.",
@@ -191,6 +261,13 @@
       "category": "forms"
     },
     {
+      "name": "resizable",
+      "type": "registry:ui",
+      "description": "Resizable panel layouts with accessible drag handles for dashboards.",
+      "docs": "https://vinyaas.vercel.app/components/resizable",
+      "category": "layout"
+    },
+    {
       "name": "scroll-area",
       "type": "registry:ui",
       "description": "A native scroll container with a thin scrollbar.",
@@ -198,11 +275,32 @@
       "category": "layout"
     },
     {
+      "name": "select",
+      "type": "registry:ui",
+      "description": "A custom select with grouped options, keyboard navigation, and accessible listbox behavior.",
+      "docs": "https://vinyaas.vercel.app/components/select",
+      "category": "forms"
+    },
+    {
       "name": "separator",
       "type": "registry:ui",
       "description": "A horizontal or vertical divider between content.",
       "docs": "https://vinyaas.vercel.app/components/separator",
       "category": "layout"
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "description": "A side modal for settings, details, filters, and mobile navigation.",
+      "docs": "https://vinyaas.vercel.app/components/sheet",
+      "category": "feedback"
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "description": "Composable dashboard sidebar with expanded, collapsed, and mobile navigation.",
+      "docs": "https://vinyaas.vercel.app/components/sidebar",
+      "category": "navigation"
     },
     {
       "name": "skeleton",

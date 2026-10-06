@@ -1,14 +1,11 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { CompanionPreview } from "./companion-preview";
 import { CompanionCard } from "./companion-card";
 import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { CompanionSprite } from "./companion-sprite";
-import {
-  companionCatalog,
-  normalizeAnimationClip,
-} from "./catalog";
+import { companionCatalog, normalizeAnimationClip } from "./catalog";
 import {
   companionFloorY,
   findPerchLandingY,
@@ -34,7 +31,7 @@ describe("CompanionPreview", () => {
 });
 
 describe("CompanionCard", () => {
-  it("shows only name and interaction count", () => {
+  it("shows name, type pill, and separate spawn / detail actions when hosted", () => {
     const ember = companionCatalog.find((entry) => entry.meta.id === "ember");
     expect(ember).toBeTruthy();
 
@@ -43,9 +40,13 @@ describe("CompanionCard", () => {
     const card = document.querySelector('[data-companion-card="ember"]');
     expect(card).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Ember" })).toBeInTheDocument();
-    expect(screen.getByText(/17 interactions/)).toBeInTheDocument();
-    expect(screen.queryByText(ember!.meta.description)).toBeNull();
-    expect(screen.queryByText("playful")).toBeNull();
+    expect(screen.getByText(/^fire$/i)).toBeInTheDocument();
+    expect(screen.getByText(/\d+ moves/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Open Ember detail page/i }),
+    ).toHaveAttribute("href", "/companion/ember");
+    expect(screen.queryByText(ember!.meta.description)).toBeTruthy();
+    expect(screen.queryByText(/How moves fire/i)).toBeNull();
   });
 
   it("renders Moss showcase metadata", () => {
@@ -66,25 +67,32 @@ describe("CompanionBlock", () => {
     expect(
       screen.getByRole("heading", { name: "Companion" }),
     ).toBeInTheDocument();
-    expect(document.querySelector("[data-companion-home-preview]")).toBeTruthy();
+    expect(
+      document.querySelector("[data-companion-home-preview]"),
+    ).toBeTruthy();
     expect(document.querySelector("[data-play-block]")).toBeTruthy();
     expect(screen.getByRole("img", { name: "Ember" })).toBeInTheDocument();
     expect(screen.queryByRole("img", { name: "Soul" })).toBeNull();
     expect(screen.queryByRole("img", { name: "Moss" })).toBeNull();
     expect(document.body.textContent).toContain("A tiny playful flame spirit.");
-    expect(screen.getByRole("link", { name: "Meet companions" })).toHaveAttribute(
-      "href",
-      "/companion",
-    );
+    expect(
+      screen.getByRole("link", { name: "Meet companions" }),
+    ).toHaveAttribute("href", "/companion");
   });
 });
 
 describe("companion catalog", () => {
-  it("loads Ember, Soul, and Moss metadata with fall interaction", () => {
+  it("loads Ember, Soul, Moss, Flint, Bubble, Rime, Jab, Volt, and Drake metadata with fall interaction", () => {
     expect(companionCatalog.map((entry) => entry.meta.id)).toEqual([
       "ember",
       "soul",
       "moss",
+      "flint",
+      "bubble",
+      "rime",
+      "jab",
+      "volt",
+      "drake",
     ]);
 
     for (const entry of companionCatalog) {
@@ -97,6 +105,19 @@ describe("companion catalog", () => {
       expect(entry.clips.happy.frames.length).toBeGreaterThanOrEqual(2);
       expect(entry.clips.sleep.frames.length).toBeGreaterThanOrEqual(2);
       expect(entry.clips.fall.frames.length).toBeGreaterThanOrEqual(2);
+      expect(entry.clips.cry.frames.length).toBeGreaterThanOrEqual(2);
+
+      if (
+        entry.meta.id === "ember" ||
+        entry.meta.id === "moss" ||
+        entry.meta.id === "soul"
+      ) {
+        expect(entry.clips.blink?.frames.length).toBeGreaterThanOrEqual(2);
+        expect(entry.clips.celebrate?.frames.length).toBeGreaterThanOrEqual(2);
+        expect(entry.clips.dance?.frames.length).toBeGreaterThanOrEqual(2);
+        expect(entry.clips.surprise?.frames.length).toBeGreaterThanOrEqual(2);
+        expect(entry.clips.glow?.frames.length).toBeGreaterThanOrEqual(2);
+      }
 
       const idle = normalizeAnimationClip(entry.meta.animations.idle);
       expect(idle.frames.length).toBeGreaterThanOrEqual(2);
@@ -161,6 +182,7 @@ describe("companion runtime physics", () => {
 
   it("cycles ambient roles away from idle", () => {
     expect(pickAmbientRole("idle", () => 0.7)).toBe("happy");
+    expect(pickAmbientRole("idle", () => 0.8)).toBe("blink");
     expect(pickAmbientRole("idle", () => 0.9)).toBe("sleep");
     expect(pickAmbientRole("happy", () => 0.1)).toBe("idle");
   });

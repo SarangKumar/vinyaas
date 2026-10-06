@@ -31,7 +31,7 @@ export function TypesetPlayground() {
       <PlaygroundContent>
         <PlaygroundHeader
           title="Typeset"
-          description="Playground for measure, fonts, size, leading, and flow on Markdown-style content. For concepts and setup, see the Typeset docs."
+          description="Tune measure, fonts, size, and flow on samples. Setup is in the Typeset docs."
         />
         <TypesetControls
           config={config}

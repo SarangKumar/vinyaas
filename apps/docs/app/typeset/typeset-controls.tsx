@@ -3,7 +3,10 @@
 import {
   PlaygroundCopyCodeButton,
   PlaygroundOptionStrip,
+  playgroundDenseChromeInlineClassName,
+  playgroundDenseChromeShowClassName,
 } from "@/components/playground";
+import { cn } from "@/lib/utils";
 import { Button } from "@/registry/new-york/ui/button";
 import {
   Drawer,
@@ -17,9 +20,12 @@ import {
 } from "@/registry/new-york/ui/drawer";
 import { Label } from "@/registry/new-york/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/registry/new-york/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select";
 
 import {
   bodyFonts,
@@ -57,18 +63,18 @@ function Field({
       >
         {label}
       </Label>
-      <NativeSelect
-        id={id}
-        value={value}
-        aria-label={label}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        {options.map((option) => (
-          <NativeSelectOption key={option.value} value={option.value}>
-            {option.label}
-          </NativeSelectOption>
-        ))}
-      </NativeSelect>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger id={id} aria-label={label}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }
@@ -183,12 +189,15 @@ export function TypesetControls({
             type="button"
             size="sm"
             variant="outline"
-            className="md:hidden"
+            className={playgroundDenseChromeShowClassName}
           >
             Options
           </Button>
         </DrawerTrigger>
-        <DrawerContent side="bottom" className="gap-0 p-0 md:hidden">
+        <DrawerContent
+          side="bottom"
+          className={cn("gap-0 p-0", playgroundDenseChromeShowClassName)}
+        >
           <DrawerHeader className="border-border border-b px-5 py-4 text-left">
             <DrawerTitle>Typeset options</DrawerTitle>
             <DrawerDescription>
@@ -211,7 +220,7 @@ export function TypesetControls({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <div className="hidden min-w-0 flex-1 flex-wrap items-end gap-3 md:flex">
+      <div className={playgroundDenseChromeInlineClassName}>
         <TypesetFields config={config} onChange={onChange} />
       </div>
     </PlaygroundOptionStrip>

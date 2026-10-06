@@ -1,4 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
 
@@ -40,13 +42,19 @@ describe("Accordion", () => {
     expect(first).toHaveClass("hover:underline", "underline-offset-4");
     expect(
       document.getElementById(first.getAttribute("aria-controls")!),
-    ).toHaveAttribute("hidden");
+    ).toHaveAttribute("aria-hidden", "true");
+    expect(
+      document.getElementById(first.getAttribute("aria-controls")!),
+    ).toHaveAttribute("data-state", "closed");
 
     fireEvent.click(first);
     expect(first).toHaveAttribute("aria-expanded", "true");
     expect(
       document.getElementById(first.getAttribute("aria-controls")!),
-    ).not.toHaveAttribute("hidden");
+    ).toHaveAttribute("aria-hidden", "false");
+    expect(
+      document.getElementById(first.getAttribute("aria-controls")!),
+    ).toHaveAttribute("data-state", "open");
 
     fireEvent.click(second);
     expect(first).toHaveAttribute("aria-expanded", "false");
@@ -77,6 +85,53 @@ describe("Accordion", () => {
 
     fireEvent.click(first);
     expect(first).toHaveAttribute("data-state", "open");
+  });
+
+  it("animates panel height with accordion-down and accordion-up keyframes", () => {
+    const css = readFileSync(path.join(__dirname, "accordion.css"), "utf8");
+
+    expect(css).toContain("@keyframes vinyaas-accordion-down");
+    expect(css).toContain("@keyframes vinyaas-accordion-up");
+    expect(css).toContain("height: var(--vinyaas-accordion-content-height)");
+    expect(css).toContain("animation: vinyaas-accordion-down");
+    expect(css).toContain("animation: vinyaas-accordion-up");
+    expect(css).toContain("prefers-reduced-motion");
+    expect(css).toMatch(
+      /prefers-reduced-motion: reduce[\s\S]*\.vinyaas-accordion-down[\s\S]*animation:\s*none/,
+    );
+
+    render(
+      <Accordion>
+        <Items />
+      </Accordion>,
+    );
+
+    const first = screen.getByRole("button", { name: "First" });
+    const panel = document.getElementById(first.getAttribute("aria-controls")!);
+
+    expect(panel).toHaveClass("vinyaas-accordion-panel", "overflow-hidden");
+    expect(panel).toHaveAttribute("aria-hidden", "true");
+    expect(panel).toHaveAttribute("data-state", "closed");
+    expect(panel).not.toHaveClass(
+      "vinyaas-accordion-down",
+      "vinyaas-accordion-up",
+    );
+    expect(
+      panel?.style.getPropertyValue("--vinyaas-accordion-content-height"),
+    ).toMatch(/px$/);
+
+    fireEvent.click(first);
+
+    expect(panel).toHaveAttribute("aria-hidden", "false");
+    expect(panel).toHaveAttribute("data-state", "open");
+    expect(panel).toHaveClass("vinyaas-accordion-down");
+    expect(panel).not.toHaveClass("vinyaas-accordion-up");
+
+    fireEvent.click(first);
+
+    expect(panel).toHaveAttribute("data-state", "closed");
+    expect(panel).toHaveClass("vinyaas-accordion-up");
+    expect(panel).not.toHaveClass("vinyaas-accordion-down");
   });
 
   it("keeps several items open when type is multiple", () => {

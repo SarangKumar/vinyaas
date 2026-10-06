@@ -100,8 +100,8 @@ const DEFAULT_LIGHT: ThemeModeColors = {
   accent: "oklch(0.967 0.001 286.375)",
   accentForeground: "oklch(0.21 0.006 285.885)",
   destructive: "oklch(0.577 0.245 27.325)",
-  border: "oklch(0.92 0.004 286.32)",
-  input: "oklch(0.92 0.004 286.32)",
+  border: "oklch(0.945 0.003 286.32)",
+  input: "oklch(0.945 0.003 286.32)",
   ring: "oklch(0.705 0.015 286.067)",
   chart1: "oklch(0.32 0.012 285.885)",
   chart2: "oklch(0.42 0.01 285.885)",
@@ -127,8 +127,8 @@ const DEFAULT_DARK: ThemeModeColors = {
   accent: "oklch(0.274 0.006 286.033)",
   accentForeground: "oklch(0.985 0 0)",
   destructive: "oklch(0.704 0.191 22.216)",
-  border: "oklch(1 0 0 / 10%)",
-  input: "oklch(1 0 0 / 15%)",
+  border: "oklch(1 0 0 / 8%)",
+  input: "oklch(1 0 0 / 12%)",
   ring: "oklch(0.552 0.016 285.938)",
   chart1: "oklch(0.88 0.01 286.32)",
   chart2: "oklch(0.8 0.008 286.32)",
@@ -148,7 +148,7 @@ function cloneModeColors(colors: ThemeModeColors): ThemeModeColors {
 /** Fresh default theme matching the current Vinyaas consumer baseline. */
 export function createDefaultTheme(): ThemeConfig {
   return {
-    radius: "0.5rem",
+    radius: "0.75rem",
     fontSans: DEFAULT_FONT_SANS,
     fontMono: DEFAULT_FONT_MONO,
     light: cloneModeColors(DEFAULT_LIGHT),

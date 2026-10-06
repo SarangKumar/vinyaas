@@ -183,7 +183,7 @@ export default function IntroductionPage() {
               <h3 className="text-foreground text-base font-medium">
                 {item.title}
               </h3>
-              <p className="text-muted-foreground mt-2 text-sm leading-6">
+              <p className="text-muted-foreground mt-2 text-base leading-7">
                 {item.body}
               </p>
             </div>
@@ -239,7 +239,7 @@ export default function IntroductionPage() {
         </ol>
         <InstallCommand commands={cliCommands("init")} />
         <InstallCommand commands={cliCommands("add button")} />
-        <p className="text-muted-foreground text-sm leading-6">
+        <p className="text-muted-foreground text-base leading-7">
           Full steps live on the{" "}
           <Link
             href="/installation"

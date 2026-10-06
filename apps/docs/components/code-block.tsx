@@ -161,8 +161,8 @@ function LanguageTabs({
             aria-selected={active}
             className={
               active
-                ? `bg-muted text-foreground cursor-pointer rounded-md px-2 py-1 text-xs font-medium ${focusRing}`
-                : `text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-md px-2 py-1 text-xs ${focusRing}`
+                ? `cursor-pointer rounded-md bg-[color-mix(in_oklch,var(--syntax-plain)_10%,transparent)] px-2 py-1 text-xs font-medium text-[var(--syntax-plain)] ${focusRing}`
+                : `cursor-pointer rounded-md px-2 py-1 text-xs text-[var(--syntax-comment)] hover:bg-[color-mix(in_oklch,var(--syntax-plain)_6%,transparent)] hover:text-[var(--syntax-plain)] ${focusRing}`
             }
             onClick={() => onSelect(item)}
           >
@@ -173,6 +173,10 @@ function LanguageTabs({
     </div>
   );
 }
+
+/** Collapsed peek height; expanded code scrolls inside this max. */
+const collapsedMaxClass = "max-h-44";
+const expandedMaxClass = "max-h-80";
 
 function CodeFrame({
   code,
@@ -193,32 +197,46 @@ function CodeFrame({
 
   return (
     <div
+      data-code-frame
+      data-companion-surface=""
+      data-companion-surface-id="code-frame"
       className={
         attached
-          ? "border-border bg-card text-card-foreground overflow-hidden border-t"
-          : "border-border bg-card text-card-foreground overflow-hidden rounded-md border"
+          ? "overflow-hidden rounded-b-md border-t shadow-[inset_0_-12px_24px_-18px_oklch(0_0_0/0.28)]"
+          : "overflow-hidden rounded-md border shadow-[inset_0_-12px_24px_-18px_oklch(0_0_0/0.28)]"
       }
     >
-      <div className="border-border bg-muted/60 flex items-center justify-between gap-3 border-b px-3 py-1.5">
+      <div
+        data-code-chrome
+        className="flex items-center justify-between gap-3 border-b px-3 py-1.5"
+      >
         {leading ? (
           leading
         ) : language ? (
-          <span className="text-muted-foreground font-mono text-xs">
-            {language}
-          </span>
+          <span className="font-mono text-xs opacity-80">{language}</span>
         ) : (
           <span />
         )}
         <CopyButton value={code} />
       </div>
-      <div className="bg-card relative">
+      <div
+        data-code-panel={
+          collapsed ? "collapsed" : expanded ? "expanded" : "open"
+        }
+        className="relative"
+      >
         <pre
+          tabIndex={expanded ? 0 : undefined}
           className={
             collapsed
-              ? "m-0 max-h-72 overflow-hidden font-mono text-[13px] leading-6"
-              : numbered
-                ? "m-0 overflow-x-auto font-mono text-[13px] leading-6"
-                : "m-0 overflow-x-auto px-0 py-4 font-mono text-[13px] leading-6"
+              ? `m-0 ${collapsedMaxClass} overflow-hidden font-mono text-[13px] leading-6`
+              : expanded
+                ? numbered
+                  ? `m-0 ${expandedMaxClass} overflow-auto font-mono text-[13px] leading-6`
+                  : `m-0 ${expandedMaxClass} overflow-auto px-0 py-4 font-mono text-[13px] leading-6`
+                : numbered
+                  ? "m-0 overflow-x-auto font-mono text-[13px] leading-6"
+                  : "m-0 overflow-x-auto px-0 py-4 font-mono text-[13px] leading-6"
           }
         >
           {numbered ? (
@@ -232,33 +250,29 @@ function CodeFrame({
         {collapsed ? (
           <div
             data-code-fade
-            className="from-card absolute inset-x-0 bottom-0 flex h-24 items-end justify-center bg-gradient-to-t to-transparent pb-3"
+            className="pointer-events-none absolute inset-x-0 bottom-0 flex h-28 items-end justify-center pb-3"
           >
             <Button
               type="button"
               variant="outline"
               size="sm"
               aria-expanded={false}
+              aria-label="View full code example"
+              className="bg-background/90 pointer-events-auto shadow-sm"
               onClick={() => setExpanded(true)}
             >
               View code
             </Button>
           </div>
         ) : null}
+        {expanded ? (
+          <div
+            aria-hidden="true"
+            data-code-fade="expanded"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-8"
+          />
+        ) : null}
       </div>
-      {expanded ? (
-        <div className="border-border flex justify-center border-t px-4 py-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            aria-expanded
-            onClick={() => setExpanded(false)}
-          >
-            Hide code
-          </Button>
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -277,7 +291,7 @@ function NumberedSource({
       <div
         data-line-numbers
         aria-hidden="true"
-        className="text-muted-foreground border-border bg-muted sticky left-0 shrink-0 self-stretch border-r py-0 pr-2 pl-3 text-right tabular-nums select-none"
+        className="sticky left-0 shrink-0 self-stretch border-r py-0 pr-2 pl-3 text-right tabular-nums select-none"
       >
         {lines.map((_, index) => (
           <div key={index} className="h-6 leading-6">

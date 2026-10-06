@@ -267,6 +267,95 @@ export function formatRegistryValidationFailure(
   return ["Registry validation failed:", "", ...blocks].join("\n");
 }
 
+/** Ensures named catalogs only reference installable registry item IDs. */
+export function validateComponentCatalogs(
+  catalogs: readonly {
+    id: string;
+    name: string;
+    description: string;
+    components: readonly string[];
+  }[],
+  knownNames: ReadonlySet<string>,
+): RegistryValidationIssue[] {
+  const issues: RegistryValidationIssue[] = [];
+  const seenIds = new Set<string>();
+
+  for (const catalog of catalogs) {
+    const label = `catalog:${catalog.id || "(unnamed)"}`;
+
+    if (!catalog.id?.trim()) {
+      issues.push({
+        name: label,
+        field: "id",
+        message: "missing catalog id",
+      });
+    } else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(catalog.id)) {
+      issues.push({
+        name: label,
+        field: "id",
+        message: "id must be lowercase kebab-case",
+      });
+    } else if (seenIds.has(catalog.id)) {
+      issues.push({
+        name: label,
+        field: "id",
+        message: `duplicate catalog id "${catalog.id}"`,
+      });
+    } else {
+      seenIds.add(catalog.id);
+    }
+
+    if (!catalog.name?.trim()) {
+      issues.push({
+        name: label,
+        field: "name",
+        message: "missing name",
+      });
+    }
+
+    if (
+      !catalog.description?.trim() ||
+      catalog.description.trim().length < 16
+    ) {
+      issues.push({
+        name: label,
+        field: "description",
+        message: "description is missing or too short",
+      });
+    }
+
+    if (!catalog.components.length) {
+      issues.push({
+        name: label,
+        field: "components",
+        message: "catalog must include at least one component",
+      });
+    }
+
+    const duplicates = findDuplicates(catalog.components);
+
+    if (duplicates.length > 0) {
+      issues.push({
+        name: label,
+        field: "components",
+        message: `duplicate components: ${duplicates.join(", ")}`,
+      });
+    }
+
+    for (const componentId of catalog.components) {
+      if (!knownNames.has(componentId)) {
+        issues.push({
+          name: label,
+          field: "components",
+          message: `unknown component "${componentId}"`,
+        });
+      }
+    }
+  }
+
+  return issues;
+}
+
 function validatePackageList(
   itemName: string,
   field: "dependencies" | "devDependencies",

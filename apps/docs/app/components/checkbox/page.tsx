@@ -34,7 +34,7 @@ import { Label } from "@/components/ui/label";
 export function NotificationPreferences() {
   return (
     <form className="grid w-full max-w-md gap-4 text-left">
-      <p className="text-muted-foreground text-sm leading-6">
+      <p className="text-muted-foreground text-base leading-7">
         Choose which workspace email you want to receive.
       </p>
       <div className="grid gap-3">
@@ -42,7 +42,7 @@ export function NotificationPreferences() {
           <Checkbox id="product-updates" name="product-updates" defaultChecked />
           <div className="grid gap-1">
             <Label htmlFor="product-updates">Product updates</Label>
-            <p className="text-muted-foreground text-sm leading-6">
+            <p className="text-muted-foreground text-base leading-7">
               Release notes and occasional announcements.
             </p>
           </div>
@@ -51,7 +51,7 @@ export function NotificationPreferences() {
           <Checkbox id="billing" name="billing" defaultChecked />
           <div className="grid gap-1">
             <Label htmlFor="billing">Billing</Label>
-            <p className="text-muted-foreground text-sm leading-6">
+            <p className="text-muted-foreground text-base leading-7">
               Invoices, receipts, and payment failures.
             </p>
           </div>
@@ -60,7 +60,7 @@ export function NotificationPreferences() {
           <Checkbox id="security" name="security" defaultChecked />
           <div className="grid gap-1">
             <Label htmlFor="security">Security alerts</Label>
-            <p className="text-muted-foreground text-sm leading-6">
+            <p className="text-muted-foreground text-base leading-7">
               Sign-ins, password changes, and 2FA events.
             </p>
           </div>
@@ -69,7 +69,7 @@ export function NotificationPreferences() {
           <Checkbox id="marketing" name="marketing" />
           <div className="grid gap-1">
             <Label htmlFor="marketing">Marketing</Label>
-            <p className="text-muted-foreground text-sm leading-6">
+            <p className="text-muted-foreground text-base leading-7">
               Tips, webinars, and partner offers.
             </p>
           </div>
@@ -187,7 +187,7 @@ const inPractice: ComponentInPractice = {
     "Independent notification channels use checkboxes. Save writes the selection.",
   preview: (
     <form className="grid w-full max-w-md gap-4 text-left">
-      <p className="text-muted-foreground text-sm leading-6">
+      <p className="text-muted-foreground text-base leading-7">
         Choose which workspace email you want to receive.
       </p>
       <div className="grid gap-3">
@@ -199,7 +199,7 @@ const inPractice: ComponentInPractice = {
           />
           <div className="grid gap-1">
             <Label htmlFor="practice-product-updates">Product updates</Label>
-            <p className="text-muted-foreground text-sm leading-6">
+            <p className="text-muted-foreground text-base leading-7">
               Release notes and occasional announcements.
             </p>
           </div>
@@ -208,7 +208,7 @@ const inPractice: ComponentInPractice = {
           <Checkbox id="practice-billing" name="billing" defaultChecked />
           <div className="grid gap-1">
             <Label htmlFor="practice-billing">Billing</Label>
-            <p className="text-muted-foreground text-sm leading-6">
+            <p className="text-muted-foreground text-base leading-7">
               Invoices, receipts, and payment failures.
             </p>
           </div>
@@ -217,7 +217,7 @@ const inPractice: ComponentInPractice = {
           <Checkbox id="practice-security" name="security" defaultChecked />
           <div className="grid gap-1">
             <Label htmlFor="practice-security">Security alerts</Label>
-            <p className="text-muted-foreground text-sm leading-6">
+            <p className="text-muted-foreground text-base leading-7">
               Sign-ins, password changes, and 2FA events.
             </p>
           </div>
@@ -226,7 +226,7 @@ const inPractice: ComponentInPractice = {
           <Checkbox id="practice-marketing" name="marketing" />
           <div className="grid gap-1">
             <Label htmlFor="practice-marketing">Marketing</Label>
-            <p className="text-muted-foreground text-sm leading-6">
+            <p className="text-muted-foreground text-base leading-7">
               Tips, webinars, and partner offers.
             </p>
           </div>

@@ -22,9 +22,9 @@ export type ResolvedCompanionPersonality = {
 };
 
 const ENERGY_IDLE_MS: Record<CompanionEnergyPreference, number> = {
-  high: 2000,
-  balanced: 2800,
-  calm: 4500,
+  high: 30_000,
+  balanced: 30_000,
+  calm: 30_000,
 };
 
 export function resolveCompanionPersonality(
@@ -32,9 +32,7 @@ export function resolveCompanionPersonality(
   instanceId: string | null = null,
 ): ResolvedCompanionPersonality {
   const profile: CompanionInstanceProfile | undefined =
-    instanceId && config.instances
-      ? config.instances[instanceId]
-      : undefined;
+    instanceId && config.instances ? config.instances[instanceId] : undefined;
 
   const energy = profile?.behavior?.energy ?? "balanced";
 
@@ -44,8 +42,7 @@ export function resolveCompanionPersonality(
     personalityTraits: profile?.personalityTraits ?? config.personalityTraits,
     moodBias: profile?.moodBias ?? "neutral",
     energy,
-    idleTimeoutMs:
-      profile?.behavior?.idleTimeoutMs ?? ENERGY_IDLE_MS[energy],
+    idleTimeoutMs: profile?.behavior?.idleTimeoutMs ?? ENERGY_IDLE_MS[energy],
     cursorNearbyRadius: profile?.behavior?.cursorNearbyRadius ?? 120,
   };
 }
@@ -57,13 +54,17 @@ export function deriveCompanionMood(
   state: CompanionRuntimeState,
   personality: ResolvedCompanionPersonality,
 ): CompanionMood {
-  if (state === "sleeping") {
+  if (state === "sleeping" || state === "dead" || state === "puffing") {
     return "sleepy";
   }
   if (state === "falling") {
     return "excited";
   }
-  if (state === "landing" || state === "interacting") {
+  if (
+    state === "landing" ||
+    state === "interacting" ||
+    state === "respawning"
+  ) {
     if (personality.moodBias === "excited") {
       return "excited";
     }

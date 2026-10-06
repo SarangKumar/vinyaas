@@ -75,6 +75,27 @@ describe("DocsShell", () => {
     expect(
       await within(onThisPage).findByRole("link", { name: "Notes" }),
     ).toHaveAttribute("href", "#notes");
+    expect(document.querySelector("[data-docs-feature-card]")).toBeTruthy();
+    expect(
+      document.querySelector("[data-docs-feature-card]")?.textContent,
+    ).toContain("What's new");
+    expect(
+      document.querySelector("[data-docs-feature-card]")?.textContent,
+    ).toMatch(/Select|Resizable|Sidebar|Drag & Drop/);
+    expect(
+      document.querySelector("[data-docs-feature-card]")?.textContent,
+    ).toMatch(/Flint|Bubble|Rime|Jab|Volt/);
+    expect(
+      document.querySelector("[data-docs-feature-card]")?.textContent,
+    ).toContain("View changelog");
+    expect(document.querySelector("[data-docs-feature-card] ul")).toBeNull();
+    expect(document.querySelector("[data-docs-page-feedback]")).toBeNull();
+    const homeNav = within(
+      document.querySelector("[data-header-section='start']") as HTMLElement,
+    ).getByRole("link", { name: "Home" });
+    expect(homeNav.className).toContain("text-foreground");
+    const docsSidebarLink = screen.getAllByRole("link", { name: "Button" })[0]!;
+    expect(docsSidebarLink.className).toMatch(/text-foreground/);
     const start = document.querySelector("[data-header-section='start']");
     const end = document.querySelector("[data-header-section='end']");
 
@@ -82,17 +103,18 @@ describe("DocsShell", () => {
       throw new Error("Expected header sections");
     }
 
-    expect(
-      within(start).getByRole("link", { name: "Vinyaas" }),
-    ).toHaveAttribute("href", "/");
+    expect(within(start).getByRole("link", { name: "Home" })).toHaveAttribute(
+      "href",
+      "/",
+    );
     expect(within(start).getByRole("button", { name: "Menu" })).toHaveAttribute(
       "aria-expanded",
       "false",
     );
     expect(
-      within(start).getByRole("button", { name: "Menu" }).querySelector(
-        "[data-menu-icon]",
-      ),
+      within(start)
+        .getByRole("button", { name: "Menu" })
+        .querySelector("[data-menu-icon]"),
     ).toHaveAttribute("data-state", "closed");
     expect(within(start).getByRole("link", { name: "Docs" })).toHaveAttribute(
       "href",
@@ -119,6 +141,13 @@ describe("DocsShell", () => {
     expect(
       within(start).getByRole("link", { name: "Typeset" }),
     ).toHaveAttribute("href", "/typeset/playground");
+    expect(within(start).getByRole("link", { name: "Docs" })).toHaveClass(
+      "hidden",
+      "lg:inline-flex",
+    );
+    expect(
+      within(start).getByRole("button", { name: "Menu" }).parentElement,
+    ).toHaveClass("lg:hidden");
     expect(
       within(start).queryByRole("button", { name: "Search documentation" }),
     ).toBeNull();
@@ -138,12 +167,8 @@ describe("DocsShell", () => {
       ),
     ).toBeInTheDocument();
 
-    expect(
-      document.querySelector('[data-github-link="compact"]'),
-    ).toBeTruthy();
-    expect(
-      document.querySelector('[data-github-link="default"]'),
-    ).toBeTruthy();
+    expect(document.querySelector('[data-github-link="compact"]')).toBeTruthy();
+    expect(document.querySelector('[data-github-link="default"]')).toBeTruthy();
 
     const github = within(end).getAllByRole("link", { name: /GitHub/i })[0]!;
 

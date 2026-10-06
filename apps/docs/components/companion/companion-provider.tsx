@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useMemo,
   useState,
@@ -9,44 +10,76 @@ import {
 } from "react";
 
 import { CompanionHost } from "@/components/companion/companion-host";
-import { companionCatalog } from "@/components/companion/catalog";
+import { getCatalogEntry } from "@/components/companion/catalog";
+import {
+  findCompanionSpawnPosition,
+  MAX_COMPANION_INSTANCES_PER_TYPE,
+} from "@/components/companion/runtime/spawn";
 import type { CompanionRuntimeState } from "@/components/companion/runtime/state-machine";
 import type { CompanionVec2 } from "@/components/companion/runtime/physics";
 
 export type CompanionPosition = CompanionVec2;
 
+/**
+ * One live Companion instance (distinct from Companion type/species).
+ *
+ * Decision: puffing occupies a type slot until the puff finishes and the
+ * instance is removed. Dead companions do not respawn — spawn again from a card.
+ */
 export type CompanionInstanceState = {
-  /** Stable id for this website session instance. */
-  instanceId: string;
-  companionId: string;
+  /** Stable runtime id for this session instance. */
+  id: string;
+  /** Companion type / species id (ember, soul, moss, flint, …). */
+  type: string;
   /**
    * Optional personality instance profile id from companion.json `instances`.
    * Base species assets stay the same; only display/behavior overrides apply.
    */
   instanceProfileId: string | null;
-  /**
-   * Absolute fixed position. `null` uses the default bottom-right placement
-   * until the user drags the companion.
-   */
-  position: CompanionPosition | null;
-  /** Persisted runtime state machine value. */
-  runtimeState: CompanionRuntimeState;
+  x: number;
+  y: number;
+  state: CompanionRuntimeState;
+  surfaceId: string | null;
+  deadUntilMs: number | null;
 };
 
+export type SpawnCompanionResult =
+  | { ok: true; instance: CompanionInstanceState }
+  | {
+      ok: false;
+      reason: "unknown_type" | "limit";
+      type: string;
+      count: number;
+    };
+
 type CompanionContextValue = {
-  instance: CompanionInstanceState;
+  instances: CompanionInstanceState[];
+  /** Last rejected spawn — drives brief UI feedback on the companion card. */
+  spawnFeedback: { type: string; reason: "limit"; at: number } | null;
+  clearSpawnFeedback: () => void;
+  spawnCompanion: (type: string) => SpawnCompanionResult;
+  countByType: (type: string) => number;
+  patchInstance: (
+    id: string,
+    patch: Partial<
+      Pick<
+        CompanionInstanceState,
+        | "x"
+        | "y"
+        | "state"
+        | "instanceProfileId"
+        | "surfaceId"
+        | "deadUntilMs"
+        | "type"
+      >
+    >,
+  ) => void;
+  removeInstance: (id: string) => void;
+  /** @deprecated Prefer spawnCompanion — kept for older call sites. */
   setCompanionId: (companionId: string) => void;
   setInstanceProfileId: (instanceProfileId: string | null) => void;
   setPosition: (position: CompanionPosition) => void;
   setRuntimeState: (runtimeState: CompanionRuntimeState) => void;
-  patchInstance: (
-    patch: Partial<
-      Pick<
-        CompanionInstanceState,
-        "position" | "runtimeState" | "companionId" | "instanceProfileId"
-      >
-    >,
-  ) => void;
 };
 
 const CompanionContext = createContext<CompanionContextValue | null>(null);
@@ -56,60 +89,154 @@ function createInstanceId(): string {
     return crypto.randomUUID();
   }
 
-  return `companion-${Date.now()}`;
+  return `companion-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function viewportSize() {
+  if (typeof window === "undefined") {
+    return { width: 1024, height: 768 };
+  }
+  return { width: window.innerWidth, height: window.innerHeight };
 }
 
 /**
- * Keeps one companion instance alive for the docs shell lifetime.
+ * Keeps Companion instances alive for the docs shell lifetime.
  * In-memory only — no localStorage or sync.
- * Preserves companion id, position, and runtime state across navigations.
+ *
+ * Starts empty: companions appear when the user activates a Companion card.
  */
 export function CompanionProvider({ children }: { children: ReactNode }) {
-  const [instance, setInstance] = useState<CompanionInstanceState>(() => ({
-    instanceId: createInstanceId(),
-    companionId: companionCatalog[0]?.meta.id ?? "ember",
-    instanceProfileId: null,
-    position: null,
-    runtimeState: "idle",
-  }));
+  const [instances, setInstances] = useState<CompanionInstanceState[]>([]);
+  const [spawnFeedback, setSpawnFeedback] =
+    useState<CompanionContextValue["spawnFeedback"]>(null);
+
+  const countByType = useCallback(
+    (type: string) => instances.filter((item) => item.type === type).length,
+    [instances],
+  );
+
+  const spawnCompanion = useCallback(
+    (type: string): SpawnCompanionResult => {
+      const entry = getCatalogEntry(type);
+      if (!entry) {
+        return { ok: false, reason: "unknown_type", type, count: 0 };
+      }
+
+      const existing = instances.filter((item) => item.type === type);
+      if (existing.length >= MAX_COMPANION_INSTANCES_PER_TYPE) {
+        setSpawnFeedback({ type, reason: "limit", at: Date.now() });
+        return {
+          ok: false,
+          reason: "limit",
+          type,
+          count: existing.length,
+        };
+      }
+
+      const occupied = instances.map((item) => ({ x: item.x, y: item.y }));
+      const position = findCompanionSpawnPosition(viewportSize(), occupied);
+      const instance: CompanionInstanceState = {
+        id: createInstanceId(),
+        type: entry.meta.id,
+        instanceProfileId: null,
+        x: position.x,
+        y: position.y,
+        state: "idle",
+        surfaceId: null,
+        deadUntilMs: null,
+      };
+
+      setInstances((current) => [...current, instance]);
+      setSpawnFeedback(null);
+      return { ok: true, instance };
+    },
+    [instances],
+  );
+
+  const patchInstance = useCallback(
+    (
+      id: string,
+      patch: Partial<
+        Pick<
+          CompanionInstanceState,
+          | "x"
+          | "y"
+          | "state"
+          | "instanceProfileId"
+          | "surfaceId"
+          | "deadUntilMs"
+          | "type"
+        >
+      >,
+    ) => {
+      setInstances((current) =>
+        current.map((item) => (item.id === id ? { ...item, ...patch } : item)),
+      );
+    },
+    [],
+  );
+
+  const removeInstance = useCallback((id: string) => {
+    setInstances((current) => current.filter((item) => item.id !== id));
+  }, []);
+
+  const clearSpawnFeedback = useCallback(() => {
+    setSpawnFeedback(null);
+  }, []);
 
   const value = useMemo<CompanionContextValue>(
     () => ({
-      instance,
+      instances,
+      spawnFeedback,
+      clearSpawnFeedback,
+      spawnCompanion,
+      countByType,
+      patchInstance,
+      removeInstance,
+      // Legacy single-instance shims operate on the first instance when present.
       setCompanionId: (companionId: string) => {
-        setInstance((current) =>
-          current.companionId === companionId
-            ? current
-            : {
-                ...current,
-                companionId,
-                instanceProfileId: null,
-                runtimeState: "idle",
-              },
-        );
+        const result = spawnCompanion(companionId);
+        if (!result.ok && result.reason === "limit") {
+          return;
+        }
       },
       setInstanceProfileId: (instanceProfileId: string | null) => {
-        setInstance((current) =>
-          current.instanceProfileId === instanceProfileId
-            ? current
-            : { ...current, instanceProfileId },
-        );
+        setInstances((current) => {
+          if (current.length === 0) {
+            return current;
+          }
+          const [first, ...rest] = current;
+          return [{ ...first, instanceProfileId }, ...rest];
+        });
       },
       setPosition: (position: CompanionPosition) => {
-        setInstance((current) => ({ ...current, position }));
+        setInstances((current) => {
+          if (current.length === 0) {
+            return current;
+          }
+          const [first, ...rest] = current;
+          return [{ ...first, x: position.x, y: position.y }, ...rest];
+        });
       },
       setRuntimeState: (runtimeState: CompanionRuntimeState) => {
-        setInstance((current) =>
-          current.runtimeState === runtimeState
-            ? current
-            : { ...current, runtimeState },
-        );
-      },
-      patchInstance: (patch) => {
-        setInstance((current) => ({ ...current, ...patch }));
+        setInstances((current) => {
+          if (current.length === 0) {
+            return current;
+          }
+          const [first, ...rest] = current;
+          return [{ ...first, state: runtimeState }, ...rest];
+        });
       },
     }),
-    [instance],
+    [
+      instances,
+      spawnFeedback,
+      clearSpawnFeedback,
+      spawnCompanion,
+      countByType,
+      patchInstance,
+      removeInstance,
+    ],
   );
 
   return (
@@ -131,3 +258,13 @@ export function useCompanionInstance(): CompanionContextValue {
 
   return context;
 }
+
+/** Soft hook for showcase cards that may render outside the provider. */
+export function useCompanionsOptional(): CompanionContextValue | null {
+  return useContext(CompanionContext);
+}
+
+/** Alias clarifying multi-instance usage. */
+export const useCompanions = useCompanionInstance;
+
+export { MAX_COMPANION_INSTANCES_PER_TYPE };

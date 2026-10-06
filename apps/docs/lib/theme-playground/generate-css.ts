@@ -45,6 +45,14 @@ function lightRootDeclarations(
     ["--chart-3", colors.chart3],
     ["--chart-4", colors.chart4],
     ["--chart-5", colors.chart5],
+    ["--sidebar", "var(--background)"],
+    ["--sidebar-foreground", "var(--foreground)"],
+    ["--sidebar-primary", "var(--primary)"],
+    ["--sidebar-primary-foreground", "var(--primary-foreground)"],
+    ["--sidebar-accent", "var(--accent)"],
+    ["--sidebar-accent-foreground", "var(--accent-foreground)"],
+    ["--sidebar-border", "var(--border)"],
+    ["--sidebar-ring", "var(--ring)"],
   ];
 }
 
@@ -74,6 +82,14 @@ function darkDeclarations(colors: ThemeModeColors): Array<[string, string]> {
     ["--chart-3", colors.chart3],
     ["--chart-4", colors.chart4],
     ["--chart-5", colors.chart5],
+    ["--sidebar", "var(--card)"],
+    ["--sidebar-foreground", "var(--foreground)"],
+    ["--sidebar-primary", "var(--primary)"],
+    ["--sidebar-primary-foreground", "var(--primary-foreground)"],
+    ["--sidebar-accent", "var(--accent)"],
+    ["--sidebar-accent-foreground", "var(--accent-foreground)"],
+    ["--sidebar-border", "var(--border)"],
+    ["--sidebar-ring", "var(--ring)"],
   ];
 }
 
@@ -111,6 +127,14 @@ function themeInlineDeclarations(
     ["--color-chart-3", "var(--chart-3)"],
     ["--color-chart-4", "var(--chart-4)"],
     ["--color-chart-5", "var(--chart-5)"],
+    ["--color-sidebar", "var(--sidebar)"],
+    ["--color-sidebar-foreground", "var(--sidebar-foreground)"],
+    ["--color-sidebar-primary", "var(--sidebar-primary)"],
+    ["--color-sidebar-primary-foreground", "var(--sidebar-primary-foreground)"],
+    ["--color-sidebar-accent", "var(--sidebar-accent)"],
+    ["--color-sidebar-accent-foreground", "var(--sidebar-accent-foreground)"],
+    ["--color-sidebar-border", "var(--sidebar-border)"],
+    ["--color-sidebar-ring", "var(--sidebar-ring)"],
   ];
 }
 

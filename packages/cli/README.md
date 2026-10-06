@@ -76,13 +76,27 @@ vinyaas add button card badge
 vinyaas add button --force
 vinyaas add button --dry-run
 vinyaas add button card --yes
+vinyaas add --catalog form
+vinyaas add --catalog dashboard --dry-run
 ```
 
 - One or more component names install in a single run.
+- Catalog installs require `--catalog <id>` and confirm with `[Y/n]` (default Yes) unless `--yes` is set. Bare names never expand to catalogs.
+- There is exactly one catalog install syntax: `vinyaas add --catalog <id>` (not `vinyaas catalog add`).
 - Already-installed components are skipped unless `--force` is set.
-- `--dry-run` prints the install plan without writing files or installing packages.
+- `--dry-run` prints components, files, npm dependencies, and registry dependencies without writing files or installing packages.
 - Multi-component installs prompt for confirmation unless `--yes` is set.
 - Registry dependencies resolve automatically; only missing npm packages are installed.
+
+### Catalogs
+
+```bash
+vinyaas catalog list
+vinyaas catalog info form
+vinyaas add --catalog form
+```
+
+Named catalogs are owned by the registry (`/r/catalogs/`), not hardcoded in the CLI. Current catalogs: `form`, `dashboard`, `navigation`, `feedback`, `application`. Membership lists only currently installable component IDs. Discovery commands do not install.
 
 ### Category installation
 
@@ -92,7 +106,7 @@ vinyaas add --category forms --yes
 vinyaas add --category forms --dry-run
 ```
 
-Categories are registry metadata used for discovery and group install. They are **not** component collections or packages. Expansion uses the same install pipeline as named components.
+Categories are registry metadata used for discovery and group install. They are **not** the same as named catalogs. Expansion uses the same install pipeline as named components.
 
 Current categories: `forms`, `layout`, `navigation`, `feedback`, `data-display`, `typography`, `charts`, `utilities`.
 
@@ -110,6 +124,8 @@ Lists components recorded in `.vinyaas/manifest.json` after successful installs.
 ### Discover
 
 ```bash
+vinyaas catalog list
+vinyaas catalog info form
 vinyaas list
 vinyaas list --category forms
 vinyaas list --json
@@ -120,7 +136,8 @@ vinyaas info button
 vinyaas info button --json
 ```
 
-- `list` — browse the catalog
+- `catalog list` / `catalog info` — named component groups
+- `list` — browse installable components
 - `search` — find by name or description
 - `info` — inspect one component (files, dependencies, docs) before installing
 
