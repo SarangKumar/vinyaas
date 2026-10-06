@@ -188,6 +188,8 @@ pnpm cli:release-check
 
 `cli:release-build` fails if `http://localhost:3000/r` remains in `packages/cli/dist/index.js`.
 
+`npm publish` runs `prepublishOnly`, which refuses to publish if the production registry path is missing or localhost is still embedded.
+
 `cli:release-check` packs the package, installs the tarball into a temp prefix, and smoke-tests `vinyaas --version`, `--help`, and `info button`. It does **not** publish.
 
 Publish order:
