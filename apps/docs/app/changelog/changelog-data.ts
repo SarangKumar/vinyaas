@@ -50,10 +50,10 @@ export const changelogVersions: ChangelogVersion[] = [
       {
         title: "Companions",
         items: [
-          `Roster expanded to Ember, Soul, Moss, Flint (rock), Bubble (water), Rime (ice), Jab (fighting), and Volt (electric), each with companion.json, pixel clips, and type badges.`,
+          `Roster expanded to Ember, Soul, Moss, Flint (rock), Bubble (water), Rime (ice), Jab (fighting), Volt (electric), and Drake (dragon), each with companion.json, pixel clips, and type badges.`,
           `Species cards with Spawn and Know more actions, plus Pokédex-style detail pages at /companion/[id] (Bond, unlocked moves, type chart).`,
-          `Landing surfaces and interactions: perch on declared surfaces/buttons/selects/code blocks; fatal fall when dropping more than 70vh above the surface below (puff, no respawn); max one instance per type.`,
-          `Companion Animations docs with clip and move tables; Custom Companion docs updated for the fall/puff layout.`,
+          `Landing surfaces and interactions: perch on declared surfaces/buttons/selects/code blocks; fatal fall when dropping more than 70vh above the surface below (cry while held, then puff; XP penalty on death); max one instance per type.`,
+          `Bond unlocks are steeper (higher XP ranks and longer awake-time gates). Companion Animations docs with clip and move tables; Custom Companion docs updated for the fall/puff layout.`,
         ],
       },
       {

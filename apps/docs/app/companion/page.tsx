@@ -12,6 +12,11 @@ import {
 } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 import { pageMetadata } from "@/lib/page-metadata";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/registry/new-york/ui/alert";
 
 export const metadata: Metadata = pageMetadata({
   title: "Companions",
@@ -25,12 +30,37 @@ const sectionHeading =
 const body = "text-foreground text-base leading-7";
 const linkClass = `text-primary underline underline-offset-4 ${focusRing}`;
 
+function InfoIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" strokeLinecap="round" />
+      <path d="M12 8h.01" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function CompanionPage() {
   return (
     <DocsArticle
       title="Meet Vinyaas Companions"
       description="Tiny customizable companions that bring your workspace to life."
     >
+      <Alert>
+        <InfoIcon />
+        <AlertTitle>Beta — unstable</AlertTitle>
+        <AlertDescription>
+          Companions are an experimental docs feature. APIs, clips, progression,
+          and behavior may change or break in future versions.
+        </AlertDescription>
+      </Alert>
+
       <section className="flex flex-col gap-4">
         <h2 id="showcase" className={sectionHeading}>
           Built-in companions
@@ -116,6 +146,10 @@ export default function CompanionPage() {
           <li>
             <strong className="font-medium">Volt</strong> — electric-type mouse
             with spark cheeks.
+          </li>
+          <li>
+            <strong className="font-medium">Drake</strong> — dragon-type
+            hatchling with stubby wings.
           </li>
         </ul>
         <p className={body}>

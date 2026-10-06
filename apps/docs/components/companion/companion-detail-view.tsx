@@ -20,11 +20,13 @@ import {
   ELEMENT_VISUALS,
 } from "@/components/companion/element-type";
 import {
+  DEATH_XP_PENALTY,
   ELEMENT_MATCHUPS,
   elementTypeForCompanion,
   formatLifetime,
   formatUnlockRequirement,
   isMoveUnlocked,
+  resetCompanionBond,
   unlockRequirementForMove,
   xpToNextBond,
 } from "@/components/companion/progression";
@@ -33,6 +35,18 @@ import { useCompanionBond } from "@/components/companion/use-companion-bond";
 import { focusRing } from "@/components/focus-ring";
 import { companionPath } from "@/components/docs-nav";
 import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/registry/new-york/ui/alert-dialog";
+import { Button } from "@/registry/new-york/ui/button";
 
 type CompanionDetailViewProps = {
   companionId: string;
@@ -294,10 +308,45 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
             surfaceId={`${companionId}-stat-falls`}
           />
         </div>
+        <AlertDialog>
+          <AlertDialogTrigger>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              data-companion-card-control=""
+              aria-label={`Reset ${entry.meta.name} bond stats`}
+            >
+              Reset stats
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Reset {entry.meta.name}&apos;s stats?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This clears Bond, XP, awake time, and fatal falls for{" "}
+                {entry.meta.name} only, and locks moves back to starters. Other
+                companions are not affected. This cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                variant="destructive"
+                onClick={() => resetCompanionBond(companionId)}
+              >
+                Reset stats
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         {isEmber ? (
           <p className="text-muted-foreground text-sm leading-6">
-            Stats live in local storage. A puff death keeps Bond, awake time,
-            and unlocks — only the on-screen instance is removed.
+            Stats live in local storage. A puff death costs {DEATH_XP_PENALTY}{" "}
+            XP (and can drop Bond / lock moves again). Awake time still
+            accumulates.
           </p>
         ) : (
           <p className="text-muted-foreground text-sm leading-6">

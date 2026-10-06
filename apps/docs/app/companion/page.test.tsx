@@ -13,7 +13,7 @@ function renderWithStore(ui: React.ReactElement) {
 }
 
 describe("Companion landing page", () => {
-  it("showcases Ember, Soul, Moss, Flint, Bubble, Rime, Jab, and Volt with spawn and know-more actions", () => {
+  it("showcases Ember, Soul, Moss, Flint, Bubble, Rime, Jab, Volt, and Drake with spawn and know-more actions", () => {
     renderWithStore(<CompanionPage />);
 
     expect(
@@ -22,6 +22,9 @@ describe("Companion landing page", () => {
         name: "Meet Vinyaas Companions",
       }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(screen.getByText(/Beta — unstable/i)).toBeInTheDocument();
+    expect(screen.getByText(/experimental docs feature/i)).toBeInTheDocument();
     for (const name of [
       "Ember",
       "Soul",
@@ -31,20 +34,22 @@ describe("Companion landing page", () => {
       "Rime",
       "Jab",
       "Volt",
+      "Drake",
     ]) {
       expect(screen.getByRole("img", { name })).toBeInTheDocument();
       expect(screen.getByRole("heading", { name })).toBeInTheDocument();
     }
     expect(
       screen.getAllByRole("link", { name: /Open .* detail page/i }).length,
-    ).toBeGreaterThanOrEqual(8);
+    ).toBeGreaterThanOrEqual(9);
     expect(
       document.querySelector('[data-companion-surface-id="docs-demo-perch"]'),
     ).toBeTruthy();
     expect(screen.getByText(/Landing surfaces/i)).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Animations" }),
-    ).toHaveAttribute("href", "/companion/animations");
+    expect(screen.getByRole("link", { name: "Animations" })).toHaveAttribute(
+      "href",
+      "/companion/animations",
+    );
     expect(metadata.title).toBe("Companions");
     expect(metadata.alternates).toMatchObject({ canonical: "/companion" });
   });

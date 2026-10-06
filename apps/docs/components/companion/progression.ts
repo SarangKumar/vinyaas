@@ -78,8 +78,11 @@ export type CompanionBondRecord = {
 
 const STORAGE_KEY = "vinyaas.companion.bond.v1";
 
-/** XP thresholds to reach bond ranks 2–5. */
-export const BOND_THRESHOLDS = [0, 40, 120, 280, 500] as const;
+/** XP thresholds to reach bond ranks 2–5 (slightly steep). */
+export const BOND_THRESHOLDS = [0, 60, 160, 360, 640] as const;
+
+/** XP lost on a fatal puff death (floored at 0). */
+export const DEATH_XP_PENALTY = 28;
 
 export type EmberUnlockTier = {
   bond: number;
@@ -108,22 +111,22 @@ export const EMBER_UNLOCK_TIERS: EmberUnlockTier[] = [
   },
   {
     bond: 2,
-    lifetimeMs: 60_000,
+    lifetimeMs: 2 * 60_000,
     moveIds: ["jump", "celebrate"],
   },
   {
     bond: 3,
-    lifetimeMs: 5 * 60_000,
+    lifetimeMs: 8 * 60_000,
     moveIds: ["sleep", "wake", "blink"],
   },
   {
     bond: 4,
-    lifetimeMs: 15 * 60_000,
+    lifetimeMs: 25 * 60_000,
     moveIds: ["wiggle", "dance", "glow"],
   },
   {
     bond: 5,
-    lifetimeMs: 30 * 60_000,
+    lifetimeMs: 45 * 60_000,
     moveIds: ["spin", "surprise", "follow-cursor"],
   },
 ];
@@ -218,6 +221,9 @@ export function elementTypeForCompanion(
   }
   if (companionId === "volt" || rawType === "mouse") {
     return "electric";
+  }
+  if (companionId === "drake" || rawType === "dragon") {
+    return "dragon";
   }
   return "psychic";
 }
@@ -320,6 +326,29 @@ export function saveCompanionBond(record: CompanionBondRecord) {
   }
 }
 
+/** Clear Bond / XP / awake / deaths and lock non-starter moves for one species. */
+export function resetCompanionBond(companionId: string): CompanionBondRecord {
+  const all = readAll();
+  const next: CompanionBondRecord = {
+    companionId,
+    bond: 1,
+    xp: 0,
+    interactionCount: 0,
+    lifetimeMs: 0,
+    deaths: 0,
+    evolutionStage: 0,
+    unlockedInteractionIds:
+      companionId === "ember" ? unlockedIdsForEmber(1, 0) : [],
+    updatedAt: Date.now(),
+  };
+  all[companionId] = next;
+  writeAll(all);
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("vinyaas:companion-bond"));
+  }
+  return next;
+}
+
 export function recordCompanionInteraction(
   companionId: string,
   interactionId: string,
@@ -372,9 +401,17 @@ export function recordCompanionLifetime(
 
 export function recordCompanionDeath(companionId: string): CompanionBondRecord {
   const current = getCompanionBond(companionId);
+  const xp = Math.max(0, current.xp - DEATH_XP_PENALTY);
+  const bond = bondRankFromXp(xp);
   const next: CompanionBondRecord = {
     ...current,
+    xp,
+    bond,
     deaths: current.deaths + 1,
+    unlockedInteractionIds:
+      companionId === "ember"
+        ? unlockedIdsForEmber(bond, current.lifetimeMs)
+        : current.unlockedInteractionIds,
   };
   saveCompanionBond(next);
   return next;

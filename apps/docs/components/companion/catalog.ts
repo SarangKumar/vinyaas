@@ -267,6 +267,25 @@ import voltCry2 from "@/companion/volt/animations/cry/2.png";
 import voltCry3 from "@/companion/volt/animations/cry/3.png";
 import voltCry4 from "@/companion/volt/animations/cry/4.png";
 
+import drakeMeta from "@/companion/drake/companion.json";
+import drakeIdle from "@/companion/drake/assets/idle.png";
+import drakeIdle1 from "@/companion/drake/animations/idle/1.png";
+import drakeIdle2 from "@/companion/drake/animations/idle/2.png";
+import drakeIdle3 from "@/companion/drake/animations/idle/3.png";
+import drakeHappy1 from "@/companion/drake/animations/happy/1.png";
+import drakeHappy2 from "@/companion/drake/animations/happy/2.png";
+import drakeSleep1 from "@/companion/drake/animations/sleep/1.png";
+import drakeSleep2 from "@/companion/drake/animations/sleep/2.png";
+import drakeFall1 from "@/companion/drake/animations/fall/1.png";
+import drakeFall2 from "@/companion/drake/animations/fall/2.png";
+import drakePuff1 from "@/companion/drake/animations/puff/1.png";
+import drakePuff2 from "@/companion/drake/animations/puff/2.png";
+import drakePuff3 from "@/companion/drake/animations/puff/3.png";
+import drakeCry1 from "@/companion/drake/animations/cry/1.png";
+import drakeCry2 from "@/companion/drake/animations/cry/2.png";
+import drakeCry3 from "@/companion/drake/animations/cry/3.png";
+import drakeCry4 from "@/companion/drake/animations/cry/4.png";
+
 import {
   assertCompanionConfig,
   normalizeAnimationClipCompat,
@@ -616,6 +635,18 @@ export const companionCatalog: CompanionCatalogEntry[] = [
       fall: clip([voltFall1, voltFall2], 8, true),
       puff: clip([voltPuff1, voltPuff2, voltPuff3], 10, false),
       cry: clip([voltCry1, voltCry2, voltCry3, voltCry4], 8, true),
+    },
+  },
+  {
+    meta: assertCompanionConfig(drakeMeta),
+    idle: drakeIdle,
+    clips: {
+      idle: clip([drakeIdle1, drakeIdle2, drakeIdle3], 5, true),
+      happy: clip([drakeHappy1, drakeHappy2], 6, false),
+      sleep: clip([drakeSleep1, drakeSleep2], 3, true),
+      fall: clip([drakeFall1, drakeFall2], 8, true),
+      puff: clip([drakePuff1, drakePuff2, drakePuff3], 10, false),
+      cry: clip([drakeCry1, drakeCry2, drakeCry3, drakeCry4], 8, true),
     },
   },
 ];

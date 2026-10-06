@@ -52,9 +52,11 @@ export function DocsFrame({ children }: { children: ReactNode }) {
     >
       <aside
         data-docs-sidebar
-        className="relative z-0 hidden min-h-0 overflow-y-auto overscroll-y-contain lg:block print:hidden"
+        className="relative z-0 hidden min-h-0 overflow-hidden lg:block print:hidden"
       >
-        <DocsNavLinks className="flex flex-col gap-6 px-4 py-6" />
+        <div className="h-full min-h-0 overflow-y-auto overscroll-y-contain">
+          <DocsNavLinks className="flex flex-col gap-6 px-4 py-6" />
+        </div>
       </aside>
       <div className="relative z-0 flex h-full min-h-0 min-w-0 flex-col overflow-hidden print:contents">
         <main

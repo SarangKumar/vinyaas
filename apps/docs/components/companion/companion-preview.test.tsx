@@ -82,7 +82,7 @@ describe("CompanionBlock", () => {
 });
 
 describe("companion catalog", () => {
-  it("loads Ember, Soul, Moss, Flint, Bubble, Rime, Jab, and Volt metadata with fall interaction", () => {
+  it("loads Ember, Soul, Moss, Flint, Bubble, Rime, Jab, Volt, and Drake metadata with fall interaction", () => {
     expect(companionCatalog.map((entry) => entry.meta.id)).toEqual([
       "ember",
       "soul",
@@ -92,6 +92,7 @@ describe("companion catalog", () => {
       "rime",
       "jab",
       "volt",
+      "drake",
     ]);
 
     for (const entry of companionCatalog) {

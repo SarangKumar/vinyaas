@@ -15,6 +15,7 @@ const NEW_COMPANIONS = [
   { id: "rime", name: "Rime" },
   { id: "jab", name: "Jab" },
   { id: "volt", name: "Volt" },
+  { id: "drake", name: "Drake" },
 ] as const;
 
 const inlineLink = `text-foreground underline underline-offset-4 ${focusRing} rounded-sm`;
