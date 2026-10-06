@@ -24,7 +24,7 @@ const heading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 
 const nameGrid =
-  "grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 md:grid-cols-3";
+  "grid grid-cols-2 gap-x-6 gap-y-1 md:grid-cols-3";
 
 export default function ComponentsPage() {
   const catalog = [...components].sort((a, b) => a.name.localeCompare(b.name));

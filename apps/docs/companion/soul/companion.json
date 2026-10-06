@@ -3,6 +3,7 @@
   "name": "Soul",
   "type": "ghost",
   "description": "A gentle floating ghost friend.",
+  "lore": "Woven from moonlit mist above a quiet lake, Soul drifted into the workspace looking for company. It glows softly, never startles, and remembers every page you visit.",
   "personalityTraits": ["calm", "gentle", "mysterious"],
   "capabilities": {
     "floating": true,

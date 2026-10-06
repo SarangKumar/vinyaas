@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, act } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DocsShell } from "@/components/docs-shell";
@@ -7,8 +7,9 @@ import {
   useCompanions,
 } from "@/components/companion/companion-provider";
 import {
-  COMPANION_DEATH_MS,
   COMPANION_SIZE,
+  findSurfaceTopBelow,
+  isFatalFallAboveSurface,
 } from "@/components/companion/runtime/physics";
 import {
   clearCompanionSurfaceHighlight,
@@ -17,7 +18,6 @@ import {
 } from "@/components/companion/runtime/surfaces";
 import {
   createCompanionEngine,
-  engineBeginRespawn,
   engineEndDrag,
   engineStartDrag,
   engineTick,
@@ -26,7 +26,7 @@ import { assertCompanionConfig } from "@/components/companion/runtime/schema";
 import { findCompanionSpawnPosition } from "@/components/companion/runtime/spawn";
 import { isCompanionInteractive } from "@/components/companion/runtime/state-machine";
 import emberMeta from "@/companion/ember/companion.json";
-import tuskMeta from "@/companion/tusk/companion.json";
+import flintMeta from "@/companion/flint/companion.json";
 
 const navigation = vi.hoisted(() => ({
   pathname: "/companion",
@@ -44,8 +44,8 @@ function SpawnHarness() {
       <button type="button" onClick={() => spawnCompanion("ember")}>
         Spawn Ember
       </button>
-      <button type="button" onClick={() => spawnCompanion("tusk")}>
-        Spawn Tusk
+      <button type="button" onClick={() => spawnCompanion("flint")}>
+        Spawn Flint
       </button>
       <button type="button" onClick={() => spawnCompanion("soul")}>
         Spawn Soul
@@ -96,7 +96,7 @@ describe("Companion multi-instance spawn", () => {
     expect(document.querySelector("[data-companion-id='ember']")).toBeTruthy();
   });
 
-  it("allows at most two instances of the same type", () => {
+  it("allows at most one instance of the same type", () => {
     render(
       <CompanionProvider>
         <SpawnHarness />
@@ -105,11 +105,10 @@ describe("Companion multi-instance spawn", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Spawn Ember" }));
     fireEvent.click(screen.getByRole("button", { name: "Spawn Ember" }));
-    fireEvent.click(screen.getByRole("button", { name: "Spawn Ember" }));
 
     expect(
       document.querySelectorAll("[data-companion-id='ember']"),
-    ).toHaveLength(2);
+    ).toHaveLength(1);
     expect(screen.getByText("limit")).toBeInTheDocument();
   });
 
@@ -121,16 +120,15 @@ describe("Companion multi-instance spawn", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Spawn Ember" }));
-    fireEvent.click(screen.getByRole("button", { name: "Spawn Ember" }));
-    fireEvent.click(screen.getByRole("button", { name: "Spawn Tusk" }));
+    fireEvent.click(screen.getByRole("button", { name: "Spawn Flint" }));
     fireEvent.click(screen.getByRole("button", { name: "Spawn Soul" }));
 
-    expect(document.querySelectorAll("[data-companion-host]").length).toBe(4);
+    expect(document.querySelectorAll("[data-companion-host]").length).toBe(3);
     expect(
       document.querySelectorAll("[data-companion-id='ember']"),
-    ).toHaveLength(2);
+    ).toHaveLength(1);
     expect(
-      document.querySelectorAll("[data-companion-id='tusk']"),
+      document.querySelectorAll("[data-companion-id='flint']"),
     ).toHaveLength(1);
     expect(
       document.querySelectorAll("[data-companion-id='soul']"),
@@ -245,54 +243,73 @@ describe("Companion surface hit testing", () => {
   });
 });
 
-describe("Companion death and respawn engine", () => {
-  it("puffs then dies after a fatal drop below 80vh", () => {
-    vi.useFakeTimers();
+describe("Companion death engine", () => {
+  it("treats a drop more than 70vh above the surface below as fatal", () => {
+    // Surface at y=700; companion top y=28 → feet at 100 → fall 600 on 800vh = 0.75 > 0.7
+    expect(isFatalFallAboveSurface(28, 700, 800, COMPANION_SIZE)).toBe(true);
+    // Just under 70vh: feet at 141 → fall 559 on 800vh < 0.7
+    expect(isFatalFallAboveSurface(69, 700, 800, COMPANION_SIZE)).toBe(false);
+    // Close drop: top at 578 → feet at 650, surface 700 → 50px << 0.7*800
+    expect(isFatalFallAboveSurface(578, 700, 800)).toBe(false);
+
+    const surfaceTop = findSurfaceTopBelow(
+      100,
+      40,
+      [{ top: 500, left: 0, right: 400, bottom: 560 }],
+      800 - COMPANION_SIZE - 24,
+      COMPANION_SIZE,
+    );
+    expect(surfaceTop).toBe(500);
+  });
+
+  it("falls then puffs on impact after a fatal-height drop", () => {
     const config = assertCompanionConfig(emberMeta);
     let engine = createCompanionEngine({
       config,
-      position: { x: 100, y: 700 },
+      position: { x: 100, y: 40 },
     });
 
-    engine = engineStartDrag(engine, config, { x: 100, y: 700 });
+    engine = engineStartDrag(engine, config, { x: 100, y: 40 });
     engine = engineEndDrag(engine, config, { width: 1000, height: 800 }, [], {
       deathDrop: true,
       nowMs: 1_000,
     });
-    expect(engine.state).toBe("puffing");
-    expect(engine.animation.clipId).toBe("puff");
-    expect(engine.deathPending).toBe(false);
+    expect(engine.state).toBe("falling");
+    expect(engine.deathPending).toBe(true);
 
-    for (let i = 0; i < 40 && engine.state === "puffing"; i += 1) {
+    for (let i = 0; i < 400 && engine.state === "falling"; i += 1) {
       engine = engineTick(
         engine,
         config,
-        50,
+        16,
         { width: 1000, height: 800 },
-        [],
+        [{ top: 700, left: 0, right: 1000, bottom: 760 }],
         COMPANION_SIZE,
-        1_000 + i * 50,
+        1_000 + i * 16,
       );
     }
 
-    expect(engine.state).toBe("dead");
-    expect(engine.deadUntilMs).toBeGreaterThanOrEqual(
-      1_000 + COMPANION_DEATH_MS,
-    );
-    expect(isCompanionInteractive(engine.state)).toBe(false);
-
-    engine = engineBeginRespawn(engine, config, { x: 200, y: 120 });
-    expect(engine.state).toBe("respawning");
-    expect(engine.deadUntilMs).toBeNull();
-
-    for (let i = 0; i < 40 && engine.state === "respawning"; i += 1) {
-      engine = engineTick(engine, config, 50, { width: 1000, height: 800 }, []);
+    expect(["puffing", "dead"]).toContain(engine.state);
+    if (engine.state === "puffing") {
+      expect(engine.animation.clipId).toBe("puff");
+      for (let i = 0; i < 40 && engine.state === "puffing"; i += 1) {
+        engine = engineTick(
+          engine,
+          config,
+          50,
+          { width: 1000, height: 800 },
+          [],
+          COMPANION_SIZE,
+        );
+      }
     }
-    expect(engine.state).toBe("idle");
+    expect(engine.state).toBe("dead");
+    expect(engine.deadUntilMs).toBeNull();
+    expect(isCompanionInteractive(engine.state)).toBe(false);
   });
 
   it("snaps onto a declared drop surface instead of falling", () => {
-    const config = assertCompanionConfig(tuskMeta);
+    const config = assertCompanionConfig(flintMeta);
     let engine = createCompanionEngine({
       config,
       position: { x: 40, y: 20 },
@@ -387,11 +404,11 @@ describe("CompanionHost in DocsShell", () => {
       value() {
         return {
           x: 100,
-          y: 200,
+          y: 400,
           left: 100,
-          top: 200,
+          top: 400,
           right: 172,
-          bottom: 272,
+          bottom: 472,
           width: 72,
           height: 72,
           toJSON() {
@@ -420,39 +437,53 @@ describe("CompanionHost in DocsShell", () => {
     fireEvent.pointerDown(host!, {
       button: 0,
       clientX: 120,
-      clientY: 220,
+      clientY: 420,
       pointerId: 1,
     });
     expect(host).toHaveAttribute("data-companion-motion", "dragging");
 
-    fireEvent.pointerMove(window, { clientX: 180, clientY: 120, pointerId: 1 });
+    fireEvent.pointerMove(window, { clientX: 180, clientY: 380, pointerId: 1 });
     fireEvent.pointerUp(window, { pointerId: 1 });
 
     expect(host).toHaveAttribute("data-companion-motion", "falling");
   });
 
-  it("cleans up the death timer on unmount", () => {
-    vi.useFakeTimers();
-    const config = assertCompanionConfig(emberMeta);
-    const engine = createCompanionEngine({
-      config,
-      position: { x: 10, y: 10 },
-      state: "dead",
-      deadUntilMs: Date.now() + COMPANION_DEATH_MS,
-    });
-    expect(engine.state).toBe("dead");
+  it("can remove a spawned companion without respawning", () => {
+    function ShellSpawn() {
+      const { spawnCompanion, instances, removeInstance } = useCompanions();
+      return (
+        <div>
+          <button type="button" onClick={() => spawnCompanion("ember")}>
+            Spawn
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const first = instances[0];
+              if (first) {
+                removeInstance(first.id);
+              }
+            }}
+          >
+            Remove
+          </button>
+          <span data-count={instances.length}>{instances.length}</span>
+        </div>
+      );
+    }
 
-    const { unmount } = render(
-      <CompanionProvider>
-        <SpawnHarness />
-      </CompanionProvider>,
+    render(
+      <DocsShell>
+        <ShellSpawn />
+      </DocsShell>,
     );
 
-    unmount();
-    act(() => {
-      vi.advanceTimersByTime(COMPANION_DEATH_MS + 100);
-    });
-    // No throw / no stray timers targeting unmounted trees.
-    expect(engine.state).toBe("dead");
+    fireEvent.click(screen.getByRole("button", { name: "Spawn" }));
+    expect(screen.getByText("1")).toBeInTheDocument();
+    expect(document.querySelector("[data-companion-host]")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Remove" }));
+    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(document.querySelector("[data-companion-host]")).toBeNull();
   });
 });

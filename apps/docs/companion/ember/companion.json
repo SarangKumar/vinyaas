@@ -3,6 +3,7 @@
   "name": "Ember",
   "type": "flame",
   "description": "A tiny playful flame spirit.",
+  "lore": "Born from the lava of a restless volcano, Ember hopped onto cooler stone and never looked back. It warms desks, scorches boredom, and still smells faintly of ash and summer lightning.",
   "personalityTraits": ["playful", "curious", "energetic"],
   "capabilities": {
     "floating": true,
@@ -16,7 +17,7 @@
       "moodBias": "excited",
       "behavior": {
         "energy": "high",
-        "idleTimeoutMs": 2000,
+        "idleTimeoutMs": 30000,
         "cursorNearbyRadius": 140
       }
     },
@@ -26,7 +27,7 @@
       "moodBias": "sleepy",
       "behavior": {
         "energy": "calm",
-        "idleTimeoutMs": 4800,
+        "idleTimeoutMs": 30000,
         "cursorNearbyRadius": 90
       }
     }
@@ -48,7 +49,7 @@
       "action": "jump",
       "animation": "happy",
       "cooldown": 1200,
-      "duration": 1400
+      "duration": 900
     },
     {
       "id": "sleep",
@@ -191,33 +192,49 @@
       "frames": [
         "animations/idle/1.png",
         "animations/idle/2.png",
-        "animations/idle/3.png"
+        "animations/idle/3.png",
+        "animations/idle/4.png",
+        "animations/idle/5.png"
       ],
-      "fps": 5,
+      "fps": 6,
       "loop": true
     },
     "happy": {
-      "frames": ["animations/happy/1.png", "animations/happy/2.png"],
-      "fps": 6,
+      "frames": [
+        "animations/happy/1.png",
+        "animations/happy/2.png",
+        "animations/happy/3.png",
+        "animations/happy/4.png"
+      ],
+      "fps": 10,
       "loop": false
     },
     "sleep": {
-      "frames": ["animations/sleep/1.png", "animations/sleep/2.png"],
+      "frames": [
+        "animations/sleep/1.png",
+        "animations/sleep/2.png",
+        "animations/sleep/3.png"
+      ],
       "fps": 3,
       "loop": true
     },
     "fall": {
-      "frames": ["animations/fall/1.png", "animations/fall/2.png"],
-      "fps": 8,
+      "frames": [
+        "animations/fall/1.png",
+        "animations/fall/2.png",
+        "animations/fall/3.png"
+      ],
+      "fps": 10,
       "loop": true
     },
     "puff": {
       "frames": [
         "animations/puff/1.png",
         "animations/puff/2.png",
-        "animations/puff/3.png"
+        "animations/puff/3.png",
+        "animations/puff/4.png"
       ],
-      "fps": 10,
+      "fps": 12,
       "loop": false
     }
   }

@@ -75,6 +75,8 @@ export type CompanionConfig = {
   name: string;
   type?: string;
   description: string;
+  /** Longer origin story for the Pokédex detail sheet. */
+  lore?: string;
   personalityTraits: string[];
   capabilities: CompanionCapabilities;
   interactions: CompanionInteractionDefinition[];
@@ -639,6 +641,7 @@ export function parseCompanionConfig(raw: unknown): CompanionConfigResult {
       name: raw.name,
       type: isNonEmptyString(raw.type) ? raw.type : undefined,
       description: raw.description,
+      lore: isNonEmptyString(raw.lore) ? raw.lore : undefined,
       personalityTraits: raw.personalityTraits as string[],
       capabilities,
       interactions,

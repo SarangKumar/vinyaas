@@ -81,9 +81,10 @@ export function executeInteractionAction(
       return {
         nextState: "interacting",
         clipId: interaction.animation ?? "happy",
-        positionDelta: { x: 0, y: -18 },
-        velocityImpulse: { x: 0, y: -2 },
-        durationMs: durationMs ?? 1400,
+        // Soft upward impulse — the engine eases the arc over the clip.
+        positionDelta: { x: 0, y: -6 },
+        velocityImpulse: { x: 0, y: -5.5 },
+        durationMs: durationMs ?? 900,
       };
 
     case "sleep":

@@ -150,6 +150,34 @@ export function findCompanionSurfaceAt(
   return null;
 }
 
+/** Resolve a previously recorded perch by surface id. */
+export function findCompanionSurfaceById(
+  surfaceId: string | null | undefined,
+): CompanionSurfaceRect | null {
+  if (!surfaceId || typeof document === "undefined") {
+    return null;
+  }
+
+  const escaped =
+    typeof CSS !== "undefined" && typeof CSS.escape === "function"
+      ? CSS.escape(surfaceId)
+      : surfaceId.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  const declared = document.querySelector(
+    `[data-companion-surface-id="${escaped}"]`,
+  );
+  if (declared instanceof HTMLElement && isUsableSurface(declared)) {
+    return toCompanionSurfaceRect(declared);
+  }
+
+  for (const surface of collectDeclaredCompanionSurfaces()) {
+    if (surface.id === surfaceId) {
+      return surface;
+    }
+  }
+
+  return null;
+}
+
 /** All landable surfaces currently in the document (for fall perch tests). */
 export function collectDeclaredCompanionSurfaces(): CompanionSurfaceRect[] {
   if (typeof document === "undefined") {

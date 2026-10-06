@@ -13,7 +13,7 @@ import { COMPANION_SURFACE_ACTIVE_ATTR } from "@/components/companion/runtime/su
  * Navigation preserves instances via the provider.
  */
 export function CompanionHost() {
-  const { instances, patchInstance } = useCompanions();
+  const { instances, patchInstance, removeInstance } = useCompanions();
   const pathname = usePathname();
   const pathnameRef = useRef<string | null>(null);
   const rejectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -96,6 +96,7 @@ export function CompanionHost() {
           instance={instance}
           occupied={occupied}
           patchInstance={patchInstance}
+          removeInstance={removeInstance}
           onDragSurfaceChange={onDragSurfaceChange}
         />
       ))}

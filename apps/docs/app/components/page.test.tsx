@@ -68,8 +68,7 @@ describe("components catalog", () => {
     const allGrid = lists.at(-1)!;
     expect(allGrid).toHaveClass(
       "grid",
-      "grid-cols-1",
-      "sm:grid-cols-2",
+      "grid-cols-2",
       "md:grid-cols-3",
     );
     expect(allGrid.querySelectorAll(".bg-primary").length).toBe(0);

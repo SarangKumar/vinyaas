@@ -20,10 +20,8 @@ import {
 import {
   clampCompanionPosition,
   companionFloorY,
-  COMPANION_DEATH_MS,
   COMPANION_SIZE,
   createPhysicsBody,
-  isDropBelowDeathThreshold,
   resolveFallTargetY,
   shouldFallOnDrop,
   stepCompanionFall,
@@ -64,6 +62,10 @@ export type CompanionEngineSnapshot = {
   deadUntilMs: number | null;
   /** Declared surface id the companion is perched on, if any. */
   surfaceId: string | null;
+  /** Y to settle to after a jump arc (set when a jump impulse is applied). */
+  jumpBaseY: number | null;
+  /** Last interaction id that successfully fired (for bond XP). */
+  lastInteractionId: string | null;
 };
 
 export type CompanionEngineOptions = {
@@ -123,6 +125,8 @@ export function createCompanionEngine(
     deathPending: options.deathPending ?? false,
     deadUntilMs: options.deadUntilMs ?? null,
     surfaceId: options.surfaceId ?? null,
+    jumpBaseY: null,
+    lastInteractionId: null,
   };
 
   return {
@@ -191,10 +195,16 @@ function applyEffect(
     );
   }
 
+  const jumpBaseY =
+    effect.velocityImpulse && effect.velocityImpulse.y < 0
+      ? snapshot.physics.position.y
+      : snapshot.jumpBaseY;
+
   return applyState(
     {
       ...snapshot,
       cooldowns,
+      jumpBaseY,
       physics: { position, velocity },
     },
     config,
@@ -210,6 +220,7 @@ export function engineDispatchTrigger(
   event: TriggerEvent,
   nowMs = Date.now(),
   viewport?: { width: number; height: number },
+  allowedInteractionIds?: ReadonlySet<string> | null,
 ): CompanionEngineSnapshot {
   if (
     snapshot.state === "dead" ||
@@ -228,19 +239,23 @@ export function engineDispatchTrigger(
     nowMs,
     personality: snapshot.personality,
     mood: snapshot.mood,
+    allowedInteractionIds,
   });
 
   if (!executed) {
     return snapshot;
   }
 
-  return applyEffect(
-    snapshot,
-    config,
-    executed.effect,
-    executed.cooldowns,
-    viewport,
-  );
+  return {
+    ...applyEffect(
+      snapshot,
+      config,
+      executed.effect,
+      executed.cooldowns,
+      viewport,
+    ),
+    lastInteractionId: executed.effect.interactionId,
+  };
 }
 
 export function engineStartDrag(
@@ -336,23 +351,34 @@ export function engineEndDrag(
   );
 
   if (options.deathDrop) {
-    // Instant death puff — no fall sequence when dropped below 80vh.
-    return applyState(
+    // Fatal height: fall toward the surface, then puff on impact.
+    let falling = engineDispatchTrigger(
       {
         ...next,
-        deathPending: false,
-        surfaceId: null,
-        deadUntilMs: null,
         physics: {
           ...next.physics,
           velocity: { x: 0, y: 0 },
         },
+        deathPending: true,
+        surfaceId: null,
+        deadUntilMs: null,
       },
       config,
-      "puffing",
-      "puff",
-      480,
+      { trigger: "drop" },
+      nowMs,
+      viewport,
     );
+
+    if (falling.state !== "falling") {
+      falling = applyState(falling, config, "falling", "fall");
+    }
+
+    return {
+      ...falling,
+      deathPending: true,
+      surfaceId: null,
+      deadUntilMs: null,
+    };
   }
 
   if (options.dropSurface) {
@@ -431,13 +457,14 @@ export function engineEndDrag(
 export function engineEnterDead(
   snapshot: CompanionEngineSnapshot,
   config: CompanionConfig,
-  nowMs = Date.now(),
+  _nowMs = Date.now(),
 ): CompanionEngineSnapshot {
   return applyState(
     {
       ...snapshot,
       deathPending: false,
-      deadUntilMs: nowMs + COMPANION_DEATH_MS,
+      // Permanent death — no respawn timer.
+      deadUntilMs: null,
       surfaceId: null,
       physics: {
         ...snapshot.physics,
@@ -446,7 +473,7 @@ export function engineEnterDead(
     },
     config,
     "dead",
-    "fall",
+    "puff",
   );
 }
 
@@ -480,6 +507,7 @@ export function engineTriggerClick(
   config: CompanionConfig,
   nowMs = Date.now(),
   viewport?: { width: number; height: number },
+  allowedInteractionIds?: ReadonlySet<string> | null,
 ): CompanionEngineSnapshot {
   if (snapshot.state !== "idle" && snapshot.state !== "sleeping") {
     return snapshot;
@@ -491,6 +519,7 @@ export function engineTriggerClick(
     { trigger: "click" },
     nowMs,
     viewport,
+    allowedInteractionIds,
   );
 }
 
@@ -499,6 +528,7 @@ export function engineTriggerDoubleClick(
   config: CompanionConfig,
   nowMs = Date.now(),
   viewport?: { width: number; height: number },
+  allowedInteractionIds?: ReadonlySet<string> | null,
 ): CompanionEngineSnapshot {
   if (snapshot.state !== "idle" && snapshot.state !== "sleeping") {
     return snapshot;
@@ -510,7 +540,94 @@ export function engineTriggerDoubleClick(
     { trigger: "double_click" },
     nowMs,
     viewport,
+    allowedInteractionIds,
   );
+}
+
+const PERCH_FOLLOW_STATES = new Set<CompanionRuntimeState>([
+  "idle",
+  "sleeping",
+  "landing",
+  "interacting",
+]);
+
+/**
+ * Keep a perched companion glued to its surface while the page scrolls.
+ * When the surface (or companion) hits the top of the viewport, start falling.
+ */
+export function engineFollowPerch(
+  snapshot: CompanionEngineSnapshot,
+  config: CompanionConfig,
+  surface: LandingSurface | null,
+  viewport: { width: number; height: number },
+  size = COMPANION_SIZE,
+): CompanionEngineSnapshot {
+  if (!snapshot.surfaceId || !PERCH_FOLLOW_STATES.has(snapshot.state)) {
+    return snapshot;
+  }
+
+  if (!surface) {
+    return applyState(
+      {
+        ...snapshot,
+        surfaceId: null,
+        physics: {
+          ...snapshot.physics,
+          velocity: { x: 0, y: 0 },
+        },
+      },
+      config,
+      "falling",
+      "fall",
+    );
+  }
+
+  const perchY = surface.top - size;
+  // Surface scrolled off the top — tip over and fall.
+  if (surface.top <= size || perchY < 0) {
+    return applyState(
+      {
+        ...snapshot,
+        surfaceId: null,
+        physics: {
+          position: clampCompanionPosition(
+            snapshot.physics.position.x,
+            Math.max(0, perchY),
+            viewport.width,
+            viewport.height,
+            size,
+          ),
+          velocity: { x: 0, y: 0 },
+        },
+      },
+      config,
+      "falling",
+      "fall",
+    );
+  }
+
+  const minX = surface.left;
+  const maxX = Math.max(surface.left, surface.right - size);
+  const x = Math.min(Math.max(snapshot.physics.position.x, minX), maxX);
+  const clamped = clampCompanionPosition(
+    x,
+    perchY,
+    viewport.width,
+    viewport.height,
+    size,
+  );
+
+  if (
+    clamped.x === snapshot.physics.position.x &&
+    clamped.y === snapshot.physics.position.y
+  ) {
+    return snapshot;
+  }
+
+  return {
+    ...snapshot,
+    physics: createPhysicsBody(clamped, { x: 0, y: 0 }),
+  };
 }
 
 export function engineTick(
@@ -521,6 +638,7 @@ export function engineTick(
   surfaces: LandingSurface[] = [],
   size = COMPANION_SIZE,
   nowMs = Date.now(),
+  allowedInteractionIds?: ReadonlySet<string> | null,
 ): CompanionEngineSnapshot {
   let next: CompanionEngineSnapshot = {
     ...snapshot,
@@ -555,8 +673,7 @@ export function engineTick(
 
   if (next.state === "falling") {
     const viewportFloor = companionFloorY(viewport.height, size);
-    // Fatal falls ignore perches — companion falls through to death.
-    const fallSurfaces = next.deathPending ? [] : surfaces;
+    // Fatal falls still land on the surface beneath, then puff on impact.
     const projected = stepCompanionFall(
       next.physics,
       viewportFloor,
@@ -566,7 +683,7 @@ export function engineTick(
       next.physics.position.x,
       next.physics.position.y,
       projected.position.y,
-      fallSurfaces,
+      surfaces,
       viewportFloor,
       size,
     );
@@ -592,17 +709,18 @@ export function engineTick(
     };
 
     if (next.deathPending && stepped.landed) {
-      return engineEnterDead(next, config, nowMs);
-    }
-
-    if (
-      next.deathPending &&
-      isDropBelowDeathThreshold(clamped.y, viewport.height, size)
-    ) {
-      // Already past the threshold mid-fall — finish with a short fall then die.
-      if (stepped.landed || next.ambientElapsedMs > 900) {
-        return engineEnterDead(next, config, nowMs);
-      }
+      return applyState(
+        {
+          ...next,
+          physics: createPhysicsBody(clamped, { x: 0, y: 0 }),
+          deathPending: false,
+          surfaceId: null,
+        },
+        config,
+        "puffing",
+        "puff",
+        520,
+      );
     }
 
     if (stepped.landed) {
@@ -636,8 +754,53 @@ export function engineTick(
   if (next.state === "interacting") {
     const budget =
       next.interactionDurationMs > 0 ? next.interactionDurationMs : 1800;
+
+    // Ease jump arcs when a velocity impulse was applied.
+    if (next.physics.velocity.y !== 0 || next.physics.velocity.x !== 0) {
+      const baseY = next.jumpBaseY ?? next.physics.position.y;
+      const floorY = companionFloorY(viewport.height, size);
+      const settleY = Math.min(baseY, floorY);
+      const frame = dtMs / (1000 / 60);
+      let vy = next.physics.velocity.y + 0.55 * frame;
+      let y = next.physics.position.y + vy * frame;
+      let vx = next.physics.velocity.x * 0.9;
+      let x = next.physics.position.x + vx * frame;
+
+      if (y >= settleY && vy >= 0) {
+        y = settleY;
+        vy = 0;
+        vx = 0;
+      }
+
+      const clamped = clampCompanionPosition(
+        x,
+        y,
+        viewport.width,
+        viewport.height,
+        size,
+      );
+      next = {
+        ...next,
+        physics: {
+          position: clamped,
+          velocity: { x: vx, y: vy },
+        },
+      };
+    }
+
     if (next.animation.finished || next.ambientElapsedMs >= budget) {
-      return applyState(next, config, "idle");
+      return applyState(
+        {
+          ...next,
+          jumpBaseY: null,
+          physics: {
+            ...next.physics,
+            velocity: { x: 0, y: 0 },
+          },
+        },
+        config,
+        "idle",
+      );
     }
     return next;
   }
@@ -659,6 +822,7 @@ export function engineTick(
         { trigger: "idle_timeout" },
         nowMs,
         viewport,
+        allowedInteractionIds,
       );
     }
   }

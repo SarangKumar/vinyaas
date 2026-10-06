@@ -31,7 +31,7 @@ describe("CompanionPreview", () => {
 });
 
 describe("CompanionCard", () => {
-  it("shows only name and interaction count", () => {
+  it("shows name, type pill, and separate spawn / detail actions when hosted", () => {
     const ember = companionCatalog.find((entry) => entry.meta.id === "ember");
     expect(ember).toBeTruthy();
 
@@ -40,9 +40,13 @@ describe("CompanionCard", () => {
     const card = document.querySelector('[data-companion-card="ember"]');
     expect(card).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Ember" })).toBeInTheDocument();
-    expect(screen.getByText(/18 interactions/)).toBeInTheDocument();
-    expect(screen.queryByText(ember!.meta.description)).toBeNull();
-    expect(screen.queryByText("playful")).toBeNull();
+    expect(screen.getByText(/^fire$/i)).toBeInTheDocument();
+    expect(screen.getByText(/moves/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open Ember detail page/i })).toHaveAttribute(
+      "href",
+      "/companion/ember",
+    );
+    expect(screen.queryByText(ember!.meta.description)).toBeTruthy();
   });
 
   it("renders Moss showcase metadata", () => {
@@ -78,12 +82,16 @@ describe("CompanionBlock", () => {
 });
 
 describe("companion catalog", () => {
-  it("loads Ember, Soul, Moss, and Tusk metadata with fall interaction", () => {
+  it("loads Ember, Soul, Moss, Flint, Bubble, Rime, Jab, and Volt metadata with fall interaction", () => {
     expect(companionCatalog.map((entry) => entry.meta.id)).toEqual([
       "ember",
       "soul",
       "moss",
-      "tusk",
+      "flint",
+      "bubble",
+      "rime",
+      "jab",
+      "volt",
     ]);
 
     for (const entry of companionCatalog) {

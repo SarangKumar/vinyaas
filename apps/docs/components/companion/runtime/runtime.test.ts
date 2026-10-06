@@ -307,7 +307,7 @@ describe("interaction system v0.1", () => {
       instanceProfileId: "ash",
     });
 
-    expect(engine.personality.idleTimeoutMs).toBe(4800);
+    expect(engine.personality.idleTimeoutMs).toBe(30000);
     expect(engine.mood).toBe("sleepy");
 
     engine = engineTick(
@@ -347,12 +347,12 @@ describe("interaction system v0.1", () => {
 
     expect(spark.displayName).toBe("Spark");
     expect(spark.energy).toBe("high");
-    expect(spark.idleTimeoutMs).toBe(2000);
+    expect(spark.idleTimeoutMs).toBe(30000);
     expect(deriveCompanionMood("idle", spark)).toBe("excited");
 
     expect(ash.displayName).toBe("Ash");
     expect(ash.energy).toBe("calm");
-    expect(ash.idleTimeoutMs).toBe(4800);
+    expect(ash.idleTimeoutMs).toBe(30000);
     expect(deriveCompanionMood("idle", ash)).toBe("sleepy");
 
     let engine = createCompanionEngine({

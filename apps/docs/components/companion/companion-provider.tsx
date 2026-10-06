@@ -23,14 +23,13 @@ export type CompanionPosition = CompanionVec2;
 /**
  * One live Companion instance (distinct from Companion type/species).
  *
- * Decision: dead / falling / respawning instances still occupy a type slot
- * until they fully despawn. A fallen companion cannot be replaced by spawning
- * a third of the same type during its 5s death window.
+ * Decision: puffing occupies a type slot until the puff finishes and the
+ * instance is removed. Dead companions do not respawn — spawn again from a card.
  */
 export type CompanionInstanceState = {
   /** Stable runtime id for this session instance. */
   id: string;
-  /** Companion type / species id (ember, soul, moss, tusk, …). */
+  /** Companion type / species id (ember, soul, moss, flint, …). */
   type: string;
   /**
    * Optional personality instance profile id from companion.json `instances`.

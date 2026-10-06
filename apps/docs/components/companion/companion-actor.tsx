@@ -17,9 +17,9 @@ import type { CompanionInstanceState } from "@/components/companion/companion-pr
 import { CompanionSprite } from "@/components/companion/companion-sprite";
 import {
   createCompanionEngine,
-  engineBeginRespawn,
   engineDispatchTrigger,
   engineEndDrag,
+  engineFollowPerch,
   engineMoveDrag,
   engineStartDrag,
   engineTick,
@@ -28,11 +28,12 @@ import {
   type CompanionEngineSnapshot,
 } from "@/components/companion/runtime/engine";
 import {
+  companionFloorY,
   COMPANION_SIZE,
-  isDropBelowDeathThreshold,
+  findSurfaceTopBelow,
+  isFatalFallAboveSurface,
   type LandingSurface,
 } from "@/components/companion/runtime/physics";
-import { findCompanionRespawnPosition } from "@/components/companion/runtime/spawn";
 import {
   isCompanionInteractive,
   isCompanionVisible,
@@ -41,10 +42,17 @@ import {
   clearCompanionSurfaceHighlight,
   collectDeclaredCompanionSurfaces,
   findCompanionSurfaceAt,
+  findCompanionSurfaceById,
   setCompanionSurfaceHighlight,
   type CompanionSurfaceRect,
 } from "@/components/companion/runtime/surfaces";
 import { focusRing } from "@/components/focus-ring";
+import {
+  getCompanionBond,
+  recordCompanionDeath,
+  recordCompanionInteraction,
+  recordCompanionLifetime,
+} from "@/components/companion/progression";
 
 type CompanionActorProps = {
   instance: CompanionInstanceState;
@@ -58,6 +66,7 @@ type CompanionActorProps = {
       >
     >,
   ) => void;
+  removeInstance: (id: string) => void;
   onDragSurfaceChange: (
     surface: CompanionSurfaceRect | null,
     valid: boolean,
@@ -84,23 +93,34 @@ function distanceToCompanion(
   return Math.hypot(clientX - cx, clientY - cy);
 }
 
+function allowedIdsFor(type: string): ReadonlySet<string> | null {
+  if (type !== "ember") {
+    return null;
+  }
+  return new Set(getCompanionBond("ember").unlockedInteractionIds);
+}
+
 /**
- * One Companion instance runtime adapter — engine, drag, death timer.
+ * One Companion instance runtime adapter — engine, drag, permanent death.
  */
 export function CompanionActor({
   instance,
   occupied,
   patchInstance,
+  removeInstance,
   onDragSurfaceChange,
 }: CompanionActorProps) {
   const entry = getCatalogEntry(instance.type);
   const dragOffset = useRef<{ x: number; y: number } | null>(null);
   const dragMovedRef = useRef(false);
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const deathTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const removedRef = useRef(false);
+  const lifetimeAccRef = useRef(0);
+  const lastXpInteractionRef = useRef<string | null>(null);
   const engineRef = useRef<CompanionEngineSnapshot | null>(null);
   const highlightElRef = useRef<HTMLElement | null>(null);
   const patchRef = useRef(patchInstance);
+  const removeRef = useRef(removeInstance);
   const occupiedRef = useRef(occupied);
   const instanceRef = useRef(instance);
   const onDragSurfaceChangeRef = useRef(onDragSurfaceChange);
@@ -126,10 +146,11 @@ export function CompanionActor({
 
   useEffect(() => {
     patchRef.current = patchInstance;
+    removeRef.current = removeInstance;
     occupiedRef.current = occupied;
     instanceRef.current = instance;
     onDragSurfaceChangeRef.current = onDragSurfaceChange;
-  }, [patchInstance, occupied, instance, onDragSurfaceChange]);
+  }, [patchInstance, removeInstance, occupied, instance, onDragSurfaceChange]);
 
   // page_navigation broadcast from the host
   useEffect(() => {
@@ -157,6 +178,7 @@ export function CompanionActor({
         },
         Date.now(),
         { width: window.innerWidth, height: window.innerHeight },
+        allowedIdsFor(instanceRef.current.type),
       );
       engineRef.current = next;
       setSnapshot(next);
@@ -185,18 +207,85 @@ export function CompanionActor({
 
       const dtMs = Math.min(48, now - last);
       last = now;
+      const viewport = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      };
+
+      let currentEngine = engineRef.current;
+      if (currentEngine.surfaceId) {
+        const perch = findCompanionSurfaceById(currentEngine.surfaceId);
+        currentEngine = engineFollowPerch(
+          currentEngine,
+          entry.meta,
+          perch
+            ? {
+                top: perch.top,
+                left: perch.left,
+                right: perch.right,
+                bottom: perch.bottom,
+              }
+            : null,
+          viewport,
+          COMPANION_SIZE,
+        );
+      }
+
       const surfaces =
-        engineRef.current.state === "falling" && !engineRef.current.deathPending
+        currentEngine.state === "falling" && !currentEngine.deathPending
           ? surfacesAsLanding(collectDeclaredCompanionSurfaces())
           : [];
 
-      const next = engineTick(
-        engineRef.current,
+      const allowed =
+        instanceRef.current.type === "ember"
+          ? allowedIdsFor("ember")
+          : null;
+
+      let next = engineTick(
+        currentEngine,
         entry.meta,
         dtMs,
-        { width: window.innerWidth, height: window.innerHeight },
+        viewport,
         surfaces,
+        COMPANION_SIZE,
+        Date.now(),
+        allowed,
       );
+
+      // After a non-fatal land, bind to the surface underfoot so scroll-follow works.
+      if (
+        currentEngine.state === "falling" &&
+        !currentEngine.deathPending &&
+        (next.state === "landing" || next.state === "idle") &&
+        !next.surfaceId
+      ) {
+        const feetX = next.physics.position.x + COMPANION_SIZE / 2;
+        const feetY = next.physics.position.y + COMPANION_SIZE - 2;
+        const underfoot = findCompanionSurfaceAt(feetX, feetY);
+        if (underfoot) {
+          next = { ...next, surfaceId: underfoot.id };
+        }
+      }
+
+      if (
+        next.lastInteractionId &&
+        next.lastInteractionId !== lastXpInteractionRef.current
+      ) {
+        lastXpInteractionRef.current = next.lastInteractionId;
+        recordCompanionInteraction(
+          instanceRef.current.type,
+          next.lastInteractionId,
+        );
+      }
+
+      lifetimeAccRef.current += dtMs;
+      if (lifetimeAccRef.current >= 5000) {
+        recordCompanionLifetime(
+          instanceRef.current.type,
+          lifetimeAccRef.current,
+        );
+        lifetimeAccRef.current = 0;
+      }
 
       engineRef.current = next;
       setSnapshot(next);
@@ -228,55 +317,16 @@ export function CompanionActor({
     };
   }, [entry]);
 
-  // Death → respawn timer (exactly ~5s). Slot stays reserved while dead.
+  // Permanent death — record bond, remove instance (no respawn).
   const isDead = snapshot?.state === "dead";
-  const deadUntilMs = snapshot?.deadUntilMs ?? null;
   useEffect(() => {
-    if (!entry || !isDead) {
+    if (!isDead || removedRef.current) {
       return;
     }
-
-    const until = deadUntilMs ?? Date.now() + 5000;
-    const delay = Math.max(0, until - Date.now());
-
-    deathTimerRef.current = setTimeout(() => {
-      if (!engineRef.current || !entry) {
-        return;
-      }
-      const others = occupiedRef.current.filter(
-        (slot) =>
-          !(
-            slot.x === engineRef.current!.physics.position.x &&
-            slot.y === engineRef.current!.physics.position.y
-          ),
-      );
-      const position = findCompanionRespawnPosition(
-        { width: window.innerWidth, height: window.innerHeight },
-        others,
-      );
-      const respawned = engineBeginRespawn(
-        engineRef.current,
-        entry.meta,
-        position,
-      );
-      engineRef.current = respawned;
-      setSnapshot(respawned);
-      patchRef.current(instanceRef.current.id, {
-        x: respawned.physics.position.x,
-        y: respawned.physics.position.y,
-        state: respawned.state,
-        surfaceId: null,
-        deadUntilMs: null,
-      });
-    }, delay);
-
-    return () => {
-      if (deathTimerRef.current) {
-        clearTimeout(deathTimerRef.current);
-        deathTimerRef.current = null;
-      }
-    };
-  }, [entry, isDead, deadUntilMs]);
+    removedRef.current = true;
+    recordCompanionDeath(instanceRef.current.type);
+    removeRef.current(instanceRef.current.id);
+  }, [isDead]);
 
   // cursor_nearby (hover reaction)
   useEffect(() => {
@@ -319,6 +369,7 @@ export function CompanionActor({
         },
         Date.now(),
         { width: window.innerWidth, height: window.innerHeight },
+        allowedIdsFor(instanceRef.current.type),
       );
 
       if (next === engineRef.current) {
@@ -386,23 +437,36 @@ export function CompanionActor({
       onDragSurfaceChangeRef.current(null, false);
 
       const pos = engineRef.current.physics.position;
-      const centerX = pos.x + COMPANION_SIZE / 2;
-      const centerY = pos.y + COMPANION_SIZE / 2;
-      const deathDrop = isDropBelowDeathThreshold(
-        pos.y,
+      const declared = collectDeclaredCompanionSurfaces();
+      const landing = surfacesAsLanding(declared);
+      const floorCompanionY = companionFloorY(
         window.innerHeight,
         COMPANION_SIZE,
       );
+      const surfaceTopBelow = findSurfaceTopBelow(
+        pos.x,
+        pos.y,
+        landing,
+        floorCompanionY,
+        COMPANION_SIZE,
+      );
+      const deathDrop = isFatalFallAboveSurface(
+        pos.y,
+        surfaceTopBelow,
+        window.innerHeight,
+        COMPANION_SIZE,
+      );
+      const centerX = pos.x + COMPANION_SIZE / 2;
+      const centerY = pos.y + COMPANION_SIZE / 2;
       const surface = deathDrop
         ? null
         : findCompanionSurfaceAt(centerX, centerY);
-      const declared = collectDeclaredCompanionSurfaces();
 
       const ended = engineEndDrag(
         engineRef.current,
         entry.meta,
         { width: window.innerWidth, height: window.innerHeight },
-        surfacesAsLanding(declared),
+        landing,
         {
           deathDrop,
           dropSurface: surface
@@ -444,9 +508,6 @@ export function CompanionActor({
     return () => {
       if (clickTimerRef.current) {
         clearTimeout(clickTimerRef.current);
-      }
-      if (deathTimerRef.current) {
-        clearTimeout(deathTimerRef.current);
       }
       clearCompanionSurfaceHighlight(highlightElRef.current);
     };
@@ -512,7 +573,13 @@ export function CompanionActor({
           if (!engineRef.current || !entry) {
             return;
           }
-          const clicked = engineTriggerClick(engineRef.current, entry.meta);
+          const clicked = engineTriggerClick(
+            engineRef.current,
+            entry.meta,
+            Date.now(),
+            undefined,
+            allowedIdsFor(instance.type),
+          );
           engineRef.current = clicked;
           setSnapshot(clicked);
           patchRef.current(instance.id, { state: clicked.state });
@@ -533,7 +600,13 @@ export function CompanionActor({
           clickTimerRef.current = null;
         }
 
-        const jumped = engineTriggerDoubleClick(engineRef.current, entry.meta);
+        const jumped = engineTriggerDoubleClick(
+          engineRef.current,
+          entry.meta,
+          Date.now(),
+          undefined,
+          allowedIdsFor(instance.type),
+        );
         engineRef.current = jumped;
         setSnapshot(jumped);
         patchRef.current(instance.id, { state: jumped.state });
@@ -550,7 +623,13 @@ export function CompanionActor({
           return;
         }
         event.preventDefault();
-        const clicked = engineTriggerClick(engineRef.current, entry.meta);
+        const clicked = engineTriggerClick(
+          engineRef.current,
+          entry.meta,
+          Date.now(),
+          undefined,
+          allowedIdsFor(instance.type),
+        );
         engineRef.current = clicked;
         setSnapshot(clicked);
         patchRef.current(instance.id, { state: clicked.state });
@@ -572,6 +651,7 @@ export function CompanionActor({
           event,
           Date.now(),
           { width: window.innerWidth, height: window.innerHeight },
+          allowedIdsFor(instance.type),
         );
         if (next === engineRef.current) {
           return;

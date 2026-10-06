@@ -8,7 +8,7 @@ import {
   type CompanionVec2,
 } from "@/components/companion/runtime/physics";
 
-export const MAX_COMPANION_INSTANCES_PER_TYPE = 2;
+export const MAX_COMPANION_INSTANCES_PER_TYPE = 1;
 
 /** Minimum spacing between companion tops when spawning. */
 const SPAWN_CLEARANCE = COMPANION_SIZE + 16;

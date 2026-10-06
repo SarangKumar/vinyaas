@@ -7,9 +7,14 @@ export const COMPANION_SIZE = 72;
 export const COMPANION_FLOOR_INSET = 24;
 export const COMPANION_GRAVITY = 0.55;
 export const COMPANION_MAX_FALL_SPEED = 18;
-/** Dropping at or below this viewport fraction enters the death cycle. */
-export const COMPANION_DEATH_VH = 0.8;
-/** How long a fallen companion stays dead before respawning. */
+/**
+ * Fatal drop when the companion is at least this many viewport-heights
+ * above the landing surface beneath it (not relative to the screen bottom).
+ */
+export const COMPANION_DEATH_FALL_VH = 0.7;
+/** @deprecated Kept for older call sites; prefer COMPANION_DEATH_FALL_VH. */
+export const COMPANION_DEATH_VH = COMPANION_DEATH_FALL_VH;
+/** @deprecated Death no longer auto-respawns; removal happens after the puff. */
 export const COMPANION_DEATH_MS = 5000;
 
 export type CompanionVec2 = {
@@ -160,15 +165,70 @@ export function shouldFallOnDrop(y: number, floorY: number, threshold = 2) {
   return y < floorY - threshold;
 }
 
-/** True when the companion's vertical center is at or below 80vh. */
+/**
+ * Top edge of the nearest landing surface (or viewport floor) beneath the
+ * companion's feet. Used for fatal-fall distance checks.
+ */
+export function findSurfaceTopBelow(
+  x: number,
+  y: number,
+  surfaces: LandingSurface[],
+  viewportFloorCompanionY: number,
+  size = COMPANION_SIZE,
+): number {
+  const pad = size * 0.22;
+  const left = x + pad;
+  const right = x + size - pad;
+  const feetY = y + size;
+  // Viewport floor expressed as a surface top (where feet would land).
+  const floorTop = viewportFloorCompanionY + size;
+
+  let hitTop: number | null = null;
+
+  for (const surface of surfaces) {
+    if (surface.right <= left || surface.left >= right) {
+      continue;
+    }
+    // Surface must be at or below the feet.
+    if (surface.top + 0.5 < feetY) {
+      continue;
+    }
+    if (hitTop === null || surface.top < hitTop) {
+      hitTop = surface.top;
+    }
+  }
+
+  if (hitTop === null || floorTop < hitTop) {
+    return floorTop;
+  }
+  return hitTop;
+}
+
+/**
+ * True when the drop height above the surface beneath exceeds 70vh.
+ * `surfaceTop` is the top of that landing surface (or the floor line).
+ */
+export function isFatalFallAboveSurface(
+  y: number,
+  surfaceTop: number,
+  viewportHeight: number,
+  size = COMPANION_SIZE,
+  fallVh = COMPANION_DEATH_FALL_VH,
+): boolean {
+  const feetY = y + size;
+  const fallDistance = surfaceTop - feetY;
+  return fallDistance >= viewportHeight * fallVh;
+}
+
+/** @deprecated Use isFatalFallAboveSurface with the surface beneath the companion. */
 export function isDropBelowDeathThreshold(
   y: number,
   viewportHeight: number,
   size = COMPANION_SIZE,
-  deathVh = COMPANION_DEATH_VH,
+  deathVh = COMPANION_DEATH_FALL_VH,
 ): boolean {
-  const centerY = y + size / 2;
-  return centerY >= viewportHeight * deathVh;
+  // Legacy: treat viewport bottom as the surface.
+  return isFatalFallAboveSurface(y, viewportHeight, viewportHeight, size, deathVh);
 }
 
 export function resolveFallTargetY(

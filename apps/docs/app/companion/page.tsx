@@ -5,6 +5,7 @@ import { CompanionCard } from "@/components/companion/companion-card";
 import { companionCatalog } from "@/components/companion/catalog";
 import { DocsArticle } from "@/components/docs-article";
 import {
+  companionAnimationsPath,
   companionCustomPath,
   companionInstallationPath,
   companionJsonPath,
@@ -35,16 +36,17 @@ export default function CompanionPage() {
           Built-in companions
         </h2>
         <p className={body}>
-          Click a companion card to spawn it on the page. You can have up to two
-          instances of each type at once. Dead companions still hold their slot
-          until they respawn.
+          Spawn one companion of each type onto the page. Use{" "}
+          <strong className="font-medium">Know more</strong> for a Pokédex-style
+          sheet (Bond, unlocked moves, type). Fatal falls puff the companion out
+          — Bond stats stay in local storage.
         </p>
         <div
           data-companion-card-grid
-          className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2"
+          className="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2"
         >
           {companionCatalog.map((entry) => (
-            <CompanionCard key={entry.meta.id} entry={entry} size={128} />
+            <CompanionCard key={entry.meta.id} entry={entry} size={112} />
           ))}
         </div>
       </section>
@@ -55,9 +57,10 @@ export default function CompanionPage() {
         </h2>
         <p className={body}>
           Companions land on declared surfaces and interactive chrome — buttons,
-          selects, code blocks, cards, and playground panels. Plain text and
-          layout wrappers are not valid perches. While dragging, a valid surface
-          highlights softly; invalid areas do not accept a landing.
+          selects, code blocks, cards, and playground panels. Dropping from more
+          than 70vh above the surface beneath causes a fall, then a puff on
+          impact. Perched companions scroll with their surface and tip off when
+          it hits the top of the viewport.
         </p>
         <div
           data-companion-surface=""
@@ -66,7 +69,7 @@ export default function CompanionPage() {
         >
           <p className={body}>
             Drop a companion on this panel to perch. Nested controls inherit the
-            surface from this parent — you do not need to mark every child.
+            surface from this parent.
           </p>
           <button
             type="button"
@@ -83,28 +86,45 @@ export default function CompanionPage() {
         </h2>
         <ul className={`${body} list-disc space-y-2 pl-5`}>
           <li>
-            <strong className="font-medium">Spawn</strong> — click a companion
-            card. A third of the same type is rejected with a short cue.
+            <strong className="font-medium">Spawn</strong> — primary button on
+            each card (one of each type on screen).
           </li>
           <li>
-            <strong className="font-medium">React</strong> — click or tap an
-            existing companion for a bounce/happy reaction (keyboard: Enter or
-            Space).
+            <strong className="font-medium">Know more</strong> — opens the
+            companion sheet with Bond and move unlocks (Ember first).
           </li>
           <li>
-            <strong className="font-medium">Drag</strong> — place on a declared
-            surface or interactive control. Drop below 80% of the viewport
-            height to puff out, stay gone for about 5 seconds, then respawn.
+            <strong className="font-medium">Idle</strong> — after ~30 seconds
+            without interaction, ambient idle/sleep may fire.
           </li>
           <li>
-            <strong className="font-medium">Tusk</strong> — the elephant perch
-            sentinel. Notices clicks on the surface it sits on (
-            <code className="bg-muted rounded px-1.5 py-0.5 text-sm">
-              surface_action
-            </code>
-            ), and glances on scroll.
+            <strong className="font-medium">Flint</strong> — rock-type pebble
+            with a spark still stuck in its cracks.
+          </li>
+          <li>
+            <strong className="font-medium">Bubble</strong> — water-type float
+            with a shiny soap-bubble look.
+          </li>
+          <li>
+            <strong className="font-medium">Rime</strong> — ice-type fox with a
+            glittering tail tip.
+          </li>
+          <li>
+            <strong className="font-medium">Jab</strong> — fighting-type spar
+            buddy in red gloves.
+          </li>
+          <li>
+            <strong className="font-medium">Volt</strong> — electric-type mouse
+            with spark cheeks.
           </li>
         </ul>
+        <p className={body}>
+          Full clip and move tables live on{" "}
+          <Link href={companionAnimationsPath} className={linkClass}>
+            Animations
+          </Link>
+          .
+        </p>
       </section>
 
       <section className="flex flex-col gap-4">

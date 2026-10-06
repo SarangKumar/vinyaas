@@ -3,6 +3,7 @@
   "name": "Moss",
   "type": "frog",
   "description": "A tiny leafy frog buddy.",
+  "lore": "Sprouted from rain-soaked moss on an old garden stone, Moss hopped into the docs with damp toes and a soft croak. It naps in green shade and leaves tiny leaf prints on every perch.",
   "personalityTraits": ["chill", "curious", "loyal"],
   "capabilities": {
     "floating": false,

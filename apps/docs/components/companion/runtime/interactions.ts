@@ -69,9 +69,18 @@ export function executeTriggeredInteraction(args: {
   nowMs: number;
   personality?: ResolvedCompanionPersonality;
   mood?: CompanionMood;
+  /** When set, only these interaction ids may fire (bond unlocks). */
+  allowedInteractionIds?: ReadonlySet<string> | null;
 }): { effect: InteractionEffect; cooldowns: CooldownMap } | null {
-  const ready = (interaction: CompanionInteractionDefinition) =>
-    isInteractionReady(interaction, args.cooldowns, args.nowMs);
+  const ready = (interaction: CompanionInteractionDefinition) => {
+    if (
+      args.allowedInteractionIds &&
+      !args.allowedInteractionIds.has(interaction.id)
+    ) {
+      return false;
+    }
+    return isInteractionReady(interaction, args.cooldowns, args.nowMs);
+  };
 
   let interaction: CompanionInteractionDefinition | null = null;
 

@@ -22,9 +22,9 @@ export type ResolvedCompanionPersonality = {
 };
 
 const ENERGY_IDLE_MS: Record<CompanionEnergyPreference, number> = {
-  high: 2000,
-  balanced: 2800,
-  calm: 4500,
+  high: 30_000,
+  balanced: 30_000,
+  calm: 30_000,
 };
 
 export function resolveCompanionPersonality(
