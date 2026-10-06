@@ -22,6 +22,8 @@ export function PlayBlock({
     <section
       data-slot="card"
       data-play-block
+      data-companion-surface=""
+      data-companion-surface-id={title ? `play-${title}` : undefined}
       className={cn(
         "border-border/80 bg-card text-card-foreground flex w-full max-w-full min-w-0 flex-col gap-5 overflow-hidden rounded-2xl border p-5 shadow-[0_1px_0_oklch(1_0_0/0.04)_inset] sm:gap-6 sm:p-6",
         className,

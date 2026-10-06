@@ -49,6 +49,14 @@
     "fall": {
       "frames": ["animations/fall/1.png", "animations/fall/2.png"],
       "fps": 8
+    },
+    "puff": {
+      "frames": [
+        "animations/puff/1.png",
+        "animations/puff/2.png",
+        "animations/puff/3.png"
+      ],
+      "fps": 10
     }
   }
 }

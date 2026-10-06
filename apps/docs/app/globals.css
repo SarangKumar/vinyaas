@@ -140,9 +140,45 @@
   animation: vinyaas-companion-float 2.8s ease-in-out infinite;
 }
 
+/* Declared Companion landing surfaces — highlight while dragging. */
+[data-companion-surface-active] {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  transition: outline-color 120ms ease;
+}
+
+[data-companion-drag-invalid] {
+  cursor: not-allowed;
+}
+
+@keyframes vinyaas-companion-spawn-reject {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+[data-companion-spawn-reject] {
+  animation: vinyaas-companion-spawn-reject 0.35s ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .vinyaas-companion-float {
     animation: none;
+  }
+
+  [data-companion-spawn-reject] {
+    animation: none;
+  }
+
+  [data-companion-surface-active] {
+    transition: none;
   }
 
   [data-docs-mobile-panel] {

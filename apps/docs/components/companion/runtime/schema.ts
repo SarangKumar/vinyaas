@@ -18,14 +18,12 @@ export type CompanionInteractionTrigger =
   | "drop"
   | "cursor_nearby"
   | "page_navigation"
+  | "surface_action"
+  | "scroll"
   | "manual";
 
 export type CompanionInteractionAction =
-  | "play_animation"
-  | "change_state"
-  | "jump"
-  | "sleep"
-  | "move";
+  "play_animation" | "change_state" | "jump" | "sleep" | "move";
 
 export type CompanionMood = "happy" | "neutral" | "sleepy" | "excited";
 
@@ -97,7 +95,8 @@ export type CompanionConfigSuccess = {
   config: CompanionConfig;
 };
 
-export type CompanionConfigResult = CompanionConfigError | CompanionConfigSuccess;
+export type CompanionConfigResult =
+  CompanionConfigError | CompanionConfigSuccess;
 
 const DEFAULT_FPS = 5;
 
@@ -110,6 +109,8 @@ const TRIGGERS = new Set<CompanionInteractionTrigger>([
   "drop",
   "cursor_nearby",
   "page_navigation",
+  "surface_action",
+  "scroll",
   "manual",
 ]);
 
@@ -121,12 +122,7 @@ const ACTIONS = new Set<CompanionInteractionAction>([
   "move",
 ]);
 
-const MOODS = new Set<CompanionMood>([
-  "happy",
-  "neutral",
-  "sleepy",
-  "excited",
-]);
+const MOODS = new Set<CompanionMood>(["happy", "neutral", "sleepy", "excited"]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -315,16 +311,22 @@ function parseInteraction(
     return inferLegacyInteraction(item.id, description);
   }
 
-  if (!isNonEmptyString(item.trigger) || !TRIGGERS.has(item.trigger as CompanionInteractionTrigger)) {
+  if (
+    !isNonEmptyString(item.trigger) ||
+    !TRIGGERS.has(item.trigger as CompanionInteractionTrigger)
+  ) {
     return {
       ok: false,
       error:
-        "interaction.trigger must be one of click, double_click, idle_timeout, drag_start, drag_end, drop, cursor_nearby, page_navigation, manual.",
+        "interaction.trigger must be one of click, double_click, idle_timeout, drag_start, drag_end, drop, cursor_nearby, page_navigation, surface_action, scroll, manual.",
       path: `${path}.trigger`,
     };
   }
 
-  if (!isNonEmptyString(item.action) || !ACTIONS.has(item.action as CompanionInteractionAction)) {
+  if (
+    !isNonEmptyString(item.action) ||
+    !ACTIONS.has(item.action as CompanionInteractionAction)
+  ) {
     return {
       ok: false,
       error:
@@ -413,7 +415,8 @@ function parseInstanceProfile(
 
   if (
     item.moodBias !== undefined &&
-    (!isNonEmptyString(item.moodBias) || !MOODS.has(item.moodBias as CompanionMood))
+    (!isNonEmptyString(item.moodBias) ||
+      !MOODS.has(item.moodBias as CompanionMood))
   ) {
     return {
       ok: false,
@@ -462,14 +465,16 @@ function parseInstanceProfile(
     ) {
       return {
         ok: false,
-        error: "instance.behavior.cursorNearbyRadius must be a positive number.",
+        error:
+          "instance.behavior.cursorNearbyRadius must be a positive number.",
         path: `${path}.behavior.cursorNearbyRadius`,
       };
     }
     behavior = {
       energy: energy as CompanionEnergyPreference | undefined,
       idleTimeoutMs: item.behavior.idleTimeoutMs as number | undefined,
-      cursorNearbyRadius: item.behavior.cursorNearbyRadius as number | undefined,
+      cursorNearbyRadius: item.behavior.cursorNearbyRadius as
+        number | undefined,
     };
   }
 
@@ -568,10 +573,7 @@ export function parseCompanionConfig(raw: unknown): CompanionConfigResult {
 
   const interactions: CompanionInteractionDefinition[] = [];
   for (let i = 0; i < raw.interactions.length; i++) {
-    const parsed = parseInteraction(
-      raw.interactions[i],
-      `interactions[${i}]`,
-    );
+    const parsed = parseInteraction(raw.interactions[i], `interactions[${i}]`);
     if ("ok" in parsed && parsed.ok === false) {
       return parsed;
     }

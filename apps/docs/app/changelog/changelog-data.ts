@@ -46,6 +46,7 @@ export const changelogVersions: ChangelogVersion[] = [
           `Combobox — searchable selection built from Popover and Command for filtering and choosing options.`,
           `Empty State — composable empty panel with icon, title, description, and actions for lists and dashboards.`,
           `Form — accessible field structure that wires labels, descriptions, and validation messages to existing controls.`,
+          `Companion instances: spawn from cards (max 2 per type), explicit landing surfaces (plus buttons/selects/code blocks), 80vh puff death/respawn, and Tusk the elephant perch sentinel.`,
           `Named catalogs (form, dashboard, navigation, feedback, application) published under /r/catalogs/.`,
           `CLI catalog commands: vinyaas catalog list, vinyaas catalog info, and vinyaas add --catalog.`,
           `vinyaas add --dry-run for install previews without writing files.`,

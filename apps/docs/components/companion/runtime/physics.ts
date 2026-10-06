@@ -7,6 +7,10 @@ export const COMPANION_SIZE = 72;
 export const COMPANION_FLOOR_INSET = 24;
 export const COMPANION_GRAVITY = 0.55;
 export const COMPANION_MAX_FALL_SPEED = 18;
+/** Dropping at or below this viewport fraction enters the death cycle. */
+export const COMPANION_DEATH_VH = 0.8;
+/** How long a fallen companion stays dead before respawning. */
+export const COMPANION_DEATH_MS = 5000;
 
 export type CompanionVec2 = {
   x: number;
@@ -154,6 +158,17 @@ export function findPerchLandingY(
 
 export function shouldFallOnDrop(y: number, floorY: number, threshold = 2) {
   return y < floorY - threshold;
+}
+
+/** True when the companion's vertical center is at or below 80vh. */
+export function isDropBelowDeathThreshold(
+  y: number,
+  viewportHeight: number,
+  size = COMPANION_SIZE,
+  deathVh = COMPANION_DEATH_VH,
+): boolean {
+  const centerY = y + size / 2;
+  return centerY >= viewportHeight * deathVh;
 }
 
 export function resolveFallTargetY(

@@ -20,8 +20,10 @@ import {
 import {
   clampCompanionPosition,
   companionFloorY,
+  COMPANION_DEATH_MS,
   COMPANION_SIZE,
   createPhysicsBody,
+  isDropBelowDeathThreshold,
   resolveFallTargetY,
   shouldFallOnDrop,
   stepCompanionFall,
@@ -56,6 +58,12 @@ export type CompanionEngineSnapshot = {
   /** Active interaction duration budget. */
   interactionDurationMs: number;
   personality: ResolvedCompanionPersonality;
+  /** Falling will end in dead instead of landing. */
+  deathPending: boolean;
+  /** Epoch ms when a dead companion should begin respawn. */
+  deadUntilMs: number | null;
+  /** Declared surface id the companion is perched on, if any. */
+  surfaceId: string | null;
 };
 
 export type CompanionEngineOptions = {
@@ -65,6 +73,19 @@ export type CompanionEngineOptions = {
   state?: CompanionRuntimeState;
   instanceProfileId?: string | null;
   nowMs?: number;
+  surfaceId?: string | null;
+  deathPending?: boolean;
+  deadUntilMs?: number | null;
+};
+
+export type EngineEndDragOptions = {
+  size?: number;
+  nowMs?: number;
+  /** Declared Companion surface under the drop point. */
+  dropSurface?: LandingSurface | null;
+  surfaceId?: string | null;
+  /** Drop center at or below 80vh — enter the death cycle. */
+  deathDrop?: boolean;
 };
 
 function playForState(
@@ -99,6 +120,9 @@ export function createCompanionEngine(
     cooldowns: {},
     interactionDurationMs: 0,
     personality,
+    deathPending: options.deathPending ?? false,
+    deadUntilMs: options.deadUntilMs ?? null,
+    surfaceId: options.surfaceId ?? null,
   };
 
   return {
@@ -187,6 +211,15 @@ export function engineDispatchTrigger(
   nowMs = Date.now(),
   viewport?: { width: number; height: number },
 ): CompanionEngineSnapshot {
+  if (
+    snapshot.state === "dead" ||
+    snapshot.state === "respawning" ||
+    snapshot.state === "falling" ||
+    snapshot.state === "puffing"
+  ) {
+    return snapshot;
+  }
+
   const executed = executeTriggeredInteraction({
     config,
     currentState: snapshot.state,
@@ -216,11 +249,22 @@ export function engineStartDrag(
   position: CompanionVec2,
   nowMs = Date.now(),
 ): CompanionEngineSnapshot {
+  if (
+    snapshot.state === "dead" ||
+    snapshot.state === "respawning" ||
+    snapshot.state === "falling" ||
+    snapshot.state === "puffing"
+  ) {
+    return snapshot;
+  }
+
   const withDrag = applyState(
     {
       ...snapshot,
       physics: createPhysicsBody(position, { x: 0, y: 0 }),
       placed: true,
+      surfaceId: null,
+      deathPending: false,
     },
     config,
     "dragging",
@@ -239,6 +283,8 @@ export function engineStartDrag(
     state: "dragging",
     physics: createPhysicsBody(position, { x: 0, y: 0 }),
     placed: true,
+    surfaceId: null,
+    deathPending: false,
     mood: deriveCompanionMood("dragging", triggered.personality),
   };
 }
@@ -272,12 +318,14 @@ export function engineEndDrag(
   config: CompanionConfig,
   viewport: { width: number; height: number },
   surfaces: LandingSurface[],
-  size = COMPANION_SIZE,
-  nowMs = Date.now(),
+  options: EngineEndDragOptions = {},
 ): CompanionEngineSnapshot {
   if (snapshot.state !== "dragging") {
     return snapshot;
   }
+
+  const size = options.size ?? COMPANION_SIZE;
+  const nowMs = options.nowMs ?? Date.now();
 
   let next = engineDispatchTrigger(
     snapshot,
@@ -286,6 +334,52 @@ export function engineEndDrag(
     nowMs,
     viewport,
   );
+
+  if (options.deathDrop) {
+    // Instant death puff — no fall sequence when dropped below 80vh.
+    return applyState(
+      {
+        ...next,
+        deathPending: false,
+        surfaceId: null,
+        deadUntilMs: null,
+        physics: {
+          ...next.physics,
+          velocity: { x: 0, y: 0 },
+        },
+      },
+      config,
+      "puffing",
+      "puff",
+      480,
+    );
+  }
+
+  if (options.dropSurface) {
+    const perchY = options.dropSurface.top - size;
+    const clamped = clampCompanionPosition(
+      next.physics.position.x,
+      perchY,
+      viewport.width,
+      viewport.height,
+      size,
+    );
+
+    return applyState(
+      {
+        ...next,
+        deathPending: false,
+        deadUntilMs: null,
+        surfaceId: options.surfaceId ?? null,
+        physics: createPhysicsBody(clamped, { x: 0, y: 0 }),
+        placed: true,
+      },
+      config,
+      "landing",
+      "happy",
+      700,
+    );
+  }
 
   const floorY = resolveFallTargetY(
     next.physics.position.x,
@@ -304,6 +398,8 @@ export function engineEndDrag(
           ...next.physics,
           velocity: { x: 0, y: 0 },
         },
+        deathPending: false,
+        surfaceId: null,
       },
       config,
       { trigger: "drop" },
@@ -311,14 +407,72 @@ export function engineEndDrag(
       viewport,
     );
 
-    // Ensure we enter falling even if metadata omitted a drop interaction.
     if (next.state !== "falling") {
       next = applyState(next, config, "falling", "fall");
     }
-    return next;
+    return {
+      ...next,
+      deathPending: false,
+      surfaceId: null,
+    };
   }
 
-  return applyState(next, config, "idle");
+  return applyState(
+    {
+      ...next,
+      deathPending: false,
+      surfaceId: null,
+    },
+    config,
+    "idle",
+  );
+}
+
+export function engineEnterDead(
+  snapshot: CompanionEngineSnapshot,
+  config: CompanionConfig,
+  nowMs = Date.now(),
+): CompanionEngineSnapshot {
+  return applyState(
+    {
+      ...snapshot,
+      deathPending: false,
+      deadUntilMs: nowMs + COMPANION_DEATH_MS,
+      surfaceId: null,
+      physics: {
+        ...snapshot.physics,
+        velocity: { x: 0, y: 0 },
+      },
+    },
+    config,
+    "dead",
+    "fall",
+  );
+}
+
+export function engineBeginRespawn(
+  snapshot: CompanionEngineSnapshot,
+  config: CompanionConfig,
+  position: CompanionVec2,
+): CompanionEngineSnapshot {
+  if (snapshot.state !== "dead") {
+    return snapshot;
+  }
+
+  return applyState(
+    {
+      ...snapshot,
+      deathPending: false,
+      deadUntilMs: null,
+      surfaceId: null,
+      placed: true,
+      physics: createPhysicsBody(position, { x: 0, y: 0 }),
+    },
+    config,
+    "respawning",
+    "happy",
+    600,
+  );
 }
 
 export function engineTriggerClick(
@@ -375,8 +529,34 @@ export function engineTick(
     mood: deriveCompanionMood(snapshot.state, snapshot.personality),
   };
 
+  if (next.state === "dead") {
+    return next;
+  }
+
+  if (next.state === "puffing") {
+    const budget =
+      next.interactionDurationMs > 0 ? next.interactionDurationMs : 480;
+    if (next.animation.finished || next.ambientElapsedMs >= budget) {
+      return engineEnterDead(next, config, nowMs);
+    }
+    return next;
+  }
+
+  if (next.state === "respawning") {
+    if (
+      next.animation.finished ||
+      (next.interactionDurationMs > 0 &&
+        next.ambientElapsedMs >= next.interactionDurationMs)
+    ) {
+      return applyState(next, config, "idle");
+    }
+    return next;
+  }
+
   if (next.state === "falling") {
     const viewportFloor = companionFloorY(viewport.height, size);
+    // Fatal falls ignore perches — companion falls through to death.
+    const fallSurfaces = next.deathPending ? [] : surfaces;
     const projected = stepCompanionFall(
       next.physics,
       viewportFloor,
@@ -386,7 +566,7 @@ export function engineTick(
       next.physics.position.x,
       next.physics.position.y,
       projected.position.y,
-      surfaces,
+      fallSurfaces,
       viewportFloor,
       size,
     );
@@ -411,11 +591,26 @@ export function engineTick(
       },
     };
 
+    if (next.deathPending && stepped.landed) {
+      return engineEnterDead(next, config, nowMs);
+    }
+
+    if (
+      next.deathPending &&
+      isDropBelowDeathThreshold(clamped.y, viewport.height, size)
+    ) {
+      // Already past the threshold mid-fall — finish with a short fall then die.
+      if (stepped.landed || next.ambientElapsedMs > 900) {
+        return engineEnterDead(next, config, nowMs);
+      }
+    }
+
     if (stepped.landed) {
       next = applyState(
         {
           ...next,
           physics: createPhysicsBody(clamped, { x: 0, y: 0 }),
+          deathPending: false,
         },
         config,
         "landing",

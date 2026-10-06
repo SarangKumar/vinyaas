@@ -11,6 +11,9 @@ import emberSleep1 from "@/companion/ember/animations/sleep/1.png";
 import emberSleep2 from "@/companion/ember/animations/sleep/2.png";
 import emberFall1 from "@/companion/ember/animations/fall/1.png";
 import emberFall2 from "@/companion/ember/animations/fall/2.png";
+import emberPuff1 from "@/companion/ember/animations/puff/1.png";
+import emberPuff2 from "@/companion/ember/animations/puff/2.png";
+import emberPuff3 from "@/companion/ember/animations/puff/3.png";
 
 import soulMeta from "@/companion/soul/companion.json";
 import soulIdle from "@/companion/soul/assets/idle.png";
@@ -23,6 +26,9 @@ import soulSleep1 from "@/companion/soul/animations/sleep/1.png";
 import soulSleep2 from "@/companion/soul/animations/sleep/2.png";
 import soulFall1 from "@/companion/soul/animations/fall/1.png";
 import soulFall2 from "@/companion/soul/animations/fall/2.png";
+import soulPuff1 from "@/companion/soul/animations/puff/1.png";
+import soulPuff2 from "@/companion/soul/animations/puff/2.png";
+import soulPuff3 from "@/companion/soul/animations/puff/3.png";
 
 import mossMeta from "@/companion/moss/companion.json";
 import mossIdle from "@/companion/moss/assets/idle.png";
@@ -35,6 +41,24 @@ import mossSleep1 from "@/companion/moss/animations/sleep/1.png";
 import mossSleep2 from "@/companion/moss/animations/sleep/2.png";
 import mossFall1 from "@/companion/moss/animations/fall/1.png";
 import mossFall2 from "@/companion/moss/animations/fall/2.png";
+import mossPuff1 from "@/companion/moss/animations/puff/1.png";
+import mossPuff2 from "@/companion/moss/animations/puff/2.png";
+import mossPuff3 from "@/companion/moss/animations/puff/3.png";
+
+import tuskMeta from "@/companion/tusk/companion.json";
+import tuskIdle from "@/companion/tusk/assets/idle.png";
+import tuskIdle1 from "@/companion/tusk/animations/idle/1.png";
+import tuskIdle2 from "@/companion/tusk/animations/idle/2.png";
+import tuskIdle3 from "@/companion/tusk/animations/idle/3.png";
+import tuskHappy1 from "@/companion/tusk/animations/happy/1.png";
+import tuskHappy2 from "@/companion/tusk/animations/happy/2.png";
+import tuskSleep1 from "@/companion/tusk/animations/sleep/1.png";
+import tuskSleep2 from "@/companion/tusk/animations/sleep/2.png";
+import tuskFall1 from "@/companion/tusk/animations/fall/1.png";
+import tuskFall2 from "@/companion/tusk/animations/fall/2.png";
+import tuskPuff1 from "@/companion/tusk/animations/puff/1.png";
+import tuskPuff2 from "@/companion/tusk/animations/puff/2.png";
+import tuskPuff3 from "@/companion/tusk/animations/puff/3.png";
 
 import {
   assertCompanionConfig,
@@ -55,7 +79,8 @@ export type CompanionClipFrames = {
 };
 
 /** Ambient + motion clips available to the generic renderer. */
-export type CompanionAnimationRole = "idle" | "happy" | "sleep" | "fall";
+export type CompanionAnimationRole =
+  "idle" | "happy" | "sleep" | "fall" | "puff";
 
 export type CompanionCatalogEntry = {
   meta: CompanionConfig;
@@ -92,6 +117,7 @@ export const companionCatalog: CompanionCatalogEntry[] = [
       happy: clip([emberHappy1, emberHappy2], 6, false),
       sleep: clip([emberSleep1, emberSleep2], 3, true),
       fall: clip([emberFall1, emberFall2], 8, true),
+      puff: clip([emberPuff1, emberPuff2, emberPuff3], 10, false),
     },
   },
   {
@@ -102,6 +128,7 @@ export const companionCatalog: CompanionCatalogEntry[] = [
       happy: clip([soulHappy1, soulHappy2], 5, false),
       sleep: clip([soulSleep1, soulSleep2], 3, true),
       fall: clip([soulFall1, soulFall2], 8, true),
+      puff: clip([soulPuff1, soulPuff2, soulPuff3], 10, false),
     },
   },
   {
@@ -112,13 +139,27 @@ export const companionCatalog: CompanionCatalogEntry[] = [
       happy: clip([mossHappy1, mossHappy2], 6, false),
       sleep: clip([mossSleep1, mossSleep2], 3, true),
       fall: clip([mossFall1, mossFall2], 8, true),
+      puff: clip([mossPuff1, mossPuff2, mossPuff3], 10, false),
+    },
+  },
+  {
+    meta: assertCompanionConfig(tuskMeta),
+    idle: tuskIdle,
+    clips: {
+      idle: clip([tuskIdle1, tuskIdle2, tuskIdle3], 5, true),
+      happy: clip([tuskHappy1, tuskHappy2], 6, false),
+      sleep: clip([tuskSleep1, tuskSleep2], 3, true),
+      fall: clip([tuskFall1, tuskFall2], 8, true),
+      puff: clip([tuskPuff1, tuskPuff2, tuskPuff3], 10, false),
     },
   },
 ];
 
 export function getCatalogEntry(companionId: string) {
-  return (
-    companionCatalog.find((entry) => entry.meta.id === companionId) ??
-    companionCatalog[0]
-  );
+  return companionCatalog.find((entry) => entry.meta.id === companionId);
+}
+
+/** First catalog entry — used only when a default is explicitly needed. */
+export function getDefaultCatalogEntry() {
+  return companionCatalog[0];
 }

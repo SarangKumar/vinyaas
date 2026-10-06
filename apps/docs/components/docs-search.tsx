@@ -89,7 +89,7 @@ const docPages: SearchPage[] = [
     title: "Companions",
     href: "/companion",
     description:
-      "Meet Ember, Soul, and Moss — tiny Vinyaas companions separate from UI components.",
+      "Meet Ember, Soul, Moss, and Tusk — tiny Vinyaas companions separate from UI components.",
     group: "Pages",
   },
   {

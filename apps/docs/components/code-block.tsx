@@ -198,6 +198,8 @@ function CodeFrame({
   return (
     <div
       data-code-frame
+      data-companion-surface=""
+      data-companion-surface-id="code-frame"
       className={
         attached
           ? "overflow-hidden rounded-b-md border-t shadow-[inset_0_-12px_24px_-18px_oklch(0_0_0/0.28)]"

@@ -5,10 +5,7 @@ import { CompanionPreview } from "./companion-preview";
 import { CompanionCard } from "./companion-card";
 import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { CompanionSprite } from "./companion-sprite";
-import {
-  companionCatalog,
-  normalizeAnimationClip,
-} from "./catalog";
+import { companionCatalog, normalizeAnimationClip } from "./catalog";
 import {
   companionFloorY,
   findPerchLandingY,
@@ -43,7 +40,7 @@ describe("CompanionCard", () => {
     const card = document.querySelector('[data-companion-card="ember"]');
     expect(card).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Ember" })).toBeInTheDocument();
-    expect(screen.getByText(/17 interactions/)).toBeInTheDocument();
+    expect(screen.getByText(/18 interactions/)).toBeInTheDocument();
     expect(screen.queryByText(ember!.meta.description)).toBeNull();
     expect(screen.queryByText("playful")).toBeNull();
   });
@@ -66,25 +63,27 @@ describe("CompanionBlock", () => {
     expect(
       screen.getByRole("heading", { name: "Companion" }),
     ).toBeInTheDocument();
-    expect(document.querySelector("[data-companion-home-preview]")).toBeTruthy();
+    expect(
+      document.querySelector("[data-companion-home-preview]"),
+    ).toBeTruthy();
     expect(document.querySelector("[data-play-block]")).toBeTruthy();
     expect(screen.getByRole("img", { name: "Ember" })).toBeInTheDocument();
     expect(screen.queryByRole("img", { name: "Soul" })).toBeNull();
     expect(screen.queryByRole("img", { name: "Moss" })).toBeNull();
     expect(document.body.textContent).toContain("A tiny playful flame spirit.");
-    expect(screen.getByRole("link", { name: "Meet companions" })).toHaveAttribute(
-      "href",
-      "/companion",
-    );
+    expect(
+      screen.getByRole("link", { name: "Meet companions" }),
+    ).toHaveAttribute("href", "/companion");
   });
 });
 
 describe("companion catalog", () => {
-  it("loads Ember, Soul, and Moss metadata with fall interaction", () => {
+  it("loads Ember, Soul, Moss, and Tusk metadata with fall interaction", () => {
     expect(companionCatalog.map((entry) => entry.meta.id)).toEqual([
       "ember",
       "soul",
       "moss",
+      "tusk",
     ]);
 
     for (const entry of companionCatalog) {

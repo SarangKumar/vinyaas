@@ -35,10 +35,9 @@ export default function CompanionPage() {
           Built-in companions
         </h2>
         <p className={body}>
-          Companions are a separate Vinyaas feature from registry UI components.
-          Each companion has its own metadata, pixel assets, animation sets, and
-          interaction definitions. The runtime and install CLI are still ahead —
-          this page is the product showcase.
+          Click a companion card to spawn it on the page. You can have up to two
+          instances of each type at once. Dead companions still hold their slot
+          until they respawn.
         </p>
         <div
           data-companion-card-grid
@@ -48,6 +47,64 @@ export default function CompanionPage() {
             <CompanionCard key={entry.meta.id} entry={entry} size={128} />
           ))}
         </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="surfaces" className={sectionHeading}>
+          Landing surfaces
+        </h2>
+        <p className={body}>
+          Companions land on declared surfaces and interactive chrome — buttons,
+          selects, code blocks, cards, and playground panels. Plain text and
+          layout wrappers are not valid perches. While dragging, a valid surface
+          highlights softly; invalid areas do not accept a landing.
+        </p>
+        <div
+          data-companion-surface=""
+          data-companion-surface-id="docs-demo-perch"
+          className="border-border bg-card text-card-foreground rounded-md border p-5"
+        >
+          <p className={body}>
+            Drop a companion on this panel to perch. Nested controls inherit the
+            surface from this parent — you do not need to mark every child.
+          </p>
+          <button
+            type="button"
+            className={`border-border bg-background mt-3 inline-flex h-8 items-center rounded-md border px-3 text-sm ${focusRing}`}
+          >
+            Surface action
+          </button>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 id="interactions" className={sectionHeading}>
+          Interactions
+        </h2>
+        <ul className={`${body} list-disc space-y-2 pl-5`}>
+          <li>
+            <strong className="font-medium">Spawn</strong> — click a companion
+            card. A third of the same type is rejected with a short cue.
+          </li>
+          <li>
+            <strong className="font-medium">React</strong> — click or tap an
+            existing companion for a bounce/happy reaction (keyboard: Enter or
+            Space).
+          </li>
+          <li>
+            <strong className="font-medium">Drag</strong> — place on a declared
+            surface or interactive control. Drop below 80% of the viewport
+            height to puff out, stay gone for about 5 seconds, then respawn.
+          </li>
+          <li>
+            <strong className="font-medium">Tusk</strong> — the elephant perch
+            sentinel. Notices clicks on the surface it sits on (
+            <code className="bg-muted rounded px-1.5 py-0.5 text-sm">
+              surface_action
+            </code>
+            ), and glances on scroll.
+          </li>
+        </ul>
       </section>
 
       <section className="flex flex-col gap-4">

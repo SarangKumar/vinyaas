@@ -13,7 +13,7 @@ function renderWithStore(ui: React.ReactElement) {
 }
 
 describe("Companion landing page", () => {
-  it("showcases Ember, Soul, and Moss as a product feature area", () => {
+  it("showcases Ember, Soul, Moss, and Tusk with spawn and surface docs", () => {
     renderWithStore(<CompanionPage />);
 
     expect(
@@ -25,18 +25,25 @@ describe("Companion landing page", () => {
     expect(screen.getByRole("img", { name: "Ember" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Soul" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Moss" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Tusk" })).toBeInTheDocument();
     expect(screen.queryByRole("img", { name: "Skeleton" })).toBeNull();
-    expect(
-      screen.getByRole("heading", { name: "Ember" }),
-    ).toBeInTheDocument();
+    expect(screen.queryByRole("img", { name: "Pip" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Ember" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Soul" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Moss" })).toBeInTheDocument();
-    expect(document.querySelector("[data-companion-card-grid]")?.className).toContain(
-      "sm:grid-cols-2",
-    );
+    expect(screen.getByRole("heading", { name: "Tusk" })).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Installation" }),
-    ).toHaveAttribute("href", "/companion/installation");
+      document.querySelector("[data-companion-card-grid]")?.className,
+    ).toContain("sm:grid-cols-2");
+    expect(
+      document.querySelector('[data-companion-surface-id="docs-demo-perch"]'),
+    ).toBeTruthy();
+    expect(screen.getByText(/Landing surfaces/i)).toBeInTheDocument();
+    expect(screen.getByText(/elephant perch sentinel/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Installation" })).toHaveAttribute(
+      "href",
+      "/companion/installation",
+    );
     expect(
       screen.getByRole("link", { name: "companion.json" }),
     ).toHaveAttribute("href", "/companion/configuration");

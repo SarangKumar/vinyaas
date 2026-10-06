@@ -26,9 +26,14 @@ const STATE_VALUES = new Set<CompanionRuntimeState>([
   "landing",
   "sleeping",
   "interacting",
+  "puffing",
+  "dead",
+  "respawning",
 ]);
 
-function asRuntimeState(value: string | undefined): CompanionRuntimeState | null {
+function asRuntimeState(
+  value: string | undefined,
+): CompanionRuntimeState | null {
   if (!value) {
     return null;
   }
@@ -59,10 +64,15 @@ export function executeInteractionAction(
     case "change_state": {
       const nextState =
         asRuntimeState(interaction.state) ??
-        (clipId === "fall" ? "falling" : clipId === "sleep" ? "sleeping" : "idle");
+        (clipId === "fall"
+          ? "falling"
+          : clipId === "sleep"
+            ? "sleeping"
+            : "idle");
       return {
         nextState,
-        clipId: interaction.animation ?? (nextState === "falling" ? "fall" : "idle"),
+        clipId:
+          interaction.animation ?? (nextState === "falling" ? "fall" : "idle"),
         durationMs,
       };
     }

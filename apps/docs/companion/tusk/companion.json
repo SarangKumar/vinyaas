@@ -1,0 +1,162 @@
+{
+  "id": "tusk",
+  "name": "Tusk",
+  "type": "elephant",
+  "description": "A sturdy elephant perch sentinel.",
+  "personalityTraits": ["steady", "loyal", "observant"],
+  "capabilities": {
+    "floating": false,
+    "followCursor": false,
+    "reactToClick": true
+  },
+  "instances": {
+    "scout": {
+      "name": "Scout",
+      "personalityTraits": ["alert", "curious", "steady"],
+      "moodBias": "happy",
+      "behavior": {
+        "energy": "balanced",
+        "idleTimeoutMs": 3200,
+        "cursorNearbyRadius": 120
+      }
+    }
+  },
+  "interactions": [
+    {
+      "id": "react-click",
+      "description": "Reacts when clicked",
+      "trigger": "click",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 900,
+      "duration": 1600
+    },
+    {
+      "id": "jump",
+      "description": "Stomps when double-clicked",
+      "trigger": "double_click",
+      "action": "jump",
+      "animation": "happy",
+      "cooldown": 1200,
+      "duration": 1400
+    },
+    {
+      "id": "sleep",
+      "description": "Naps after a quiet stretch",
+      "trigger": "idle_timeout",
+      "action": "sleep",
+      "animation": "sleep",
+      "cooldown": 7000,
+      "duration": 4000
+    },
+    {
+      "id": "idle",
+      "description": "Watches the room while waiting",
+      "trigger": "idle_timeout",
+      "action": "play_animation",
+      "animation": "idle",
+      "cooldown": 0,
+      "duration": 2600
+    },
+    {
+      "id": "fall",
+      "description": "Falls after being dropped",
+      "trigger": "drop",
+      "action": "change_state",
+      "state": "falling",
+      "animation": "fall",
+      "cooldown": 0
+    },
+    {
+      "id": "drag-start",
+      "description": "Settles when picked up",
+      "trigger": "drag_start",
+      "action": "play_animation",
+      "animation": "idle",
+      "cooldown": 0
+    },
+    {
+      "id": "nearby",
+      "description": "Notices a nearby cursor",
+      "trigger": "cursor_nearby",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 2800,
+      "duration": 1100
+    },
+    {
+      "id": "page-hello",
+      "description": "Greets after navigation",
+      "trigger": "page_navigation",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 4000,
+      "duration": 1200
+    },
+    {
+      "id": "surface-action",
+      "description": "Reacts when its landing surface is used",
+      "trigger": "surface_action",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 1600,
+      "duration": 1400
+    },
+    {
+      "id": "scroll-glance",
+      "description": "Glances when the page scrolls",
+      "trigger": "scroll",
+      "action": "play_animation",
+      "animation": "idle",
+      "cooldown": 2200,
+      "duration": 900
+    },
+    {
+      "id": "wake",
+      "description": "Wakes from a nap",
+      "trigger": "click",
+      "action": "change_state",
+      "state": "idle",
+      "animation": "idle",
+      "cooldown": 400
+    }
+  ],
+  "assets": {
+    "idle": "assets/idle.png"
+  },
+  "animations": {
+    "idle": {
+      "frames": [
+        "animations/idle/1.png",
+        "animations/idle/2.png",
+        "animations/idle/3.png"
+      ],
+      "fps": 5,
+      "loop": true
+    },
+    "happy": {
+      "frames": ["animations/happy/1.png", "animations/happy/2.png"],
+      "fps": 6,
+      "loop": false
+    },
+    "sleep": {
+      "frames": ["animations/sleep/1.png", "animations/sleep/2.png"],
+      "fps": 3,
+      "loop": true
+    },
+    "fall": {
+      "frames": ["animations/fall/1.png", "animations/fall/2.png"],
+      "fps": 8,
+      "loop": true
+    },
+    "puff": {
+      "frames": [
+        "animations/puff/1.png",
+        "animations/puff/2.png",
+        "animations/puff/3.png"
+      ],
+      "fps": 10,
+      "loop": false
+    }
+  }
+}
