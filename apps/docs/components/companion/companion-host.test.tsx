@@ -19,6 +19,7 @@ import {
 import {
   createCompanionEngine,
   engineEndDrag,
+  engineMoveDrag,
   engineStartDrag,
   engineTick,
 } from "@/components/companion/runtime/engine";
@@ -276,6 +277,7 @@ describe("Companion death engine", () => {
     });
     expect(engine.state).toBe("falling");
     expect(engine.deathPending).toBe(true);
+    expect(engine.animation.clipId).toBe("cry");
 
     for (let i = 0; i < 400 && engine.state === "falling"; i += 1) {
       engine = engineTick(
@@ -306,6 +308,35 @@ describe("Companion death engine", () => {
     expect(engine.state).toBe("dead");
     expect(engine.deadUntilMs).toBeNull();
     expect(isCompanionInteractive(engine.state)).toBe(false);
+  });
+
+  it("cries while held at a fatal height above the surface beneath", () => {
+    const config = assertCompanionConfig(emberMeta);
+    let engine = createCompanionEngine({
+      config,
+      position: { x: 100, y: 40 },
+    });
+
+    engine = engineStartDrag(engine, config, { x: 100, y: 40 });
+    expect(engine.state).toBe("dragging");
+
+    engine = engineMoveDrag(
+      engine,
+      { x: 100, y: 20 },
+      { width: 1000, height: 800 },
+      COMPANION_SIZE,
+      { config, fatalHeight: true },
+    );
+    expect(engine.animation.clipId).toBe("cry");
+
+    engine = engineMoveDrag(
+      engine,
+      { x: 100, y: 500 },
+      { width: 1000, height: 800 },
+      COMPANION_SIZE,
+      { config, fatalHeight: false },
+    );
+    expect(engine.animation.clipId).toBe("idle");
   });
 
   it("snaps onto a declared drop surface instead of falling", () => {

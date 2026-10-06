@@ -41,11 +41,12 @@ describe("CompanionCard", () => {
     expect(card).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Ember" })).toBeInTheDocument();
     expect(screen.getByText(/^fire$/i)).toBeInTheDocument();
-    expect(screen.getByText(/moves/i)).toBeInTheDocument();
+    expect(screen.getByText(/\d+ moves/i)).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Open Ember detail page/i }),
     ).toHaveAttribute("href", "/companion/ember");
     expect(screen.queryByText(ember!.meta.description)).toBeTruthy();
+    expect(screen.queryByText(/How moves fire/i)).toBeNull();
   });
 
   it("renders Moss showcase metadata", () => {
@@ -103,6 +104,19 @@ describe("companion catalog", () => {
       expect(entry.clips.happy.frames.length).toBeGreaterThanOrEqual(2);
       expect(entry.clips.sleep.frames.length).toBeGreaterThanOrEqual(2);
       expect(entry.clips.fall.frames.length).toBeGreaterThanOrEqual(2);
+      expect(entry.clips.cry.frames.length).toBeGreaterThanOrEqual(2);
+
+      if (
+        entry.meta.id === "ember" ||
+        entry.meta.id === "moss" ||
+        entry.meta.id === "soul"
+      ) {
+        expect(entry.clips.blink?.frames.length).toBeGreaterThanOrEqual(2);
+        expect(entry.clips.celebrate?.frames.length).toBeGreaterThanOrEqual(2);
+        expect(entry.clips.dance?.frames.length).toBeGreaterThanOrEqual(2);
+        expect(entry.clips.surprise?.frames.length).toBeGreaterThanOrEqual(2);
+        expect(entry.clips.glow?.frames.length).toBeGreaterThanOrEqual(2);
+      }
 
       const idle = normalizeAnimationClip(entry.meta.animations.idle);
       expect(idle.frames.length).toBeGreaterThanOrEqual(2);
@@ -167,6 +181,7 @@ describe("companion runtime physics", () => {
 
   it("cycles ambient roles away from idle", () => {
     expect(pickAmbientRole("idle", () => 0.7)).toBe("happy");
+    expect(pickAmbientRole("idle", () => 0.8)).toBe("blink");
     expect(pickAmbientRole("idle", () => 0.9)).toBe("sleep");
     expect(pickAmbientRole("happy", () => 0.1)).toBe("idle");
   });

@@ -4,11 +4,7 @@
   "type": "fox",
   "description": "A frosty little ice fox.",
   "lore": "Hatched from a snowflake on a silent ridge, Rime padded into the docs with icy ears and a glittering tail tip. Soft paws, sharp curiosity.",
-  "personalityTraits": [
-    "curious",
-    "gentle",
-    "alert"
-  ],
+  "personalityTraits": ["curious", "gentle", "alert"],
   "capabilities": {
     "floating": false,
     "followCursor": false,
@@ -128,26 +124,17 @@
       "loop": true
     },
     "happy": {
-      "frames": [
-        "animations/happy/1.png",
-        "animations/happy/2.png"
-      ],
+      "frames": ["animations/happy/1.png", "animations/happy/2.png"],
       "fps": 6,
       "loop": false
     },
     "sleep": {
-      "frames": [
-        "animations/sleep/1.png",
-        "animations/sleep/2.png"
-      ],
+      "frames": ["animations/sleep/1.png", "animations/sleep/2.png"],
       "fps": 3,
       "loop": true
     },
     "fall": {
-      "frames": [
-        "animations/fall/1.png",
-        "animations/fall/2.png"
-      ],
+      "frames": ["animations/fall/1.png", "animations/fall/2.png"],
       "fps": 8,
       "loop": true
     },
@@ -159,6 +146,16 @@
       ],
       "fps": 10,
       "loop": false
+    },
+    "cry": {
+      "frames": [
+        "animations/cry/1.png",
+        "animations/cry/2.png",
+        "animations/cry/3.png",
+        "animations/cry/4.png"
+      ],
+      "fps": 8,
+      "loop": true
     }
   }
 }

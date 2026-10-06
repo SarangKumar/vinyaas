@@ -118,7 +118,7 @@
       "description": "Bursts brighter in joy",
       "trigger": "click",
       "action": "play_animation",
-      "animation": "happy",
+      "animation": "celebrate",
       "cooldown": 1200,
       "duration": 1800
     },
@@ -134,45 +134,56 @@
     {
       "id": "blink",
       "description": "Blinks with bright ember eyes",
-      "trigger": "manual",
+      "trigger": "idle_timeout",
       "action": "play_animation",
-      "animation": "idle"
+      "animation": "blink",
+      "cooldown": 5000,
+      "duration": 500
     },
     {
-      "id": "wave",
-      "description": "Waves a little flame tip",
-      "trigger": "manual",
+      "id": "wiggle",
+      "description": "Wiggles with a happy squash",
+      "trigger": "surface_action",
       "action": "play_animation",
-      "animation": "happy"
+      "animation": "wiggle",
+      "cooldown": 1400,
+      "duration": 1400
     },
     {
       "id": "dance",
       "description": "Dances happily on command",
-      "trigger": "manual",
+      "trigger": "scroll",
       "action": "play_animation",
-      "animation": "happy",
-      "duration": 1800
+      "animation": "dance",
+      "duration": 1800,
+      "cooldown": 2800
     },
     {
       "id": "spin",
       "description": "Spins like a tiny spark",
-      "trigger": "manual",
+      "trigger": "page_navigation",
       "action": "play_animation",
-      "animation": "happy"
+      "animation": "spin",
+      "cooldown": 4500,
+      "duration": 1600
     },
     {
       "id": "surprise",
       "description": "Pops up in surprise",
-      "trigger": "manual",
+      "trigger": "double_click",
       "action": "jump",
-      "animation": "happy"
+      "animation": "surprise",
+      "cooldown": 1400,
+      "duration": 1400
     },
     {
       "id": "glow",
       "description": "Glows warmer for a moment",
-      "trigger": "manual",
+      "trigger": "cursor_nearby",
       "action": "play_animation",
-      "animation": "happy"
+      "animation": "glow",
+      "cooldown": 3000,
+      "duration": 1600
     },
     {
       "id": "follow-cursor",
@@ -236,6 +247,94 @@
       ],
       "fps": 12,
       "loop": false
+    },
+    "blink": {
+      "frames": [
+        "animations/blink/1.png",
+        "animations/blink/2.png",
+        "animations/blink/3.png"
+      ],
+      "fps": 8,
+      "loop": false
+    },
+    "celebrate": {
+      "frames": [
+        "animations/celebrate/1.png",
+        "animations/celebrate/2.png",
+        "animations/celebrate/3.png",
+        "animations/celebrate/4.png",
+        "animations/celebrate/5.png"
+      ],
+      "fps": 12,
+      "loop": false
+    },
+    "dance": {
+      "frames": [
+        "animations/dance/1.png",
+        "animations/dance/2.png",
+        "animations/dance/3.png",
+        "animations/dance/4.png",
+        "animations/dance/5.png",
+        "animations/dance/6.png"
+      ],
+      "fps": 12,
+      "loop": true
+    },
+    "surprise": {
+      "frames": [
+        "animations/surprise/1.png",
+        "animations/surprise/2.png",
+        "animations/surprise/3.png"
+      ],
+      "fps": 10,
+      "loop": false
+    },
+    "glow": {
+      "frames": [
+        "animations/glow/1.png",
+        "animations/glow/2.png",
+        "animations/glow/3.png",
+        "animations/glow/4.png",
+        "animations/glow/5.png"
+      ],
+      "fps": 10,
+      "loop": true
+    },
+    "spin": {
+      "frames": [
+        "animations/spin/1.png",
+        "animations/spin/2.png",
+        "animations/spin/3.png",
+        "animations/spin/4.png",
+        "animations/spin/5.png",
+        "animations/spin/6.png",
+        "animations/spin/7.png",
+        "animations/spin/8.png"
+      ],
+      "fps": 14,
+      "loop": true
+    },
+    "cry": {
+      "frames": [
+        "animations/cry/1.png",
+        "animations/cry/2.png",
+        "animations/cry/3.png",
+        "animations/cry/4.png"
+      ],
+      "fps": 8,
+      "loop": true
+    },
+    "wiggle": {
+      "frames": [
+        "animations/wiggle/1.png",
+        "animations/wiggle/2.png",
+        "animations/wiggle/3.png",
+        "animations/wiggle/4.png",
+        "animations/wiggle/5.png",
+        "animations/wiggle/6.png"
+      ],
+      "fps": 12,
+      "loop": true
     }
   }
 }

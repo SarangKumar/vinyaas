@@ -309,6 +309,11 @@ export function engineMoveDrag(
   position: CompanionVec2,
   viewport: { width: number; height: number },
   size = COMPANION_SIZE,
+  options: {
+    config?: CompanionConfig;
+    /** True when the held height would be a fatal drop if released. */
+    fatalHeight?: boolean;
+  } = {},
 ): CompanionEngineSnapshot {
   if (snapshot.state !== "dragging") {
     return snapshot;
@@ -322,10 +327,31 @@ export function engineMoveDrag(
     size,
   );
 
-  return {
+  let next: CompanionEngineSnapshot = {
     ...snapshot,
     physics: createPhysicsBody(clamped, { x: 0, y: 0 }),
   };
+
+  const config = options.config;
+  if (!config) {
+    return next;
+  }
+
+  if (options.fatalHeight) {
+    if (next.animation.clipId !== "cry") {
+      next = {
+        ...next,
+        animation: playForState(config, "dragging", "cry"),
+      };
+    }
+  } else if (next.animation.clipId === "cry") {
+    next = {
+      ...next,
+      animation: playForState(config, "dragging", "idle"),
+    };
+  }
+
+  return next;
 }
 
 export function engineEndDrag(
@@ -351,7 +377,7 @@ export function engineEndDrag(
   );
 
   if (options.deathDrop) {
-    // Fatal height: fall toward the surface, then puff on impact.
+    // Fatal height: cry while falling toward the surface, then puff on impact.
     let falling = engineDispatchTrigger(
       {
         ...next,
@@ -370,7 +396,12 @@ export function engineEndDrag(
     );
 
     if (falling.state !== "falling") {
-      falling = applyState(falling, config, "falling", "fall");
+      falling = applyState(falling, config, "falling", "cry");
+    } else {
+      falling = {
+        ...falling,
+        animation: playForState(config, "falling", "cry"),
+      };
     }
 
     return {

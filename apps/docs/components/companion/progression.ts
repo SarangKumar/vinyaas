@@ -119,7 +119,7 @@ export const EMBER_UNLOCK_TIERS: EmberUnlockTier[] = [
   {
     bond: 4,
     lifetimeMs: 15 * 60_000,
-    moveIds: ["wave", "dance", "glow"],
+    moveIds: ["wiggle", "dance", "glow"],
   },
   {
     bond: 5,
@@ -294,7 +294,21 @@ function writeAll(map: Record<string, CompanionBondRecord>) {
 
 export function getCompanionBond(companionId: string): CompanionBondRecord {
   const all = readAll();
-  return all[companionId] ?? defaultBondRecord(companionId);
+  const record = all[companionId] ?? defaultBondRecord(companionId);
+  // Migrate retired move id wave → wiggle.
+  if (record.unlockedInteractionIds.includes("wave")) {
+    return {
+      ...record,
+      unlockedInteractionIds: Array.from(
+        new Set(
+          record.unlockedInteractionIds.map((id) =>
+            id === "wave" ? "wiggle" : id,
+          ),
+        ),
+      ),
+    };
+  }
+  return record;
 }
 
 export function saveCompanionBond(record: CompanionBondRecord) {

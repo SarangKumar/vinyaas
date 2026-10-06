@@ -28,6 +28,7 @@ import {
   unlockRequirementForMove,
   xpToNextBond,
 } from "@/components/companion/progression";
+import { describeMoveHowTo } from "@/components/companion/move-triggers";
 import { useCompanionBond } from "@/components/companion/use-companion-bond";
 import { focusRing } from "@/components/focus-ring";
 import { companionPath } from "@/components/docs-nav";
@@ -155,6 +156,29 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
   const isEmber = companionId === "ember";
   const elementLabel = ELEMENT_VISUALS[element].label;
   const story = entry.meta.lore ?? entry.meta.description;
+  const interactionTotal = entry.meta.interactions?.length ?? 0;
+  const animationRoles = (
+    [
+      "idle",
+      "happy",
+      "sleep",
+      "fall",
+      "puff",
+      "cry",
+      "blink",
+      "celebrate",
+      "dance",
+      "surprise",
+      "glow",
+      "wiggle",
+      "spin",
+    ] as const
+  ).filter((role) => Boolean(entry.clips[role]));
+  const animationTotal = animationRoles.length;
+  const animationFrameTotal = animationRoles.reduce(
+    (sum, role) => sum + (entry.clips[role]?.frames.length ?? 0),
+    0,
+  );
 
   return (
     <div className="flex flex-col gap-10" data-companion-detail={companionId}>
@@ -184,6 +208,10 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
             <p className="text-foreground text-base leading-7">{story}</p>
             <p className="text-muted-foreground text-sm leading-6">
               Traits: {entry.meta.personalityTraits.join(" · ")}
+            </p>
+            <p className="text-foreground text-sm leading-6">
+              {interactionTotal} interactions · {animationTotal} animation clips
+              ({animationFrameTotal} frames)
             </p>
           </div>
 
@@ -323,8 +351,11 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
           Moves
         </h2>
         <p className="text-muted-foreground text-sm leading-6">
-          Starter moves first, then other unlocks, then locked gates (Bond +
-          awake time). Drop onto a move row to perch on it.
+          {interactionTotal} interactions
+          {isEmber
+            ? " · starter moves first, then unlocks gated by Bond + awake time"
+            : ""}
+          . Drop onto a move row to perch on it.
         </p>
         <ul className="flex flex-col gap-2">
           {sortedMoves.map(({ item, unlocked, starter }) => {
@@ -380,15 +411,14 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
                       ) : null}
                     </div>
                     <p className="text-muted-foreground mt-0.5 text-sm leading-5">
-                      {item.description ?? item.trigger}
-                      {" · "}
-                      <code>{item.trigger}</code>
-                      {" → "}
-                      <code>{item.action}</code>
+                      {item.description ?? item.id}
+                    </p>
+                    <p className="text-foreground/85 mt-1 text-xs leading-5">
+                      {describeMoveHowTo(item.id, item)}
                       {item.animation ? (
                         <>
-                          {" "}
-                          (<code>{item.animation}</code>)
+                          {" · clip "}
+                          <code>{item.animation}</code>
                         </>
                       ) : null}
                     </p>
@@ -415,8 +445,12 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
         <h2 className="text-foreground text-xl font-semibold tracking-tight">
           Animation clips
         </h2>
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 sm:gap-4 md:grid-cols-5 lg:grid-cols-6">
-          {(["idle", "happy", "sleep", "fall", "puff"] as const).map((role) => {
+        <p className="text-muted-foreground text-sm leading-6">
+          {animationTotal} clips · {animationFrameTotal} frames total. Each card
+          shows how that clip is triggered in the host.
+        </p>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
+          {animationRoles.map((role) => {
             const clip = entry.clips[role];
             if (!clip) {
               return null;
@@ -436,6 +470,9 @@ export function CompanionDetailView({ companionId }: CompanionDetailViewProps) {
                 />
                 <span className="text-foreground font-mono text-xs">
                   {role}
+                </span>
+                <span className="text-muted-foreground text-center text-[0.65rem] leading-4">
+                  {describeMoveHowTo(role)}
                 </span>
                 <span className="text-muted-foreground text-[0.7rem]">
                   {clip.frames.length} frames

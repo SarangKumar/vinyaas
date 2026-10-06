@@ -237,9 +237,7 @@ export function CompanionActor({
           : [];
 
       const allowed =
-        instanceRef.current.type === "ember"
-          ? allowedIdsFor("ember")
-          : null;
+        instanceRef.current.type === "ember" ? allowedIdsFor("ember") : null;
 
       let next = engineTick(
         currentEngine,
@@ -409,10 +407,34 @@ export function CompanionActor({
         dragMovedRef.current = true;
       }
 
-      const moved = engineMoveDrag(engineRef.current, nextPos, {
+      const viewport = {
         width: window.innerWidth,
         height: window.innerHeight,
-      });
+      };
+      const declared = collectDeclaredCompanionSurfaces();
+      const landing = surfacesAsLanding(declared);
+      const floorCompanionY = companionFloorY(viewport.height, COMPANION_SIZE);
+      const surfaceTopBelow = findSurfaceTopBelow(
+        nextPos.x,
+        nextPos.y,
+        landing,
+        floorCompanionY,
+        COMPANION_SIZE,
+      );
+      const fatalHeight = isFatalFallAboveSurface(
+        nextPos.y,
+        surfaceTopBelow,
+        viewport.height,
+        COMPANION_SIZE,
+      );
+
+      const moved = engineMoveDrag(
+        engineRef.current,
+        nextPos,
+        viewport,
+        COMPANION_SIZE,
+        { config: entry.meta, fatalHeight },
+      );
       engineRef.current = moved;
       setSnapshot(moved);
 

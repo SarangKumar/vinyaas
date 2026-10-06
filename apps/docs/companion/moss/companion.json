@@ -11,23 +11,74 @@
     "reactToClick": true
   },
   "interactions": [
-    { "id": "idle", "description": "Breathes and blinks softly" },
-    { "id": "blink", "description": "Blinks big froggy eyes" },
-    { "id": "wave", "description": "Waves a tiny arm" },
-    { "id": "jump", "description": "Hops with a happy bounce" },
-    { "id": "dance", "description": "Does a silly hop-dance" },
-    { "id": "spin", "description": "Spins with a dizzy grin" },
-    { "id": "sleep", "description": "Naps in a little curl" },
-    { "id": "wake", "description": "Wakes with a stretch" },
-    { "id": "celebrate", "description": "Hops higher in delight" },
-    { "id": "follow-cursor", "description": "Can trail the cursor later" },
-    { "id": "hide", "description": "Tucks into a leaf ball" },
-    { "id": "peek", "description": "Peeks out from hiding" },
-    { "id": "shake", "description": "Shivers with a giggle" },
-    { "id": "glow", "description": "Cheeks glow softly" },
-    { "id": "react-click", "description": "Reacts when clicked" },
-    { "id": "surprise", "description": "Jumps in surprise" },
-    { "id": "fall", "description": "Falls after being dropped" }
+    {
+      "id": "idle",
+      "description": "Breathes and blinks softly"
+    },
+    {
+      "id": "blink",
+      "description": "Blinks big froggy eyes"
+    },
+    {
+      "id": "wiggle",
+      "description": "Wiggles with a froggy squash"
+    },
+    {
+      "id": "jump",
+      "description": "Hops with a happy bounce"
+    },
+    {
+      "id": "dance",
+      "description": "Does a silly hop-dance"
+    },
+    {
+      "id": "spin",
+      "description": "Spins with a dizzy grin"
+    },
+    {
+      "id": "sleep",
+      "description": "Naps in a little curl"
+    },
+    {
+      "id": "wake",
+      "description": "Wakes with a stretch"
+    },
+    {
+      "id": "celebrate",
+      "description": "Hops higher in delight"
+    },
+    {
+      "id": "follow-cursor",
+      "description": "Can trail the cursor later"
+    },
+    {
+      "id": "hide",
+      "description": "Tucks into a leaf ball"
+    },
+    {
+      "id": "peek",
+      "description": "Peeks out from hiding"
+    },
+    {
+      "id": "shake",
+      "description": "Shivers with a giggle"
+    },
+    {
+      "id": "glow",
+      "description": "Cheeks glow softly"
+    },
+    {
+      "id": "react-click",
+      "description": "Reacts when clicked"
+    },
+    {
+      "id": "surprise",
+      "description": "Jumps in surprise"
+    },
+    {
+      "id": "fall",
+      "description": "Falls after being dropped"
+    }
   ],
   "assets": {
     "idle": "assets/idle.png"
@@ -58,6 +109,94 @@
         "animations/puff/3.png"
       ],
       "fps": 10
+    },
+    "blink": {
+      "frames": [
+        "animations/blink/1.png",
+        "animations/blink/2.png",
+        "animations/blink/3.png"
+      ],
+      "fps": 8,
+      "loop": false
+    },
+    "celebrate": {
+      "frames": [
+        "animations/celebrate/1.png",
+        "animations/celebrate/2.png",
+        "animations/celebrate/3.png",
+        "animations/celebrate/4.png",
+        "animations/celebrate/5.png"
+      ],
+      "fps": 12,
+      "loop": false
+    },
+    "dance": {
+      "frames": [
+        "animations/dance/1.png",
+        "animations/dance/2.png",
+        "animations/dance/3.png",
+        "animations/dance/4.png",
+        "animations/dance/5.png",
+        "animations/dance/6.png"
+      ],
+      "fps": 12,
+      "loop": true
+    },
+    "surprise": {
+      "frames": [
+        "animations/surprise/1.png",
+        "animations/surprise/2.png",
+        "animations/surprise/3.png"
+      ],
+      "fps": 10,
+      "loop": false
+    },
+    "glow": {
+      "frames": [
+        "animations/glow/1.png",
+        "animations/glow/2.png",
+        "animations/glow/3.png",
+        "animations/glow/4.png",
+        "animations/glow/5.png"
+      ],
+      "fps": 10,
+      "loop": true
+    },
+    "spin": {
+      "frames": [
+        "animations/spin/1.png",
+        "animations/spin/2.png",
+        "animations/spin/3.png",
+        "animations/spin/4.png",
+        "animations/spin/5.png",
+        "animations/spin/6.png",
+        "animations/spin/7.png",
+        "animations/spin/8.png"
+      ],
+      "fps": 14,
+      "loop": true
+    },
+    "cry": {
+      "frames": [
+        "animations/cry/1.png",
+        "animations/cry/2.png",
+        "animations/cry/3.png",
+        "animations/cry/4.png"
+      ],
+      "fps": 8,
+      "loop": true
+    },
+    "wiggle": {
+      "frames": [
+        "animations/wiggle/1.png",
+        "animations/wiggle/2.png",
+        "animations/wiggle/3.png",
+        "animations/wiggle/4.png",
+        "animations/wiggle/5.png",
+        "animations/wiggle/6.png"
+      ],
+      "fps": 12,
+      "loop": true
     }
   }
 }

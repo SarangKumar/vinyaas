@@ -19,23 +19,62 @@ const body = "text-foreground text-base leading-7";
 const CLIP_ROLES = [
   {
     id: "idle",
-    summary: "Ambient loop while waiting. Fires after ~30s without interaction via idle_timeout.",
+    summary:
+      "Ambient loop while waiting. Fires after ~30s without interaction via idle_timeout.",
   },
   {
     id: "happy",
-    summary: "Short celebration / reaction one-shot used by click, jump, nearby, and greet moves.",
+    summary:
+      "Short reaction one-shot used by click, jump, nearby, and greet moves.",
+  },
+  {
+    id: "blink",
+    summary:
+      "Quick eye-close. Occasional idle flicker once Bond 3 unlocks blink.",
+  },
+  {
+    id: "celebrate",
+    summary: "Joy burst with sparkles. Click once Bond 2 unlocks celebrate.",
+  },
+  {
+    id: "dance",
+    summary: "Side-to-side squash dance. Scroll the page (Bond 4+).",
+  },
+  {
+    id: "surprise",
+    summary: "Wide-eyed jump. Double-click (Bond 5+; after jump cools).",
+  },
+  {
+    id: "glow",
+    summary: "Brightened aura. Move the cursor nearby (Bond 4+).",
+  },
+  {
+    id: "wiggle",
+    summary:
+      "Squash-and-stretch body wiggle. Click the surface it is perched on (Bond 4+).",
+  },
+  {
+    id: "spin",
+    summary: "Full rotate-in-place loop. Change docs pages (Bond 5+).",
   },
   {
     id: "sleep",
-    summary: "Dozing loop when an idle_timeout sleep interaction wins.",
+    summary:
+      "Dozing loop when an idle_timeout sleep interaction wins (~30s idle, Bond 3+).",
   },
   {
     id: "fall",
-    summary: "Loop while gravity runs after a non-fatal or fatal drop.",
+    summary: "Loop while gravity runs after a non-fatal drop.",
+  },
+  {
+    id: "cry",
+    summary:
+      "Tearful loop while held more than 70vh above a surface, and while falling after a fatal drop.",
   },
   {
     id: "puff",
-    summary: "Death burst played when a fatal-height fall hits the surface beneath.",
+    summary:
+      "Death burst played when a fatal-height fall hits the surface beneath.",
   },
 ] as const;
 
@@ -89,21 +128,25 @@ export default function CompanionAnimationsPage() {
         </div>
         {ember ? (
           <div className="flex flex-wrap items-end gap-6 pt-2">
-            {(
-              ["idle", "happy", "sleep", "fall", "puff"] as const
-            ).map((role) => (
-              <div key={role} className="flex flex-col items-center gap-2">
-                <CompanionSprite
-                  name={`Ember ${role}`}
-                  frames={ember.clips[role].frames}
-                  fps={ember.clips[role].fps}
-                  size={72}
-                />
-                <span className="text-muted-foreground font-mono text-xs">
-                  {role}
-                </span>
-              </div>
-            ))}
+            {CLIP_ROLES.map((clip) => {
+              const frames = ember.clips[clip.id as keyof typeof ember.clips];
+              if (!frames) {
+                return null;
+              }
+              return (
+                <div key={clip.id} className="flex flex-col items-center gap-2">
+                  <CompanionSprite
+                    name={`Ember ${clip.id}`}
+                    frames={frames.frames}
+                    fps={frames.fps}
+                    size={72}
+                  />
+                  <span className="text-muted-foreground font-mono text-xs">
+                    {clip.id}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         ) : null}
       </section>
@@ -168,14 +211,15 @@ export default function CompanionAnimationsPage() {
         <ol className={`${body} list-decimal space-y-2 pl-5`}>
           <li>Spawn from a companion card (one instance per type).</li>
           <li>
-            Drag onto a surface. Short drops land; drops from more than 70vh
-            above the surface beneath fall, then <code>puff</code> on impact.
+            Drag onto a surface. Hold more than 70vh above the surface beneath
+            and it <code>cry</code>s while you still hold it; release and it
+            keeps crying through the fall, then <code>puff</code>s on impact.
             While perched, the companion scrolls with its box and falls when
             that surface hits the top of the viewport.
           </li>
           <li>
-            After ~30 seconds without interaction, <code>idle_timeout</code>{" "}
-            may sleep or flicker.
+            After ~30 seconds without interaction, <code>idle_timeout</code> may
+            sleep or flicker.
           </li>
           <li>
             Double-click plays a eased jump using the <code>happy</code> clip.

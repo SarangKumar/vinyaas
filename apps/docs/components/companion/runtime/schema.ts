@@ -209,9 +209,6 @@ export function inferLegacyInteraction(
 
   switch (id) {
     case "react-click":
-    case "celebrate":
-    case "surprise":
-    case "dance":
       return {
         ...base,
         trigger: "click",
@@ -219,6 +216,81 @@ export function inferLegacyInteraction(
         animation: "happy",
         cooldown: 900,
         duration: 1800,
+      };
+    case "celebrate":
+      return {
+        ...base,
+        trigger: "click",
+        action: "play_animation",
+        animation: "celebrate",
+        cooldown: 900,
+        duration: 1800,
+      };
+    case "surprise":
+      return {
+        ...base,
+        trigger: "double_click",
+        action: "jump",
+        animation: "surprise",
+        cooldown: 1400,
+        duration: 1400,
+      };
+    case "dance":
+      return {
+        ...base,
+        trigger: "scroll",
+        action: "play_animation",
+        animation: "dance",
+        cooldown: 2800,
+        duration: 1800,
+      };
+    case "blink":
+      return {
+        ...base,
+        trigger: "idle_timeout",
+        action: "play_animation",
+        animation: "blink",
+        cooldown: 5000,
+        duration: 500,
+      };
+    case "glow":
+      return {
+        ...base,
+        trigger: "cursor_nearby",
+        action: "play_animation",
+        animation: "glow",
+        cooldown: 3000,
+        duration: 1600,
+      };
+    case "wiggle":
+    case "wave":
+      return {
+        ...base,
+        id: "wiggle",
+        description: base.description ?? "Wiggles with a happy squash",
+        trigger: "surface_action",
+        action: "play_animation",
+        animation: "wiggle",
+        cooldown: 1400,
+        duration: 1400,
+      };
+    case "spin":
+      return {
+        ...base,
+        trigger: "page_navigation",
+        action: "play_animation",
+        animation: "spin",
+        cooldown: 4500,
+        duration: 1600,
+      };
+    case "cry":
+      return {
+        ...base,
+        trigger: "manual",
+        action: "play_animation",
+        animation: "cry",
+        cooldown: 0,
+        duration: 1600,
       };
     case "jump":
       return {

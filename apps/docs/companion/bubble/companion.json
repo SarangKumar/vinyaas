@@ -168,6 +168,16 @@
       ],
       "fps": 10,
       "loop": false
+    },
+    "cry": {
+      "frames": [
+        "animations/cry/1.png",
+        "animations/cry/2.png",
+        "animations/cry/3.png",
+        "animations/cry/4.png"
+      ],
+      "fps": 8,
+      "loop": true
     }
   }
 }

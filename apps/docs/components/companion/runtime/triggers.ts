@@ -29,31 +29,42 @@ export function interactionsForTrigger(
 
 function pickPreferredInteraction(
   matches: CompanionInteractionDefinition[],
+  isReady: (interaction: CompanionInteractionDefinition) => boolean,
 ): CompanionInteractionDefinition | null {
   const preferredOrder = [
     "react-click",
     "celebrate",
+    "wake",
     "jump",
-    "fall",
+    "surprise",
     "sleep",
+    "blink",
     "idle",
+    "scroll-glance",
+    "dance",
+    "nearby",
+    "glow",
     "follow-cursor",
+    "page-hello",
+    "spin",
+    "drag-start",
+    "wiggle",
+    "fall",
   ];
 
   for (const id of preferredOrder) {
     const found = matches.find((item) => item.id === id);
-    if (found) {
+    if (found && isReady(found)) {
       return found;
     }
   }
 
-  return matches[0] ?? null;
+  return matches.find((item) => isReady(item)) ?? null;
 }
 
 /**
  * Resolve the first eligible interaction for a trigger.
- * Prefers a stable primary interaction; cooldown filtering happens in the executor
- * so a cooling preferred interaction does not silently fall through to another.
+ * Walks a preferred order, then any other ready match for that trigger.
  */
 export function resolveTriggerInteraction(
   config: CompanionConfig,
@@ -68,17 +79,7 @@ export function resolveTriggerInteraction(
     if (distance === undefined || distance > radius) {
       return null;
     }
-    const preferred = pickPreferredInteraction(matches);
-    if (!preferred || !isReady(preferred)) {
-      return null;
-    }
-    return preferred;
   }
 
-  const preferred = pickPreferredInteraction(matches);
-  if (!preferred || !isReady(preferred)) {
-    return null;
-  }
-
-  return preferred;
+  return pickPreferredInteraction(matches, isReady);
 }

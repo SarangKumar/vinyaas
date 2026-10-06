@@ -11,23 +11,74 @@
     "reactToClick": true
   },
   "interactions": [
-    { "id": "idle", "description": "Hovers with a soft glow" },
-    { "id": "blink", "description": "Blinks slowly and kindly" },
-    { "id": "wave", "description": "Waves a ghostly hand" },
-    { "id": "jump", "description": "Floats up a little higher" },
-    { "id": "dance", "description": "Sways in a gentle dance" },
-    { "id": "spin", "description": "Twinkles while spinning" },
-    { "id": "sleep", "description": "Drifts into a quiet nap" },
-    { "id": "wake", "description": "Wakes with a soft shimmer" },
-    { "id": "celebrate", "description": "Glows brighter in delight" },
-    { "id": "follow-cursor", "description": "Can trail the cursor later" },
-    { "id": "hide", "description": "Fades almost out of sight" },
-    { "id": "peek", "description": "Peeks back into view" },
-    { "id": "shake", "description": "Shivers with a giggle" },
-    { "id": "glow", "description": "Aura brightens briefly" },
-    { "id": "react-click", "description": "Reacts when clicked" },
-    { "id": "surprise", "description": "Pops with mild surprise" },
-    { "id": "fall", "description": "Falls after being dropped" }
+    {
+      "id": "idle",
+      "description": "Hovers with a soft glow"
+    },
+    {
+      "id": "blink",
+      "description": "Blinks slowly and kindly"
+    },
+    {
+      "id": "wiggle",
+      "description": "Wiggles with a ghostly squash"
+    },
+    {
+      "id": "jump",
+      "description": "Floats up a little higher"
+    },
+    {
+      "id": "dance",
+      "description": "Sways in a gentle dance"
+    },
+    {
+      "id": "spin",
+      "description": "Twinkles while spinning"
+    },
+    {
+      "id": "sleep",
+      "description": "Drifts into a quiet nap"
+    },
+    {
+      "id": "wake",
+      "description": "Wakes with a soft shimmer"
+    },
+    {
+      "id": "celebrate",
+      "description": "Glows brighter in delight"
+    },
+    {
+      "id": "follow-cursor",
+      "description": "Can trail the cursor later"
+    },
+    {
+      "id": "hide",
+      "description": "Fades almost out of sight"
+    },
+    {
+      "id": "peek",
+      "description": "Peeks back into view"
+    },
+    {
+      "id": "shake",
+      "description": "Shivers with a giggle"
+    },
+    {
+      "id": "glow",
+      "description": "Aura brightens briefly"
+    },
+    {
+      "id": "react-click",
+      "description": "Reacts when clicked"
+    },
+    {
+      "id": "surprise",
+      "description": "Pops with mild surprise"
+    },
+    {
+      "id": "fall",
+      "description": "Falls after being dropped"
+    }
   ],
   "assets": {
     "idle": "assets/idle.png"
@@ -58,6 +109,94 @@
         "animations/puff/3.png"
       ],
       "fps": 10
+    },
+    "blink": {
+      "frames": [
+        "animations/blink/1.png",
+        "animations/blink/2.png",
+        "animations/blink/3.png"
+      ],
+      "fps": 8,
+      "loop": false
+    },
+    "celebrate": {
+      "frames": [
+        "animations/celebrate/1.png",
+        "animations/celebrate/2.png",
+        "animations/celebrate/3.png",
+        "animations/celebrate/4.png",
+        "animations/celebrate/5.png"
+      ],
+      "fps": 12,
+      "loop": false
+    },
+    "dance": {
+      "frames": [
+        "animations/dance/1.png",
+        "animations/dance/2.png",
+        "animations/dance/3.png",
+        "animations/dance/4.png",
+        "animations/dance/5.png",
+        "animations/dance/6.png"
+      ],
+      "fps": 12,
+      "loop": true
+    },
+    "surprise": {
+      "frames": [
+        "animations/surprise/1.png",
+        "animations/surprise/2.png",
+        "animations/surprise/3.png"
+      ],
+      "fps": 10,
+      "loop": false
+    },
+    "glow": {
+      "frames": [
+        "animations/glow/1.png",
+        "animations/glow/2.png",
+        "animations/glow/3.png",
+        "animations/glow/4.png",
+        "animations/glow/5.png"
+      ],
+      "fps": 10,
+      "loop": true
+    },
+    "spin": {
+      "frames": [
+        "animations/spin/1.png",
+        "animations/spin/2.png",
+        "animations/spin/3.png",
+        "animations/spin/4.png",
+        "animations/spin/5.png",
+        "animations/spin/6.png",
+        "animations/spin/7.png",
+        "animations/spin/8.png"
+      ],
+      "fps": 14,
+      "loop": true
+    },
+    "cry": {
+      "frames": [
+        "animations/cry/1.png",
+        "animations/cry/2.png",
+        "animations/cry/3.png",
+        "animations/cry/4.png"
+      ],
+      "fps": 8,
+      "loop": true
+    },
+    "wiggle": {
+      "frames": [
+        "animations/wiggle/1.png",
+        "animations/wiggle/2.png",
+        "animations/wiggle/3.png",
+        "animations/wiggle/4.png",
+        "animations/wiggle/5.png",
+        "animations/wiggle/6.png"
+      ],
+      "fps": 12,
+      "loop": true
     }
   }
 }
