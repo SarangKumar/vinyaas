@@ -12,6 +12,7 @@ export function CalendarBlock() {
     <PlayBlock
       title="Schedule"
       description="Pick a meeting day on the calendar."
+      align="center"
     >
       <Calendar
         mode="single"

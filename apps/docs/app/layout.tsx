@@ -92,34 +92,27 @@ export const metadata: Metadata = {
   },
 };
 
-/**
- * Before-paint theme boot.
- * Cookie wins when present; otherwise follow prefers-color-scheme so the
- * default theme matches the device without a flash of the wrong mode.
- */
-const themeInitScript = `(function(){try{var k=${JSON.stringify(themeStorageKey)};var s=localStorage.getItem(k);var c=document.cookie.split("; ").find(function(p){return p.indexOf(k+"=")===0;});var fromCookie=c?c.slice(k.length+1):null;var pref=s==="light"||s==="dark"?s:fromCookie==="light"||fromCookie==="dark"?fromCookie:null;var dark=pref?pref==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.classList.toggle("dark",dark);}catch(e){}})();`;
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  url: siteUrl,
+  description: siteDescription,
+  publisher: {
+    "@type": "Person",
+    name: "Sarang Kumar",
+    url: "https://github.com/SarangKumar",
+  },
+};
 
 /**
- * Theme class comes from the cookie when set. ThemeSync + themeInitScript
- * reconcile localStorage / system preference. suppressHydrationWarning allows
- * the before-paint script to set dark without a hydration mismatch.
+ * Theme class comes from the cookie when the visitor has chosen light/dark.
+ * ThemeSync applies the stored choice or falls back to prefers-color-scheme
+ * after mount — no inline HTML injection.
  */
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const stored = (await cookies()).get(themeStorageKey)?.value;
   const themeClass = stored === "dark" ? "dark" : "";
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: siteName,
-    url: siteUrl,
-    description: siteDescription,
-    publisher: {
-      "@type": "Person",
-      name: "Sarang Kumar",
-      url: "https://github.com/SarangKumar",
-    },
-  };
 
   return (
     <html
@@ -128,11 +121,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased${themeClass ? ` ${themeClass}` : ""}`}
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script type="application/ld+json">
+          {JSON.stringify(websiteJsonLd)}
+        </script>
       </head>
       <body className="bg-background text-foreground h-full overflow-hidden font-sans">
         <ThemeSync />

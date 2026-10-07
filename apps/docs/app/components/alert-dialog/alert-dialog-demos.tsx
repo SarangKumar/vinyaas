@@ -171,8 +171,8 @@ export function DashboardAlertDialogDemo() {
                           <Button
                             type="button"
                             variant="destructive"
-                            size="icon-sm"
-                            className="sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3"
+                            size="sm"
+                            className="gap-1.5 max-sm:size-8 max-sm:max-h-8 max-sm:max-w-8 max-sm:min-w-8 max-sm:p-0"
                             aria-label={`Delete ${project.name}`}
                           >
                             <TrashIcon className="size-4 sm:hidden" />
@@ -224,8 +224,8 @@ export function InPracticeAlertDialogDemo() {
           <Button
             type="button"
             variant="destructive"
-            size="icon-sm"
-            className="sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3"
+            size="sm"
+            className="gap-1.5 max-sm:size-8 max-sm:max-h-8 max-sm:max-w-8 max-sm:min-w-8 max-sm:p-0"
             aria-label="Delete vinyaas-web"
           >
             <TrashIcon className="size-4 sm:hidden" />

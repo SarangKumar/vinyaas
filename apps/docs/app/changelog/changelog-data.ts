@@ -1,4 +1,4 @@
-import { components, currentVersion } from "@/components/component-meta";
+import { components } from "@/components/component-meta";
 
 export type ChangelogSection = {
   title: string;
@@ -40,6 +40,8 @@ export const changelogVersions: ChangelogVersion[] = [
           `Companion docs expanded with Interactions, Examples, and Gallery pages plus a minimal setup path.`,
           `SEO: richer keywords, JSON-LD WebSite schema, sitemap coverage for catalogs, accessibility, and companion routes.`,
           `Font display swap and consistent hierarchical type scale across docs chrome.`,
+          `Theme init and JSON-LD without dangerouslySetInnerHTML; cookie + ThemeSync for system default.`,
+          `Component demos centered; Alert Dialog delete triggers use size sm with icon collapse; Sidebar examples deduped (Dashboard, Collapsed, Composition).`,
         ],
       },
       {

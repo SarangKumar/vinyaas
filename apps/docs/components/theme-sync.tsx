@@ -11,9 +11,8 @@ import {
 } from "@/components/theme";
 
 /**
- * Next can replace the document class during hydration and client navigations.
- * That drops the dark class the before-paint script added. This puts it back
- * from storage without writing a new preference.
+ * Keeps the document theme class in sync with storage and system preference
+ * after hydration and client navigations — without inline HTML injection.
  */
 export function ThemeSync() {
   const pathname = usePathname();

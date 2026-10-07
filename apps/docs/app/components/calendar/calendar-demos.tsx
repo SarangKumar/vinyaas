@@ -24,7 +24,7 @@ export function SelectedDateDemo() {
   const [date, setDate] = useState<Date | undefined>(new Date(2026, 9, 15));
 
   return (
-    <div className="grid w-full max-w-sm gap-3">
+    <div className="flex w-full max-w-sm flex-col items-center gap-3">
       <Calendar
         mode="single"
         selected={date}
@@ -33,7 +33,7 @@ export function SelectedDateDemo() {
         className="rounded-md border"
       />
       {date ? (
-        <p className="text-muted-foreground text-sm leading-6">
+        <p className="text-muted-foreground text-center text-sm leading-6">
           Selected{" "}
           <span className="text-foreground font-medium">
             {date.toLocaleDateString(undefined, {
@@ -69,7 +69,7 @@ export function MonthNavigationDemo() {
   const [date, setDate] = useState<Date | undefined>(new Date(2026, 2, 12));
 
   return (
-    <div className="grid w-full max-w-sm gap-3">
+    <div className="flex w-full max-w-sm flex-col items-center gap-3">
       <Calendar
         mode="single"
         selected={date}
@@ -94,7 +94,7 @@ export function RangeCalendarDemo() {
   });
 
   return (
-    <div className="grid w-full max-w-sm gap-3">
+    <div className="flex w-full max-w-sm flex-col items-center gap-3">
       <Calendar
         mode="range"
         selected={range}
@@ -119,11 +119,11 @@ export function MeetingScheduleInPracticeDemo() {
 
   return (
     <form
-      className="grid w-full max-w-md gap-4"
+      className="flex w-full max-w-md flex-col items-center gap-4"
       onSubmit={(event) => event.preventDefault()}
     >
-      <div className="grid gap-2">
-        <Label>Meeting date</Label>
+      <div className="flex w-full flex-col items-center gap-2">
+        <Label className="self-start">Meeting date</Label>
         <Calendar
           mode="single"
           selected={date}

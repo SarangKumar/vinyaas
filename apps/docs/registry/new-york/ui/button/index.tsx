@@ -67,20 +67,18 @@ export interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {}
 
-export function Button({
-  className,
-  children,
-  variant,
-  size,
-  ...props
-}: ButtonProps) {
-  return (
-    <button
-      type="button"
-      className={cn(buttonVariants({ variant, size }), className)}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-}
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button({ className, children, variant, size, ...props }, ref) {
+    return (
+      <button
+        ref={ref}
+        type="button"
+        className={cn(buttonVariants({ variant, size }), className)}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  },
+);
+Button.displayName = "Button";
