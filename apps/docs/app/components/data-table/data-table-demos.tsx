@@ -40,7 +40,7 @@ export const projects: Project[] = [
   {
     id: "3",
     name: "Mobile App",
-    owner: "Rahul",
+    owner: "Aarav",
     status: "Complete",
     updated: "2d ago",
   },
@@ -68,7 +68,7 @@ export const projects: Project[] = [
   {
     id: "7",
     name: "Onboarding",
-    owner: "Rahul",
+    owner: "Aarav",
     status: "Review",
     updated: "1w ago",
   },

@@ -7,8 +7,8 @@ const events = [
   {
     time: "09:30",
     title: "Production deploy finished",
-    who: "Rahul Mehta",
-    initials: "RM",
+    who: "Aarav Mehta",
+    initials: "AM",
     state: "Deploy",
   },
   {

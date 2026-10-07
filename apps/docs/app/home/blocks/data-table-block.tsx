@@ -24,7 +24,7 @@ type Project = {
 const rows: Project[] = [
   { id: "1", name: "Vinyaas", owner: "Sarang", status: "Active" },
   { id: "2", name: "Dashboard", owner: "Priya", status: "Review" },
-  { id: "3", name: "Mobile App", owner: "Rahul", status: "Draft" },
+  { id: "3", name: "Mobile App", owner: "Aarav", status: "Draft" },
   { id: "4", name: "Marketing", owner: "Ananya", status: "Active" },
 ];
 

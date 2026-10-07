@@ -20,7 +20,7 @@ type Project = {
 const projects: Project[] = [
   { id: "1", name: "Vinyaas", owner: "Sarang", status: "Active" },
   { id: "2", name: "Dashboard", owner: "Priya", status: "Review" },
-  { id: "3", name: "Mobile App", owner: "Rahul", status: "Complete" },
+  { id: "3", name: "Mobile App", owner: "Aarav", status: "Complete" },
   { id: "4", name: "Marketing", owner: "Ananya", status: "Draft" },
   { id: "5", name: "Analytics", owner: "Sarang", status: "Active" },
   { id: "6", name: "Billing", owner: "Priya", status: "Draft" },

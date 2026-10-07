@@ -57,6 +57,12 @@ export function Playground({
             {blocks.map(({ id, Block }) => (
               <Block key={id} />
             ))}
+            {/* Stretch short stacks to the tallest column so bottoms align. */}
+            <div
+              aria-hidden="true"
+              data-playground-column-fill
+              className="min-h-0 flex-1"
+            />
           </div>
         ))
       )}

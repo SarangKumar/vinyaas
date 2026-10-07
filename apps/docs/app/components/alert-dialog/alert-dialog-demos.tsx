@@ -125,7 +125,7 @@ export function ControlledAlertDialogDemo() {
 const projects = [
   { id: "1", name: "Vinyaas", owner: "Sarang", status: "Active" },
   { id: "2", name: "Dashboard", owner: "Priya", status: "Review" },
-  { id: "3", name: "Mobile App", owner: "Rahul", status: "Draft" },
+  { id: "3", name: "Mobile App", owner: "Aarav", status: "Draft" },
 ] as const;
 
 export function DashboardAlertDialogDemo() {

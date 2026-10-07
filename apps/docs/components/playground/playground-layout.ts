@@ -24,11 +24,11 @@ export const playgroundColumnsClassName =
  * `min-w-0` + card width rules keep demos (tables, pagination, code) inside tracks.
  */
 export const playgroundShowcaseGridClassName =
-  "relative z-10 mx-auto grid w-full min-w-0 gap-(--gap) **:data-[slot=card]:w-full **:data-[slot=card]:max-w-full min-[1400px]:grid-cols-4! min-[1900px]:grid-cols-5! md:max-w-3xl md:grid-cols-2 lg:max-w-none lg:grid-cols-3 xl:max-w-[1600px] 2xl:max-w-[1900px]";
+  "relative z-10 mx-auto grid w-full min-w-0 items-stretch gap-(--gap) **:data-[slot=card]:w-full **:data-[slot=card]:max-w-full min-[1400px]:grid-cols-4! min-[1900px]:grid-cols-5! md:max-w-3xl md:grid-cols-2 lg:max-w-none lg:grid-cols-3 xl:max-w-[1600px] 2xl:max-w-[1900px]";
 
 /** Flex stack for one homepage showcase column. */
 export const playgroundShowcaseColumnStackClassName =
-  "flex min-w-0 flex-col gap-(--gap) **:data-[slot=card]:w-full";
+  "flex h-full min-w-0 flex-col gap-(--gap) **:data-[slot=card]:w-full";
 
 /**
  * @deprecated Prefer {@link playgroundShowcaseColumnStackClassName}.
