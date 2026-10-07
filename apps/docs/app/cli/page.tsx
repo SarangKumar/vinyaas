@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = pageMetadata({
   title: "CLI",
   description:
-    "Vinyaas CLI v1.3.0: init, doctor, add by name/catalog/category, catalogs, status, list, search, and info.",
+    "Vinyaas CLI v1.3.1: init, doctor, add by name/catalog/category, catalogs, status, list, search, and info.",
   path: "/cli",
 });
 
@@ -24,7 +24,7 @@ export default function CliPage() {
   return (
     <DocsArticle
       title="CLI"
-      description="The vinyaas package on npm (v1.3.0) installs UI as editable source. Framework create-app flows live on Installation."
+      description="The vinyaas package on npm (v1.3.1) installs UI as editable source. Framework create-app flows live on Installation."
     >
       <section className="flex flex-col gap-4">
         <h2 id="overview" className={sectionHeading}>
@@ -56,13 +56,13 @@ export default function CliPage() {
           Install the CLI
         </h2>
         <p className={body}>
-          Install into the project, globally, or run once with <code>npx</code>{" "}
-          / <code>pnpm dlx</code> / <code>yarn dlx</code> / <code>bunx</code>.
-          Invoke commands as <code>vinyaas &lt;command&gt;</code>. Requires
-          Node.js 20+.
+          Install globally (recommended), then invoke{" "}
+          <code>vinyaas &lt;command&gt;</code>. Or run once with{" "}
+          <code>npx</code> / <code>pnpm dlx</code> / <code>yarn dlx</code> /{" "}
+          <code>bunx</code>. Requires Node.js 20+.
         </p>
         <InstallCommand commands={packageInstallCommands("vinyaas")} />
-        <CodeBlock language="bash" code="npx vinyaas --version" />
+        <CodeBlock language="bash" code="vinyaas --version" />
       </section>
 
       <section className="flex flex-col gap-4">
@@ -371,7 +371,7 @@ No issues found.`}
           Version
         </h2>
         <p className={body}>
-          Print the installed CLI version (currently v1.3.0).
+          Print the installed CLI version (currently v1.3.1).
         </p>
         <CodeBlock language="bash" code="vinyaas --version" />
       </section>

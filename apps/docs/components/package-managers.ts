@@ -17,10 +17,10 @@ export function packageInstallCommands(
   packageName: string,
 ): PackageManagerCommands {
   return {
-    npm: `npm install ${packageName}`,
-    pnpm: `pnpm add ${packageName}`,
-    yarn: `yarn add ${packageName}`,
-    bun: `bun add ${packageName}`,
+    npm: `npm install -g ${packageName}`,
+    pnpm: `pnpm add -g ${packageName}`,
+    yarn: `yarn global add ${packageName}`,
+    bun: `bun add -g ${packageName}`,
   };
 }
 

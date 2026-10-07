@@ -24,15 +24,15 @@ vi.mock("next/navigation", () => ({
 
 describe("changelog data", () => {
   it("defaults to the latest released version", () => {
-    expect(latestChangelogVersionId).toBe("1.3.0");
-    expect(resolveChangelogVersionId(undefined)).toBe("1.3.0");
-    expect(resolveChangelogVersionId("nope")).toBe("1.3.0");
+    expect(latestChangelogVersionId).toBe("1.3.1");
+    expect(resolveChangelogVersionId(undefined)).toBe("1.3.1");
+    expect(resolveChangelogVersionId("nope")).toBe("1.3.1");
     expect(changelogVersions[0]?.id).toBe(latestChangelogVersionId);
   });
 
   it("lists known versions without gap or shadcn marketing copy", () => {
     const ids = changelogVersions.map((version) => version.id);
-    expect(ids).toEqual(["1.3.0", "1.2.0", "1.1.0", "1.0.0", "0.1"]);
+    expect(ids).toEqual(["1.3.1", "1.3.0", "1.2.0", "1.1.0", "1.0.0", "0.1"]);
     const text = JSON.stringify(changelogVersions);
     expect(text).not.toMatch(/shadcn/i);
     expect(text).not.toContain("Not in this version");
@@ -57,7 +57,7 @@ describe("Changelog page", () => {
     await waitFor(() => {
       expect(
         screen.getByRole("combobox", { name: "Changelog version" }),
-      ).toHaveTextContent("v1.3.0");
+      ).toHaveTextContent("v1.3.1");
     });
     expect(screen.queryByPlaceholderText("Search versions…")).toBeNull();
     fireEvent.click(
@@ -65,25 +65,21 @@ describe("Changelog page", () => {
     );
     expect(screen.getByPlaceholderText("Search versions…")).toBeInTheDocument();
     fireEvent.keyDown(document, { key: "Escape" });
-    expect(screen.getByRole("heading", { name: "v1.3.0" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "v1.3.1" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "v1.2.0" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "v0.1" })).toBeNull();
     expect(
-      screen.getByRole("heading", { name: "Components" }),
+      screen.getByRole("heading", { name: "Docs & site" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Companions" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "CLI & catalogs" }),
+      screen.getByRole("heading", { name: "Quality" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Docs & accessibility" }),
-    ).toBeInTheDocument();
-    expect(document.body.textContent).toContain("Resizable");
-    expect(document.body.textContent).toContain("Drag & Drop");
-    expect(document.body.textContent).toContain("Flint");
-    expect(document.body.textContent).toContain("vinyaas catalog list");
+    expect(document.body.textContent).toContain("Nyx");
+    expect(document.body.textContent).toContain("theme_change");
+    expect(document.body.textContent).toContain("system preference");
     expect(document.body.textContent).toContain(`v${currentVersion}`);
     expect(document.body.textContent).not.toContain("ui.shadcn.com");
     expect(document.body.textContent).not.toContain("Not in this version");
@@ -103,7 +99,7 @@ describe("Changelog page", () => {
       ).toHaveTextContent("v1.2.0");
     });
     expect(screen.getByRole("heading", { name: "v1.2.0" })).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "v1.3.0" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "v1.3.1" })).toBeNull();
     expect(document.body.textContent).toContain("Companions");
     expect(document.body.textContent).toContain("companion.json");
     expect(document.body.textContent).not.toContain(

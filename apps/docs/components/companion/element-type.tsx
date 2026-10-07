@@ -80,6 +80,13 @@ export const ELEMENT_VISUALS: Record<CompanionElementType, ElementVisual> = {
     markClass:
       "border-[#d48a7a] bg-[#fbf0ed] text-[#9a3f2e] dark:bg-[#33201c] dark:text-[#e8b0a0]",
   },
+  dark: {
+    label: "Dark",
+    badgeClass:
+      "border-[#9a7ab8]/55 bg-[#f3eef8] text-[#5a3d7a] dark:border-[#9a7ab8]/35 dark:bg-[#22182c] dark:text-[#cbb0e0]",
+    markClass:
+      "border-[#9a7ab8] bg-[#f3eef8] text-[#5a3d7a] dark:bg-[#22182c] dark:text-[#cbb0e0]",
+  },
 };
 
 export function ElementTypeIcon({
@@ -149,6 +156,12 @@ export function ElementTypeIcon({
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true" className={common} fill="currentColor">
           <path d="M8 3h3v4H8V3Zm5 0h3v4h-3V3ZM6 8h12v3.5c0 2.2-1.2 4.1-3.2 5.2L14 21h-4l-.8-4.3C7.2 15.6 6 13.7 6 11.5V8Zm2 2v1.5c0 1.4.7 2.6 1.9 3.3l.6.3.5 2.9h2l.5-2.9.6-.3c1.2-.7 1.9-1.9 1.9-3.3V10H8Z" />
+        </svg>
+      );
+    case "dark":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={common} fill="currentColor">
+          <path d="M12 3a9 9 0 1 0 9 9c0-.4-.3-.7-.7-.6A6.5 6.5 0 0 1 12.6 3.7C12.3 3.6 12 3.3 12 3Z" />
         </svg>
       );
   }

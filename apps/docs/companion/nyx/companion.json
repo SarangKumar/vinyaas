@@ -1,0 +1,261 @@
+{
+  "id": "nyx",
+  "name": "Nyx",
+  "type": "shade",
+  "description": "A soft shadow that glows in the dark.",
+  "lore": "Condensed from the space between pixels after sundown, Nyx slipped into the docs looking for a quiet perch. It drinks in dark mode, glows when the theme flips, and leaves a violet hush wherever it lands.",
+  "personalityTraits": [
+    "quiet",
+    "loyal",
+    "nocturnal"
+  ],
+  "capabilities": {
+    "floating": true,
+    "followCursor": true,
+    "reactToClick": true
+  },
+  "instances": {
+    "eclipse": {
+      "name": "Eclipse",
+      "personalityTraits": [
+        "bold",
+        "nocturnal",
+        "curious"
+      ],
+      "moodBias": "excited",
+      "behavior": {
+        "energy": "high",
+        "idleTimeoutMs": 28000,
+        "cursorNearbyRadius": 160
+      }
+    },
+    "umbra": {
+      "name": "Umbra",
+      "personalityTraits": [
+        "calm",
+        "quiet",
+        "loyal"
+      ],
+      "moodBias": "sleepy",
+      "behavior": {
+        "energy": "calm",
+        "idleTimeoutMs": 36000,
+        "cursorNearbyRadius": 100
+      }
+    }
+  },
+  "interactions": [
+    {
+      "id": "react-click",
+      "description": "Soft violet flare on click",
+      "trigger": "click",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 900,
+      "duration": 1600
+    },
+    {
+      "id": "theme-shift",
+      "description": "Glows when the site theme changes",
+      "trigger": "theme_change",
+      "action": "play_animation",
+      "animation": "glow",
+      "cooldown": 1800,
+      "duration": 2000
+    },
+    {
+      "id": "night-vision",
+      "description": "Aura brightens near the cursor",
+      "trigger": "cursor_nearby",
+      "action": "play_animation",
+      "animation": "glow",
+      "cooldown": 2800,
+      "duration": 1600
+    },
+    {
+      "id": "jump",
+      "description": "Shadows upward in a hop",
+      "trigger": "double_click",
+      "action": "jump",
+      "animation": "celebrate",
+      "cooldown": 1200,
+      "duration": 1400
+    },
+    {
+      "id": "sleep",
+      "description": "Fades into a quiet nap",
+      "trigger": "idle_timeout",
+      "action": "sleep",
+      "animation": "sleep",
+      "cooldown": 7000,
+      "duration": 4200
+    },
+    {
+      "id": "idle",
+      "description": "Soft shadow pulse while waiting",
+      "trigger": "idle_timeout",
+      "action": "play_animation",
+      "animation": "idle",
+      "cooldown": 0,
+      "duration": 2800
+    },
+    {
+      "id": "blink",
+      "description": "Blinks violet eyes",
+      "trigger": "idle_timeout",
+      "action": "play_animation",
+      "animation": "blink",
+      "cooldown": 5000,
+      "duration": 500
+    },
+    {
+      "id": "fall",
+      "description": "Falls after being dropped",
+      "trigger": "drop",
+      "action": "change_state",
+      "state": "falling",
+      "animation": "fall",
+      "cooldown": 0
+    },
+    {
+      "id": "drag-start",
+      "description": "Settles when picked up",
+      "trigger": "drag_start",
+      "action": "play_animation",
+      "animation": "idle",
+      "cooldown": 0
+    },
+    {
+      "id": "page-hello",
+      "description": "Greets after navigation",
+      "trigger": "page_navigation",
+      "action": "play_animation",
+      "animation": "happy",
+      "cooldown": 4000,
+      "duration": 1400
+    },
+    {
+      "id": "scroll-glance",
+      "description": "Glances when the page scrolls",
+      "trigger": "scroll",
+      "action": "play_animation",
+      "animation": "idle",
+      "cooldown": 2200,
+      "duration": 900
+    },
+    {
+      "id": "surface-wiggle",
+      "description": "Reacts on perched surface clicks",
+      "trigger": "surface_action",
+      "action": "play_animation",
+      "animation": "celebrate",
+      "cooldown": 1400,
+      "duration": 1400
+    },
+    {
+      "id": "follow-cursor",
+      "description": "Drifts toward a nearby cursor",
+      "trigger": "cursor_nearby",
+      "action": "move",
+      "animation": "idle",
+      "cooldown": 3200,
+      "duration": 1000
+    },
+    {
+      "id": "wake",
+      "description": "Wakes from a nap",
+      "trigger": "click",
+      "action": "change_state",
+      "state": "idle",
+      "animation": "idle",
+      "cooldown": 400
+    }
+  ],
+  "assets": {
+    "idle": "assets/idle.png"
+  },
+  "animations": {
+    "idle": {
+      "frames": [
+        "animations/idle/1.png",
+        "animations/idle/2.png",
+        "animations/idle/3.png"
+      ],
+      "fps": 5,
+      "loop": true
+    },
+    "happy": {
+      "frames": [
+        "animations/happy/1.png",
+        "animations/happy/2.png"
+      ],
+      "fps": 6,
+      "loop": false
+    },
+    "sleep": {
+      "frames": [
+        "animations/sleep/1.png",
+        "animations/sleep/2.png"
+      ],
+      "fps": 3,
+      "loop": true
+    },
+    "fall": {
+      "frames": [
+        "animations/fall/1.png",
+        "animations/fall/2.png"
+      ],
+      "fps": 8,
+      "loop": true
+    },
+    "puff": {
+      "frames": [
+        "animations/puff/1.png",
+        "animations/puff/2.png",
+        "animations/puff/3.png"
+      ],
+      "fps": 10,
+      "loop": false
+    },
+    "cry": {
+      "frames": [
+        "animations/cry/1.png",
+        "animations/cry/2.png",
+        "animations/cry/3.png",
+        "animations/cry/4.png"
+      ],
+      "fps": 8,
+      "loop": true
+    },
+    "blink": {
+      "frames": [
+        "animations/blink/1.png",
+        "animations/blink/2.png",
+        "animations/blink/3.png"
+      ],
+      "fps": 8,
+      "loop": false
+    },
+    "glow": {
+      "frames": [
+        "animations/glow/1.png",
+        "animations/glow/2.png",
+        "animations/glow/3.png",
+        "animations/glow/4.png",
+        "animations/glow/5.png"
+      ],
+      "fps": 10,
+      "loop": true
+    },
+    "celebrate": {
+      "frames": [
+        "animations/celebrate/1.png",
+        "animations/celebrate/2.png",
+        "animations/celebrate/3.png",
+        "animations/celebrate/4.png"
+      ],
+      "fps": 12,
+      "loop": false
+    }
+  }
+}

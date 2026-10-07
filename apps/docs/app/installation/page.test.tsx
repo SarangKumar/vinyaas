@@ -25,14 +25,18 @@ describe("installation docs", () => {
       screen.getByRole("heading", { level: 1, name: "Installation" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Use the CLI" }),
+      screen.getByRole("heading", { name: "Install the CLI" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Existing Project" }),
+      screen.getByRole("heading", { name: "Initialize and add" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Choose Your Framework" }),
+      screen.getByRole("heading", { name: "Existing projects" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Choose your framework" }),
+    ).toBeInTheDocument();
+    expect(document.body.textContent).toContain("npm install -g vinyaas");
     expect(screen.getByRole("link", { name: "Next.js" })).toHaveAttribute(
       "href",
       "/installation/nextjs",

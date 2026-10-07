@@ -17,6 +17,7 @@ export type TriggerEvent = {
     /** Overrides the default nearby radius when provided by personality. */
     cursorNearbyRadius?: number;
     pathname?: string;
+    theme?: string;
   };
 };
 
@@ -46,6 +47,7 @@ function pickPreferredInteraction(
     "glow",
     "follow-cursor",
     "page-hello",
+    "theme-shift",
     "spin",
     "drag-start",
     "wiggle",

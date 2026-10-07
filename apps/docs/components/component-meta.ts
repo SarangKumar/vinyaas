@@ -12,9 +12,9 @@ export type ComponentCategory = RegistryCategory;
 export { formatRegistryCategoryLabel };
 
 /** The current docs/website release version. */
-export const currentVersion = "1.3.0";
+export const currentVersion = "1.3.1";
 
-export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0" | "1.2.0" | "1.3.0";
+export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0" | "1.2.0" | "1.3.0" | "1.3.1";
 
 type ComponentMetaSource = {
   name: string;
@@ -392,9 +392,11 @@ export function componentHref(slug: string) {
   return `/components/${slug}`;
 }
 
-/** Components introduced in the current docs/website release. */
+/** Components introduced in the current minor line (e.g. 1.3.x). */
 export function isNewComponent(component: ComponentMeta) {
-  return component.introducedIn === currentVersion;
+  const [major, minor] = currentVersion.split(".");
+  const [introducedMajor, introducedMinor] = component.introducedIn.split(".");
+  return introducedMajor === major && introducedMinor === minor;
 }
 
 /** Sorted new components for nav indicators and the New Components section. */

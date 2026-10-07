@@ -103,8 +103,9 @@ export function FrameworkGuide({
           ))}
         </ul>
         <p className={body}>
-          Optional: install the CLI into the project, or use <code>npx</code> /{" "}
-          <code>pnpm dlx</code> without a local install.
+          Install the CLI globally (recommended), or run once with{" "}
+          <code>npx</code> / <code>pnpm dlx</code> / <code>yarn dlx</code> /{" "}
+          <code>bunx</code>.
         </p>
         <InstallCommand commands={packageInstallCommands("vinyaas")} />
       </section>
@@ -146,7 +147,6 @@ export function FrameworkGuide({
           for confirmation, status, and discovery commands.
         </p>
         <InstallCommand commands={cliCommands("add button")} />
-        <InstallCommand commands={cliCommands("add button card dialog")} />
         <InstallCommand commands={cliCommands("add --category forms --yes")} />
       </section>
 
@@ -174,7 +174,6 @@ components/ui/toast/toast.css`}
           what to add. Each command accepts <code>--json</code>.
         </p>
         <InstallCommand commands={cliCommands("list")} />
-        <InstallCommand commands={cliCommands("search input")} />
         <InstallCommand commands={cliCommands("info button")} />
       </section>
 

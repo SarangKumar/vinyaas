@@ -20,7 +20,8 @@ export type CompanionInteractionTrigger =
   | "page_navigation"
   | "surface_action"
   | "scroll"
-  | "manual";
+  | "manual"
+  | "theme_change";
 
 export type CompanionInteractionAction =
   "play_animation" | "change_state" | "jump" | "sleep" | "move";
@@ -114,6 +115,7 @@ const TRIGGERS = new Set<CompanionInteractionTrigger>([
   "surface_action",
   "scroll",
   "manual",
+  "theme_change",
 ]);
 
 const ACTIONS = new Set<CompanionInteractionAction>([
@@ -392,7 +394,7 @@ function parseInteraction(
     return {
       ok: false,
       error:
-        "interaction.trigger must be one of click, double_click, idle_timeout, drag_start, drag_end, drop, cursor_nearby, page_navigation, surface_action, scroll, manual.",
+        "interaction.trigger must be one of click, double_click, idle_timeout, drag_start, drag_end, drop, cursor_nearby, page_navigation, surface_action, scroll, manual, theme_change.",
       path: `${path}.trigger`,
     };
   }

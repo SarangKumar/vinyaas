@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { components } from "@/components/component-meta";
+import { companionCatalog } from "@/components/companion/catalog";
 import {
   darkModeFrameworkPaths,
   installationFrameworkPaths,
@@ -13,10 +14,16 @@ const staticRoutes = [
   "/installation",
   ...installationFrameworkPaths(),
   "/cli",
+  "/catalogs",
+  "/accessibility",
   "/companion",
   "/companion/installation",
   "/companion/configuration",
+  "/companion/animations",
+  "/companion/interactions",
   "/companion/custom",
+  "/companion/examples",
+  "/companion/gallery",
   "/components",
   "/components-json",
   "/theming",
@@ -40,18 +47,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority:
         path === "/"
           ? 1
-          : path === "/themes" ||
-              path === "/typeset" ||
-              path === "/typeset/playground" ||
-              path === "/theming"
-            ? 0.9
-            : 0.8,
+          : path === "/installation" ||
+              path === "/introduction" ||
+              path === "/components"
+            ? 0.95
+            : path === "/themes" ||
+                path === "/typeset" ||
+                path === "/typeset/playground" ||
+                path === "/theming" ||
+                path === "/cli"
+              ? 0.9
+              : 0.8,
     })),
     ...components.map((component) => ({
       url: `${siteUrl}/components/${component.slug}`,
       lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 0.7,
+    })),
+    ...companionCatalog.map((entry) => ({
+      url: `${siteUrl}/companion/${entry.meta.id}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
     })),
   ];
 }

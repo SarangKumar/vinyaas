@@ -22,6 +22,10 @@ describe("companion progression", () => {
     expect(elementTypeForCompanion("drake", "dragon")).toBe("dragon");
   });
 
+  it("maps Nyx to dark type", () => {
+    expect(elementTypeForCompanion("nyx", "shade")).toBe("dark");
+  });
+
   it("uses steeper bond XP thresholds", () => {
     expect(BOND_THRESHOLDS).toEqual([0, 60, 160, 360, 640]);
     expect(bondRankFromXp(59)).toBe(1);

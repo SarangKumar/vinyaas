@@ -30,7 +30,7 @@ import {
 } from "./docs-nav";
 
 describe("documentation navigation", () => {
-  it("keeps a flat sidebar with docs routes separate from playgrounds", () => {
+  it("keeps a flat sidebar with onboarding-first chronological order", () => {
     expect(githubUrl).toBe("https://github.com/SarangKumar/vinyaas");
     expect(homePath).toBe("/");
     expect(introductionPath).toBe("/introduction");
@@ -56,37 +56,39 @@ describe("documentation navigation", () => {
     expect(darkModePath).toBe("/dark-mode");
     expect(changelogPath).toBe("/changelog");
     expect(docsNav.map((group) => group.title)).toEqual([
+      "GET STARTED",
       "SECTIONS",
       "COMPONENTS",
       "COMPANION",
-      "GET STARTED",
     ]);
-    expect(docsNav[1]?.layout).toBe("names");
+    expect(docsNav[2]?.layout).toBe("names");
 
-    const sections = docsNav[0]?.items;
+    const getStarted = docsNav[0]?.items;
+    expect(getStarted?.map((item) => item.title)).toEqual([
+      "Installation",
+      "components.json",
+      "Dark Mode",
+      "Theming",
+      "Typeset",
+      "Package Import",
+      "CLI",
+    ]);
+    expect(getStarted?.every((item) => !item.children?.length)).toBe(true);
+
+    const sections = docsNav[1]?.items;
     expect(sections?.map((item) => item.title)).toEqual([
       "Home",
       "Introduction",
       "Components",
-      "Installation",
-      "CLI",
       "Catalogs",
       "Accessibility",
-      "Theming",
-      "Typeset",
       "Changelog",
     ]);
     expect(sections?.[0]?.href).toBe("/");
     expect(sections?.at(-1)?.title).toBe("Changelog");
-    expect(sections?.find((item) => item.title === "Theming")?.href).toBe(
-      "/theming",
-    );
-    expect(sections?.find((item) => item.title === "Typeset")?.href).toBe(
-      "/typeset",
-    );
     expect(sections?.every((item) => !item.children?.length)).toBe(true);
 
-    const companion = docsNav[2];
+    const companion = docsNav[3];
     expect(companion?.items[0]?.indicator).toBe("beta");
     expect(companion?.items.map((item) => item.title)).toEqual([
       "Introduction",
@@ -109,18 +111,6 @@ describe("documentation navigation", () => {
       "/companion/gallery",
     ]);
     expect(companion?.items.every((item) => !item.children?.length)).toBe(true);
-
-    const getStarted = docsNav[3]?.items;
-    expect(getStarted?.map((item) => item.title)).toEqual([
-      "Installation",
-      "components.json",
-      "Theming",
-      "Typeset",
-      "Package Import",
-      "Dark Mode",
-      "CLI",
-    ]);
-    expect(getStarted?.every((item) => !item.children?.length)).toBe(true);
 
     expect(JSON.stringify(docsNav)).not.toContain("/installation/nextjs");
     expect(JSON.stringify(docsNav)).not.toContain("/themes");

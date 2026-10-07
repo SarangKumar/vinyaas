@@ -81,17 +81,23 @@ describe("DocsMobileNav", () => {
     expect(screen.getByText("COMPANION")).toBeInTheDocument();
     expect(screen.getByText("GET STARTED")).toBeInTheDocument();
     expect(screen.getByText("SECTIONS")).toBeInTheDocument();
-    // Companion sits after the Components name list, before Get Started.
+    // GET STARTED → SECTIONS → COMPONENTS → COMPANION
     expect(
       screen
-        .getByText("COMPONENTS")
-        .compareDocumentPosition(screen.getByText("COMPANION")) &
+        .getByText("GET STARTED")
+        .compareDocumentPosition(screen.getByText("SECTIONS")) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(
       screen
-        .getByText("COMPANION")
-        .compareDocumentPosition(screen.getByText("GET STARTED")) &
+        .getByText("SECTIONS")
+        .compareDocumentPosition(screen.getByText("COMPONENTS")) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      screen
+        .getByText("COMPONENTS")
+        .compareDocumentPosition(screen.getByText("COMPANION")) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(screen.queryByText("RESOURCES")).toBeNull();

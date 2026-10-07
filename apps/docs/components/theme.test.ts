@@ -75,4 +75,17 @@ describe("theme preference", () => {
     expect(document.documentElement.classList.contains("dark")).toBe(true);
     expect(localStorage.getItem(themeStorageKey)).toBeNull();
   });
+
+  it("notifies companions when the theme class actually changes", () => {
+    const seen: string[] = [];
+    const onTheme = (event: Event) => {
+      seen.push((event as CustomEvent<{ theme: string }>).detail.theme);
+    };
+    window.addEventListener("vinyaas:companion-theme", onTheme);
+    applyTheme("dark");
+    applyTheme("dark");
+    applyTheme("light");
+    window.removeEventListener("vinyaas:companion-theme", onTheme);
+    expect(seen).toEqual(["dark", "light"]);
+  });
 });

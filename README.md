@@ -2,7 +2,7 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
-**v1.3.0** is the current release. It adds registry-owned catalogs, a release-wide accessibility contract, and CLI catalog/`--dry-run` UX on top of the existing installable set (forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities). Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
+**v1.3.1** is the current release. It adds registry-owned catalogs, a release-wide accessibility contract, and CLI catalog/`--dry-run` UX on top of the existing installable set (forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities). Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
 
 ## Prerequisites
 
@@ -14,16 +14,16 @@ Vinyaas detects the package manager from the project lockfile: `pnpm-lock.yaml`,
 
 ## Installation
 
-Install the published package with the project's package manager:
+Install the CLI globally (recommended):
 
 ```bash
-npm install vinyaas
-pnpm add vinyaas
-yarn add vinyaas
-bun add vinyaas
+npm install -g vinyaas
+pnpm add -g vinyaas
+yarn global add vinyaas
+bun add -g vinyaas
 ```
 
-Run it without a global install:
+Or run once without a global install:
 
 ```bash
 npx vinyaas init

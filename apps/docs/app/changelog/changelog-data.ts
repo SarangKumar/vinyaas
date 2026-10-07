@@ -24,9 +24,46 @@ const v11 = components.filter(
  */
 export const changelogVersions: ChangelogVersion[] = [
   {
+    id: "1.3.1",
+    label: "v1.3.1",
+    summary:
+      "v1.3.1 is a production polish release: docs quality, system-default theming, global CLI install examples, SEO/accessibility, and Nyx — a dark-type companion.",
+    sections: [
+      {
+        title: "Docs & site",
+        items: [
+          `Sidebar reordered for chronological onboarding (GET STARTED → SECTIONS → COMPONENTS → COMPANION) without duplicated links.`,
+          `Default theme follows the device/system preference until the visitor chooses light or dark.`,
+          `Installation and CLI examples install Vinyaas globally (-g / yarn global add).`,
+          `Removed repeated install examples; kept high-signal init and add flows.`,
+          `Dark Mode guides clarify the class strategy, system default, and Next.js suppressHydrationWarning wiring.`,
+          `Companion docs expanded with Interactions, Examples, and Gallery pages plus a minimal setup path.`,
+          `SEO: richer keywords, JSON-LD WebSite schema, sitemap coverage for catalogs, accessibility, and companion routes.`,
+          `Font display swap and consistent hierarchical type scale across docs chrome.`,
+        ],
+      },
+      {
+        title: "Companions",
+        items: [
+          `Nyx — dark-type shade companion with glow/blink/celebrate clips, Eclipse/Umbra instances, and follow-cursor capability.`,
+          `theme_change trigger: companions can react when the docs light/dark theme toggles (Nyx glows).`,
+          `Dark element type with matchups and violet type badges.`,
+        ],
+      },
+      {
+        title: "Quality",
+        items: [
+          `Preview/code alignment pass, spacing and control polish, and accessibility/focus consistency across docs surfaces.`,
+          `Changelog, version badges, and package manifests aligned on v1.3.1.`,
+        ],
+      },
+    ],
+  },
+  {
     id: "1.3.0",
     label: "v1.3.0",
-    summary: `v${currentVersion} ships dashboard and form primitives, richer Companions, registry catalogs, CLI catalog installs, and stronger accessibility and release checks.`,
+    summary:
+      "v1.3.0 ships dashboard and form primitives, richer Companions, registry catalogs, CLI catalog installs, and stronger accessibility and release checks.",
     sections: [
       {
         title: "Components",
@@ -169,7 +206,7 @@ export const changelogVersions: ChangelogVersion[] = [
   },
 ];
 
-export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.3.0";
+export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.3.1";
 
 export function resolveChangelogVersionId(
   value: string | null | undefined,

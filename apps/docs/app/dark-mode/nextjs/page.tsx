@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { CodeBlock } from "@/components/code-block";
 import { DarkModeGuide } from "@/components/installation/dark-mode-guide";
 import { getInstallationFramework } from "@/lib/installation/frameworks";
 import { pageMetadata } from "@/lib/page-metadata";
@@ -9,7 +10,7 @@ const framework = getInstallationFramework("nextjs");
 export const metadata: Metadata = pageMetadata({
   title: "Dark Mode with Next.js",
   description:
-    "Enable Vinyaas light and dark theme tokens in a Next.js App Router project.",
+    "Enable Vinyaas light and dark theme tokens in a Next.js App Router project with system preference as the default.",
   path: "/dark-mode/nextjs",
 });
 
@@ -29,14 +30,15 @@ export default function NextJsDarkModePage() {
           <code>&lt;html&gt;</code> so a before-paint theme script can set{" "}
           <code>class=&quot;dark&quot;</code> without a hydration mismatch.
         </p>
-        <pre className="border-border bg-card text-card-foreground overflow-x-auto rounded-md border p-4 font-mono text-[13px] leading-6">
-          <code>{`<html lang="en" suppressHydrationWarning>
+        <CodeBlock
+          language="tsx"
+          code={`<html lang="en" suppressHydrationWarning>
   <body>{children}</body>
-</html>`}</code>
-        </pre>
+</html>`}
+        />
         <p className={body}>
-          Run a small inline script before paint (or a client provider) that
-          reads the saved preference / system preference and toggles{" "}
+          Run a small inline script before paint that reads the saved preference
+          or falls back to <code>prefers-color-scheme</code>, then toggles{" "}
           <code>dark</code> on <code>document.documentElement</code>. Keep a
           client toggle that writes the same preference for later visits.
         </p>

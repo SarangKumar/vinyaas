@@ -14,7 +14,7 @@ import { ChangelogVersionSelect } from "./changelog-version-select";
 export const metadata: Metadata = pageMetadata({
   title: "Changelog",
   description:
-    "Release notes for Vinyaas through v1.3.0, including catalogs, accessibility, CLI, and registry updates.",
+    "Release notes for Vinyaas through v1.3.1, including catalogs, accessibility, CLI, and registry updates.",
 });
 
 const heading =

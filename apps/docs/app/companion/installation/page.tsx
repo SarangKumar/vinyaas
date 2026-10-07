@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CodeBlock } from "@/components/code-block";
 import { DocsArticle } from "@/components/docs-article";
 import {
+  companionCustomPath,
   companionJsonPath,
   companionPath,
 } from "@/components/docs-nav";
@@ -13,7 +14,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = pageMetadata({
   title: "Companion Installation",
   description:
-    "How Vinyaas companions will be installed in a project. CLI companion commands are planned and not available yet.",
+    "Minimal setup for Vinyaas companions: folder layout, companion.json, and host wiring. CLI companion add is planned.",
   path: "/companion/installation",
 });
 
@@ -26,51 +27,86 @@ export default function CompanionInstallationPage() {
   return (
     <DocsArticle
       title="Companion Installation"
-      description="Companions will install as local assets and metadata — separate from registry UI components."
+      description="Companions are local assets + metadata — separate from registry UI components."
     >
       <section className="flex flex-col gap-4">
         <h2 id="status" className={sectionHeading}>
-          Current status
+          Status
         </h2>
         <p className={body}>
-          Companion installation through the CLI is{" "}
-          <strong>not available yet</strong>. Built-in companions such as Ember,
-          Soul, and Moss are showcased in the docs today. Use the{" "}
+          <code>vinyaas companion add</code> is{" "}
+          <strong>not available yet</strong>. Built-in species (Ember, Soul,
+          Moss, Flint, Bubble, Rime, Jab, Volt, Drake, Nyx) ship with the docs
+          host today. Explore them on{" "}
           <Link href={companionPath} className={linkClass}>
             Companions
-          </Link>{" "}
-          page to explore them.
+          </Link>
+          .
+        </p>
+        <CodeBlock language="bash" code="vinyaas companion add ember" />
+        <p className={body}>
+          That command is planned only. Current CLI: <code>init</code>,{" "}
+          <code>add</code>, <code>doctor</code>, discovery, catalogs, and{" "}
+          <code>status</code>.
         </p>
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 id="planned" className={sectionHeading}>
-          Planned CLI
+        <h2 id="minimal" className={sectionHeading}>
+          Minimal manual setup
         </h2>
         <p className={body}>
-          A future release may support installing a companion species into a
-          project, for example:
+          To author or vendor a companion in your own app (same shape the docs
+          use):
         </p>
-        <CodeBlock language="bash" code="vinyaas companion add ember" />
+        <ol className={`${body} list-decimal space-y-2 pl-5`}>
+          <li>
+            Create <code>companion/&lt;id&gt;/</code> with{" "}
+            <code>companion.json</code>, <code>assets/idle.png</code> (32×32),
+            and <code>animations/&lt;clip&gt;/N.png</code> frames.
+          </li>
+          <li>
+            Validate metadata against the{" "}
+            <Link href={companionJsonPath} className={linkClass}>
+              companion.json
+            </Link>{" "}
+            schema (id, capabilities, interactions, animations).
+          </li>
+          <li>
+            Register the species in your catalog (imports + clip map) and mount
+            a companion host/provider once at the app shell.
+          </li>
+          <li>
+            Mark perch targets with <code>data-companion-surface</code>.
+          </li>
+        </ol>
+        <CodeBlock
+          language="bash"
+          code={`companion/nyx/
+  companion.json
+  assets/idle.png
+  animations/idle/1.png
+  animations/happy/1.png
+  animations/glow/1.png
+  …`}
+        />
         <p className={body}>
-          That command is not implemented. Do not expect it to work with the
-          current Vinyaas CLI (<code>init</code>, <code>add</code>,{" "}
-          <code>doctor</code>, discovery, and <code>status</code>).
+          Full authoring notes:{" "}
+          <Link href={companionCustomPath} className={linkClass}>
+            Custom Companion
+          </Link>
+          .
         </p>
       </section>
 
       <section className="flex flex-col gap-4">
         <h2 id="what-installs" className={sectionHeading}>
-          What will install
+          What will install later
         </h2>
         <p className={body}>
-          When companion install ships, a typical package will include{" "}
-          <code>companion.json</code>, sprite assets, and animation frames —
-          not React UI primitives from the component registry. See{" "}
-          <Link href={companionJsonPath} className={linkClass}>
-            companion.json
-          </Link>{" "}
-          for the metadata shape.
+          When CLI companion install ships, expect <code>companion.json</code>,
+          sprites, and animation frames — not React UI primitives from the
+          component registry.
         </p>
       </section>
     </DocsArticle>

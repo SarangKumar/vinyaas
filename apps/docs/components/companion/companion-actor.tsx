@@ -190,6 +190,44 @@ export function CompanionActor({
       window.removeEventListener("vinyaas:companion-navigate", onNavigate);
   }, [entry]);
 
+  // theme_change broadcast when the docs theme toggles
+  useEffect(() => {
+    if (!entry) {
+      return;
+    }
+
+    function onTheme(event: Event) {
+      if (!engineRef.current || !entry) {
+        return;
+      }
+      if (
+        engineRef.current.state !== "idle" &&
+        engineRef.current.state !== "sleeping"
+      ) {
+        return;
+      }
+      const detail = (event as CustomEvent<{ theme?: string }>).detail;
+      const next = engineDispatchTrigger(
+        engineRef.current,
+        entry.meta,
+        {
+          trigger: "theme_change",
+          payload: { theme: detail?.theme },
+        },
+        Date.now(),
+        { width: window.innerWidth, height: window.innerHeight },
+        allowedIdsFor(instanceRef.current.type),
+      );
+      engineRef.current = next;
+      setSnapshot(next);
+      patchRef.current(instanceRef.current.id, { state: next.state });
+    }
+
+    window.addEventListener("vinyaas:companion-theme", onTheme);
+    return () =>
+      window.removeEventListener("vinyaas:companion-theme", onTheme);
+  }, [entry]);
+
   // Animation + physics tick
   useEffect(() => {
     if (!entry) {

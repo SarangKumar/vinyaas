@@ -36,7 +36,7 @@ export function HomeShowcase() {
           </a>{" "}
           · 2026
         </p>
-        <p className="text-muted-foreground text-xs">v1.3.0</p>
+        <p className="text-muted-foreground text-xs">v1.3.1</p>
       </footer>
     </div>
   );

@@ -7,7 +7,10 @@ import { DocsArticle } from "@/components/docs-article";
 import {
   companionAnimationsPath,
   companionCustomPath,
+  companionExamplesPath,
+  companionGalleryPath,
   companionInstallationPath,
+  companionInteractionsPath,
   companionJsonPath,
 } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
@@ -151,6 +154,10 @@ export default function CompanionPage() {
             <strong className="font-medium">Drake</strong> — dragon-type
             hatchling with stubby wings.
           </li>
+          <li>
+            <strong className="font-medium">Nyx</strong> — dark-type shade that
+            glows when you toggle the theme.
+          </li>
         </ul>
         <p className={body}>
           Full clip and move tables live on{" "}
@@ -177,6 +184,24 @@ export default function CompanionPage() {
               companion.json
             </Link>{" "}
             — identity, animations, personality, capabilities, and interactions.
+          </li>
+          <li>
+            <Link href={companionInteractionsPath} className={linkClass}>
+              Interactions
+            </Link>{" "}
+            — triggers, actions, and theme_change.
+          </li>
+          <li>
+            <Link href={companionExamplesPath} className={linkClass}>
+              Examples
+            </Link>{" "}
+            — perch surfaces and instance profiles.
+          </li>
+          <li>
+            <Link href={companionGalleryPath} className={linkClass}>
+              Gallery
+            </Link>{" "}
+            — spawn every built-in species.
           </li>
           <li>
             <Link href={companionCustomPath} className={linkClass}>

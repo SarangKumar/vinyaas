@@ -90,7 +90,25 @@ function componentNavItem(component: ComponentMeta): DocsNavItem {
   };
 }
 
+/**
+ * Sidebar order is chronological / onboarding-first:
+ * GET STARTED → SECTIONS → COMPONENTS → COMPANION.
+ * Routes appear once (no duplicated Installation / CLI / Theming links).
+ */
 export const docsNav: DocsNavGroup[] = [
+  {
+    title: "GET STARTED",
+    label: true,
+    items: [
+      { title: "Installation", href: installationPath },
+      { title: "components.json", href: componentsJsonPath },
+      { title: "Dark Mode", href: darkModePath },
+      { title: "Theming", href: themingPath },
+      { title: "Typeset", href: typesetPath },
+      { title: "Package Import", href: packageImportPath },
+      { title: "CLI", href: cliPath },
+    ],
+  },
   {
     title: "SECTIONS",
     label: true,
@@ -98,12 +116,8 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Home", href: homePath },
       { title: "Introduction", href: introductionPath },
       { title: "Components", href: componentsPath },
-      { title: "Installation", href: installationPath },
-      { title: "CLI", href: cliPath },
       { title: "Catalogs", href: catalogsPath },
       { title: "Accessibility", href: accessibilityPath },
-      { title: "Theming", href: themingPath },
-      { title: "Typeset", href: typesetPath },
       { title: "Changelog", href: changelogPath },
     ],
   },
@@ -127,19 +141,6 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Custom Companion", href: companionCustomPath },
       { title: "Examples", href: companionExamplesPath },
       { title: "Gallery", href: companionGalleryPath },
-    ],
-  },
-  {
-    title: "GET STARTED",
-    label: true,
-    items: [
-      { title: "Installation", href: installationPath },
-      { title: "components.json", href: componentsJsonPath },
-      { title: "Theming", href: themingPath },
-      { title: "Typeset", href: typesetPath },
-      { title: "Package Import", href: packageImportPath },
-      { title: "Dark Mode", href: darkModePath },
-      { title: "CLI", href: cliPath },
     ],
   },
 ];

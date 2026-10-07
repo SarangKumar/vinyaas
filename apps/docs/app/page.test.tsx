@@ -128,7 +128,7 @@ describe("homepage", () => {
       "data-showcase-columns",
       String(getShowcaseColumnCount(window.innerWidth)),
     );
-    expect(document.body.textContent).toContain("v1.3.0");
+    expect(document.body.textContent).toContain("v1.3.1");
     expect(document.querySelectorAll("[data-playground-item]")).toHaveLength(0);
     const playBlock = document.querySelector("[data-play-block]");
     expect(playBlock?.className).not.toMatch(/mb-\(--gap\)/);

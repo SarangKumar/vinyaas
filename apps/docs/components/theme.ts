@@ -35,13 +35,23 @@ export function writeThemeCookie(theme: ThemeName) {
 }
 
 export function applyTheme(theme: ThemeName) {
-  document.documentElement.classList.toggle("dark", theme === "dark");
+  const previousDark = document.documentElement.classList.contains("dark");
+  const nextDark = theme === "dark";
+  document.documentElement.classList.toggle("dark", nextDark);
 
   try {
     localStorage.setItem(themeStorageKey, theme);
     writeThemeCookie(theme);
   } catch {
     // Storage can be unavailable. The class still updates for this view.
+  }
+
+  if (previousDark !== nextDark) {
+    window.dispatchEvent(
+      new CustomEvent("vinyaas:companion-theme", {
+        detail: { theme },
+      }),
+    );
   }
 }
 

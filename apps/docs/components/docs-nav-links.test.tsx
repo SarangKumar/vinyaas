@@ -29,17 +29,24 @@ describe("DocsNavLinks", () => {
       within(nav).queryByRole("link", { name: "React + Vite" }),
     ).toBeNull();
 
+    // GET STARTED comes first.
+    expect(titles.slice(0, 7)).toEqual([
+      "Installation",
+      "components.json",
+      "Dark Mode",
+      "Theming",
+      "Typeset",
+      "Package Import",
+      "CLI",
+    ]);
+
     const sectionsStart = titles.indexOf("Home");
-    expect(titles.slice(sectionsStart, sectionsStart + 10)).toEqual([
+    expect(titles.slice(sectionsStart, sectionsStart + 6)).toEqual([
       "Home",
       "Introduction",
       "Components",
-      "Installation",
-      "CLI",
       "Catalogs",
       "Accessibility",
-      "Theming",
-      "Typeset",
       "Changelog",
     ]);
     expect(within(nav).getByRole("link", { name: "Home" })).toHaveAttribute(
