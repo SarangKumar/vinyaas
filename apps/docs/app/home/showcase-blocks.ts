@@ -8,23 +8,30 @@ import { ChatBlock } from "@/app/home/blocks/chat-block";
 import { ComboboxBlock } from "@/app/home/blocks/combobox-block";
 import { CommandSearchBlock } from "@/app/home/blocks/command-search-block";
 import { CompanionBlock } from "@/app/home/blocks/companion-block";
+import { ConnectDeviceBlock } from "@/app/home/blocks/connect-device-block";
+import { ContributionHistoryBlock } from "@/app/home/blocks/contribution-history-block";
 import { DataTableBlock } from "@/app/home/blocks/data-table-block";
 import { DatePickerBlock } from "@/app/home/blocks/date-picker-block";
+import { DragAndDropBlock } from "@/app/home/blocks/drag-and-drop-block";
 import { EmptyStateBlock } from "@/app/home/blocks/empty-state-block";
 import { FormBlock } from "@/app/home/blocks/form-block";
 import { LoadingStateBlock } from "@/app/home/blocks/loading-state-block";
 import { MediaControlsBlock } from "@/app/home/blocks/media-controls-block";
-import { SelectBlock } from "@/app/home/blocks/select-block";
+import { MilestoneBlock } from "@/app/home/blocks/milestone-block";
+import { NotificationSettingsBlock } from "@/app/home/blocks/notification-settings-block";
 import { OtpBlock } from "@/app/home/blocks/otp-block";
 import { PaginationBlock } from "@/app/home/blocks/pagination-block";
+import { PaymentConfirmationBlock } from "@/app/home/blocks/payment-confirmation-block";
+import { PaymentMethodBlock } from "@/app/home/blocks/payment-method-block";
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
-import { DragAndDropBlock } from "@/app/home/blocks/drag-and-drop-block";
 import { RecentDocumentsBlock } from "@/app/home/blocks/recent-documents-block";
 import { ResizableBlock } from "@/app/home/blocks/resizable-block";
 import { ScheduleBlock } from "@/app/home/blocks/schedule-block";
+import { SelectBlock } from "@/app/home/blocks/select-block";
 import { SheetBlock } from "@/app/home/blocks/sheet-block";
 import { TableBlock } from "@/app/home/blocks/table-block";
 import { TabsSettingsBlock } from "@/app/home/blocks/tabs-settings-block";
+import { WorkspaceNavBlock } from "@/app/home/blocks/workspace-nav-block";
 import { components } from "@/components/component-meta";
 
 /**
@@ -35,8 +42,8 @@ import { components } from "@/components/component-meta";
  * When a new showcase-worthy registry component ships:
  * 1. Add a compact block that demonstrates a real interaction/composition.
  * 2. Prefer placing new-component blocks near the start of this list.
- * 3. Prefer a count divisible by the wide breakpoints (5 columns @ 1900px)
- *    so stacks stay even. Grow when real demos exist; do not pad with junk.
+ * 3. Prefer a count divisible by 4 (and ideally 8) so 4-column desktops
+ *    land even stacks. Grow when real demos exist; do not pad with junk.
  * 4. Do not remove important single-representation components just because
  *    they are older.
  * 5. Keep cards light. Avoid Sidebar, Navigation Menu, and other full app
@@ -44,11 +51,11 @@ import { components } from "@/components/component-meta";
  *
  * Layout (homepage, shadcn-style grid of flex columns):
  * 1 · md:2 · lg:3 · min-[1400px]:4 · min-[1900px]:5
- * Cards pack into the shortest column using relative height weights so
- * stacks end near the same height (round-robin left tall leftover gaps).
+ * Cards pack via first-fit decreasing on {@link ShowcaseBlockDefinition.weight}.
  *
- * v1.3.1 note: 25 demos + weighted packing; Navigation Menu / Sidebar
- * stay docs-only.
+ * v1.3.1: 32 demos (was 25) with weights tuned to real card heights so
+ * every column bottoms out evenly above the footer. Navigation Menu /
+ * Sidebar stay docs-only.
  */
 
 /** Shell / nav primitives that are too dense for homepage masonry cards. */
@@ -58,7 +65,7 @@ export const homepageExcludedNewComponents = [
 ] as const;
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
-export const SHOWCASE_BLOCK_COUNT = 25;
+export const SHOWCASE_BLOCK_COUNT = 32;
 
 export type ShowcaseBlockDefinition = {
   id: string;
@@ -68,8 +75,8 @@ export type ShowcaseBlockDefinition = {
    */
   components: readonly string[];
   /**
-   * Relative visual height for masonry packing (1 = short, 5 = tall).
-   * Used by {@link distributeShowcaseBlocks} — not CSS.
+   * Relative visual height for masonry packing (1 = short, 8 = very tall).
+   * Tuned against the live homepage — not CSS.
    */
   weight: number;
   Block: ComponentType;
@@ -80,14 +87,23 @@ const registrySlugs = new Set(components.map((component) => component.slug));
 /**
  * Ordered source of truth for homepage playground cards.
  * Rendered by {@link Playground}; length is asserted in tests.
+ *
+ * Weights reflect measured visual mass (primitives/command/table run tall;
+ * date-picker/combobox stay compact).
  */
 export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
-  { id: "chart", weight: 5, components: ["chart"], Block: ChartBlock },
+  { id: "chart", weight: 6, components: ["chart"], Block: ChartBlock },
   {
     id: "analytics",
-    weight: 4,
+    weight: 5,
     components: ["select", "badge", "button", "separator", "label"],
     Block: AnalyticsBlock,
+  },
+  {
+    id: "contribution",
+    weight: 5,
+    components: ["card", "button"],
+    Block: ContributionHistoryBlock,
   },
   {
     id: "sheet",
@@ -103,7 +119,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   },
   {
     id: "data-table",
-    weight: 5,
+    weight: 6,
     components: [
       "data-table",
       "table",
@@ -117,7 +133,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   },
   {
     id: "documents",
-    weight: 5,
+    weight: 6,
     components: [
       "table",
       "input",
@@ -131,7 +147,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   },
   {
     id: "calendar",
-    weight: 4,
+    weight: 5,
     components: ["calendar"],
     Block: CalendarBlock,
   },
@@ -143,7 +159,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   },
   {
     id: "activity",
-    weight: 4,
+    weight: 5,
     components: ["avatar", "badge", "separator"],
     Block: ScheduleBlock,
   },
@@ -161,7 +177,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   },
   {
     id: "loading",
-    weight: 4,
+    weight: 5,
     components: ["skeleton", "spinner", "marker", "button", "separator"],
     Block: LoadingStateBlock,
   },
@@ -170,6 +186,12 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     weight: 4,
     components: ["form", "input", "label", "button", "switch"],
     Block: FormBlock,
+  },
+  {
+    id: "milestone",
+    weight: 4,
+    components: ["input", "label", "button"],
+    Block: MilestoneBlock,
   },
   {
     id: "resizable",
@@ -197,9 +219,15 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   },
   {
     id: "media",
-    weight: 4,
+    weight: 5,
     components: ["slider", "switch", "label", "badge"],
     Block: MediaControlsBlock,
+  },
+  {
+    id: "channels",
+    weight: 5,
+    components: ["switch", "label", "badge", "button", "separator"],
+    Block: NotificationSettingsBlock,
   },
   {
     id: "pagination",
@@ -208,8 +236,32 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     Block: PaginationBlock,
   },
   {
+    id: "payment",
+    weight: 4,
+    components: ["badge", "button", "separator"],
+    Block: PaymentConfirmationBlock,
+  },
+  {
+    id: "payment-method",
+    weight: 3,
+    components: ["badge", "button", "dropdown-menu"],
+    Block: PaymentMethodBlock,
+  },
+  {
+    id: "connect-device",
+    weight: 4,
+    components: [],
+    Block: ConnectDeviceBlock,
+  },
+  {
+    id: "workspace-nav",
+    weight: 4,
+    components: [],
+    Block: WorkspaceNavBlock,
+  },
+  {
     id: "primitives",
-    weight: 5,
+    weight: 8,
     components: [
       "button",
       "input",
@@ -226,20 +278,20 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   },
   {
     id: "table",
-    weight: 5,
+    weight: 6,
     components: ["table", "input", "badge", "dropdown-menu", "avatar"],
     Block: TableBlock,
   },
   {
     id: "command",
-    weight: 4,
+    weight: 6,
     components: ["command", "kbd"],
     Block: CommandSearchBlock,
   },
-  { id: "companion", weight: 3, components: [], Block: CompanionBlock },
+  { id: "companion", weight: 4, components: [], Block: CompanionBlock },
   {
     id: "chat",
-    weight: 3,
+    weight: 4,
     components: ["button", "textarea", "avatar"],
     Block: ChatBlock,
   },

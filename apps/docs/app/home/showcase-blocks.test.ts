@@ -15,9 +15,9 @@ import {
 } from "./showcase-blocks";
 
 describe("homepage showcase blocks", () => {
-  it("keeps exactly 25 showcase blocks as a product rule", () => {
-    expect(SHOWCASE_BLOCK_COUNT).toBe(25);
-    expect(showcaseBlocks).toHaveLength(25);
+  it("keeps exactly 32 showcase blocks as a product rule", () => {
+    expect(SHOWCASE_BLOCK_COUNT).toBe(32);
+    expect(showcaseBlocks).toHaveLength(32);
     expect(showcaseBlocks).toHaveLength(SHOWCASE_BLOCK_COUNT);
     expect(new Set(showcaseBlockIds()).size).toBe(SHOWCASE_BLOCK_COUNT);
   });
@@ -80,8 +80,7 @@ describe("homepage showcase blocks", () => {
   });
 
   it("documents replacement policy by staying fixed-length when covering more primitives", () => {
-    // Primitives + command remain for broad coverage; v1.3.1 grew the fixed
-    // list to 25 with denser product demos (not filler).
+    // v1.3.1: 32 real demos so 4-column desktops get 8 cards each.
     expect(showcaseBlockIds()).toContain("primitives");
     expect(showcaseBlockIds()).toContain("command");
     expect(showcaseBlockIds()).toContain("documents");
@@ -89,6 +88,12 @@ describe("homepage showcase blocks", () => {
     expect(showcaseBlockIds()).toContain("analytics");
     expect(showcaseBlockIds()).toContain("loading");
     expect(showcaseBlockIds()).toContain("media");
+    expect(showcaseBlockIds()).toContain("contribution");
+    expect(showcaseBlockIds()).toContain("channels");
+    expect(showcaseBlockIds()).toContain("milestone");
+    expect(showcaseBlockIds()).toContain("payment");
+    expect(showcaseBlockIds()).toContain("connect-device");
+    expect(showcaseBlockIds()).toContain("workspace-nav");
     expect(showcaseBlocks).toHaveLength(SHOWCASE_BLOCK_COUNT);
   });
 
@@ -137,10 +142,11 @@ describe("homepage showcase blocks", () => {
       expect(max - min).toBeLessThanOrEqual(3);
     }
 
-    // Round-robin at 4-up put both late tall cards (indexes 20/24) in
-    // column 0 — packing must keep per-column card counts within 1.
+    // 32 cards → exactly 8 per column at 4-up; weights stay within one tall card.
     const four = distributeShowcaseBlocks(showcaseBlocks, 4);
     const counts = four.map((column) => column.length);
-    expect(Math.max(...counts) - Math.min(...counts)).toBeLessThanOrEqual(1);
+    expect(counts).toEqual([8, 8, 8, 8]);
+    const weights = showcaseColumnWeights(four);
+    expect(Math.max(...weights) - Math.min(...weights)).toBeLessThanOrEqual(2);
   });
 });
