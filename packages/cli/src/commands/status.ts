@@ -23,7 +23,8 @@ export function registerStatusCommand(program: Command): void {
         "  $ vinyaas status --json",
         "  $ vinyaas status --cwd ./my-app",
         "",
-        "Vinyaas tracks installed components locally to support future update/remove workflows.",
+        "Vinyaas tracks installed components in `.vinyaas/manifest.json`.",
+        "Use `vinyaas update` to overwrite them with the latest registry versions.",
       ].join("\n"),
     )
     .action(async (options: { cwd?: string; json?: boolean }) => {

@@ -90,10 +90,17 @@ describe("DocsShell", () => {
     ).toContain("View changelog");
     expect(document.querySelector("[data-docs-feature-card] ul")).toBeNull();
     expect(document.querySelector("[data-docs-page-feedback]")).toBeNull();
-    const homeNav = within(
-      document.querySelector("[data-header-section='start']") as HTMLElement,
-    ).getByRole("link", { name: "Home" });
+    const startHeader = document.querySelector(
+      "[data-header-section='start']",
+    ) as HTMLElement;
+    const homeNav = within(startHeader).getByRole("link", { name: "Home" });
     expect(homeNav.className).toContain("text-foreground");
+    expect(
+      within(startHeader).getByRole("link", { name: "Vinyaas home" }),
+    ).toHaveAttribute("href", "/");
+    expect(
+      within(startHeader).getByRole("img", { name: "Vinyaas" }),
+    ).toBeInTheDocument();
     const docsSidebarLink = screen.getAllByRole("link", { name: "Button" })[0]!;
     expect(docsSidebarLink.className).toMatch(/text-foreground/);
     const start = document.querySelector("[data-header-section='start']");

@@ -57,6 +57,7 @@ describe("vinyaas", () => {
     assert.match(result.stdout, /--help/);
     assert.match(result.stdout, /\binit\b/);
     assert.match(result.stdout, /\badd\b/);
+    assert.match(result.stdout, /\bupdate\b/);
     assert.match(result.stdout, /\bcatalog\b/);
     assert.match(result.stdout, /\blist\b/);
     assert.match(result.stdout, /\bsearch\b/);
@@ -68,6 +69,7 @@ describe("vinyaas", () => {
   it("shows --cwd on init and add", async () => {
     const init = await run(["init", "--help"]);
     const add = await run(["add", "--help"]);
+    const update = await run(["update", "--help"]);
     const list = await run(["list", "--help"]);
     const search = await run(["search", "--help"]);
     const info = await run(["info", "--help"]);
@@ -92,6 +94,13 @@ describe("vinyaas", () => {
     assert.match(add.stdout, /vinyaas add --category forms/);
     assert.match(add.stdout, /already-installed/i);
     assert.match(add.stdout, /Catalog installs require an explicit --catalog/);
+    assert.equal(update.exitCode, 0);
+    assert.match(update.stdout, /--cwd <path>/);
+    assert.match(update.stdout, /--dry-run/);
+    assert.match(update.stdout, /--yes/);
+    assert.match(update.stdout, /\[name\.\.\.\]/);
+    assert.match(update.stdout, /vinyaas update button/);
+    assert.match(update.stdout, /overwrite local component files/i);
     assert.equal(list.exitCode, 0);
     assert.match(list.stdout, /--json/);
     assert.equal(search.exitCode, 0);
@@ -103,7 +112,7 @@ describe("vinyaas", () => {
     assert.equal(status.exitCode, 0);
     assert.match(status.stdout, /--json/);
     assert.match(status.stdout, /--cwd <path>/);
-    assert.match(status.stdout, /tracks installed components/i);
+    assert.match(status.stdout, /vinyaas update/);
     assert.equal(doctor.exitCode, 0);
     assert.match(doctor.stdout, /--json/);
     assert.match(doctor.stdout, /--cwd <path>/);

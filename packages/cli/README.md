@@ -112,6 +112,22 @@ Current categories: `forms`, `layout`, `navigation`, `feedback`, `data-display`,
 
 Unknown categories fail with the available list. If you pass explicit component names together with `--category`, the names win and `--category` is ignored.
 
+### Update components
+
+```bash
+vinyaas update button
+vinyaas update button card
+vinyaas update
+vinyaas update --yes
+vinyaas update button --dry-run
+```
+
+- Named updates overwrite those installed components with the latest registry source.
+- With no names, every component in `.vinyaas/manifest.json` is updated.
+- Confirmation warns that local edits will be overwritten unless `--yes` is set.
+- Only components previously installed via Vinyaas (recorded in the manifest) can be updated.
+- `--dry-run` prints the plan without writing files.
+
 ### Status
 
 ```bash
@@ -119,7 +135,7 @@ vinyaas status
 vinyaas status --json
 ```
 
-Lists components recorded in `.vinyaas/manifest.json` after successful installs. Useful for future update/remove workflows. Dry-run does not write the manifest.
+Lists components recorded in `.vinyaas/manifest.json` after successful installs. Use `vinyaas update` to refresh them from the registry. Dry-run does not write the manifest.
 
 ### Discover
 

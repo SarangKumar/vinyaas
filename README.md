@@ -114,6 +114,14 @@ Check what Vinyaas recorded locally:
 vinyaas status
 ```
 
+Refresh installed components from the registry (overwrites local edits after confirmation):
+
+```bash
+vinyaas update button
+vinyaas update
+vinyaas update --yes
+```
+
 For each component, Vinyaas:
 
 1. Fetches the registry item.
