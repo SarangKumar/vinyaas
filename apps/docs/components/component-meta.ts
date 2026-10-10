@@ -14,7 +14,8 @@ export { formatRegistryCategoryLabel };
 /** The current docs/website release version. */
 export const currentVersion = "1.3.1";
 
-export type ReleaseVersion = "0.1" | "1.0.0" | "1.1.0" | "1.2.0" | "1.3.0" | "1.3.1";
+export type ReleaseVersion =
+  "0.1" | "1.0.0" | "1.1.0" | "1.2.0" | "1.3.0" | "1.3.1";
 
 type ComponentMetaSource = {
   name: string;
@@ -268,6 +269,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.3.0",
   },
   {
+    name: "Score Ring",
+    slug: "score-ring",
+    description:
+      "A circular score meter whose color blends from a start to an end color.",
+    introducedIn: "1.3.1",
+  },
+  {
     name: "Scroll Area",
     slug: "scroll-area",
     description: "A native scroll container with a thin scrollbar.",
@@ -347,6 +355,18 @@ const componentSources: readonly ComponentMetaSource[] = [
     slug: "toast",
     description: "A temporary notice.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Toggle",
+    slug: "toggle",
+    description: "A two-state button that stays pressed until toggled again.",
+    introducedIn: "1.3.1",
+  },
+  {
+    name: "Toggle Group",
+    slug: "toggle-group",
+    description: "A set of toggles with single or multiple selection.",
+    introducedIn: "1.3.1",
   },
   {
     name: "Tooltip",

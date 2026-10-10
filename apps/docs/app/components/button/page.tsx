@@ -174,27 +174,27 @@ const examples: ComponentExample[] = [
     description:
       "Outline, ghost, and secondary are quiet actions. Destructive is for delete. Link is inline.",
     preview: (
-      <>
+      <div className="flex flex-wrap items-center justify-center gap-4">
         <Button>Save</Button>
         <Button variant="outline">Cancel</Button>
         <Button variant="ghost">Skip</Button>
         <Button variant="secondary">Draft</Button>
         <Button variant="destructive">Delete</Button>
         <Button variant="link">Learn more</Button>
-      </>
+      </div>
     ),
     code: `import { Button } from "@/components/ui/button";
 
 export function Actions() {
   return (
-    <>
+    <div className="flex flex-wrap items-center justify-center gap-4">
       <Button>Save</Button>
       <Button variant="outline">Cancel</Button>
       <Button variant="ghost">Skip</Button>
       <Button variant="secondary">Draft</Button>
       <Button variant="destructive">Delete</Button>
       <Button variant="link">Learn more</Button>
-    </>
+    </div>
   );
 }
 `,
@@ -205,7 +205,7 @@ export function Actions() {
     description:
       "default matches Input. xs, sm, and lg change the text button. Icon sizes are square.",
     preview: (
-      <>
+      <div className="flex flex-wrap items-center justify-center gap-4">
         <Button size="xs">Extra small</Button>
         <Button size="sm">Small</Button>
         <Button>Default</Button>
@@ -213,13 +213,13 @@ export function Actions() {
         <Button size="icon" aria-label="Add">
           +
         </Button>
-      </>
+      </div>
     ),
     code: `import { Button } from "@/components/ui/button";
 
 export function Sizes() {
   return (
-    <>
+    <div className="flex flex-wrap items-center justify-center gap-4">
       <Button size="xs">Extra small</Button>
       <Button size="sm">Small</Button>
       <Button>Default</Button>
@@ -227,7 +227,7 @@ export function Sizes() {
       <Button size="icon" aria-label="Add">
         +
       </Button>
-    </>
+    </div>
   );
 }
 `,

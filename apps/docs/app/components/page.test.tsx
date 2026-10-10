@@ -33,9 +33,12 @@ describe("components catalog", () => {
       "navigation-menu",
       "pagination",
       "resizable",
+      "score-ring",
       "select",
       "sheet",
       "sidebar",
+      "toggle",
+      "toggle-group",
     ]);
 
     const newSection = screen.getByRole("heading", {
@@ -66,11 +69,7 @@ describe("components catalog", () => {
     // New Components list + All Components grid
     expect(lists.length).toBeGreaterThanOrEqual(2);
     const allGrid = lists.at(-1)!;
-    expect(allGrid).toHaveClass(
-      "grid",
-      "grid-cols-2",
-      "md:grid-cols-3",
-    );
+    expect(allGrid).toHaveClass("grid", "grid-cols-2", "md:grid-cols-3");
     expect(allGrid.querySelectorAll(".bg-primary").length).toBe(0);
     expect(allGrid.querySelector("svg")).toBeNull();
 

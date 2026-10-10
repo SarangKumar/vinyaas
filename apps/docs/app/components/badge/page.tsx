@@ -178,27 +178,27 @@ export function Saved() {
     description:
       "Default, secondary, destructive, outline, ghost, and link cover status, quiet labels, and link-like text.",
     preview: (
-      <>
+      <div className="flex flex-wrap items-center justify-center gap-4">
         <Badge>Default</Badge>
         <Badge variant="secondary">Secondary</Badge>
         <Badge variant="destructive">Destructive</Badge>
         <Badge variant="outline">Outline</Badge>
         <Badge variant="ghost">Ghost</Badge>
         <Badge variant="link">Link</Badge>
-      </>
+      </div>
     ),
     code: `import { Badge } from "@/components/ui/badge";
 
 export function StatusLabels() {
   return (
-    <>
+    <div className="flex flex-wrap items-center justify-center gap-4">
       <Badge>Default</Badge>
       <Badge variant="secondary">Secondary</Badge>
       <Badge variant="destructive">Destructive</Badge>
       <Badge variant="outline">Outline</Badge>
       <Badge variant="ghost">Ghost</Badge>
       <Badge variant="link">Link</Badge>
-    </>
+    </div>
   );
 }
 `,

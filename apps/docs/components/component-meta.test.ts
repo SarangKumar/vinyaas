@@ -61,6 +61,7 @@ describe("component metadata", () => {
       "Progress",
       "Radio Group",
       "Resizable",
+      "Score Ring",
       "Scroll Area",
       "Select",
       "Separator",
@@ -74,6 +75,8 @@ describe("component metadata", () => {
       "Tabs",
       "Textarea",
       "Toast",
+      "Toggle",
+      "Toggle Group",
       "Tooltip",
       "Typography",
     ]);
@@ -117,9 +120,15 @@ describe("component metadata", () => {
       "sidebar",
     ]);
     expect(
+      components
+        .filter((component) => component.introducedIn === "1.3.1")
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual(["score-ring", "toggle", "toggle-group"]);
+    expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 20);
+    ).toBe(components.length - 23);
     expect(
       newComponents()
         .map((component) => component.slug)
@@ -136,9 +145,12 @@ describe("component metadata", () => {
       "navigation-menu",
       "pagination",
       "resizable",
+      "score-ring",
       "select",
       "sheet",
       "sidebar",
+      "toggle",
+      "toggle-group",
     ]);
     expect(
       isNewComponent(

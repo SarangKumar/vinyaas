@@ -163,7 +163,8 @@ const api: ApiRow[] = [
   {
     prop: "actionProps",
     type: "{ children, onClick }",
-    description: "An action button. It does not dismiss the toast by itself.",
+    description:
+      "An action button shown on the right, beside the close button. It does not dismiss the toast by itself.",
   },
   {
     prop: "position",

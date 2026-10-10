@@ -183,7 +183,7 @@ export function InputOTPSlot({
       data-slot="input-otp-slot"
       data-active={active ? "true" : undefined}
       className={cn(
-        "border-input bg-muted text-foreground inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-sm sm:h-9 sm:w-9",
+        "border-input bg-background text-foreground inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-sm sm:h-9 sm:w-9",
         active && "ring-ring ring-offset-background ring-2 ring-offset-2",
         otp.invalid && "border-destructive text-destructive",
         otp.disabled && "opacity-50",

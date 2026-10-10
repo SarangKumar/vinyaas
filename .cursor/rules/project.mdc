@@ -1,6 +1,6 @@
 ---
 description: Shared repository instructions
 alwaysApply: true
------------------
+---
 
 Follow the repository instructions in `AGENTS.md`. Read and apply them before making changes. Do not duplicate their contents here.

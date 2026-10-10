@@ -160,11 +160,28 @@ export function DialogTrigger({
   });
 }
 
+export type DialogSize = "sm" | "default" | "lg" | "xl" | "full";
+
+// Width and max height per size. "default" keeps the original 32rem / max-w-lg box.
+const dialogSizeClasses: Record<DialogSize, string> = {
+  sm: "max-h-[min(24rem,calc(100dvh-2rem))] sm:max-w-sm",
+  default: "max-h-[min(32rem,calc(100dvh-2rem))] sm:max-w-lg",
+  lg: "max-h-[min(40rem,calc(100dvh-2rem))] sm:max-w-3xl",
+  xl: "max-h-[min(48rem,calc(100dvh-2rem))] sm:max-w-5xl",
+  full: "h-[calc(100dvh-2rem)] max-h-[calc(100dvh-2rem)] sm:max-w-[calc(100%-2rem)]",
+};
+
+export type DialogContentProps = React.HTMLAttributes<HTMLDivElement> & {
+  /** Dialog box width and maximum height. */
+  size?: DialogSize;
+};
+
 export function DialogContent({
   className,
   children,
+  size = "default",
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+}: DialogContentProps) {
   const { open, setOpen, titleId, descriptionId } = useDialog();
   const contentRef = useRef<HTMLDivElement>(null);
   const [present, setPresent] = useState(open);
@@ -266,9 +283,11 @@ export function DialogContent({
         aria-describedby={descriptionId}
         tabIndex={-1}
         data-dialog-content=""
+        data-size={size}
         data-state={exiting ? "closed" : "open"}
         className={cn(
-          "border-border bg-background text-foreground relative z-10 flex max-h-[min(32rem,calc(100dvh-2rem))] w-full max-w-[calc(100%-2rem)] flex-col gap-4 overflow-y-auto rounded-lg border p-6 shadow-lg sm:max-w-lg",
+          "border-border bg-background text-foreground relative z-10 flex w-full max-w-[calc(100%-2rem)] flex-col gap-4 overflow-y-auto rounded-lg border p-6 shadow-lg",
+          dialogSizeClasses[size],
           exiting ? "vinyaas-dialog-out" : "vinyaas-dialog-in",
           className,
         )}

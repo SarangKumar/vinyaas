@@ -70,6 +70,7 @@ describe("vinyaas", () => {
     const init = await run(["init", "--help"]);
     const add = await run(["add", "--help"]);
     const update = await run(["update", "--help"]);
+    const upgrade = await run(["upgrade", "--help"]);
     const list = await run(["list", "--help"]);
     const search = await run(["search", "--help"]);
     const info = await run(["info", "--help"]);
@@ -101,6 +102,11 @@ describe("vinyaas", () => {
     assert.match(update.stdout, /\[name\.\.\.\]/);
     assert.match(update.stdout, /vinyaas update button/);
     assert.match(update.stdout, /overwrite local component files/i);
+    assert.match(update.stdout, /vinyaas upgrade/);
+    assert.equal(upgrade.exitCode, 0);
+    assert.match(upgrade.stdout, /Usage: vinyaas update\|upgrade/);
+    assert.match(upgrade.stdout, /\[name\.\.\.\]/);
+    assert.match(upgrade.stdout, /--yes/);
     assert.equal(list.exitCode, 0);
     assert.match(list.stdout, /--json/);
     assert.equal(search.exitCode, 0);

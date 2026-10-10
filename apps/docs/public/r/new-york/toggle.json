@@ -1,0 +1,16 @@
+{
+  "$schema": "https://vinyaas.vercel.app/r/schema/registry-item.json",
+  "name": "toggle",
+  "type": "registry:ui",
+  "description": "A two-state button that stays pressed until toggled again.",
+  "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "ui/toggle/index.tsx",
+      "content": "\"use client\";\n\nimport React, { useState } from \"react\";\n\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport { cn } from \"@/lib/utils\";\n\n// Heights match Button (xs h-7, sm h-8, default h-9, lg h-10) so a Toggle\n// lines up with buttons and inputs of the same size. The border stays inside\n// the box, so default and outline toggles are the same size.\nexport const toggleVariants = cva(\n  \"inline-flex box-border shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-transparent text-sm leading-none font-medium whitespace-nowrap transition-[color,background-color,border-color] duration-200 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 aria-pressed:bg-accent aria-pressed:text-accent-foreground motion-reduce:transition-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0\",\n  {\n    variants: {\n      variant: {\n        default: \"bg-transparent\",\n        outline:\n          \"border-input bg-transparent hover:bg-accent hover:text-accent-foreground\",\n      },\n      size: {\n        default: \"h-9 min-w-9 px-2.5\",\n        sm: \"h-8 min-w-8 px-2\",\n        lg: \"h-10 min-w-10 px-3\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n      size: \"default\",\n    },\n  },\n);\n\nexport type ToggleProps = Omit<\n  React.ComponentProps<\"button\">,\n  \"aria-pressed\" | \"onChange\"\n> &\n  VariantProps<typeof toggleVariants> & {\n    /** Controlled pressed state. */\n    pressed?: boolean;\n    /** Initial pressed state when uncontrolled. */\n    defaultPressed?: boolean;\n    onPressedChange?: (pressed: boolean) => void;\n  };\n\n/**\n * A two-state button. It is a native `<button>` with `aria-pressed`, so give\n * icon-only toggles an `aria-label`.\n */\nexport function Toggle({\n  pressed,\n  defaultPressed = false,\n  onPressedChange,\n  variant,\n  size,\n  disabled,\n  className,\n  ref,\n  onClick,\n  ...props\n}: ToggleProps) {\n  const [uncontrolled, setUncontrolled] = useState(defaultPressed);\n  const isPressed = pressed ?? uncontrolled;\n\n  return (\n    <button\n      {...props}\n      ref={ref}\n      type=\"button\"\n      aria-pressed={isPressed}\n      data-slot=\"toggle\"\n      data-state={isPressed ? \"on\" : \"off\"}\n      disabled={disabled}\n      className={cn(toggleVariants({ variant, size }), className)}\n      onClick={(event) => {\n        onClick?.(event);\n\n        if (event.defaultPrevented || disabled) {\n          return;\n        }\n\n        const next = !isPressed;\n\n        if (pressed === undefined) {\n          setUncontrolled(next);\n        }\n\n        onPressedChange?.(next);\n      }}\n    />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "docs": "https://vinyaas.vercel.app/components/toggle",
+  "category": "forms"
+}

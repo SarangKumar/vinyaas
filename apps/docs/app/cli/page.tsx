@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = pageMetadata({
   title: "CLI",
   description:
-    "Vinyaas CLI v1.3.1: init, doctor, add by name/catalog/category, catalogs, status, list, search, and info.",
+    "Vinyaas CLI v1.3.1: init, doctor, add by name/catalog/category, update/upgrade, catalogs, status, list, search, and info.",
   path: "/cli",
 });
 
@@ -269,6 +269,35 @@ No issues found.`}
         </ul>
 
         <h3
+          id="update"
+          className="text-foreground scroll-mt-8 text-base font-semibold"
+        >
+          update / upgrade
+        </h3>
+        <p className={body}>
+          Overwrites installed components with the latest registry source.{" "}
+          <code>upgrade</code> is an alias of <code>update</code>. With no names
+          it updates every component recorded in the manifest after a
+          confirmation. Pass names to update only those components.
+        </p>
+        <CodeBlock language="bash" code="vinyaas upgrade" />
+        <CodeBlock language="bash" code="vinyaas upgrade button card" />
+        <CodeBlock language="bash" code="vinyaas update button --dry-run" />
+        <ul className={`${body} list-disc space-y-2 pl-5`}>
+          <li>
+            Local edits to the updated files are replaced. The confirmation
+            warns about this; skip it with <code>--yes</code>.
+          </li>
+          <li>
+            Only components installed through Vinyaas (recorded in{" "}
+            <code>.vinyaas/manifest.json</code>) can be updated.
+          </li>
+          <li>
+            <code>--dry-run</code> prints the plan without writing files.
+          </li>
+        </ul>
+
+        <h3
           id="status"
           className="text-foreground scroll-mt-8 text-base font-semibold"
         >
@@ -276,7 +305,8 @@ No issues found.`}
         </h3>
         <p className={body}>
           Shows components recorded locally after successful installs. Vinyaas
-          tracks installed components to support future update/remove workflows.
+          tracks installed components so <code>vinyaas update</code> can refresh
+          them.
         </p>
         <CodeBlock language="bash" code="vinyaas status" />
         <CodeBlock language="bash" code="vinyaas status --json" />

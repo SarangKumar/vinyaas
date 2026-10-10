@@ -3,7 +3,6 @@
 ## 1. Project Overview
 
 Vinyaas is a UI component registry and documentation project with a CLI for discovering and installing registry items into consumer projects.
-
 Priorities: simplicity, maintainability, predictable behavior, and a good developer experience.
 
 ## 2. Technology Stack
@@ -52,6 +51,18 @@ Registry metadata distinguishes:
 Do not conflate npm dependencies with registry dependencies. Do not assume component imports are automatically resolved by registry metadata.
 
 Use existing registry tooling to regenerate artifacts. Do not edit generated files manually unless the task explicitly requires it.
+
+### Adding a registry component
+
+A new component touches several places that tests keep in sync:
+
+1. `apps/docs/registry/new-york/ui/<name>/index.tsx` plus a colocated `*.test.tsx`.
+2. `apps/docs/registry/new-york/registry.ts` (declare `registryDependencies` when it imports sibling items such as `../toggle`), `apps/docs/registry/categories.ts`, and, where it fits, `apps/docs/registry/catalogs.ts`.
+3. `apps/docs/components/component-meta.ts` with `introducedIn` set to the current release.
+4. A docs page at `apps/docs/app/components/<name>/page.tsx`, registered in `apps/docs/app/components/primitives.test.tsx`.
+5. A homepage showcase block that lists the slug in `components` (`apps/docs/app/home/showcase-blocks.ts`); every new component must appear there.
+6. `pnpm registry:build`, then update the tests that enumerate components (`component-meta.test.ts`, `docs-nav.test.ts`, `app/components/page.test.tsx`, `registry-item.test.ts` item count).
+7. The changelog entry in `apps/docs/app/changelog/changelog-data.ts`.
 
 ### CLI and Releases
 

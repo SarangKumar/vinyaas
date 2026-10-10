@@ -151,9 +151,12 @@ describe("documentation navigation", () => {
       "Navigation Menu",
       "Pagination",
       "Resizable",
+      "Score Ring",
       "Select",
       "Sheet",
       "Sidebar",
+      "Toggle",
+      "Toggle Group",
     ]);
     expect(items?.find((item) => item.title === "Select")?.indicator).toBe(
       "new",

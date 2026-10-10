@@ -291,7 +291,7 @@ export function SelectTrigger({
       disabled={disabled}
       data-slot="select-trigger"
       className={cn(
-        "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background aria-invalid:border-destructive aria-invalid:ring-destructive/20 relative box-border flex h-9 max-h-9 min-h-9 w-full min-w-0 items-center justify-between rounded-md border pr-9 pl-3 text-sm leading-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "border-input bg-background text-foreground focus-visible:ring-ring focus-visible:ring-offset-background aria-invalid:border-destructive aria-invalid:ring-destructive/20 relative box-border flex h-9 max-h-9 min-h-9 w-full min-w-0 items-center justify-between gap-2 rounded-md border px-3 text-sm leading-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       ref={(node) => {
@@ -327,7 +327,8 @@ export function SelectTrigger({
       <span className="flex min-w-0 flex-1 items-center truncate text-left">
         {children}
       </span>
-      <SelectChevron />
+      {/* In flow (not absolute) so a consumer's padding classes can never push text under the arrow. */}
+      <SelectChevron className="relative inset-auto w-4 shrink-0" />
       <span className="sr-only">
         {selectedLabel ? `Selected ${selectedLabel}` : "No value selected"}
       </span>

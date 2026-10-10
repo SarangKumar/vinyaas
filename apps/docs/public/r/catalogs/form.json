@@ -18,6 +18,8 @@
         "checkbox",
         "radio-group",
         "switch",
+        "toggle",
+        "toggle-group",
         "slider",
         "form"
       ]

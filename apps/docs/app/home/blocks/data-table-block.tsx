@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { PlayBlock } from "@/app/home/play-block";
 import { Badge } from "@/registry/new-york/ui/badge";
 import { Button } from "@/registry/new-york/ui/button";
@@ -7,12 +9,6 @@ import {
   DataTable,
   type DataTableColumn,
 } from "@/registry/new-york/ui/data-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu";
 
 type Project = {
   id: string;
@@ -20,6 +16,23 @@ type Project = {
   owner: string;
   status: "Active" | "Review" | "Draft";
 };
+
+function ActionIcon({ children }: { children: ReactNode }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="size-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {children}
+    </svg>
+  );
+}
 
 const rows: Project[] = [
   { id: "1", name: "Vinyaas", owner: "Sarang", status: "Active" },
@@ -70,22 +83,30 @@ export function DataTableBlock() {
         selectable
         pagination={3}
         renderRowActions={(row) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                aria-label={`Actions for ${row.name}`}
-              >
-                ···
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>View</DropdownMenuItem>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center justify-end gap-1">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label={`View ${row.name}`}
+            >
+              <ActionIcon>
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                <circle cx="12" cy="12" r="3" />
+              </ActionIcon>
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label={`Edit ${row.name}`}
+            >
+              <ActionIcon>
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+              </ActionIcon>
+            </Button>
+          </div>
         )}
       />
     </PlayBlock>

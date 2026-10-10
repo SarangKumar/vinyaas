@@ -53,6 +53,14 @@ const weeklyActiveUsers = [
   { week: "W6", users: 1320 },
 ];
 
+const channelTraffic = [
+  { channel: "Search", visitors: 1840 },
+  { channel: "Direct", visitors: 1260 },
+  { channel: "Social", visitors: 920 },
+  { channel: "Referral", visitors: 610 },
+  { channel: "Email", visitors: 380 },
+];
+
 const signupTrend = [
   { month: "Jan", signups: 420 },
   { month: "Feb", signups: 510 },
@@ -121,6 +129,13 @@ const usersConfig = {
   users: {
     label: "Active users",
     color: "var(--color-chart-2)",
+  },
+} satisfies ChartConfig;
+
+const visitorsConfig = {
+  visitors: {
+    label: "Visitors",
+    color: "var(--color-chart-3)",
   },
 } satisfies ChartConfig;
 
@@ -228,6 +243,41 @@ export function UsersBarPreview() {
           fill="var(--color-users)"
           radius={6}
           maxBarSize={48}
+          isAnimationActive
+          animationDuration={900}
+          animationEasing="ease-out"
+          activeBar={false}
+        />
+      </BarChart>
+    </ChartContainer>
+  );
+}
+
+export function HorizontalBarPreview() {
+  return (
+    <ChartContainer config={visitorsConfig} className="h-56 w-full max-w-lg">
+      <BarChart
+        data={channelTraffic}
+        layout="vertical"
+        barCategoryGap="22%"
+        margin={{ left: 8, right: 8 }}
+        accessibilityLayer
+      >
+        <CartesianGrid horizontal={false} strokeDasharray="3 3" />
+        <XAxis type="number" hide />
+        <YAxis
+          dataKey="channel"
+          type="category"
+          tickLine={false}
+          axisLine={false}
+          width={64}
+        />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+        <Bar
+          dataKey="visitors"
+          fill="var(--color-visitors)"
+          radius={6}
+          maxBarSize={28}
           isAnimationActive
           animationDuration={900}
           animationEasing="ease-out"

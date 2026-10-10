@@ -27,7 +27,31 @@ describe("Kbd", () => {
 
     expect(ref.current).toBe(screen.getByText("⌘"));
     expect(ref.current).toHaveAttribute("title", "Command");
-    expect(ref.current).toHaveClass("min-w-8", "font-mono");
+    expect(ref.current).toHaveClass("min-w-8", "font-sans");
     expect(ref.current).not.toHaveClass("min-w-5");
+  });
+
+  it("keeps the same key height for letters and modifier symbols", () => {
+    render(
+      <>
+        <Kbd>K</Kbd>
+        <Kbd>⌘</Kbd>
+        <Kbd>⇧</Kbd>
+      </>,
+    );
+
+    const letter = screen.getByText("K");
+    const command = screen.getByText("⌘");
+    const shift = screen.getByText("⇧");
+
+    for (const key of [letter, command, shift]) {
+      expect(key).toHaveClass("h-5", "box-border");
+    }
+
+    expect(letter).not.toHaveAttribute("data-symbol");
+    expect(command).toHaveAttribute("data-symbol");
+    expect(shift).toHaveAttribute("data-symbol");
+    expect(command).toHaveClass("text-[0.9375rem]");
+    expect(letter).toHaveClass("text-xs");
   });
 });

@@ -288,7 +288,7 @@ export function Toaster({
       data-toaster=""
       data-position={position}
       className={cn(
-        "pointer-events-none fixed z-50 flex w-80 max-w-[calc(100vw-2rem)] gap-2",
+        "pointer-events-none fixed z-50 flex w-96 max-w-[calc(100vw-2rem)] gap-2",
         fromTop ? "flex-col" : "flex-col-reverse",
         positionClass[position],
       )}
@@ -301,7 +301,7 @@ export function Toaster({
           data-exiting={item.exiting ? "true" : undefined}
           aria-busy={item.type === "loading" ? true : undefined}
           className={cn(
-            "pointer-events-auto flex w-full items-start gap-3 rounded-md border px-3 py-3 text-sm",
+            "pointer-events-auto flex w-full items-start gap-3 rounded-md border py-3 pr-2.5 pl-3 text-sm shadow-lg",
             item.exiting ? "vinyaas-toast-out" : "vinyaas-toast-in",
             typeClass[item.type],
           )}
@@ -315,28 +315,42 @@ export function Toaster({
           }}
         >
           <ToastIcon type={item.type} />
-          <div className="grid min-w-0 flex-1 gap-1">
-            <div className="flex items-start justify-between gap-3">
-              <p className="font-medium">{item.title}</p>
-              <button
-                type="button"
-                aria-label="Dismiss"
-                className="focus-visible:ring-ring focus-visible:ring-offset-background cursor-pointer rounded-md px-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                onClick={() => dismiss(item.id)}
-              >
-                ×
-              </button>
-            </div>
-            {item.description ? <p>{item.description}</p> : null}
+          <div className="grid min-w-0 flex-1 gap-0.5">
+            <p className="font-medium">{item.title}</p>
+            {item.description ? (
+              <p className="text-xs opacity-80">{item.description}</p>
+            ) : null}
+          </div>
+          <div className="flex shrink-0 items-center gap-1 self-center">
             {item.actionProps ? (
               <button
                 type="button"
-                className="border-border bg-background text-foreground hover:bg-accent focus-visible:ring-ring focus-visible:ring-offset-background mt-1 inline-flex h-7 w-fit cursor-pointer items-center rounded-md border px-2 text-xs font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                data-slot="toast-action"
+                className="border-border bg-background text-foreground hover:bg-accent focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-7 cursor-pointer items-center rounded-md border px-2.5 text-xs font-medium whitespace-nowrap focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 onClick={item.actionProps.onClick}
               >
                 {item.actionProps.children}
               </button>
             ) : null}
+            <button
+              type="button"
+              aria-label="Dismiss"
+              data-slot="toast-close"
+              className="focus-visible:ring-ring focus-visible:ring-offset-background inline-flex size-6 cursor-pointer items-center justify-center rounded-md opacity-70 hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              onClick={() => dismiss(item.id)}
+            >
+              <svg
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+                className="size-3.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              >
+                <path d="m4 4 8 8M12 4l-8 8" />
+              </svg>
+            </button>
           </div>
         </div>
       ))}

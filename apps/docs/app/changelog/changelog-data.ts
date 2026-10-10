@@ -27,8 +27,41 @@ export const changelogVersions: ChangelogVersion[] = [
     id: "1.3.1",
     label: "v1.3.1",
     summary:
-      "v1.3.1 is a production polish release: docs quality, system-default theming, global CLI install examples, SEO/accessibility, and Nyx — a dark-type companion.",
+      "v1.3.1 adds Toggle, Toggle Group, and Score Ring, polishes forms, overlays, tables, and charts, and ships vinyaas update (alias: upgrade) alongside docs quality work, system-default theming, and Nyx — a dark-type companion.",
     sections: [
+      {
+        title: "Components",
+        items: [
+          `Toggle — a two-state button with aria-pressed, default and outline variants, controlled or uncontrolled state, and Button-matched heights.`,
+          `Toggle Group — single or multiple selection with joined or spaced layouts, horizontal or vertical orientation, group-level variant, size, and disabled, and arrow-key focus movement.`,
+          `Score Ring — a circular score meter with xs, sm, default, and lg sizes. The ring color blends from fromColor (default red at 0) to toColor (default green at 100).`,
+        ],
+      },
+      {
+        title: "Component improvements",
+        items: [
+          `Input, Textarea, Input Group, and Input OTP use the same background as Select, Native Select, and outline buttons so fields blend with cards and popovers.`,
+          `Textarea: showCount renders a current/maxLength counter below the field on the right, linked to the field with aria-describedby.`,
+          `Button: tests now pin identical box sizes for every variant at every size, so borders and outlines never make one variant larger.`,
+          `Avatar: AvatarBadge anchors a status dot (online, offline, away, busy) or a text label such as PRO to the bottom-right corner without being clipped.`,
+          `Dialog: size prop on DialogContent (sm, default, lg, xl, full) for wider and taller dialogs.`,
+          `Select: the arrow sits in the flow of the trigger, so custom padding classes can no longer push text under it.`,
+          `Kbd: symbol keys such as ⌘, ⌥, ⇧, and arrows use a larger glyph size so every key reads at the same height.`,
+          `Resizable: variant="blocks" renders panels as separate bordered blocks with a small gutter and a three-dot grip; the grip rotates for vertical groups.`,
+          `Table: row borders are lighter.`,
+          `Data Table: the sort control uses fixed-size icons, the table uses a fixed layout (with optional column width and actionsWidth) so sorting never resizes columns, and row actions are icon buttons.`,
+          `Toast: the action button sits on the right beside the close icon, and toasts slide in from the edge they are anchored to.`,
+          `Chart: horizontal bar charts documented with layout="vertical".`,
+          `Docs: spacing added between the Badge and Button variant and size previews.`,
+        ],
+      },
+      {
+        title: "CLI",
+        items: [
+          `vinyaas update (alias: vinyaas upgrade) replaces installed components with the latest registry source after a confirmation. Pass component names to update only those, or --yes to skip the prompt.`,
+          `update/upgrade only touches components recorded in .vinyaas/manifest.json and supports --dry-run.`,
+        ],
+      },
       {
         title: "Docs & site",
         items: [

@@ -126,4 +126,30 @@ describe("Dialog", () => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
   });
+
+  it("sizes the dialog box with the size prop", async () => {
+    render(
+      <Dialog defaultOpen>
+        <DialogContent size="xl">
+          <DialogTitle>Wide</DialogTitle>
+          <DialogDescription>Large content.</DialogDescription>
+        </DialogContent>
+      </Dialog>,
+    );
+
+    const dialog = await screen.findByRole("dialog");
+
+    expect(dialog).toHaveAttribute("data-size", "xl");
+    expect(dialog).toHaveClass("sm:max-w-5xl");
+    expect(dialog).not.toHaveClass("sm:max-w-lg");
+  });
+
+  it("defaults to the medium dialog width", async () => {
+    render(<Example defaultOpen />);
+
+    const dialog = await screen.findByRole("dialog");
+
+    expect(dialog).toHaveAttribute("data-size", "default");
+    expect(dialog).toHaveClass("sm:max-w-lg");
+  });
 });

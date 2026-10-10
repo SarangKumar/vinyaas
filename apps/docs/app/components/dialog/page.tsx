@@ -131,11 +131,20 @@ const api: ApiRow[] = [
     description: "Called when the dialog opens or closes.",
   },
   {
+    prop: "size",
+    type: '"sm" | "default" | "lg" | "xl" | "full"',
+    defaultValue: '"default"',
+    description:
+      "DialogContent. Sets the box width and maximum height. default is max-w-lg; lg, xl, and full give wide content more room.",
+  },
+  {
     prop: "className",
     type: "string",
     description: "Merged onto the part with cn.",
   },
 ];
+
+const dialogSizes = ["sm", "default", "lg", "xl", "full"] as const;
 
 const examples: ComponentExample[] = [
   {
@@ -212,6 +221,73 @@ export function EditProfileDialog() {
           </DialogClose>
           <DialogClose>
             <Button>Save</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+`,
+  },
+  {
+    id: "sizes",
+    title: "Sizes",
+    description:
+      "size on DialogContent changes the box width and maximum height. Use lg or xl for tables and side-by-side layouts, and full for editors that need the whole viewport.",
+    preview: (
+      <div className="flex flex-wrap justify-center gap-2">
+        {dialogSizes.map((size) => (
+          <Dialog key={size}>
+            <DialogTrigger>
+              <Button variant="outline" size="sm">
+                {size}
+              </Button>
+            </DialogTrigger>
+            <DialogContent size={size}>
+              <DialogHeader>
+                <DialogTitle>Size: {size}</DialogTitle>
+                <DialogDescription>
+                  This dialog uses size=&quot;{size}&quot;.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline">Close</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        ))}
+      </div>
+    ),
+    code: `import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+export function LargeDialog() {
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <Button variant="outline">Open large dialog</Button>
+      </DialogTrigger>
+      <DialogContent size="xl">
+        <DialogHeader>
+          <DialogTitle>Quarterly report</DialogTitle>
+          <DialogDescription>
+            Sizes: sm, default, lg, xl, and full.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose>
+            <Button variant="outline">Close</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

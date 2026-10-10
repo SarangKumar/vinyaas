@@ -8,6 +8,7 @@ import type {
 import { ComponentReference } from "@/components/component-reference";
 import {
   Avatar,
+  AvatarBadge,
   AvatarFallback,
   AvatarImage,
 } from "@/registry/new-york/ui/avatar";
@@ -50,9 +51,17 @@ const api: ApiRow[] = [
       "Avatar content. AvatarFallback children are initials or other fallback content, shown until the image loads and after it fails.",
   },
   {
+    prop: "status",
+    type: '"online" | "offline" | "away" | "busy" | "default"',
+    defaultValue: '"default"',
+    description:
+      "AvatarBadge. Picks the badge color. Without children the badge is a status dot named by its status (or aria-label); with children it is a text label such as PRO.",
+  },
+  {
     prop: "className",
     type: "string",
-    description: "Merged with cn on Avatar, AvatarImage, and AvatarFallback.",
+    description:
+      "Merged with cn on Avatar, AvatarImage, AvatarFallback, and AvatarBadge.",
   },
 ];
 
@@ -107,6 +116,74 @@ const examples: ComponentExample[] = [
     ),
     code: `<Avatar>
   <AvatarFallback>Guest</AvatarFallback>
+</Avatar>`,
+  },
+  {
+    id: "status-dot",
+    title: "Status dot",
+    description:
+      "AvatarBadge without children anchors a dot to the bottom-right corner. Use status to show online, offline, away, or busy.",
+    preview: (
+      <div className="flex items-center gap-4">
+        <Avatar>
+          <AvatarFallback>SK</AvatarFallback>
+          <AvatarBadge status="online" aria-label="Online" />
+        </Avatar>
+        <Avatar>
+          <AvatarFallback>AL</AvatarFallback>
+          <AvatarBadge status="away" aria-label="Away" />
+        </Avatar>
+        <Avatar>
+          <AvatarFallback>PS</AvatarFallback>
+          <AvatarBadge status="busy" aria-label="Busy" />
+        </Avatar>
+        <Avatar>
+          <AvatarFallback>GU</AvatarFallback>
+          <AvatarBadge status="offline" aria-label="Offline" />
+        </Avatar>
+      </div>
+    ),
+    code: `<Avatar>
+  <AvatarFallback>SK</AvatarFallback>
+  <AvatarBadge status="online" aria-label="Online" />
+</Avatar>
+<Avatar>
+  <AvatarFallback>AL</AvatarFallback>
+  <AvatarBadge status="away" aria-label="Away" />
+</Avatar>
+<Avatar>
+  <AvatarFallback>PS</AvatarFallback>
+  <AvatarBadge status="busy" aria-label="Busy" />
+</Avatar>
+<Avatar>
+  <AvatarFallback>GU</AvatarFallback>
+  <AvatarBadge status="offline" aria-label="Offline" />
+</Avatar>`,
+  },
+  {
+    id: "text-badge",
+    title: "Text badge",
+    description:
+      "Pass children to show a short label, such as a tier or role, instead of a dot.",
+    preview: (
+      <div className="flex items-center gap-4">
+        <Avatar>
+          <AvatarFallback>SK</AvatarFallback>
+          <AvatarBadge>Pro</AvatarBadge>
+        </Avatar>
+        <Avatar>
+          <AvatarFallback>AL</AvatarFallback>
+          <AvatarBadge status="busy">Admin</AvatarBadge>
+        </Avatar>
+      </div>
+    ),
+    code: `<Avatar>
+  <AvatarFallback>SK</AvatarFallback>
+  <AvatarBadge>Pro</AvatarBadge>
+</Avatar>
+<Avatar>
+  <AvatarFallback>AL</AvatarFallback>
+  <AvatarBadge status="busy">Admin</AvatarBadge>
 </Avatar>`,
   },
   {

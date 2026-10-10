@@ -1,5 +1,6 @@
 "use client";
 
+import { createContext, useContext } from "react";
 import {
   Group,
   Panel,
@@ -11,7 +12,18 @@ import {
 
 import { cn } from "@/lib/utils";
 
-export type ResizablePanelGroupProps = GroupProps;
+export type ResizableVariant = "default" | "blocks";
+
+const ResizableVariantContext = createContext<ResizableVariant>("default");
+
+export type ResizablePanelGroupProps = GroupProps & {
+  /**
+   * `default` is one surface split by a thin line. `blocks` renders each
+   * panel as its own bordered block with a small gutter between them; the
+   * gutter shows a three-dot grip.
+   */
+  variant?: ResizableVariant;
+};
 
 /**
  * Resizable panel group backed by `react-resizable-panels`.
@@ -23,13 +35,36 @@ export type ResizablePanelGroupProps = GroupProps;
  */
 export function ResizablePanelGroup({
   className,
+  variant = "default",
   ...props
 }: ResizablePanelGroupProps) {
   return (
-    <Group
-      data-slot="resizable-panel-group"
+    <ResizableVariantContext.Provider value={variant}>
+      <Group
+        data-slot="resizable-panel-group"
+        data-variant={variant}
+        className={cn(
+          "flex h-full w-full aria-[orientation=vertical]:flex-col",
+          className,
+        )}
+        {...props}
+      />
+    </ResizableVariantContext.Provider>
+  );
+}
+
+export type ResizablePanelProps = PanelProps;
+
+export function ResizablePanel({ className, ...props }: ResizablePanelProps) {
+  const variant = useContext(ResizableVariantContext);
+
+  return (
+    <Panel
+      data-slot="resizable-panel"
       className={cn(
-        "flex h-full w-full aria-[orientation=vertical]:flex-col",
+        "min-h-0 min-w-0",
+        variant === "blocks" &&
+          "border-border bg-card overflow-hidden rounded-lg border",
         className,
       )}
       {...props}
@@ -37,20 +72,11 @@ export function ResizablePanelGroup({
   );
 }
 
-export type ResizablePanelProps = PanelProps;
-
-export function ResizablePanel({ className, ...props }: ResizablePanelProps) {
-  return (
-    <Panel
-      data-slot="resizable-panel"
-      className={cn("min-h-0 min-w-0", className)}
-      {...props}
-    />
-  );
-}
-
 export type ResizableHandleProps = PanelSeparatorProps & {
-  /** Renders a centered orientation-aware grip affordance on the separator. */
+  /**
+   * Renders a centered orientation-aware grip affordance on the separator.
+   * Defaults to `false`, or `true` inside a `blocks` group.
+   */
   withHandle?: boolean;
 };
 
@@ -87,6 +113,30 @@ function ResizableHandleGrip() {
 }
 
 /**
+ * Three-dot grip for the `blocks` variant. The gutter is the whole gap
+ * between blocks, so the dots sit on the page background with no box.
+ * Rotated on horizontal separators (vertical resize).
+ */
+function ResizableHandleDots() {
+  return (
+    <svg
+      viewBox="0 0 4 16"
+      aria-hidden="true"
+      data-slot="resizable-handle-dots"
+      className={cn(
+        "text-muted-foreground/60 group-hover/resizable-handle:text-foreground group-data-[separator=active]/resizable-handle:text-foreground h-4 w-1 shrink-0 transition-colors",
+        "group-aria-[orientation=horizontal]/resizable-handle:rotate-90",
+      )}
+      fill="currentColor"
+    >
+      <circle cx="2" cy="2.5" r="1.4" />
+      <circle cx="2" cy="8" r="1.4" />
+      <circle cx="2" cy="13.5" r="1.4" />
+    </svg>
+  );
+}
+
+/**
  * Keyboard-accessible resize handle (`role="separator"` from the library).
  *
  * Visual bar stays thin (`w-px` / `h-px`). A wider centered `::after` hit
@@ -100,10 +150,14 @@ function ResizableHandleGrip() {
  */
 export function ResizableHandle({
   className,
-  withHandle = false,
+  withHandle,
   disabled,
   ...props
 }: ResizableHandleProps) {
+  const blocks = useContext(ResizableVariantContext) === "blocks";
+  // Blocks have no divider line, so the grip is on unless explicitly disabled.
+  const showHandle = withHandle ?? blocks;
+
   return (
     <PanelSeparator
       data-slot="resizable-handle"
@@ -124,13 +178,21 @@ export function ResizableHandle({
         "aria-[orientation=horizontal]:after:w-full aria-[orientation=horizontal]:after:translate-x-0",
         "aria-[orientation=horizontal]:after:-translate-y-1/2",
         "data-[separator=active]:bg-ring",
+        blocks &&
+          "w-2 bg-transparent aria-[orientation=horizontal]:h-2 data-[separator=active]:bg-transparent",
         "motion-reduce:transition-none",
         disabled && "pointer-events-none opacity-50",
         className,
       )}
       {...props}
     >
-      {withHandle ? <ResizableHandleGrip /> : null}
+      {showHandle ? (
+        blocks ? (
+          <ResizableHandleDots />
+        ) : (
+          <ResizableHandleGrip />
+        )
+      ) : null}
     </PanelSeparator>
   );
 }

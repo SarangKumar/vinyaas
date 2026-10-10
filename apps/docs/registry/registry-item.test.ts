@@ -540,6 +540,8 @@ describe("registry build output", () => {
     ["separator", ["ui/separator/index.tsx"], "<hr"],
     ["kbd", ["ui/kbd/index.tsx"], "<kbd"],
     ["switch", ["ui/switch/index.tsx"], 'role="switch"'],
+    ["toggle", ["ui/toggle/index.tsx"], "aria-pressed"],
+    ["score-ring", ["ui/score-ring/index.tsx"], 'role="meter"'],
     ["table", ["ui/table/index.tsx"], "<table"],
     [
       "tooltip",
@@ -713,6 +715,46 @@ describe("registry build output", () => {
     expect(generated.files[1]?.content).toBe(sourceCss);
   });
 
+  it("keeps the new-york toggle-group artifact aligned and depends on toggle", async () => {
+    const outputPath = path.join(
+      docsRoot,
+      "public/r/new-york/toggle-group.json",
+    );
+    const source = await fs.readFile(
+      path.join(docsRoot, "registry/new-york/ui/toggle-group/index.tsx"),
+      "utf8",
+    );
+    const generated = JSON.parse(await fs.readFile(outputPath, "utf8")) as {
+      $schema: string;
+      name: string;
+      dependencies: string[];
+      registryDependencies?: string[];
+      files: { path: string; content: string }[];
+    };
+    const item = newYork.find((entry) => entry.name === "toggle-group");
+
+    if (!item) {
+      throw new Error("Expected a toggle-group registry item");
+    }
+
+    const files = await readRegistryItemFiles(item, async (relativePath) => {
+      expect(relativePath).toBe("ui/toggle-group/index.tsx");
+      return source;
+    });
+
+    expect(generated).toEqual(
+      serializeBuiltItem(item, files, generated.$schema),
+    );
+    expect(generated.registryDependencies).toEqual(["toggle"]);
+    expect(generated.dependencies).toEqual([
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge",
+    ]);
+    expect(generated.files[0]?.content).toContain('from "../toggle"');
+    expect(generated.files[0]?.content).toContain('role="group"');
+  });
+
   it("keeps the new-york data-table artifact aligned with the source item", async () => {
     const outputPath = path.join(docsRoot, "public/r/new-york/data-table.json");
     const source = await fs.readFile(
@@ -830,7 +872,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).resolves.toBeUndefined();
     expect(newYork.some((item) => item.name === "select")).toBe(true);
-    expect(newYork).toHaveLength(53);
+    expect(newYork).toHaveLength(56);
   });
 
   it("publishes Calendar, Date Picker, Combobox, Empty State, and Form", async () => {

@@ -39,7 +39,7 @@ export function Avatar({ className, ref, ...props }: AvatarProps) {
       <span
         ref={ref}
         className={cn(
-          "border-border relative flex size-10 shrink-0 overflow-hidden rounded-full border",
+          "border-border relative flex size-10 shrink-0 rounded-full border",
           className,
         )}
         {...props}
@@ -94,7 +94,7 @@ export function AvatarImage({
       {...props}
       hidden={status === "error" ? true : undefined}
       className={cn(
-        "aspect-square size-full object-cover",
+        "aspect-square size-full rounded-[inherit] object-cover",
         status === "loaded" ? "block" : "sr-only",
         className,
       )}
@@ -129,9 +129,63 @@ export function AvatarFallback({
       {...props}
       aria-hidden={status === "loading" ? true : undefined}
       className={cn(
-        "bg-muted text-muted-foreground flex size-full items-center justify-center text-xs font-medium [&_svg]:size-3.5",
+        "bg-muted text-muted-foreground flex size-full items-center justify-center rounded-[inherit] text-xs font-medium [&_svg]:size-3.5",
         className,
       )}
     />
+  );
+}
+
+export type AvatarBadgeStatus =
+  "online" | "offline" | "away" | "busy" | "default";
+
+const badgeStatusClasses: Record<AvatarBadgeStatus, string> = {
+  online: "bg-emerald-500 text-white",
+  offline: "bg-muted-foreground text-background",
+  away: "bg-amber-500 text-white",
+  busy: "bg-destructive text-white",
+  default: "bg-primary text-primary-foreground",
+};
+
+export type AvatarBadgeProps = React.ComponentProps<"span"> & {
+  /** Picks the badge color. Use `default` for tier or role labels. */
+  status?: AvatarBadgeStatus;
+};
+
+/**
+ * Anchors to the bottom-right of the Avatar. Without children it renders a
+ * status dot (give it an `aria-label`; it defaults to the status name). With
+ * children it renders a small text label such as "PRO" or "Admin".
+ */
+export function AvatarBadge({
+  className,
+  status = "default",
+  children,
+  ref,
+  ...props
+}: AvatarBadgeProps) {
+  const hasContent =
+    children !== undefined && children !== null && children !== false;
+
+  return (
+    <span
+      ref={ref}
+      data-slot="avatar-badge"
+      data-status={status}
+      {...(hasContent
+        ? {}
+        : { role: "img", "aria-label": props["aria-label"] ?? status })}
+      className={cn(
+        "ring-background absolute flex items-center justify-center ring-2",
+        badgeStatusClasses[status],
+        hasContent
+          ? "right-0 bottom-0 min-h-4 translate-x-1/4 translate-y-1/4 rounded-full px-1 text-[10px] leading-none font-semibold uppercase"
+          : "right-0 bottom-0 size-2.5 rounded-full",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </span>
   );
 }

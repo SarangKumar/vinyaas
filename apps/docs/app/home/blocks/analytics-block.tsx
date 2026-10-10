@@ -11,7 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/new-york/ui/select";
+import { ScoreRing } from "@/registry/new-york/ui/score-ring";
 import { Separator } from "@/registry/new-york/ui/separator";
+import { Toggle } from "@/registry/new-york/ui/toggle";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/registry/new-york/ui/toggle-group";
 
 const metrics = [
   { label: "Signups", value: "1,284", delta: "+12.4%" },
@@ -43,6 +49,20 @@ export function AnalyticsBlock() {
           </SelectContent>
         </Select>
       </div>
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+        <ToggleGroup
+          variant="outline"
+          size="sm"
+          aria-label="Granularity"
+          defaultValue={["weekly"]}
+        >
+          <ToggleGroupItem value="daily">Daily</ToggleGroupItem>
+          <ToggleGroupItem value="weekly">Weekly</ToggleGroupItem>
+        </ToggleGroup>
+        <Toggle variant="outline" size="sm" aria-label="Compare to last period">
+          Compare
+        </Toggle>
+      </div>
       <div className="grid min-w-0 grid-cols-3 gap-2">
         {metrics.map((metric) => (
           <div
@@ -60,6 +80,15 @@ export function AnalyticsBlock() {
         ))}
       </div>
       <Separator />
+      <div className="flex min-w-0 items-center gap-3">
+        <ScoreRing size="sm" value={86} label="Health score" />
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Workspace health</p>
+          <p className="text-muted-foreground text-xs">
+            Based on activity and retention.
+          </p>
+        </div>
+      </div>
       <dl className="grid min-w-0 gap-3 text-sm">
         {highlights.map((item) => (
           <div

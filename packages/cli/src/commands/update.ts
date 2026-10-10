@@ -17,7 +17,10 @@ import {
 export function registerUpdateCommand(program: Command): void {
   program
     .command("update")
-    .description("Update installed components to the latest registry versions.")
+    .alias("upgrade")
+    .description(
+      "Update installed components to the latest registry versions (alias: upgrade).",
+    )
     .argument(
       "[name...]",
       "Component names to update. Omit to update every installed component.",
@@ -35,6 +38,7 @@ export function registerUpdateCommand(program: Command): void {
         "Usage:",
         "  $ vinyaas update",
         "  $ vinyaas update <component...>",
+        "  $ vinyaas upgrade [component...]   (alias of update)",
         "",
         "Examples:",
         "  $ vinyaas update button",
@@ -42,6 +46,8 @@ export function registerUpdateCommand(program: Command): void {
         "  $ vinyaas update",
         "  $ vinyaas update --yes",
         "  $ vinyaas update button --dry-run",
+        "  $ vinyaas upgrade",
+        "  $ vinyaas upgrade button card",
         "",
         "Updates overwrite local component files with the latest registry source.",
         "With no names, every component in `.vinyaas/manifest.json` is updated",

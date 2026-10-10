@@ -95,8 +95,17 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   { id: "chart", weight: 6, components: ["chart"], Block: ChartBlock },
   {
     id: "analytics",
-    weight: 5,
-    components: ["select", "badge", "button", "separator", "label"],
+    weight: 6,
+    components: [
+      "select",
+      "badge",
+      "button",
+      "separator",
+      "label",
+      "toggle",
+      "toggle-group",
+      "score-ring",
+    ],
     Block: AnalyticsBlock,
   },
   {

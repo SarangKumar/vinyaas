@@ -120,6 +120,8 @@ vinyaas update button card
 vinyaas update
 vinyaas update --yes
 vinyaas update button --dry-run
+vinyaas upgrade            # alias of update
+vinyaas upgrade button card
 ```
 
 - Named updates overwrite those installed components with the latest registry source.

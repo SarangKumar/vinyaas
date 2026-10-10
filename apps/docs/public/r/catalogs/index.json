@@ -18,6 +18,8 @@
         "checkbox",
         "radio-group",
         "switch",
+        "toggle",
+        "toggle-group",
         "slider",
         "form"
       ]
@@ -33,6 +35,7 @@
         "breadcrumb",
         "tooltip",
         "progress",
+        "score-ring",
         "skeleton",
         "table",
         "data-table",

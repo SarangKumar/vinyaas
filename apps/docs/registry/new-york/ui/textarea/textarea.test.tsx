@@ -48,7 +48,7 @@ describe("Textarea", () => {
     expect(field).toHaveAttribute("aria-describedby", "message-hint");
     expect(field).toHaveAttribute("aria-invalid", "true");
     expect(field).toHaveClass("max-w-sm");
-    expect(field).toHaveClass("min-h-20", "bg-muted");
+    expect(field).toHaveClass("min-h-20", "bg-background");
   });
 
   it("uses a default value without becoming controlled", () => {
@@ -118,5 +118,51 @@ describe("Textarea", () => {
 
     expect(ref.current).toBeInstanceOf(HTMLTextAreaElement);
     expect(ref.current).toBe(screen.getByRole("textbox", { name: "Message" }));
+  });
+
+  it("shows a current/max counter outside the field when showCount is set", () => {
+    render(
+      <Textarea
+        aria-label="Bio"
+        showCount
+        maxLength={10}
+        defaultValue="Hello"
+      />,
+    );
+
+    const field = screen.getByRole("textbox", { name: "Bio" });
+    const count = screen.getByText("5/10");
+
+    expect(count).toHaveAttribute("data-slot", "textarea-count");
+    expect(field.parentElement).toContainElement(count);
+    expect(field).toHaveAttribute("aria-describedby", count.id);
+    expect(count).not.toHaveClass("text-destructive");
+
+    fireEvent.change(field, { target: { value: "Hello you!" } });
+
+    expect(screen.getByText("10/10")).toHaveClass("text-destructive");
+  });
+
+  it("tracks the length of a controlled value", () => {
+    render(
+      <Textarea
+        aria-label="Bio"
+        showCount
+        maxLength={20}
+        value="Hey"
+        readOnly
+      />,
+    );
+
+    expect(screen.getByText("3/20")).toBeInTheDocument();
+  });
+
+  it("does not render a counter by default", () => {
+    render(<Textarea aria-label="Bio" maxLength={10} />);
+
+    expect(screen.queryByText("0/10")).toBeNull();
+    expect(screen.getByRole("textbox", { name: "Bio" }).parentElement).toBe(
+      document.body.firstElementChild,
+    );
   });
 });

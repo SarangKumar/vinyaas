@@ -10,6 +10,7 @@ import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 import {
   DashboardPreview,
+  HorizontalBarPreview,
   LegendPreview,
   RadarPreview,
   RadialPreview,
@@ -435,6 +436,66 @@ export function RevenueCard() {
 }
 `;
 
+const horizontalBarCode = `import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+
+const data = [
+  { channel: "Search", visitors: 1840 },
+  { channel: "Direct", visitors: 1260 },
+  { channel: "Social", visitors: 920 },
+  { channel: "Referral", visitors: 610 },
+  { channel: "Email", visitors: 380 },
+];
+
+const config = {
+  visitors: {
+    label: "Visitors",
+    color: "var(--color-chart-3)",
+  },
+} satisfies ChartConfig;
+
+export function TrafficByChannelChart() {
+  return (
+    <ChartContainer config={config} className="h-56 w-full max-w-lg">
+      {/* layout="vertical" lays bars out horizontally: the value axis is X,
+          the category axis is Y. */}
+      <BarChart
+        data={data}
+        layout="vertical"
+        barCategoryGap="22%"
+        margin={{ left: 8, right: 8 }}
+        accessibilityLayer
+      >
+        <CartesianGrid horizontal={false} strokeDasharray="3 3" />
+        <XAxis type="number" hide />
+        <YAxis
+          dataKey="channel"
+          type="category"
+          tickLine={false}
+          axisLine={false}
+          width={64}
+        />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+        <Bar
+          dataKey="visitors"
+          fill="var(--color-visitors)"
+          radius={6}
+          maxBarSize={28}
+          isAnimationActive
+          animationDuration={900}
+          activeBar={false}
+        />
+      </BarChart>
+    </ChartContainer>
+  );
+}
+`;
+
 const examples: ComponentExample[] = [
   {
     id: "line",
@@ -451,6 +512,14 @@ const examples: ComponentExample[] = [
       "Animated weekly active users. Hover does not restyle the bar fill.",
     preview: <UsersBarPreview />,
     code: barCode,
+  },
+  {
+    id: "horizontal-bar",
+    title: "Horizontal bar chart",
+    description:
+      'Set layout="vertical" on BarChart to draw bars left to right. Put the numeric axis on X and the category axis on Y, and keep the Y axis visible so labels read naturally.',
+    preview: <HorizontalBarPreview />,
+    code: horizontalBarCode,
   },
   {
     id: "area",

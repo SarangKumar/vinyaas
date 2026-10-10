@@ -68,7 +68,8 @@ describe("Toast", () => {
     expect(css).toContain("@keyframes vinyaas-toast-out");
     expect(css).toContain(".vinyaas-toast-in");
     expect(css).toContain(".vinyaas-toast-out");
-    expect(css).toContain("animation: vinyaas-toast-in 180ms ease-out");
+    expect(css).toContain("animation: vinyaas-toast-in 260ms");
+    expect(css).toContain("--vinyaas-toast-x");
     expect(css).toContain(
       "animation: vinyaas-toast-out 160ms ease-in forwards",
     );
@@ -111,6 +112,28 @@ describe("Toast", () => {
     await waitFor(() => {
       expect(screen.getAllByRole("status")).toHaveLength(1);
     });
+  });
+
+  it("places the action button beside the close button on the right", async () => {
+    render(<Toaster />);
+    await flushMount();
+    act(() => {
+      toast.add({
+        title: "Message archived",
+        description: "It moved to the archive.",
+        actionProps: { children: "Undo", onClick: () => {} },
+      });
+    });
+
+    const action = screen.getByRole("button", { name: "Undo" });
+    const close = screen.getByRole("button", { name: "Dismiss" });
+    const toastNode = screen.getByRole("status");
+
+    expect(action.parentElement).toBe(close.parentElement);
+    expect(action.nextElementSibling).toBe(close);
+    expect(toastNode.lastElementChild).toBe(action.parentElement);
+    expect(toastNode.contains(screen.getByText("Message archived"))).toBe(true);
+    expect(close.textContent).toBe("");
   });
 
   it("dismisses automatically and pauses while hovered", () => {

@@ -268,6 +268,13 @@
       "category": "layout"
     },
     {
+      "name": "score-ring",
+      "type": "registry:ui",
+      "description": "A circular score meter whose color blends from a start to an end color.",
+      "docs": "https://vinyaas.vercel.app/components/score-ring",
+      "category": "data-display"
+    },
+    {
       "name": "scroll-area",
       "type": "registry:ui",
       "description": "A native scroll container with a thin scrollbar.",
@@ -357,6 +364,20 @@
       "description": "A temporary notice for success, error, or informational feedback.",
       "docs": "https://vinyaas.vercel.app/components/toast",
       "category": "feedback"
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "description": "A two-state button that stays pressed until toggled again.",
+      "docs": "https://vinyaas.vercel.app/components/toggle",
+      "category": "forms"
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "description": "A set of toggles with single or multiple selection and joined or spaced layouts.",
+      "docs": "https://vinyaas.vercel.app/components/toggle-group",
+      "category": "forms"
     },
     {
       "name": "tooltip",
