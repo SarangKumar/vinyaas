@@ -119,7 +119,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script type="application/ld+json">
-          {JSON.stringify(websiteJsonLd)}
+          {/* Escape "<" so the data can never close the script tag early. */}
+          {JSON.stringify(websiteJsonLd).replace(/</g, "\\u003c")}
         </script>
       </head>
       <body className="bg-background text-foreground h-full overflow-hidden font-sans">

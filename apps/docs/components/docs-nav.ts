@@ -80,6 +80,8 @@ export type DocsNavGroup = {
   title: string;
   /** Section label above child links. */
   label?: boolean;
+  /** Small status tag shown next to the section label, e.g. "Beta". */
+  badge?: string;
   /** Dense name grid when the container is wide enough. */
   layout?: "names";
   items: DocsNavItem[];
@@ -136,8 +138,9 @@ export const docsNav: DocsNavGroup[] = [
   {
     title: "COMPANION",
     label: true,
+    badge: "Beta",
     items: [
-      { title: "Introduction", href: companionPath, indicator: "beta" },
+      { title: "Introduction", href: companionPath },
       { title: "Installation", href: companionInstallationPath },
       { title: "companion.json", href: companionJsonPath },
       { title: "Animations", href: companionAnimationsPath },

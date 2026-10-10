@@ -7,6 +7,7 @@ describe("AspectRatio", () => {
   it("sets the ratio on the root and fills children", () => {
     const { container } = render(
       <AspectRatio ratio={16 / 9} className="max-w-sm">
+        {/* eslint-disable-next-line @next/next/no-img-element -- the registry component wraps a native img */}
         <img src="/hero.png" alt="Hero" />
       </AspectRatio>,
     );

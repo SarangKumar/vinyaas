@@ -80,13 +80,11 @@ describe("DocsNavLinks", () => {
       within(nav)
         .getAllByRole("link", { name: /Introduction/i })
         .at(-1)
-        ?.querySelector('[data-nav-indicator="beta"]'),
-    ).toBeTruthy();
-    expect(
-      within(nav)
-        .getByText("COMPANION")
-        .querySelector('[data-nav-indicator="beta"]'),
+        ?.querySelector("[data-nav-indicator]"),
     ).toBeNull();
+    expect(
+      within(nav).getByText("COMPANION").querySelector("[data-group-badge]"),
+    ).toHaveTextContent("Beta");
     expect(
       within(nav).getAllByRole("link", { name: "Installation" })[1],
     ).toHaveAttribute("href", "/companion/installation");

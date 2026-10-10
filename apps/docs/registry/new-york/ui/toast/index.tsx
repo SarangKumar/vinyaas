@@ -35,6 +35,8 @@ type ToastRecord = ToastInput & {
   id: string;
   type: ToastType;
   exiting?: boolean;
+  /** Waiting on toast.promise: no auto-dismiss until the promise settles. */
+  pending?: boolean;
 };
 
 type ToastListener = (toasts: readonly ToastRecord[]) => void;
@@ -65,7 +67,7 @@ function schedule(id: string) {
   clearTimer(id);
   const item = records.find((entry) => entry.id === id);
 
-  if (!item || item.type === "loading") {
+  if (!item || item.pending) {
     return;
   }
 
@@ -144,6 +146,7 @@ function update(id: string, patch: ToastInput) {
           ...entry,
           ...patch,
           type: patch.type ?? entry.type,
+          pending: false,
         }
       : entry,
   );
@@ -169,7 +172,7 @@ function resume(id: string) {
 
 /**
  * One icon per state on a shared surface (no per-type backgrounds). The
- * default toast has no icon; loading uses stepped activity-indicator spokes.
+ * default toast has no icon; loading uses a spinning ring like Spinner.
  */
 function ToastIcon({ type }: { type: ToastType }) {
   if (type === "default") {
@@ -177,28 +180,30 @@ function ToastIcon({ type }: { type: ToastType }) {
   }
 
   if (type === "loading") {
+    // Same ring-and-arc spinner as the Spinner component.
     return (
       <svg
         viewBox="0 0 24 24"
         aria-hidden="true"
         data-slot="toast-icon"
         data-icon="loading"
-        className="text-muted-foreground mt-0.5 size-4 shrink-0 animate-[spin_0.8s_steps(8)_infinite] motion-reduce:animate-none"
+        className="mt-0.5 size-4 shrink-0 animate-spin motion-reduce:animate-none"
+        fill="none"
       >
-        {Array.from({ length: 8 }, (_, index) => (
-          <line
-            key={index}
-            x1="12"
-            y1="3"
-            x2="12"
-            y2="7.5"
-            stroke="currentColor"
-            strokeWidth="2.25"
-            strokeLinecap="round"
-            opacity={1 - index * 0.11}
-            transform={`rotate(${-index * 45} 12 12)`}
-          />
-        ))}
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          className="opacity-25"
+        />
+        <path
+          d="M21 12a9 9 0 0 0-9-9"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
       </svg>
     );
   }
@@ -244,19 +249,25 @@ function ToastIcon({ type }: { type: ToastType }) {
   );
 }
 
-export const toast = {
-  add(input: ToastInput) {
-    const id = `toast-${nextId++}`;
-    const record: ToastRecord = {
-      ...input,
-      id,
-      type: input.type ?? "default",
-    };
+function addRecord(input: ToastInput, pending: boolean) {
+  const id = `toast-${nextId++}`;
+  const record: ToastRecord = {
+    ...input,
+    id,
+    type: input.type ?? "default",
+    pending,
+  };
 
-    records = [...records, record];
-    emit();
-    schedule(id);
-    return id;
+  records = [...records, record];
+  emit();
+  schedule(id);
+  return id;
+}
+
+export const toast = {
+  /** Every toast, including type "loading", dismisses after `duration`. */
+  add(input: ToastInput) {
+    return addRecord(input, false);
   },
   dismiss,
   update,
@@ -268,7 +279,9 @@ export const toast = {
       error: ToastInput;
     },
   ) {
-    const id = toast.add({ ...messages.loading, type: "loading" });
+    // The loading state stays until the promise settles, then the success or
+    // error toast gets the normal duration.
+    const id = addRecord({ ...messages.loading, type: "loading" }, true);
 
     promise.then(
       () => {
@@ -368,7 +381,7 @@ export function Toaster({
               <button
                 type="button"
                 data-slot="toast-action"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-6 cursor-pointer items-center rounded-md px-2 text-xs font-medium whitespace-nowrap focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-[26px] cursor-pointer items-center rounded-sm px-2.5 text-xs font-semibold whitespace-nowrap focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 onClick={item.actionProps.onClick}
               >
                 {item.actionProps.children}
@@ -378,7 +391,7 @@ export function Toaster({
               type="button"
               aria-label="Dismiss"
               data-slot="toast-close"
-              className="text-muted-foreground hover:text-foreground focus-visible:ring-ring focus-visible:ring-offset-background inline-flex size-6 cursor-pointer items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:ring-ring focus-visible:ring-offset-background inline-flex size-6 cursor-pointer items-center justify-center rounded-md transition-colors duration-150 [corner-shape:squircle] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               onClick={() => dismiss(item.id)}
             >
               <svg

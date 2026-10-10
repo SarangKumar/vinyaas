@@ -221,6 +221,7 @@ const inPractice: ComponentInPractice = {
   preview: (
     <Card className="w-full max-w-sm gap-0 overflow-hidden p-0 text-left">
       <AspectRatio ratio={16 / 9} className="bg-muted rounded-none">
+        {/* eslint-disable-next-line @next/next/no-img-element -- framework-agnostic demo: consumers copy a native img */}
         <img
           src="/og.png"
           alt="Vinyaas Open Graph preview"

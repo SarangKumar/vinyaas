@@ -86,7 +86,7 @@ describe("Command", () => {
     expect(button).toHaveFocus();
   });
 
-  it("aligns an icon with the title and keeps the shortcut on that line", () => {
+  it("centers the icon, label, and shortcut in each row", () => {
     render(
       <Command>
         <CommandInput aria-label="Search" />
@@ -111,16 +111,17 @@ describe("Command", () => {
     const single = screen.getByRole("option", { name: "Button" });
     const disabled = screen.getByRole("option", { name: "Input" });
 
-    expect(multiline).toHaveClass("items-start");
-    expect(multiline).not.toHaveClass("items-center");
-    expect(multiline).toHaveClass("[&>svg]:mt-0.5");
+    // Rows center their icon, label, and shortcut on one axis.
+    expect(multiline).toHaveClass("items-center");
+    expect(multiline).not.toHaveClass("items-start");
     expect(multiline.querySelector("svg")).toBe(multiline.firstElementChild);
-    expect(screen.getByText("Enter")).toHaveClass("ml-auto", "mt-0.5");
+    expect(screen.getByText("Enter")).toHaveClass("ml-auto");
+    expect(screen.getByText("Enter")).not.toHaveClass("mt-0.5");
     // The shortcut is a Kbd, so it matches Kbd elsewhere in the app.
     expect(screen.getByText("Enter").tagName).toBe("KBD");
-    expect(single).toHaveClass("items-start");
+    expect(single).toHaveClass("items-center");
     expect(disabled).toBeDisabled();
-    expect(disabled).toHaveClass("items-start");
+    expect(disabled).toHaveClass("items-center");
     expect(single).toHaveClass("hover:bg-accent", "data-selected:bg-accent");
   });
 

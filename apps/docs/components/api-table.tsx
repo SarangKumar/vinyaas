@@ -31,9 +31,11 @@ export function ApiTable({ rows }: { rows: ApiRow[] }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
+          {rows.map((row, index) => (
             <tr
-              key={row.prop}
+              // The same prop can appear for two parts (e.g. ToggleGroup and
+              // ToggleGroupItem both take `value`), so the name alone is not unique.
+              key={`${row.prop}-${index}`}
               className="border-border border-b last:border-b-0"
             >
               <th className="text-foreground px-3 py-2.5 align-top font-normal break-words">

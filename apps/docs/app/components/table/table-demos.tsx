@@ -24,7 +24,7 @@ import {
 const users = [
   ["Aarav Sharma", "aarav@example.com", "AS", "Admin", "Active"],
   ["Priya Singh", "priya@example.com", "PS", "Editor", "Pending"],
-  ["Aarav Mehta", "aarav@example.com", "AM", "Viewer", "Disabled"],
+  ["Aarav Mehta", "aarav.mehta@example.com", "AM", "Viewer", "Disabled"],
 ] as const;
 
 function SearchIcon() {

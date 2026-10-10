@@ -30,7 +30,7 @@ export function MenuStage({ children }: { children: React.ReactNode }) {
   return (
     <div
       data-demo-align="start"
-      className="flex min-h-[32rem] w-full items-start justify-start sm:min-h-[22rem]"
+      className="flex min-h-[32rem] w-full items-start justify-start sm:min-h-[26rem]"
     >
       {/* self-start: the preview stretches start-aligned demos; keep the menu at the top. */}
       <div className="max-w-full self-start">{children}</div>
@@ -57,6 +57,33 @@ function ListItem({
         {children}
       </span>
     </NavigationMenuLink>
+  );
+}
+
+/** First preview on the docs page; mirrors the usage snippet exactly. */
+export function BasicNavigationDemo() {
+  return (
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem value="products">
+          <NavigationMenuTrigger>Products</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <div className="grid gap-3 md:grid-cols-2">
+              <NavigationMenuLink href="/products/analytics">
+                Analytics
+              </NavigationMenuLink>
+              <NavigationMenuLink href="/products/workspace">
+                Workspace
+              </NavigationMenuLink>
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/docs">Documentation</NavigationMenuLink>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+      <NavigationMenuViewport />
+    </NavigationMenu>
   );
 }
 

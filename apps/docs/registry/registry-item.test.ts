@@ -7,7 +7,6 @@ import { describe, expect, it } from "vitest";
 import registryItemSchema from "../public/schema/registry-item.json";
 import { withDefaultDocs } from "./docs";
 import { registry as newYork } from "./new-york/registry";
-import { themes } from "./registry";
 import { readRegistryItemFiles, serializeRegistryItem } from "./serialize";
 import { registryItemTypes, type RegistryItem } from "./types";
 
@@ -280,6 +279,7 @@ describe("registry build output", () => {
       files: { path: string; content: string }[];
       docs?: string;
     };
+    expect(generated.files[0]?.content).toBe(source);
     expect(generated).not.toHaveProperty("registryDependencies");
     expect(generated).not.toHaveProperty("devDependencies");
     expect(generated).not.toHaveProperty("cssVars");
@@ -549,7 +549,11 @@ describe("registry build output", () => {
       'role="tooltip"',
     ],
     ["native-select", ["ui/native-select/index.tsx"], "<select"],
-    ["toast", ["ui/toast/index.tsx", "ui/toast/toast.css"], "toast.add"],
+    [
+      "toast",
+      ["ui/toast/index.tsx", "ui/toast/toast.css"],
+      "export const toast",
+    ],
     ["popover", ["ui/popover/index.tsx"], "PopoverContent"],
     ["badge", ["ui/badge/index.tsx"], "<span"],
     ["spinner", ["ui/spinner/index.tsx"], "aria-hidden"],

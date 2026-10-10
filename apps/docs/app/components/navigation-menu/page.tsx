@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 import {
+  BasicNavigationDemo,
   DashboardNavigationDemo,
   DocsNavigationDemo,
   MenuStage,
@@ -186,9 +187,7 @@ export function SimpleNav() {
       "Compose Card, Badge, Button, and links inside NavigationMenuContent.",
     preview: (
       <MenuStage>
-        <MenuStage>
-          <ProductMegaMenuDemo />
-        </MenuStage>
+        <ProductMegaMenuDemo />
       </MenuStage>
     ),
     code: usage,
@@ -301,7 +300,9 @@ export default async function NavigationMenuPage() {
       }
       source={source}
     >
-      <ProductMegaMenuDemo />
+      <MenuStage>
+        <BasicNavigationDemo />
+      </MenuStage>
     </ComponentReference>
   );
 }

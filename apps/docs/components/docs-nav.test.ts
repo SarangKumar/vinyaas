@@ -90,7 +90,8 @@ describe("documentation navigation", () => {
     expect(sections?.every((item) => !item.children?.length)).toBe(true);
 
     const companion = docsNav[3];
-    expect(companion?.items[0]?.indicator).toBe("beta");
+    expect(companion?.badge).toBe("Beta");
+    expect(companion?.items[0]?.indicator).toBeUndefined();
     expect(companion?.items.map((item) => item.title)).toEqual([
       "Introduction",
       "Installation",
@@ -150,5 +151,12 @@ describe("documentation navigation", () => {
     expect(
       items?.find((item) => item.title === "Drag & Drop")?.indicator,
     ).toBeUndefined();
+  });
+
+  it("marks the Companion section as Beta and leaves its Introduction link without a dot", () => {
+    const group = docsNav.find((entry) => entry.title === "COMPANION");
+
+    expect(group?.badge).toBe("Beta");
+    expect(group?.items[0]?.indicator).toBeUndefined();
   });
 });

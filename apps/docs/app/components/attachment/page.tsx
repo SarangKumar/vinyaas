@@ -252,6 +252,7 @@ function AttachmentComposer() {
         {images.map((image) => (
           <Attachment key={image.name} orientation="vertical">
             <AttachmentMedia variant="image">
+              {/* eslint-disable-next-line @next/next/no-img-element -- framework-agnostic demo: consumers copy a native img */}
               <img src={image.src} alt={image.alt} />
             </AttachmentMedia>
             <AttachmentContent>
@@ -385,6 +386,7 @@ const examples: ComponentExample[] = [
         {images.map((image) => (
           <Attachment key={image.name} orientation="vertical">
             <AttachmentMedia variant="image">
+              {/* eslint-disable-next-line @next/next/no-img-element -- framework-agnostic demo: consumers copy a native img */}
               <img src={image.src} alt={image.alt} />
             </AttachmentMedia>
             <AttachmentContent>

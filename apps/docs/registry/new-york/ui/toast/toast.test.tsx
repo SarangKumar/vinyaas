@@ -103,8 +103,18 @@ describe("Toast", () => {
 
     expect(onUndo).toHaveBeenCalledOnce();
     expect(screen.getByRole("button", { name: "Undo" })).toHaveClass(
-      "h-6",
+      "h-[26px]",
+      "px-2.5",
+      "rounded-sm",
+      "font-semibold",
       "text-xs",
+    );
+    expect(screen.getAllByRole("button", { name: "Dismiss" })[0]).toHaveClass(
+      "rounded-md",
+      "[corner-shape:squircle]",
+      "hover:bg-accent",
+      "transition-colors",
+      "duration-150",
     );
 
     fireEvent.click(screen.getAllByRole("button", { name: "Dismiss" })[0]!);
@@ -278,5 +288,44 @@ describe("Toast", () => {
 
     expect(node).toHaveClass("items-start");
     expect(node.querySelector("[data-slot=toast-icon]")).toHaveClass("mt-0.5");
+  });
+
+  it("dismisses a plain loading toast after its duration", () => {
+    vi.useFakeTimers();
+    render(<Toaster />);
+    act(() => {
+      vi.advanceTimersByTime(0);
+    });
+
+    act(() => {
+      toast.add({ title: "Uploading", type: "loading", duration: 1000 });
+    });
+    expect(screen.getByText("Uploading")).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(1000 + 160);
+    });
+    expect(screen.queryByText("Uploading")).not.toBeInTheDocument();
+  });
+
+  it("keeps a toast.promise loading state until the promise settles", () => {
+    vi.useFakeTimers();
+    render(<Toaster />);
+    act(() => {
+      vi.advanceTimersByTime(0);
+    });
+
+    act(() => {
+      toast.promise(new Promise(() => {}), {
+        loading: { title: "Saving", duration: 1000 },
+        success: { title: "Saved" },
+        error: { title: "Failed" },
+      });
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+    expect(screen.getByText("Saving")).toBeInTheDocument();
   });
 });

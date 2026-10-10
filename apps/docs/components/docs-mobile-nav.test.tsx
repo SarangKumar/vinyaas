@@ -124,8 +124,11 @@ describe("DocsMobileNav", () => {
     expect(
       screen
         .getAllByRole("link", { name: /Introduction/i })[1]
-        ?.querySelector('[data-nav-indicator="beta"]'),
-    ).toBeTruthy();
+        ?.querySelector("[data-nav-indicator]"),
+    ).toBeNull();
+    expect(
+      screen.getByText("COMPANION").querySelector("[data-group-badge]"),
+    ).toHaveTextContent("Beta");
     expect(screen.getByRole("link", { name: "Changelog" })).toHaveAttribute(
       "href",
       "/changelog",

@@ -377,7 +377,7 @@ export function CommandItem({
       disabled={disabled}
       data-selected={selected ? "" : undefined}
       className={cn(
-        "text-foreground data-selected:bg-accent data-selected:text-accent-foreground hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground data-selected:hover:bg-accent flex w-full cursor-pointer items-start gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>svg]:mt-0.5 [&>svg]:shrink-0",
+        "text-foreground data-selected:bg-accent data-selected:text-accent-foreground hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground data-selected:hover:bg-accent flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>svg]:shrink-0",
         className,
       )}
       onMouseEnter={(event) => {
@@ -480,7 +480,7 @@ export function CommandShortcut({ className, ...props }: CommandShortcutProps) {
   return (
     <Kbd
       data-slot="command-shortcut"
-      className={cn("text-muted-foreground mt-0.5 ml-auto shrink-0", className)}
+      className={cn("text-muted-foreground ml-auto shrink-0", className)}
       {...props}
     />
   );

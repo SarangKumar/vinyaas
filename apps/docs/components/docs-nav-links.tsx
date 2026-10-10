@@ -94,6 +94,14 @@ export function DocsNavLinks({
               }
             >
               {group.title}
+              {group.badge ? (
+                <span
+                  data-group-badge=""
+                  className="bg-muted text-muted-foreground ml-2 rounded-sm px-1.5 py-px align-middle text-[0.625rem] font-semibold tracking-normal normal-case"
+                >
+                  {group.badge}
+                </span>
+              ) : null}
             </p>
           ) : null}
           <ul
