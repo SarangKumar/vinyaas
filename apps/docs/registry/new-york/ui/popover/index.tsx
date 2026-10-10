@@ -158,6 +158,12 @@ export function PopoverContent({
       }
 
       const trigger = triggerNode.getBoundingClientRect();
+      // Exposed so content can size itself to the trigger (e.g. Combobox
+      // uses w-(--popover-trigger-width)). Set before measuring the content.
+      contentNode.style.setProperty(
+        "--popover-trigger-width",
+        `${trigger.width}px`,
+      );
       const content = contentNode.getBoundingClientRect();
       const gap = 8;
       let top = trigger.bottom + gap;

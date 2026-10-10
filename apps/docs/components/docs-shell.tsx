@@ -21,7 +21,6 @@ import { focusRing } from "@/components/focus-ring";
 import { GitHubLink } from "@/components/github-link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CompanionProvider } from "@/components/companion/companion-provider";
-import { VinyaasMark } from "@/components/vinyaas-mark";
 import { Toaster } from "@/registry/new-york/ui/toast";
 
 const headerLink = `text-foreground hover:text-foreground/80 cursor-pointer rounded-md px-2 py-1 text-sm ${focusRing}`;
@@ -45,13 +44,6 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
                 className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-3"
               >
                 <DocsMobileNav />
-                <Link
-                  href={homePath}
-                  aria-label="Vinyaas home"
-                  className={`inline-flex size-7 shrink-0 items-center justify-center rounded-md ${focusRing}`}
-                >
-                  <VinyaasMark className="size-7" />
-                </Link>
                 <nav
                   aria-label="Site"
                   className="flex shrink-0 items-center gap-1"

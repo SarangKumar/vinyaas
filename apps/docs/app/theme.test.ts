@@ -25,7 +25,7 @@ describe("docs theme", () => {
     expect(css).toContain(":root");
     expect(css).toContain(".dark");
 
-    expect(css).toContain("--radius: 0.5rem");
+    expect(css).toContain("--radius: 0.8rem");
     expect(css).toContain("--radius-lg: var(--radius)");
     expect(css).toContain("--background: oklch(1 0 0)");
     expect(css).toContain("--foreground: oklch(0.141 0.005 285.823)");

@@ -24,40 +24,61 @@ const v11 = components.filter(
  */
 export const changelogVersions: ChangelogVersion[] = [
   {
-    id: "1.3.2",
-    label: "v1.3.2",
+    id: "1.4.0",
+    label: "v1.4.0",
     summary:
-      "v1.3.2 is a fit-and-finish and performance release: auto-growing Textarea, Kbd shortcuts that read evenly, a restyled Toast, Avatar symbol badges, a working empty-column drop in Drag & Drop, a static and lighter docs site, a refreshed site theme, an llm.txt map, and command options on the CLI page.",
+      "v1.4.0 adds Toggle, Toggle Group, and Score Ring and the vinyaas update / upgrade command, polishes forms, overlays, tables, toasts, and charts, and makes the docs site static, lighter, and re-themed with an llm.txt map.",
     sections: [
+      {
+        title: "Components",
+        items: [
+          `Toggle — a two-state button with aria-pressed, default and outline variants, controlled or uncontrolled state, Button-matched heights, and corners that follow --radius.`,
+          `Toggle Group — single or multiple selection with joined or spaced layouts, horizontal or vertical orientation, group-level variant, size, and disabled, and arrow-key focus movement.`,
+          `Score Ring — a circular score meter with xs (32px), sm, default, and lg sizes. The ring color blends from fromColor (default red at 0) to toColor (default green at 100).`,
+        ],
+      },
       {
         title: "Component improvements",
         items: [
-          `Textarea: maxRows grows the field with its content (starting at rows) and scrolls once the limit is reached. showCount still shows a current/maxLength counter below the field.`,
-          `Kbd: mixed labels such as ⌘K render as one key with every character at the same height. KbdGroup groups separate keys of one shortcut.`,
-          `Command: CommandShortcut renders Kbd (command now depends on the kbd registry item), and the search field is 36px tall like Input and Button.`,
-          `Input Group: the field stays 36px including its border, matching Input, Button, Select, Combobox, Toggle, and Command.`,
-          `Toast: one popover surface for every state, a distinct icon per state (success, info, warning, error, loading), sonner-style type sizes, a compact primary action next to the close icon, and the icon aligned with the title line.`,
-          `Avatar: text badges stay on one line (for example ADMIN), and a single icon child renders a round symbol dot such as a verified check.`,
-          `Dialog: size="full" stays clear of the site header, and DialogFooter pins its actions to the bottom right of tall dialogs.`,
-          `Drag & Drop: boards use pointer-first collision detection, so a column that was emptied accepts items again.`,
+          `Input, Textarea, Input Group, and Input OTP share the Select / outline-button background, and Button, Input, Input Group, Select, Combobox, Toggle, and Command are all 36px tall at the default size.`,
+          `Textarea: showCount renders a current/maxLength counter below the field on the right; maxRows grows the field with its content and scrolls once the limit is reached.`,
+          `Button: tests pin identical box sizes for every variant at every size, so borders never make one variant larger.`,
+          `Select and Combobox: the dropdown is exactly as wide as the trigger (Popover exposes --popover-trigger-width), and the Select arrow sits in the flow of the trigger so padding classes cannot push text under it.`,
+          `Kbd: symbol keys such as ⌘, ⌥, ⇧, and arrows render at letter height, mixed labels such as ⌘K stay one key, and KbdGroup groups separate keys.`,
+          `Command: CommandShortcut renders Kbd (command now depends on the kbd registry item).`,
+          `Avatar: AvatarBadge anchors a status dot, a one-line text label such as PRO or ADMIN, or a round symbol dot to the bottom-right corner.`,
+          `Dialog: size prop on DialogContent (sm, default, lg, xl, full); full stays clear of the site header, and DialogFooter pins actions to the bottom right.`,
+          `Toast: one popover surface for every state with a distinct icon per state aligned to the title, sonner-style type sizes, a compact action beside the close icon, and edge-aware enter and exit animation.`,
+          `Resizable: variant="blocks" renders panels as separate bordered blocks with a small gutter and a three-dot grip.`,
+          `Table: lighter row borders. Data Table: fixed-size sort icons, a fixed layout (optional column width and actionsWidth) so sorting never resizes columns, and icon row actions.`,
+          `Drag & Drop: boards use pointer-first collision detection, so an emptied column accepts items again.`,
+          `Chart: horizontal bar charts documented with layout="vertical".`,
+        ],
+      },
+      {
+        title: "CLI",
+        items: [
+          `vinyaas update (alias: vinyaas upgrade) replaces installed components with the latest registry source after a confirmation. Pass component names to update only those, --yes to skip the prompt, or --dry-run to preview.`,
+          `Only components recorded in .vinyaas/manifest.json are updated.`,
         ],
       },
       {
         title: "Docs & site",
         items: [
           `Every docs route is prerendered as static HTML. The theme no longer uses a cookie: before hydration the site follows the system color scheme, then applies a saved light or dark choice from localStorage.`,
-          `Lighter first load: the docs drop Redux for a tiny built-in store, and sidebar links prefetch on hover or focus instead of all at once.`,
-          `New site theme with a 0.5rem radius and five neutral chart colors spread from black to white.`,
+          `Lighter first load: the docs drop Redux for a tiny built-in store, and sidebar and What's new links prefetch on hover or focus.`,
+          `New site theme with a 0.8rem radius and five neutral chart colors spread from black to white.`,
           `llm.txt (also at llms.txt) lists every docs page and component for language models; it is the last Get Started link.`,
           `CLI page: each command shows package-manager tabs and its --help options.`,
-          `Navigation Menu previews leave room for the open panel; Table examples show the exact code behind each preview; the Spinner customization uses a macOS-style activity indicator.`,
-          `Spacing: subsections get more room above them, playground and homepage gaps are 6px tighter, the homepage showcase is trimmed on laptop screens, and sidebar links are 1px smaller.`,
-          `Badge, Button, and Avatar previews sit in one row; the Typeset playground no longer reserves empty space under card titles; Score Ring is documented but not on the homepage.`,
+          `Previews: rounded tops that match their frame, one-row Badge, Button, and Avatar previews, room for open Navigation Menu panels, exact Table code, and a macOS-style loader in the Spinner customization.`,
+          `Layout: no logo in the navbar, more space above subsections, 6px tighter playground and homepage gaps, a homepage showcase trimmed on laptop screens, 1px smaller sidebar links, and no empty band under Typeset card titles.`,
         ],
       },
       {
         title: "Release",
-        items: [`CLI, docs, and workspace manifests are versioned 1.3.2.`],
+        items: [
+          `Minor release after the published v1.3.1: new components and a new CLI command, no breaking changes. CLI, docs, and workspace manifests are versioned 1.4.0.`,
+        ],
       },
     ],
   },
@@ -65,41 +86,8 @@ export const changelogVersions: ChangelogVersion[] = [
     id: "1.3.1",
     label: "v1.3.1",
     summary:
-      "v1.3.1 adds Toggle, Toggle Group, and Score Ring, polishes forms, overlays, tables, and charts, and ships vinyaas update (alias: upgrade) alongside docs quality work, system-default theming, and Nyx — a dark-type companion.",
+      "v1.3.1 is a production polish release: docs quality, system-default theming, global CLI install examples, SEO/accessibility, and Nyx — a dark-type companion.",
     sections: [
-      {
-        title: "Components",
-        items: [
-          `Toggle — a two-state button with aria-pressed, default and outline variants, controlled or uncontrolled state, and Button-matched heights.`,
-          `Toggle Group — single or multiple selection with joined or spaced layouts, horizontal or vertical orientation, group-level variant, size, and disabled, and arrow-key focus movement.`,
-          `Score Ring — a circular score meter with xs, sm, default, and lg sizes. The ring color blends from fromColor (default red at 0) to toColor (default green at 100).`,
-        ],
-      },
-      {
-        title: "Component improvements",
-        items: [
-          `Input, Textarea, Input Group, and Input OTP use the same background as Select, Native Select, and outline buttons so fields blend with cards and popovers.`,
-          `Textarea: showCount renders a current/maxLength counter below the field on the right, linked to the field with aria-describedby.`,
-          `Button: tests now pin identical box sizes for every variant at every size, so borders and outlines never make one variant larger.`,
-          `Avatar: AvatarBadge anchors a status dot (online, offline, away, busy) or a text label such as PRO to the bottom-right corner without being clipped.`,
-          `Dialog: size prop on DialogContent (sm, default, lg, xl, full) for wider and taller dialogs.`,
-          `Select: the arrow sits in the flow of the trigger, so custom padding classes can no longer push text under it.`,
-          `Kbd: symbol keys such as ⌘, ⌥, ⇧, and arrows use a larger glyph size so every key reads at the same height.`,
-          `Resizable: variant="blocks" renders panels as separate bordered blocks with a small gutter and a three-dot grip; the grip rotates for vertical groups.`,
-          `Table: row borders are lighter.`,
-          `Data Table: the sort control uses fixed-size icons, the table uses a fixed layout (with optional column width and actionsWidth) so sorting never resizes columns, and row actions are icon buttons.`,
-          `Toast: the action button sits on the right beside the close icon, and toasts slide in from the edge they are anchored to.`,
-          `Chart: horizontal bar charts documented with layout="vertical".`,
-          `Docs: spacing added between the Badge and Button variant and size previews.`,
-        ],
-      },
-      {
-        title: "CLI",
-        items: [
-          `vinyaas update (alias: vinyaas upgrade) replaces installed components with the latest registry source after a confirmation. Pass component names to update only those, or --yes to skip the prompt.`,
-          `update/upgrade only touches components recorded in .vinyaas/manifest.json and supports --dry-run.`,
-        ],
-      },
       {
         title: "Docs & site",
         items: [
@@ -279,7 +267,7 @@ export const changelogVersions: ChangelogVersion[] = [
   },
 ];
 
-export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.3.2";
+export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.4.0";
 
 export function resolveChangelogVersionId(
   value: string | null | undefined,

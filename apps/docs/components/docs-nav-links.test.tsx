@@ -146,8 +146,12 @@ describe("DocsNavLinks", () => {
 
     const resizable = within(nav).getByRole("link", { name: /Resizable/i });
     expect(resizable).toHaveAttribute("href", "/components/resizable");
+    expect(resizable.querySelector('[data-nav-indicator="new"]')).toBeNull();
+    const toggleGroup = within(nav).getByRole("link", {
+      name: /Toggle Group/i,
+    });
     expect(
-      resizable.querySelector('[data-nav-indicator="new"]'),
+      toggleGroup.querySelector('[data-nav-indicator="new"]'),
     ).toHaveAttribute("aria-label", "New");
     expect(
       within(nav)

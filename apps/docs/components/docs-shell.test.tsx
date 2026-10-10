@@ -81,10 +81,10 @@ describe("DocsShell", () => {
     ).toContain("What's new");
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
-    ).toMatch(/Select|Resizable|Sidebar|Drag & Drop/);
+    ).toMatch(/Toggle|Score Ring/);
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
-    ).toMatch(/Flint|Bubble|Rime|Jab|Volt/);
+    ).not.toMatch(/Resizable|Sidebar|Flint/);
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
     ).toContain("View changelog");
@@ -95,12 +95,14 @@ describe("DocsShell", () => {
     ) as HTMLElement;
     const homeNav = within(startHeader).getByRole("link", { name: "Home" });
     expect(homeNav.className).toContain("text-foreground");
+    expect(homeNav).toHaveAttribute("href", "/");
+    // The navbar has no logo mark; Home is the link to the homepage.
     expect(
-      within(startHeader).getByRole("link", { name: "Vinyaas home" }),
-    ).toHaveAttribute("href", "/");
+      within(startHeader).queryByRole("link", { name: "Vinyaas home" }),
+    ).toBeNull();
     expect(
-      within(startHeader).getByRole("img", { name: "Vinyaas" }),
-    ).toBeInTheDocument();
+      within(startHeader).queryByRole("img", { name: "Vinyaas" }),
+    ).toBeNull();
     const docsSidebarLink = screen.getAllByRole("link", { name: "Button" })[0]!;
     expect(docsSidebarLink.className).toMatch(/text-foreground/);
     const start = document.querySelector("[data-header-section='start']");

@@ -130,7 +130,7 @@ describe("documentation navigation", () => {
     );
     expect(items?.some((item) => item.title === "Typography")).toBe(true);
     expect(items?.every((item) => !("isNew" in item))).toBe(true);
-    expect(items?.find((item) => item.title === "Resizable")?.indicator).toBe(
+    expect(items?.find((item) => item.title === "Toggle")?.indicator).toBe(
       "new",
     );
     expect(
@@ -140,33 +140,15 @@ describe("documentation navigation", () => {
       items
         ?.filter((item) => item.indicator === "new")
         .map((item) => item.title),
-    ).toEqual([
-      "Alert Dialog",
-      "Calendar",
-      "Combobox",
-      "Data Table",
-      "Date Picker",
-      "Drag & Drop",
-      "Empty State",
-      "Form",
-      "Navigation Menu",
-      "Pagination",
-      "Resizable",
-      "Score Ring",
-      "Select",
-      "Sheet",
-      "Sidebar",
-      "Toggle",
-      "Toggle Group",
-    ]);
-    expect(items?.find((item) => item.title === "Select")?.indicator).toBe(
-      "new",
-    );
-    expect(items?.find((item) => item.title === "Sidebar")?.indicator).toBe(
-      "new",
-    );
-    expect(items?.find((item) => item.title === "Drag & Drop")?.indicator).toBe(
-      "new",
-    );
+    ).toEqual(["Score Ring", "Toggle", "Toggle Group"]);
+    expect(
+      items?.find((item) => item.title === "Select")?.indicator,
+    ).toBeUndefined();
+    expect(
+      items?.find((item) => item.title === "Sidebar")?.indicator,
+    ).toBeUndefined();
+    expect(
+      items?.find((item) => item.title === "Drag & Drop")?.indicator,
+    ).toBeUndefined();
   });
 });

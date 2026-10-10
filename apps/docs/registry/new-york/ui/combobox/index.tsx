@@ -278,7 +278,8 @@ export function ComboboxContent({
   return (
     <PopoverContent
       align={align}
-      className={cn("w-72 min-w-[12rem] p-0", className)}
+      // Same width as the trigger, like Select; 18rem until it is measured.
+      className={cn("w-[var(--popover-trigger-width,18rem)] p-0", className)}
     >
       <Command className="rounded-md border-0 shadow-none">
         <CommandInput

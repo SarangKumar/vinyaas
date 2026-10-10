@@ -18,7 +18,7 @@ import { cliHelp } from "./cli-help";
 export const metadata: Metadata = pageMetadata({
   title: "CLI",
   description:
-    "Vinyaas CLI v1.3.2: init, doctor, add by name/catalog/category, update/upgrade, catalogs, status, list, search, and info.",
+    "Vinyaas CLI v1.4.0: init, doctor, add by name/catalog/category, update/upgrade, catalogs, status, list, search, and info.",
   path: "/cli",
 });
 
@@ -31,7 +31,7 @@ export default function CliPage() {
   return (
     <DocsArticle
       title="CLI"
-      description="The vinyaas package on npm (v1.3.2) installs UI as editable source. Framework create-app flows live on Installation."
+      description="The vinyaas package on npm (v1.4.0) installs UI as editable source. Framework create-app flows live on Installation."
     >
       <section className="flex flex-col gap-4">
         <h2 id="overview" className={sectionHeading}>
@@ -443,7 +443,7 @@ No issues found.`}
           Version
         </h2>
         <p className={body}>
-          Print the installed CLI version (currently v1.3.2).
+          Print the installed CLI version (currently v1.4.0).
         </p>
         <CodeBlock language="bash" code="vinyaas --version" />
       </section>
