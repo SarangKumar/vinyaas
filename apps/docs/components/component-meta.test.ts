@@ -61,6 +61,7 @@ describe("component metadata", () => {
       "Progress",
       "Radio Group",
       "Resizable",
+      "Score Ring",
       "Scroll Area",
       "Select",
       "Separator",
@@ -74,13 +75,15 @@ describe("component metadata", () => {
       "Tabs",
       "Textarea",
       "Toast",
+      "Toggle",
+      "Toggle Group",
       "Tooltip",
       "Typography",
     ]);
   });
 
   it("tracks introduction versions and derives the current new set", () => {
-    expect(currentVersion).toBe("1.3.0");
+    expect(currentVersion).toBe("1.4.0");
     expect(
       components
         .filter((component) => component.introducedIn === "0.1")
@@ -117,44 +120,43 @@ describe("component metadata", () => {
       "sidebar",
     ]);
     expect(
+      components
+        .filter((component) => component.introducedIn === "1.4.0")
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual(["score-ring", "toggle", "toggle-group"]);
+    expect(
+      components.filter((component) => component.introducedIn === "1.3.1"),
+    ).toHaveLength(0);
+    expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 20);
+    ).toBe(components.length - 23);
     expect(
       newComponents()
         .map((component) => component.slug)
         .sort(),
-    ).toEqual([
-      "alert-dialog",
-      "calendar",
-      "combobox",
-      "data-table",
-      "date-picker",
-      "drag-and-drop",
-      "empty-state",
-      "form",
-      "navigation-menu",
-      "pagination",
-      "resizable",
-      "select",
-      "sheet",
-      "sidebar",
-    ]);
+    ).toEqual(["score-ring", "toggle", "toggle-group"]);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "toggle")!,
+      ),
+    ).toBe(true);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "pagination")!,
       ),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "resizable")!,
       ),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "sidebar")!,
       ),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "button")!,

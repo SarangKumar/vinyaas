@@ -67,6 +67,7 @@ export const registryComponentCategories: Readonly<
   pagination: "navigation",
   popover: "feedback",
   progress: "feedback",
+  "score-ring": "data-display",
   "radio-group": "forms",
   resizable: "layout",
   "scroll-area": "layout",
@@ -81,6 +82,8 @@ export const registryComponentCategories: Readonly<
   tabs: "navigation",
   textarea: "forms",
   toast: "feedback",
+  toggle: "forms",
+  "toggle-group": "forms",
   tooltip: "feedback",
   typography: "typography",
 };

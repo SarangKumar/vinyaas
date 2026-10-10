@@ -71,13 +71,8 @@ export function ProjectsTable({ data }: { data: Project[] }) {
 const inPracticeCode = `import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable, type DataTableColumn } from "@/components/ui/data-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+// Bring your own icons (lucide-react's Eye, Pencil, and Trash2 work well).
+import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 type Project = {
   id: string;
@@ -129,20 +124,17 @@ export function ProjectsBoard({ data }: { data: Project[] }) {
       columnVisibility
       pagination={4}
       renderRowActions={(row) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button variant="ghost" size="sm" aria-label={\`Actions for \${row.name}\`}>
-              ···
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>View</DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Duplicate</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center justify-end gap-1">
+          <Button variant="ghost" size="icon-sm" aria-label={\`View \${row.name}\`}>
+            <EyeIcon />
+          </Button>
+          <Button variant="ghost" size="icon-sm" aria-label={\`Edit \${row.name}\`}>
+            <PencilIcon />
+          </Button>
+          <Button variant="ghost" size="icon-sm" aria-label={\`Delete \${row.name}\`}>
+            <TrashIcon />
+          </Button>
+        </div>
       )}
     />
   );
@@ -190,6 +182,18 @@ const api: ApiRow[] = [
     description: "Client-side pagination. A number sets the page size.",
   },
   {
+    prop: "actionsWidth",
+    type: "string | number",
+    defaultValue: '"7rem"',
+    description: "Width of the trailing actions column.",
+  },
+  {
+    prop: "columns[].width",
+    type: "string | number",
+    description:
+      "Column width. The table uses a fixed layout, so sorting, paging, and search never resize columns. Columns without a width share the remaining space.",
+  },
+  {
     prop: "columnVisibility",
     type: "boolean",
     defaultValue: "false",
@@ -229,7 +233,7 @@ const examples: ComponentExample[] = [
     id: "sorting",
     title: "Sorting",
     description:
-      "Click a sortable header to cycle ascending, descending, and unsorted.",
+      "Click a sortable header to cycle ascending, descending, and unsorted. The sort icon has a fixed size and the table layout is fixed, so columns keep their width while the order changes.",
     preview: <SortingDataTableDemo />,
     code: `{
   id: "name",

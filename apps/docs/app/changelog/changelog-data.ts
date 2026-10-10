@@ -1,4 +1,4 @@
-import { components, currentVersion } from "@/components/component-meta";
+import { components } from "@/components/component-meta";
 
 export type ChangelogSection = {
   title: string;
@@ -24,9 +24,107 @@ const v11 = components.filter(
  */
 export const changelogVersions: ChangelogVersion[] = [
   {
+    id: "1.4.0",
+    label: "v1.4.0",
+    summary:
+      "v1.4.0 adds Toggle, Toggle Group, and Score Ring and the vinyaas update / upgrade command, polishes forms, overlays, tables, toasts, and charts, and makes the docs site static, lighter, and re-themed with an llm.txt map.",
+    sections: [
+      {
+        title: "Components",
+        items: [
+          `Toggle — a two-state button with aria-pressed, default and outline variants, controlled or uncontrolled state, Button-matched heights, and corners that follow --radius.`,
+          `Toggle Group — single or multiple selection with joined or spaced layouts, horizontal or vertical orientation, group-level variant, size, and disabled, and arrow-key focus movement.`,
+          `Score Ring — a circular score meter with xs (32px), sm, default, and lg sizes. The ring color blends from fromColor (default red at 0) to toColor (default green at 100).`,
+        ],
+      },
+      {
+        title: "Component improvements",
+        items: [
+          `Input, Textarea, Input Group, and Input OTP share the Select / outline-button background, and Button, Input, Input Group, Select, Combobox, Toggle, and Command are all 36px tall at the default size.`,
+          `Textarea: showCount renders a current/maxLength counter below the field on the right; maxRows grows the field with its content and scrolls once the limit is reached.`,
+          `Button: tests pin identical box sizes for every variant at every size, so borders never make one variant larger.`,
+          `Select and Combobox: the dropdown is exactly as wide as the trigger (Popover exposes --popover-trigger-width), and the Select arrow sits in the flow of the trigger so padding classes cannot push text under it.`,
+          `Kbd: symbol keys such as ⌘, ⌥, ⇧, and arrows render at letter height, mixed labels such as ⌘K stay one key, and KbdGroup groups separate keys.`,
+          `Command: CommandShortcut renders Kbd (command now depends on the kbd registry item).`,
+          `Avatar: AvatarBadge anchors a status dot, a one-line text label such as PRO or ADMIN, or a round symbol dot to the bottom-right corner.`,
+          `Dialog: size prop on DialogContent (sm, default, lg, xl, full); full stays clear of the site header, and DialogFooter pins actions to the bottom right.`,
+          `Toast: one popover surface for every state with a distinct icon per state aligned to the title, sonner-style type sizes, a compact action beside the close icon, and edge-aware enter and exit animation.`,
+          `Resizable: variant="blocks" renders panels as separate bordered blocks with a small gutter and a three-dot grip.`,
+          `Table: lighter row borders. Data Table: fixed-size sort icons, a fixed layout (optional column width and actionsWidth) so sorting never resizes columns, and icon row actions.`,
+          `Drag & Drop: boards use pointer-first collision detection, so an emptied column accepts items again.`,
+          `Chart: horizontal bar charts documented with layout="vertical".`,
+        ],
+      },
+      {
+        title: "CLI",
+        items: [
+          `vinyaas update (alias: vinyaas upgrade) replaces installed components with the latest registry source after a confirmation. Pass component names to update only those, --yes to skip the prompt, or --dry-run to preview.`,
+          `Only components recorded in .vinyaas/manifest.json are updated.`,
+        ],
+      },
+      {
+        title: "Docs & site",
+        items: [
+          `Every docs route is prerendered as static HTML. The theme no longer uses a cookie: before hydration the site follows the system color scheme, then applies a saved light or dark choice from localStorage.`,
+          `Lighter first load: the docs drop Redux for a tiny built-in store, and sidebar and What's new links prefetch on hover or focus.`,
+          `New site theme with a 0.8rem radius and five neutral chart colors spread from black to white.`,
+          `llm.txt (also at llms.txt) lists every docs page and component for language models; it is the last Get Started link.`,
+          `CLI page: each command shows package-manager tabs and its --help options.`,
+          `Previews: rounded tops that match their frame, one-row Badge, Button, and Avatar previews, room for open Navigation Menu panels, exact Table code, and a macOS-style loader in the Spinner customization.`,
+          `Layout: no logo in the navbar, more space above subsections, 6px tighter playground and homepage gaps, a homepage showcase trimmed on laptop screens, 1px smaller sidebar links, and no empty band under Typeset card titles.`,
+        ],
+      },
+      {
+        title: "Release",
+        items: [
+          `Minor release after the published v1.3.1: new components and a new CLI command, no breaking changes. CLI, docs, and workspace manifests are versioned 1.4.0.`,
+        ],
+      },
+    ],
+  },
+  {
+    id: "1.3.1",
+    label: "v1.3.1",
+    summary:
+      "v1.3.1 is a production polish release: docs quality, system-default theming, global CLI install examples, SEO/accessibility, and Nyx — a dark-type companion.",
+    sections: [
+      {
+        title: "Docs & site",
+        items: [
+          `Sidebar reordered for chronological onboarding (GET STARTED → SECTIONS → COMPONENTS → COMPANION) without duplicated links.`,
+          `Default theme follows the device/system preference until the visitor chooses light or dark.`,
+          `Installation and CLI examples install Vinyaas globally (-g / yarn global add).`,
+          `Removed repeated install examples; kept high-signal init and add flows.`,
+          `Dark Mode guides clarify the class strategy, system default, and Next.js suppressHydrationWarning wiring.`,
+          `Companion docs expanded with Interactions, Examples, and Gallery pages plus a minimal setup path.`,
+          `SEO: richer keywords, JSON-LD WebSite schema, sitemap coverage for catalogs, accessibility, and companion routes.`,
+          `Font display swap and consistent hierarchical type scale across docs chrome.`,
+          `Theme init and JSON-LD without dangerouslySetInnerHTML; cookie + ThemeSync for system default.`,
+          `Component demos centered; Alert Dialog delete triggers use size sm with icon collapse; Sidebar examples deduped (Dashboard, Collapsed, Composition).`,
+        ],
+      },
+      {
+        title: "Companions",
+        items: [
+          `Nyx — dark-type shade companion with glow/blink/celebrate clips, Eclipse/Umbra instances, and follow-cursor capability.`,
+          `theme_change trigger: companions can react when the docs light/dark theme toggles (Nyx glows).`,
+          `Dark element type with matchups and violet type badges.`,
+        ],
+      },
+      {
+        title: "Quality",
+        items: [
+          `Preview/code alignment pass, spacing and control polish, and accessibility/focus consistency across docs surfaces.`,
+          `Changelog, version badges, and package manifests aligned on v1.3.1.`,
+        ],
+      },
+    ],
+  },
+  {
     id: "1.3.0",
     label: "v1.3.0",
-    summary: `v${currentVersion} ships dashboard and form primitives, richer Companions, registry catalogs, CLI catalog installs, and stronger accessibility and release checks.`,
+    summary:
+      "v1.3.0 ships dashboard and form primitives, richer Companions, registry catalogs, CLI catalog installs, and stronger accessibility and release checks.",
     sections: [
       {
         title: "Components",
@@ -169,7 +267,7 @@ export const changelogVersions: ChangelogVersion[] = [
   },
 ];
 
-export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.3.0";
+export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.4.0";
 
 export function resolveChangelogVersionId(
   value: string | null | undefined,

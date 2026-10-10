@@ -13,6 +13,7 @@ import {
 export function EmptyStateBlock() {
   return (
     <PlayBlock
+      align="center"
       title="Empty workspace"
       description="Empty dashboard panel before the first project."
     >

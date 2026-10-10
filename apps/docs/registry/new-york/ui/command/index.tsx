@@ -9,6 +9,7 @@ import React, {
 } from "react";
 
 import { cn } from "@/lib/utils";
+import { Kbd, type KbdProps } from "../kbd";
 
 type CommandContextValue = {
   query: string;
@@ -158,7 +159,8 @@ export function CommandInput({ className, ...props }: CommandInputProps) {
 
   return (
     <div className="p-px">
-      <div className="border-border/80 bg-muted/40 focus-within:border-ring/50 focus-within:ring-ring/30 m-0.5 flex items-center gap-2 rounded-lg border px-3 focus-within:ring-1">
+      {/* h-9 + box-border: the bordered field is 36px, the same as Input and Button. */}
+      <div className="border-border/80 bg-muted/40 focus-within:border-ring/50 focus-within:ring-ring/30 m-0.5 box-border flex h-9 items-center gap-2 rounded-lg border px-3 focus-within:ring-1">
         <SearchGlyph />
         <input
           {...props}
@@ -170,7 +172,7 @@ export function CommandInput({ className, ...props }: CommandInputProps) {
           aria-activedescendant={command.activeId || undefined}
           value={command.query}
           className={cn(
-            "placeholder:text-muted-foreground/70 text-foreground h-10 w-full min-w-0 bg-transparent text-sm outline-none",
+            "placeholder:text-muted-foreground/70 text-foreground h-full w-full min-w-0 bg-transparent text-sm outline-none",
             className,
           )}
           onChange={(event) => {
@@ -375,7 +377,7 @@ export function CommandItem({
       disabled={disabled}
       data-selected={selected ? "" : undefined}
       className={cn(
-        "text-foreground data-selected:bg-accent data-selected:text-accent-foreground hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground data-selected:hover:bg-accent flex w-full cursor-pointer items-start gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>svg]:mt-0.5 [&>svg]:shrink-0",
+        "text-foreground data-selected:bg-accent data-selected:text-accent-foreground hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground data-selected:hover:bg-accent flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>svg]:shrink-0",
         className,
       )}
       onMouseEnter={(event) => {
@@ -471,15 +473,14 @@ export function CommandItem({
   );
 }
 
-export type CommandShortcutProps = React.ComponentProps<"span">;
+export type CommandShortcutProps = KbdProps;
 
+/** A key hint at the end of an item. Renders Kbd so symbols size like letters. */
 export function CommandShortcut({ className, ...props }: CommandShortcutProps) {
   return (
-    <span
-      className={cn(
-        "bg-muted text-muted-foreground mt-0.5 ml-auto shrink-0 rounded px-1.5 py-0.5 font-mono text-[0.6875rem] leading-none",
-        className,
-      )}
+    <Kbd
+      data-slot="command-shortcut"
+      className={cn("text-muted-foreground ml-auto shrink-0", className)}
       {...props}
     />
   );

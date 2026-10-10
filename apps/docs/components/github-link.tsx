@@ -161,16 +161,3 @@ function GitHubIcon({ className = "size-4" }: { className?: string }) {
     </svg>
   );
 }
-
-function StarIcon({ className = "size-5" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={`shrink-0 ${className}`}
-      fill="currentColor"
-    >
-      <path d="M12 3.2 14.5 9l6.3.5-4.8 4.1 1.5 6.1L12 16.7 6.5 19.7l1.5-6.1L3.2 9.5 9.5 9 12 3.2Z" />
-    </svg>
-  );
-}

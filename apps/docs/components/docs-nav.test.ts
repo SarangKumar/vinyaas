@@ -30,7 +30,7 @@ import {
 } from "./docs-nav";
 
 describe("documentation navigation", () => {
-  it("keeps a flat sidebar with docs routes separate from playgrounds", () => {
+  it("keeps a flat sidebar with onboarding-first chronological order", () => {
     expect(githubUrl).toBe("https://github.com/SarangKumar/vinyaas");
     expect(homePath).toBe("/");
     expect(introductionPath).toBe("/introduction");
@@ -56,38 +56,42 @@ describe("documentation navigation", () => {
     expect(darkModePath).toBe("/dark-mode");
     expect(changelogPath).toBe("/changelog");
     expect(docsNav.map((group) => group.title)).toEqual([
+      "GET STARTED",
       "SECTIONS",
       "COMPONENTS",
       "COMPANION",
-      "GET STARTED",
     ]);
-    expect(docsNav[1]?.layout).toBe("names");
+    expect(docsNav[2]?.layout).toBe("names");
 
-    const sections = docsNav[0]?.items;
+    const getStarted = docsNav[0]?.items;
+    expect(getStarted?.map((item) => item.title)).toEqual([
+      "Installation",
+      "components.json",
+      "Dark Mode",
+      "Theming",
+      "Typeset",
+      "Package Import",
+      "CLI",
+      "llm.txt",
+    ]);
+    expect(getStarted?.every((item) => !item.children?.length)).toBe(true);
+
+    const sections = docsNav[1]?.items;
     expect(sections?.map((item) => item.title)).toEqual([
       "Home",
       "Introduction",
       "Components",
-      "Installation",
-      "CLI",
       "Catalogs",
       "Accessibility",
-      "Theming",
-      "Typeset",
       "Changelog",
     ]);
     expect(sections?.[0]?.href).toBe("/");
     expect(sections?.at(-1)?.title).toBe("Changelog");
-    expect(sections?.find((item) => item.title === "Theming")?.href).toBe(
-      "/theming",
-    );
-    expect(sections?.find((item) => item.title === "Typeset")?.href).toBe(
-      "/typeset",
-    );
     expect(sections?.every((item) => !item.children?.length)).toBe(true);
 
-    const companion = docsNav[2];
-    expect(companion?.items[0]?.indicator).toBe("beta");
+    const companion = docsNav[3];
+    expect(companion?.badge).toBe("Beta");
+    expect(companion?.items[0]?.indicator).toBeUndefined();
     expect(companion?.items.map((item) => item.title)).toEqual([
       "Introduction",
       "Installation",
@@ -110,18 +114,6 @@ describe("documentation navigation", () => {
     ]);
     expect(companion?.items.every((item) => !item.children?.length)).toBe(true);
 
-    const getStarted = docsNav[3]?.items;
-    expect(getStarted?.map((item) => item.title)).toEqual([
-      "Installation",
-      "components.json",
-      "Theming",
-      "Typeset",
-      "Package Import",
-      "Dark Mode",
-      "CLI",
-    ]);
-    expect(getStarted?.every((item) => !item.children?.length)).toBe(true);
-
     expect(JSON.stringify(docsNav)).not.toContain("/installation/nextjs");
     expect(JSON.stringify(docsNav)).not.toContain("/themes");
     expect(JSON.stringify(docsNav)).not.toContain("/typeset/playground");
@@ -139,7 +131,7 @@ describe("documentation navigation", () => {
     );
     expect(items?.some((item) => item.title === "Typography")).toBe(true);
     expect(items?.every((item) => !("isNew" in item))).toBe(true);
-    expect(items?.find((item) => item.title === "Resizable")?.indicator).toBe(
+    expect(items?.find((item) => item.title === "Toggle")?.indicator).toBe(
       "new",
     );
     expect(
@@ -149,30 +141,22 @@ describe("documentation navigation", () => {
       items
         ?.filter((item) => item.indicator === "new")
         .map((item) => item.title),
-    ).toEqual([
-      "Alert Dialog",
-      "Calendar",
-      "Combobox",
-      "Data Table",
-      "Date Picker",
-      "Drag & Drop",
-      "Empty State",
-      "Form",
-      "Navigation Menu",
-      "Pagination",
-      "Resizable",
-      "Select",
-      "Sheet",
-      "Sidebar",
-    ]);
-    expect(items?.find((item) => item.title === "Select")?.indicator).toBe(
-      "new",
-    );
-    expect(items?.find((item) => item.title === "Sidebar")?.indicator).toBe(
-      "new",
-    );
-    expect(items?.find((item) => item.title === "Drag & Drop")?.indicator).toBe(
-      "new",
-    );
+    ).toEqual(["Score Ring", "Toggle", "Toggle Group"]);
+    expect(
+      items?.find((item) => item.title === "Select")?.indicator,
+    ).toBeUndefined();
+    expect(
+      items?.find((item) => item.title === "Sidebar")?.indicator,
+    ).toBeUndefined();
+    expect(
+      items?.find((item) => item.title === "Drag & Drop")?.indicator,
+    ).toBeUndefined();
+  });
+
+  it("marks the Companion section as Beta and leaves its Introduction link without a dot", () => {
+    const group = docsNav.find((entry) => entry.title === "COMPANION");
+
+    expect(group?.badge).toBe("Beta");
+    expect(group?.items[0]?.indicator).toBeUndefined();
   });
 });

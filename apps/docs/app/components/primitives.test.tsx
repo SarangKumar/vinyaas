@@ -41,12 +41,33 @@ import InputOTPPage from "./input-otp/page";
 import FileUploadPage from "./file-upload/page";
 import CommandPage from "./command/page";
 import TypographyPage from "./typography/page";
+import TogglePage from "./toggle/page";
+import ToggleGroupPage from "./toggle-group/page";
+import ScoreRingPage from "./score-ring/page";
 
 function renderDocs(node: ReactNode) {
   return render(<DocsStoreProvider>{node}</DocsStoreProvider>);
 }
 
 const pages = [
+  {
+    load: TogglePage,
+    title: "Toggle",
+    command: "npx vinyaas add toggle",
+    api: "onPressedChange",
+  },
+  {
+    load: ToggleGroupPage,
+    title: "Toggle Group",
+    command: "npx vinyaas add toggle-group",
+    api: "onValueChange",
+  },
+  {
+    load: ScoreRingPage,
+    title: "Score Ring",
+    command: "npx vinyaas add score-ring",
+    api: "fromColor",
+  },
   {
     load: ButtonPage,
     title: "Button",

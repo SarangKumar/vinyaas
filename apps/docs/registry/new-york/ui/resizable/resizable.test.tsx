@@ -279,4 +279,69 @@ describe("Resizable", () => {
     );
     expect(groups).toHaveLength(2);
   });
+
+  it("renders the blocks variant as separate bordered panels with a dots gutter", () => {
+    const { container } = render(
+      <div style={{ width: 400, height: 200 }}>
+        <ResizablePanelGroup orientation="horizontal" variant="blocks">
+          <ResizablePanel defaultSize="50%" id="left">
+            <div>Left</div>
+          </ResizablePanel>
+          <ResizableHandle aria-label="Resize blocks" />
+          <ResizablePanel defaultSize="50%" id="right">
+            <div>Right</div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>,
+    );
+
+    const group = container.querySelector(
+      "[data-slot='resizable-panel-group']",
+    );
+    const handle = screen.getByRole("separator", { name: "Resize blocks" });
+    const panels = container.querySelectorAll("[data-slot='resizable-panel']");
+
+    expect(group).toHaveAttribute("data-variant", "blocks");
+    expect(panels).toHaveLength(2);
+
+    // The library applies className to the panel's inner element.
+    for (const panel of panels) {
+      expect(panel.firstElementChild).toHaveClass(
+        "rounded-lg",
+        "border",
+        "overflow-hidden",
+      );
+    }
+
+    expect(handle).toHaveClass("w-2", "bg-transparent");
+    expect(handle.querySelectorAll("circle")).toHaveLength(3);
+    expect(
+      handle.querySelector("[data-slot='resizable-handle-dots']"),
+    ).toBeInTheDocument();
+    expect(
+      handle.querySelector("[data-slot='resizable-handle-grip']"),
+    ).toBeNull();
+  });
+
+  it("lets the blocks variant hide the dots with withHandle={false}", () => {
+    render(
+      <div style={{ width: 400, height: 200 }}>
+        <ResizablePanelGroup orientation="horizontal" variant="blocks">
+          <ResizablePanel defaultSize="50%" id="left">
+            <div>Left</div>
+          </ResizablePanel>
+          <ResizableHandle aria-label="Resize blocks" withHandle={false} />
+          <ResizablePanel defaultSize="50%" id="right">
+            <div>Right</div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>,
+    );
+
+    expect(
+      screen
+        .getByRole("separator", { name: "Resize blocks" })
+        .querySelector("[data-slot='resizable-handle-dots']"),
+    ).toBeNull();
+  });
 });

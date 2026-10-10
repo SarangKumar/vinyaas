@@ -93,14 +93,7 @@ export default function ComponentsJsonPage() {
         <p className="text-foreground text-base leading-7">
           A realistic Next.js app config:
         </p>
-        <CodeBlock
-          code={example.trim()}
-          leading={
-            <span className="text-muted-foreground font-mono text-xs">
-              json
-            </span>
-          }
-        />
+        <CodeBlock language="json" code={example.trim()} />
       </section>
       <section className="flex flex-col gap-4">
         <h2 id="registry" className={sectionHeading}>

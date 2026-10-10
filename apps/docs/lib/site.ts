@@ -2,4 +2,4 @@
 export const siteUrl = "https://vinyaas.vercel.app";
 export const siteName = "Vinyaas";
 export const siteDescription =
-  "Composable React UI components installed into your project as source.";
+  "Accessible React UI components for Tailwind CSS v4 — install as editable source with the Vinyaas CLI.";

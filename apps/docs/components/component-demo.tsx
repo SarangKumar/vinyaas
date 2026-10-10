@@ -7,7 +7,11 @@ import { type CodeLanguage, type DemoCode } from "@/components/code-languages";
 
 /**
  * One preview and its source. String and dual TSX/JSX sources both follow the
- * shared Redux preference inside CodeBlock. Bash and other languages stay fixed.
+ * shared docs-store preference inside CodeBlock. Bash and other languages stay fixed.
+ *
+ * Preview chrome centers content horizontally and vertically. Full-bleed demos
+ * (tables, sidebars, forms) should set `w-full` on their root; compact widgets
+ * (calendar, buttons) stay centered via `w-fit` / default shrink.
  */
 export function ComponentDemo({
   preview,
@@ -24,9 +28,9 @@ export function ComponentDemo({
       data-companion-surface=""
       data-companion-surface-id="component-demo"
     >
-      <div className="bg-background flex min-h-40 items-center justify-center overflow-visible px-4 py-8 text-sm sm:min-h-48 sm:px-6 sm:py-10">
-        {/* Avoid min-w-0/flex-wrap so single-row controls like Pagination are not clipped */}
-        <div className="flex w-full items-center justify-center overflow-visible p-1">
+      {/* Top corners follow the frame radius (minus its 1px border) so the preview fill never pokes past it. */}
+      <div className="bg-background flex min-h-40 w-full items-center justify-center overflow-x-auto overflow-y-visible rounded-t-[calc(var(--radius-md)-1px)] px-4 py-8 text-sm sm:min-h-48 sm:px-6 sm:py-10">
+        <div className="flex w-full max-w-full flex-col items-center justify-center overflow-visible p-1 [&_[data-demo-align=start]]:w-full [&_[data-demo-align=start]]:items-stretch [&_[data-demo-align=start]]:self-stretch">
           {preview}
         </div>
       </div>

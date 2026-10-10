@@ -40,6 +40,7 @@ const TRIGGER_FALLBACK: Record<string, string> = {
   surface_action: "Click its perched surface",
   scroll: "Scroll the page",
   manual: "Reserved — no host trigger yet",
+  theme_change: "Toggle light/dark theme",
 };
 
 /** Plain-language how to fire a move or clip. */

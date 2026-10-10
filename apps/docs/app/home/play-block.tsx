@@ -6,17 +6,23 @@ import { cn } from "@/lib/utils";
  * Showcase card for the homepage playground masonry.
  * Vertical rhythm comes from the column-item `mb-(--gap)` wrapper in
  * {@link Playground} — do not also add margin-bottom on the card.
+ *
+ * Default `align="stretch"` matches form and dashboard cards. Use
+ * `align="center"` for compact widgets (Calendar, empty states) so they sit
+ * in the middle of the preview area.
  */
 export function PlayBlock({
   title,
   description,
   children,
   className,
+  align = "stretch",
 }: {
   title?: string;
   description?: string;
   children: ReactNode;
   className?: string;
+  align?: "center" | "stretch";
 }) {
   return (
     <section
@@ -42,7 +48,12 @@ export function PlayBlock({
         </header>
       ) : null}
       {/* p-0.5 keeps focus rings (ring + offset) from clipping at the card edge */}
-      <div className="flex max-w-full min-w-0 flex-col gap-4 p-0.5 text-sm sm:gap-5">
+      <div
+        className={cn(
+          "flex max-w-full min-w-0 flex-col gap-4 overflow-x-auto p-0.5 text-sm sm:gap-5",
+          align === "center" ? "items-center" : "items-stretch",
+        )}
+      >
         {children}
       </div>
     </section>

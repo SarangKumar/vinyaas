@@ -8,6 +8,7 @@ import { registerInitCommand } from "./commands/init.js";
 import { registerListCommand } from "./commands/list.js";
 import { registerSearchCommand } from "./commands/search.js";
 import { registerStatusCommand } from "./commands/status.js";
+import { registerUpdateCommand } from "./commands/update.js";
 import { readPackageVersion } from "./lib/version.js";
 
 export { readPackageVersion };
@@ -24,6 +25,7 @@ export function createProgram(): Command {
 
   registerInitCommand(program);
   registerAddCommand(program);
+  registerUpdateCommand(program);
   registerCatalogCommand(program);
   registerListCommand(program);
   registerSearchCommand(program);

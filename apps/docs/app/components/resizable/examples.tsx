@@ -108,6 +108,61 @@ export const examples: ComponentExample[] = [
 </ResizablePanelGroup>`,
   },
   {
+    id: "blocks",
+    title: "Separate blocks",
+    description:
+      'variant="blocks" turns each panel into its own bordered block with a small gutter between them. The gutter is the drag target and shows a three-dot grip, which rotates for vertical groups.',
+    preview: (
+      <ResizablePanelGroup
+        orientation="horizontal"
+        variant="blocks"
+        className="min-h-[200px] w-full max-w-2xl"
+      >
+        <ResizablePanel defaultSize="35%" minSize="20%" maxSize="60%">
+          <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-sm">
+            Inbox
+          </div>
+        </ResizablePanel>
+        <ResizableHandle aria-label="Resize inbox" />
+        <ResizablePanel
+          defaultSize="65%"
+          className="overflow-visible rounded-none border-0 bg-transparent"
+        >
+          <ResizablePanelGroup orientation="vertical" variant="blocks">
+            <ResizablePanel defaultSize="60%" minSize="25%">
+              <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-sm">
+                Message
+              </div>
+            </ResizablePanel>
+            <ResizableHandle aria-label="Resize reply" />
+            <ResizablePanel defaultSize="40%" minSize="20%">
+              <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-sm">
+                Reply
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    ),
+    code: `<ResizablePanelGroup orientation="horizontal" variant="blocks" className="min-h-[200px]">
+  <ResizablePanel defaultSize="35%" minSize="20%" maxSize="60%">
+    <div>Inbox</div>
+  </ResizablePanel>
+  <ResizableHandle aria-label="Resize inbox" />
+  <ResizablePanel defaultSize="65%" className="overflow-visible rounded-none border-0 bg-transparent">
+    <ResizablePanelGroup orientation="vertical" variant="blocks">
+      <ResizablePanel defaultSize="60%" minSize="25%">
+        <div>Message</div>
+      </ResizablePanel>
+      <ResizableHandle aria-label="Resize reply" />
+      <ResizablePanel defaultSize="40%" minSize="20%">
+        <div>Reply</div>
+      </ResizablePanel>
+    </ResizablePanelGroup>
+  </ResizablePanel>
+</ResizablePanelGroup>`,
+  },
+  {
     id: "dashboard",
     title: "Dashboard",
     description:

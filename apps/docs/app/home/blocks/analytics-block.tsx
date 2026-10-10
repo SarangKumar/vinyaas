@@ -12,6 +12,11 @@ import {
   SelectValue,
 } from "@/registry/new-york/ui/select";
 import { Separator } from "@/registry/new-york/ui/separator";
+import { Toggle } from "@/registry/new-york/ui/toggle";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/registry/new-york/ui/toggle-group";
 
 const metrics = [
   { label: "Signups", value: "1,284", delta: "+12.4%" },
@@ -42,6 +47,20 @@ export function AnalyticsBlock() {
             <SelectItem value="90">Last quarter</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+        <ToggleGroup
+          variant="outline"
+          size="sm"
+          aria-label="Granularity"
+          defaultValue={["weekly"]}
+        >
+          <ToggleGroupItem value="daily">Daily</ToggleGroupItem>
+          <ToggleGroupItem value="weekly">Weekly</ToggleGroupItem>
+        </ToggleGroup>
+        <Toggle variant="outline" size="sm" aria-label="Compare to last period">
+          Compare
+        </Toggle>
       </div>
       <div className="grid min-w-0 grid-cols-3 gap-2">
         {metrics.map((metric) => (

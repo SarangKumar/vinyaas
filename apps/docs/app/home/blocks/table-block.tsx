@@ -36,7 +36,7 @@ const projects = [
     initials: "PL",
     name: "Payments Ledger",
     href: "/components/table",
-    owner: "Rahul Mehta",
+    owner: "Aarav Mehta",
     status: "Review",
     updated: "Yesterday",
   },

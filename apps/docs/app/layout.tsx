@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { cookies } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
 
 import { DocsShell } from "@/components/docs-shell";
 import { DocsStoreProvider } from "@/lib/store/provider";
 import { siteDescription, siteName, siteUrl } from "@/lib/site";
-import { themeStorageKey } from "@/components/theme";
 import { ThemeSync } from "@/components/theme-sync";
 
 import "./globals.css";
@@ -14,11 +13,13 @@ import "./docs.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -35,12 +36,18 @@ export const metadata: Metadata = {
   keywords: [
     "Vinyaas",
     "React",
+    "Next.js",
+    "Vite",
     "Tailwind CSS",
+    "Tailwind CSS v4",
     "UI components",
     "component registry",
     "design system",
+    "accessible components",
     "shadcn",
     "TypeScript",
+    "CLI",
+    "open source",
   ],
   category: "technology",
   alternates: {
@@ -83,25 +90,45 @@ export const metadata: Metadata = {
     google: "IAk36o0wRdV4UaM6vJ7qh_d518L26eOemV5QjxpM0II",
   },
 };
-/**
- * Theme class comes from the cookie the toggle writes.
- * ThemeSync reconciles localStorage after mount. There is no inline script,
- * so the server and the first client paint share the same class string.
- */
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const stored = (await cookies()).get(themeStorageKey)?.value;
-  const themeClass = stored === "dark" ? "dark" : "";
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  url: siteUrl,
+  description: siteDescription,
+  publisher: {
+    "@type": "Person",
+    name: "Sarang Kumar",
+    url: "https://github.com/SarangKumar",
+  },
+};
+
+/**
+ * The layout reads no request data, so every page prerenders as static HTML
+ * served from the CDN (no server function per view). Before hydration,
+ * docs.css follows prefers-color-scheme; ThemeSync then applies a saved
+ * light/dark choice from localStorage — no cookie, no inline HTML injection.
+ */
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased${themeClass ? ` ${themeClass}` : ""}`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script type="application/ld+json">
+          {/* Escape "<" so the data can never close the script tag early. */}
+          {JSON.stringify(websiteJsonLd).replace(/</g, "\\u003c")}
+        </script>
+      </head>
       <body className="bg-background text-foreground h-full overflow-hidden font-sans">
         <ThemeSync />
         <DocsShell>
           <DocsStoreProvider>{children}</DocsStoreProvider>
         </DocsShell>
+        <Analytics />
       </body>
     </html>
   );

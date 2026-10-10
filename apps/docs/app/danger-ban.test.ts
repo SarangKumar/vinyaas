@@ -29,7 +29,13 @@ describe("dangerouslySetInnerHTML ban", () => {
       const source = await readFile(path.join(process.cwd(), file), "utf8");
 
       expect(source).not.toContain("dangerouslySetInnerHTML");
-      expect(source).not.toContain("<script");
+      // The only allowed script is the JSON-LD data block (type
+      // application/ld+json is never executed); no inline executable scripts.
+      const withoutJsonLd = source.replace(
+        /<script type="application\/ld\+json">/g,
+        "",
+      );
+      expect(withoutJsonLd).not.toContain("<script");
     }
   });
 });

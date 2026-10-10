@@ -267,18 +267,19 @@ export function ComboboxContent({
   emptyMessage = "No results found.",
   align = "start",
 }: ComboboxContentProps) {
-  const combobox = useCombobox();
+  const { registerLabel } = useCombobox();
 
   React.useLayoutEffect(() => {
     for (const item of collectComboboxItems(children)) {
-      combobox.registerLabel(item.value, item.label);
+      registerLabel(item.value, item.label);
     }
-  }, [children, combobox.registerLabel]);
+  }, [children, registerLabel]);
 
   return (
     <PopoverContent
       align={align}
-      className={cn("w-72 min-w-[12rem] p-0", className)}
+      // Same width as the trigger, like Select; 18rem until it is measured.
+      className={cn("w-[var(--popover-trigger-width,18rem)] p-0", className)}
     >
       <Command className="rounded-md border-0 shadow-none">
         <CommandInput
@@ -310,12 +311,13 @@ export function ComboboxItem({
   keywords,
 }: ComboboxItemProps) {
   const combobox = useCombobox();
+  const { registerLabel } = combobox;
   const label = textContent(children);
 
   React.useEffect(() => {
-    combobox.registerLabel(value, label);
+    registerLabel(value, label);
     // Keep labels after unmount so a closed trigger can still show the selection.
-  }, [combobox.registerLabel, value, label]);
+  }, [registerLabel, value, label]);
 
   const selected = combobox.value === value;
 

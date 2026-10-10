@@ -49,7 +49,7 @@ export function TableFooter({
 export function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
-      className={cn("border-border hover:bg-accent border-b", className)}
+      className={cn("border-border/50 hover:bg-accent border-b", className)}
       {...props}
     />
   );

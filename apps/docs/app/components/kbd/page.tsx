@@ -6,7 +6,7 @@ import type {
   ComponentInPractice,
 } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Kbd } from "@/registry/new-york/ui/kbd";
+import { Kbd, KbdGroup } from "@/registry/new-york/ui/kbd";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -85,6 +85,12 @@ const api: ApiRow[] = [
     type: "string",
     description: "Merged onto the kbd element with cn.",
   },
+  {
+    prop: "KbdGroup",
+    type: "component",
+    description:
+      "Wraps the keys of one shortcut with a small gap. Put one Kbd per key so symbol keys such as ⌘ size like letters.",
+  },
 ];
 
 const examples: ComponentExample[] = [
@@ -133,24 +139,24 @@ const examples: ComponentExample[] = [
     description: "Document the macOS and Windows shortcuts for search.",
     preview: (
       <span className="flex flex-wrap items-center gap-4 text-sm">
-        <span className="inline-flex items-center gap-1">
+        <KbdGroup>
           <Kbd>⌘</Kbd>
           <Kbd>K</Kbd>
-        </span>
-        <span className="inline-flex items-center gap-1">
+        </KbdGroup>
+        <KbdGroup>
           <Kbd>Ctrl</Kbd>
           <Kbd>K</Kbd>
-        </span>
+        </KbdGroup>
       </span>
     ),
-    code: `<span className="inline-flex gap-1">
+    code: `<KbdGroup>
   <Kbd>⌘</Kbd>
   <Kbd>K</Kbd>
-</span>
-<span className="inline-flex gap-1">
+</KbdGroup>
+<KbdGroup>
   <Kbd>Ctrl</Kbd>
   <Kbd>K</Kbd>
-</span>`,
+</KbdGroup>`,
   },
   {
     id: "save",

@@ -21,6 +21,23 @@ import {
 } from "@/registry/new-york/ui/navigation-menu";
 import { Separator } from "@/registry/new-york/ui/separator";
 
+/**
+ * Docs preview boxes clip overflow, so menu demos reserve room for the open
+ * panel below the triggers and start-align the menu so the panel never runs
+ * past the right edge.
+ */
+export function MenuStage({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      data-demo-align="start"
+      className="flex min-h-[32rem] w-full items-start justify-start sm:min-h-[26rem]"
+    >
+      {/* self-start: the preview stretches start-aligned demos; keep the menu at the top. */}
+      <div className="max-w-full self-start">{children}</div>
+    </div>
+  );
+}
+
 function ListItem({
   title,
   href,
@@ -40,6 +57,33 @@ function ListItem({
         {children}
       </span>
     </NavigationMenuLink>
+  );
+}
+
+/** First preview on the docs page; mirrors the usage snippet exactly. */
+export function BasicNavigationDemo() {
+  return (
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem value="products">
+          <NavigationMenuTrigger>Products</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <div className="grid gap-3 md:grid-cols-2">
+              <NavigationMenuLink href="/products/analytics">
+                Analytics
+              </NavigationMenuLink>
+              <NavigationMenuLink href="/products/workspace">
+                Workspace
+              </NavigationMenuLink>
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/docs">Documentation</NavigationMenuLink>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+      <NavigationMenuViewport />
+    </NavigationMenu>
   );
 }
 

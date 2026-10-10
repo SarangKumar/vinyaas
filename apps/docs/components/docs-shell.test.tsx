@@ -81,19 +81,28 @@ describe("DocsShell", () => {
     ).toContain("What's new");
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
-    ).toMatch(/Select|Resizable|Sidebar|Drag & Drop/);
+    ).toMatch(/Toggle|Score Ring/);
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
-    ).toMatch(/Flint|Bubble|Rime|Jab|Volt/);
+    ).not.toMatch(/Resizable|Sidebar|Flint/);
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
     ).toContain("View changelog");
     expect(document.querySelector("[data-docs-feature-card] ul")).toBeNull();
     expect(document.querySelector("[data-docs-page-feedback]")).toBeNull();
-    const homeNav = within(
-      document.querySelector("[data-header-section='start']") as HTMLElement,
-    ).getByRole("link", { name: "Home" });
+    const startHeader = document.querySelector(
+      "[data-header-section='start']",
+    ) as HTMLElement;
+    const homeNav = within(startHeader).getByRole("link", { name: "Home" });
     expect(homeNav.className).toContain("text-foreground");
+    expect(homeNav).toHaveAttribute("href", "/");
+    // The navbar has no logo mark; Home is the link to the homepage.
+    expect(
+      within(startHeader).queryByRole("link", { name: "Vinyaas home" }),
+    ).toBeNull();
+    expect(
+      within(startHeader).queryByRole("img", { name: "Vinyaas" }),
+    ).toBeNull();
     const docsSidebarLink = screen.getAllByRole("link", { name: "Button" })[0]!;
     expect(docsSidebarLink.className).toMatch(/text-foreground/);
     const start = document.querySelector("[data-header-section='start']");

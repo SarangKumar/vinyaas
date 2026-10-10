@@ -2,7 +2,7 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
-**v1.3.0** is the current release. It adds registry-owned catalogs, a release-wide accessibility contract, and CLI catalog/`--dry-run` UX on top of the existing installable set (forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities). Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
+**v1.4.0** is the current release. It adds Toggle, Toggle Group, and Score Ring, `vinyaas update` (alias `upgrade`), an auto-growing Textarea (`maxRows`), single-key `⌘K` Kbd labels, a restyled Toast, and form, dialog, resizable, data table, and chart refinements, plus a static, lighter docs site with `/llm.txt` — on top of registry-owned catalogs, a release-wide accessibility contract, and CLI catalog/`--dry-run` UX across the existing installable set (forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities). Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
 
 ## Prerequisites
 
@@ -14,16 +14,16 @@ Vinyaas detects the package manager from the project lockfile: `pnpm-lock.yaml`,
 
 ## Installation
 
-Install the published package with the project's package manager:
+Install the CLI globally (recommended):
 
 ```bash
-npm install vinyaas
-pnpm add vinyaas
-yarn add vinyaas
-bun add vinyaas
+npm install -g vinyaas
+pnpm add -g vinyaas
+yarn global add vinyaas
+bun add -g vinyaas
 ```
 
-Run it without a global install:
+Or run once without a global install:
 
 ```bash
 npx vinyaas init
@@ -112,6 +112,15 @@ Check what Vinyaas recorded locally:
 
 ```bash
 vinyaas status
+```
+
+Refresh installed components from the registry (overwrites local edits after confirmation):
+
+```bash
+vinyaas update button
+vinyaas update
+vinyaas update --yes
+vinyaas upgrade button card   # upgrade is an alias of update
 ```
 
 For each component, Vinyaas:
@@ -255,6 +264,9 @@ Components use the native element and the browser’s keyboard behavior.
 - Popover opens a non-modal dialog. Escape and an outside click close it and return focus to the trigger. The panel may contain controls. It follows its trigger while the page scrolls, and long content scrolls inside the panel.
 - Spinner hides its graphic from assistive technology and exposes a text label. The animation stops under `prefers-reduced-motion`.
 - Badge is an inline label. It is not a button.
+- Toggle is a `<button>` with `aria-pressed`. Click, Space, and Enter flip it. Icon-only toggles need an `aria-label`.
+- Toggle Group is a `role="group"` of toggle buttons. Every item stays in the Tab order, and arrow keys, Home, and End also move focus between enabled items.
+- Score Ring is a `role="meter"` with `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`. Pass `label` to name it.
 - Interactive elements use a visible `focus-visible` ring. Disabled controls use `cursor-not-allowed`.
 - Future components should keep native semantics before adding custom keyboard behavior.
 - Registry JSON embeds that source. It lists npm dependencies. It does not list `lib/utils.ts`.

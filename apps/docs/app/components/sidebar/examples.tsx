@@ -137,53 +137,6 @@ function StateBadge({ label }: { label: string }) {
 const demoShell =
   "border-border h-[280px] max-h-[280px] w-full min-h-0 overflow-hidden rounded-md border [&_[data-slot=sidebar-inner]]:rounded-l-md";
 
-function BasicSidebar() {
-  return (
-    <SidebarProvider defaultOpen keyboardShortcut={false} className={demoShell}>
-      <Sidebar>
-        <SidebarHeader>
-          <div className="flex items-center gap-2 px-2 py-1.5">
-            <DotIcon className="text-sidebar-primary size-4 shrink-0" />
-            <span className="truncate text-sm font-medium group-data-[collapsible=icon]:hidden">
-              Acme
-            </span>
-          </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Workspace</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton isActive tooltip="Dashboard">
-                    <HomeIcon />
-                    <span>Dashboard</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton tooltip="Projects">
-                    <FolderIcon />
-                    <span>Projects</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-      <SidebarInset className="min-h-[280px]">
-        <div className="border-border flex items-center gap-2 border-b p-3">
-          <SidebarTrigger />
-          <p className="text-sm font-medium">Overview</p>
-        </div>
-        <div className="text-muted-foreground p-4 text-sm">
-          Main content beside the sidebar.
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
-  );
-}
-
 function DashboardSidebar() {
   return (
     <SidebarProvider
@@ -521,13 +474,6 @@ export function AppShell() {
 
 export const examples: ComponentExample[] = [
   {
-    id: "basic",
-    title: "Basic",
-    description: "A simple sidebar with navigation and a main content area.",
-    preview: <BasicSidebar />,
-    code: usage,
-  },
-  {
     id: "dashboard",
     title: "Dashboard",
     description:
@@ -557,7 +503,10 @@ export const examples: ComponentExample[] = [
 
 export const inPractice: ComponentInPractice = {
   description:
-    "A compact application shell: toggle between expanded and collapsed desktop states, keep the inset content independent of routing.",
-  preview: <DashboardSidebar />,
-  code: usage,
+    "Start collapsed on dense dashboards: the icon rail stays usable, tooltips name each item, and the inset content stays independent of routing.",
+  preview: <CollapsedSidebar />,
+  code: `<SidebarProvider defaultOpen={false}>
+  <Sidebar>...</Sidebar>
+  <SidebarInset>...</SidebarInset>
+</SidebarProvider>`,
 };

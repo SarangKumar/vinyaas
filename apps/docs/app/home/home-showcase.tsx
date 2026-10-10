@@ -11,19 +11,25 @@ import { PlaygroundSideRails } from "@/app/home/playground-side-skeletons";
 export function HomeShowcase() {
   return (
     <div className="relative min-w-0">
+      {/*
+        Desktop heights are capped ~200px above the shortest column (measured
+        per column count: 3 cols ≥3.7k px, 4 cols ≥2.75k px, 5 cols ≥2.16k px)
+        so the fade trims the showcase before any column runs out. Re-measure
+        if the block set changes.
+      */}
       <div
         data-playground-shell
-        className="bg-muted dark:bg-background relative flex w-full max-w-none flex-col gap-(--gap) overflow-hidden p-(--playground-pad) pb-0! [--gap:var(--playground-gap)] min-[1900px]:p-(--playground-pad-xl)! min-[1900px]:[--gap:var(--playground-gap-2xl)]! md:[--gap:var(--playground-gap-md)] lg:p-(--playground-pad-lg) lg:[--gap:var(--playground-gap-md)] xl:p-(--playground-pad-xl) xl:[--gap:var(--playground-gap-xl)]"
+        className="bg-muted dark:bg-background relative flex w-full max-w-none flex-col gap-(--gap) overflow-hidden p-(--playground-pad) pb-24! [--gap:var(--playground-gap)] min-[1400px]:max-h-[2600px]! min-[1900px]:max-h-[2000px]! min-[1900px]:p-(--playground-pad-xl)! min-[1900px]:pb-28! min-[1900px]:[--gap:var(--playground-gap-2xl)]! md:[--gap:var(--playground-gap-md)] lg:max-h-[3500px] lg:p-(--playground-pad-lg) lg:pb-24! lg:[--gap:var(--playground-gap-md)] xl:p-(--playground-pad-xl) xl:pb-28! xl:[--gap:var(--playground-gap-xl)]"
       >
         <PlaygroundSideRails />
         <Playground />
         <div
           aria-hidden="true"
           data-playground-blur
-          className="from-background via-muted/80 dark:via-background/80 pointer-events-none absolute inset-x-0 bottom-0 z-20 h-48 bg-linear-to-t to-transparent lg:h-80 xl:h-64"
+          className="from-background via-background/90 dark:via-background/90 pointer-events-none absolute inset-x-0 bottom-0 z-20 h-52 bg-linear-to-t to-transparent lg:h-64 xl:h-56"
         />
       </div>
-      <footer className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center gap-1 px-5 pt-20 pb-10 text-center">
+      <footer className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center gap-1 px-5 pt-16 pb-8 text-center">
         <p className="text-muted-foreground pointer-events-auto text-sm">
           Made by{" "}
           <a
@@ -36,7 +42,7 @@ export function HomeShowcase() {
           </a>{" "}
           · 2026
         </p>
-        <p className="text-muted-foreground text-xs">v1.3.0</p>
+        <p className="text-muted-foreground text-xs">v1.4.0</p>
       </footer>
     </div>
   );

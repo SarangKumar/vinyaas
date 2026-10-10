@@ -1,18 +1,13 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { Badge } from "@/registry/new-york/ui/badge";
 import { Button } from "@/registry/new-york/ui/button";
 import {
   DataTable,
   type DataTableColumn,
 } from "@/registry/new-york/ui/data-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu";
 
 export type Project = {
   id: string;
@@ -40,7 +35,7 @@ export const projects: Project[] = [
   {
     id: "3",
     name: "Mobile App",
-    owner: "Rahul",
+    owner: "Aarav",
     status: "Complete",
     updated: "2d ago",
   },
@@ -68,7 +63,7 @@ export const projects: Project[] = [
   {
     id: "7",
     name: "Onboarding",
-    owner: "Rahul",
+    owner: "Aarav",
     status: "Review",
     updated: "1w ago",
   },
@@ -129,27 +124,62 @@ export const projectColumns: DataTableColumn<Project>[] = [
   },
 ];
 
+function ActionIcon({ children }: { children: ReactNode }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="size-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {children}
+    </svg>
+  );
+}
+
 function ProjectActions({ project }: { project: Project }) {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          aria-label={`Actions for ${project.name}`}
-        >
-          ···
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>View</DropdownMenuItem>
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Duplicate</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon-sm"
+        aria-label={`View ${project.name}`}
+      >
+        <ActionIcon>
+          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+          <circle cx="12" cy="12" r="3" />
+        </ActionIcon>
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon-sm"
+        aria-label={`Edit ${project.name}`}
+      >
+        <ActionIcon>
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+        </ActionIcon>
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon-sm"
+        aria-label={`Delete ${project.name}`}
+        className="text-destructive hover:text-destructive"
+      >
+        <ActionIcon>
+          <path d="M3 6h18" />
+          <path d="M8 6V4h8v2" />
+          <path d="M19 6l-1 14H6L5 6" />
+        </ActionIcon>
+      </Button>
+    </div>
   );
 }
 

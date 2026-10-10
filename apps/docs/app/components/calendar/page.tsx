@@ -49,9 +49,9 @@ export function ScheduleMeeting() {
   const [date, setDate] = useState<Date | undefined>();
 
   return (
-    <form className="grid max-w-md gap-4">
-      <div className="grid gap-2">
-        <Label>Meeting date</Label>
+    <form className="flex max-w-md flex-col items-center gap-4">
+      <div className="flex w-full flex-col items-center gap-2">
+        <Label className="self-start">Meeting date</Label>
         <Calendar
           mode="single"
           selected={date}
@@ -142,7 +142,7 @@ const examples: ComponentExample[] = [
   new Date(2026, 9, 15),
 );
 
-<div className="grid w-full max-w-sm gap-3">
+<div className="flex w-full max-w-sm flex-col items-center gap-3">
   <Calendar
     mode="single"
     selected={date}
@@ -191,7 +191,7 @@ today.setHours(0, 0, 0, 0);
   new Date(2026, 2, 12),
 );
 
-<div className="grid w-full max-w-sm gap-3">
+<div className="flex w-full max-w-sm flex-col items-center gap-3">
   <Calendar
     mode="single"
     selected={date}
@@ -217,7 +217,7 @@ today.setHours(0, 0, 0, 0);
   to: new Date(2026, 2, 16),
 });
 
-<div className="grid w-full max-w-sm gap-3">
+<div className="flex w-full max-w-sm flex-col items-center gap-3">
   <Calendar
     mode="range"
     selected={range}

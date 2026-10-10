@@ -30,10 +30,18 @@ const api: ApiRow[] = [
       'Panel size constraints from react-resizable-panels. Prefer percentage strings such as "30%".',
   },
   {
+    prop: "variant",
+    type: '"default" | "blocks"',
+    defaultValue: '"default"',
+    description:
+      "ResizablePanelGroup: default splits one surface with a thin line. blocks renders each panel as its own bordered block with a small gutter and a three-dot grip.",
+  },
+  {
     prop: "withHandle",
     type: "boolean",
     defaultValue: "false",
-    description: "ResizableHandle: show a visible grip affordance.",
+    description:
+      "ResizableHandle: show a visible grip affordance. Defaults to true inside a blocks group.",
   },
   {
     prop: "aria-label",

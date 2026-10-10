@@ -20,7 +20,7 @@ type Project = {
 const projects: Project[] = [
   { id: "1", name: "Vinyaas", owner: "Sarang", status: "Active" },
   { id: "2", name: "Dashboard", owner: "Priya", status: "Review" },
-  { id: "3", name: "Mobile App", owner: "Rahul", status: "Complete" },
+  { id: "3", name: "Mobile App", owner: "Aarav", status: "Complete" },
   { id: "4", name: "Marketing", owner: "Ananya", status: "Draft" },
   { id: "5", name: "Analytics", owner: "Sarang", status: "Active" },
   { id: "6", name: "Billing", owner: "Priya", status: "Draft" },
@@ -263,5 +263,47 @@ describe("DataTable", () => {
     expect(actions).toBeInTheDocument();
     fireEvent.click(actions);
     expect(screen.getByRole("menuitem", { name: "View" })).toBeInTheDocument();
+  });
+
+  it("uses a fixed table layout so sorting never resizes columns", () => {
+    render(
+      <DataTable
+        columns={[{ ...columns[0], width: "50%" }, ...columns.slice(1)]}
+        data={projects}
+        renderRowActions={() => <button type="button">More</button>}
+        actionsWidth="80px"
+      />,
+    );
+
+    expect(screen.getByRole("table")).toHaveClass("table-fixed");
+    expect(screen.getByRole("columnheader", { name: "Project" })).toHaveStyle({
+      width: "50%",
+    });
+    expect(document.querySelector("thead th:last-child")).toHaveStyle({
+      width: "80px",
+    });
+  });
+
+  it("shows a fixed-size sort icon that reflects the direction", () => {
+    render(<DataTable columns={columns} data={projects} />);
+
+    const header = screen.getByRole("columnheader", { name: /Project/ });
+    const icon = () =>
+      header.querySelector("[data-slot='data-table-sort-icon']");
+
+    expect(icon()).toHaveAttribute("data-direction", "none");
+    expect(icon()).toHaveClass("size-3.5", "shrink-0");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Sort Project ascending" }),
+    );
+    expect(icon()).toHaveAttribute("data-direction", "asc");
+    expect(icon()).toHaveClass("size-3.5", "shrink-0");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Sort Project descending" }),
+    );
+    expect(icon()).toHaveAttribute("data-direction", "desc");
+    expect(header.textContent).toBe("Project");
   });
 });

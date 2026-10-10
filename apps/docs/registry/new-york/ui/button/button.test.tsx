@@ -165,4 +165,51 @@ describe("Button", () => {
 
     expect(screen.getByRole("button", { name: "Save" })).toHaveClass("w-full");
   });
+
+  it("keeps the same box size for every variant at every size", () => {
+    const heights = {
+      default: "h-9",
+      xs: "h-7",
+      sm: "h-8",
+      lg: "h-10",
+      icon: "size-9",
+      "icon-xs": "size-7",
+      "icon-sm": "size-8",
+      "icon-lg": "size-10",
+    } as const;
+    const variants = [
+      "default",
+      "outline",
+      "ghost",
+      "destructive",
+      "secondary",
+    ] as const;
+
+    for (const [size, height] of Object.entries(heights)) {
+      const classNames = variants.map((variant) => {
+        const { unmount } = render(
+          <Button variant={variant} size={size as keyof typeof heights}>
+            Label
+          </Button>,
+        );
+        const button = screen.getByRole("button", { name: "Label" });
+        const classes = button.className;
+
+        // Every variant draws a 1px border inside the box, so a visible
+        // outline never makes a button taller or wider than a borderless one.
+        expect(button).toHaveClass("box-border", "border", height);
+        unmount();
+
+        return classes
+          .split(/\s+/)
+          .filter((name) =>
+            /^(h|min-h|max-h|size|min-w|max-w|px|p)-/.test(name),
+          )
+          .sort()
+          .join(" ");
+      });
+
+      expect(new Set(classNames).size).toBe(1);
+    }
+  });
 });

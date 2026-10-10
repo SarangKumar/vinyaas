@@ -223,7 +223,7 @@ export function ControlledAlertDialog() {
     id: "dashboard",
     title: "Projects table",
     description:
-      "A dashboard row action that opens a destructive confirmation before deleting. Tight layouts use an icon trigger.",
+      "A dashboard row action that opens a destructive confirmation before deleting. On small screens the trigger collapses to an icon.",
     preview: <DashboardAlertDialogDemo />,
     code: `import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -276,8 +276,8 @@ export function ProjectsTable() {
                   <AlertDialogTrigger>
                     <Button
                       variant="destructive"
-                      size="icon-sm"
-                      className="sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3"
+                      size="sm"
+                      className="gap-1.5 max-sm:size-8 max-sm:max-h-8 max-sm:max-w-8 max-sm:min-w-8 max-sm:p-0"
                       aria-label="Delete Vinyaas"
                     >
                       <svg
@@ -349,8 +349,8 @@ export function DeleteProjectRow() {
         <AlertDialogTrigger>
           <Button
             variant="destructive"
-            size="icon-sm"
-            className="sm:h-8 sm:w-auto sm:gap-1.5 sm:px-3"
+            size="sm"
+            className="gap-1.5 max-sm:size-8 max-sm:max-h-8 max-sm:max-w-8 max-sm:min-w-8 max-sm:p-0"
             aria-label="Delete vinyaas-web"
           >
             <svg
@@ -393,7 +393,7 @@ export function DeleteProjectRow() {
 
 const inPractice: ComponentInPractice = {
   description:
-    "A project row keeps the destructive action behind a confirmation. In tight layouts the trigger collapses to an icon; Cancel stays available and the badge names what will be removed.",
+    "A project row keeps the destructive action behind a confirmation. On small screens the trigger collapses to an icon; Cancel stays available and the badge names what will be removed.",
   preview: <InPracticeAlertDialogDemo />,
   code: { tsx: inPracticeCode, jsx: inPracticeCode },
 };

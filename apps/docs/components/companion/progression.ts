@@ -13,7 +13,8 @@ export type CompanionElementType =
   | "ghost"
   | "electric"
   | "ice"
-  | "fighting";
+  | "fighting"
+  | "dark";
 
 /** Element matchups — foundation for future type battles. */
 export const ELEMENT_MATCHUPS: Record<
@@ -42,11 +43,11 @@ export const ELEMENT_MATCHUPS: Record<
   },
   psychic: {
     strongAgainst: ["fighting", "ghost"],
-    weakAgainst: ["psychic", "ghost"],
+    weakAgainst: ["psychic", "ghost", "dark"],
   },
   ghost: {
     strongAgainst: ["psychic", "ghost"],
-    weakAgainst: ["ghost"],
+    weakAgainst: ["ghost", "dark"],
   },
   electric: {
     strongAgainst: ["water"],
@@ -58,7 +59,11 @@ export const ELEMENT_MATCHUPS: Record<
   },
   fighting: {
     strongAgainst: ["rock", "ice"],
-    weakAgainst: ["psychic", "ghost"],
+    weakAgainst: ["psychic", "ghost", "dark"],
+  },
+  dark: {
+    strongAgainst: ["psychic", "ghost"],
+    weakAgainst: ["fighting"],
   },
 };
 
@@ -224,6 +229,9 @@ export function elementTypeForCompanion(
   }
   if (companionId === "drake" || rawType === "dragon") {
     return "dragon";
+  }
+  if (companionId === "nyx" || rawType === "shade" || rawType === "dark") {
+    return "dark";
   }
   return "psychic";
 }

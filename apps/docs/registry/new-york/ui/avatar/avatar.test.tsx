@@ -2,7 +2,7 @@ import { createRef } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Avatar, AvatarFallback, AvatarImage } from ".";
+import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from ".";
 
 const portrait =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
@@ -127,5 +127,72 @@ describe("Avatar", () => {
       "items-center",
       "justify-center",
     );
+  });
+
+  it("renders a status dot with an accessible name in the bottom-right corner", () => {
+    render(
+      <Avatar>
+        <AvatarFallback>SK</AvatarFallback>
+        <AvatarBadge status="online" />
+      </Avatar>,
+    );
+
+    const dot = screen.getByRole("img", { name: "online" });
+
+    expect(dot).toHaveAttribute("data-slot", "avatar-badge");
+    expect(dot).toHaveClass("bottom-0", "right-0", "bg-emerald-500");
+  });
+
+  it("renders a text badge such as a tier label", () => {
+    render(
+      <Avatar>
+        <AvatarFallback>SK</AvatarFallback>
+        <AvatarBadge>Pro</AvatarBadge>
+      </Avatar>,
+    );
+
+    const badge = screen.getByText("Pro");
+
+    expect(badge).toHaveAttribute("data-status", "default");
+    expect(badge).not.toHaveAttribute("role");
+    expect(badge).toHaveClass("bg-primary", "uppercase");
+  });
+
+  it("does not clip the badge with overflow hidden on the avatar root", () => {
+    const { container } = render(
+      <Avatar>
+        <AvatarBadge status="away" aria-label="Away" />
+      </Avatar>,
+    );
+
+    expect(container.firstElementChild).not.toHaveClass("overflow-hidden");
+    expect(screen.getByRole("img", { name: "Away" })).toBeInTheDocument();
+  });
+
+  it("keeps long text labels on one line", () => {
+    render(
+      <Avatar>
+        <AvatarFallback>SK</AvatarFallback>
+        <AvatarBadge status="busy">Admin</AvatarBadge>
+      </Avatar>,
+    );
+
+    expect(screen.getByText("Admin")).toHaveClass("whitespace-nowrap");
+  });
+
+  it("renders a named icon badge as a round symbol dot", () => {
+    render(
+      <Avatar>
+        <AvatarFallback>SK</AvatarFallback>
+        <AvatarBadge status="online" aria-label="Verified">
+          <svg aria-hidden="true" viewBox="0 0 16 16" />
+        </AvatarBadge>
+      </Avatar>,
+    );
+
+    const badge = screen.getByRole("img", { name: "Verified" });
+
+    expect(badge).toHaveClass("has-[>svg:only-child]:size-4");
+    expect(badge.querySelector("svg")).toBeInTheDocument();
   });
 });

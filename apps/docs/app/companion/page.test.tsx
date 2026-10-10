@@ -13,7 +13,7 @@ function renderWithStore(ui: React.ReactElement) {
 }
 
 describe("Companion landing page", () => {
-  it("showcases Ember, Soul, Moss, Flint, Bubble, Rime, Jab, Volt, and Drake with spawn and know-more actions", () => {
+  it("showcases built-in companions including Nyx with spawn and know-more actions", () => {
     renderWithStore(<CompanionPage />);
 
     expect(

@@ -15,7 +15,7 @@ export function codeLanguageLabel(language: CodeLanguage) {
 
 /**
  * Resolves example source for the current global preference.
- * String demos stay on the declared language label; dual records follow Redux.
+ * String demos stay on the declared language label; dual records follow the shared docs store.
  */
 export function resolveDemoCode(
   code: DemoCode,

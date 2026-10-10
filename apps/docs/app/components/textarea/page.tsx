@@ -61,6 +61,25 @@ const api: ApiRow[] = [
     description: "Merged onto the textarea with cn.",
   },
   {
+    prop: "showCount",
+    type: "boolean",
+    defaultValue: "false",
+    description:
+      "Shows a current/maxLength counter below the field, aligned right. Without maxLength it shows only the current length.",
+  },
+  {
+    prop: "maxRows",
+    type: "number",
+    description:
+      "Grow with the content up to this many rows, then scroll. rows sets the starting height (default 1 while growing). Turns off manual resizing.",
+  },
+  {
+    prop: "containerClassName",
+    type: "string",
+    description:
+      "Merged onto the wrapper that holds the field and counter when showCount is set.",
+  },
+  {
     prop: "rows",
     type: "number",
     description: "Native row count. The field also has a minimum height.",
@@ -111,6 +130,46 @@ const examples: ComponentExample[] = [
     description: "A multiline field. It can be resized vertically.",
     preview: <Textarea aria-label="Message" placeholder="Write a message" />,
     code: `<Textarea aria-label="Message" placeholder="Write a message" />`,
+  },
+  {
+    id: "character-count",
+    title: "Character count",
+    description:
+      "With maxLength and showCount, the current length and limit show below the field on the right. The counter turns destructive at the limit and is linked with aria-describedby.",
+    preview: (
+      <div className="w-full max-w-sm">
+        <Textarea
+          aria-label="Bio"
+          placeholder="Tell us about yourself"
+          maxLength={120}
+          showCount
+          defaultValue="Building accessible UI."
+        />
+      </div>
+    ),
+    code: `<Textarea
+  aria-label="Bio"
+  placeholder="Tell us about yourself"
+  maxLength={120}
+  showCount
+/>`,
+  },
+  {
+    id: "auto-grow",
+    title: "Auto-grow with maxRows",
+    description:
+      "With maxRows the field starts at rows lines, grows as you type, and starts scrolling once it reaches maxRows. Type a few lines to see it.",
+    preview: (
+      <div className="w-full max-w-sm">
+        <Textarea
+          aria-label="Reply"
+          placeholder="Write a reply…"
+          rows={2}
+          maxRows={6}
+        />
+      </div>
+    ),
+    code: `<Textarea aria-label="Reply" placeholder="Write a reply…" rows={2} maxRows={6} />`,
   },
   {
     id: "label",

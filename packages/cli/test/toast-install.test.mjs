@@ -184,7 +184,7 @@ describe("installable toast registry", () => {
 
         assert.match(sourceFile, /from "@\/lib\/utils"/);
         assert.match(sourceFile, /import "\.\/toast\.css"/);
-        assert.match(sourceFile, /toast.add/);
+        assert.match(sourceFile, /export const toast = \{/);
         assert.doesNotMatch(sourceFile, /dangerouslySetInnerHTML/);
         assert.doesNotMatch(sourceFile, /<style/);
         assert.match(animationCss, /@keyframes vinyaas-toast-in/);

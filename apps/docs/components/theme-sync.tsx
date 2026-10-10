@@ -4,33 +4,21 @@ import { useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import {
+  clearLegacyThemeCookie,
   readStoredTheme,
   syncDocumentTheme,
-  themeStorageKey,
-  writeThemeCookie,
 } from "@/components/theme";
 
 /**
- * Next can replace the document class during hydration and client navigations.
- * That drops the dark class the before-paint script added. This puts it back
- * from storage without writing a new preference.
+ * Keeps the document theme class in sync with storage and system preference
+ * after hydration and client navigations — without inline HTML injection.
+ * Pages are static; before hydration docs.css follows the system preference.
  */
 export function ThemeSync() {
   const pathname = usePathname();
 
   useLayoutEffect(() => {
-    const stored = readStoredTheme();
-
-    if (stored) {
-      const cookie = document.cookie
-        .split("; ")
-        .find((part) => part.startsWith(`${themeStorageKey}=`));
-
-      if (cookie !== `${themeStorageKey}=${stored}`) {
-        writeThemeCookie(stored);
-      }
-    }
-
+    clearLegacyThemeCookie();
     syncDocumentTheme();
 
     const root = document.documentElement;

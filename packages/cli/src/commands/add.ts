@@ -188,6 +188,7 @@ export async function executeAdd({
   yes = false,
   catalog,
   category,
+  summaryMode = "add",
   from = process.cwd(),
   env = process.env,
   fetch: fetchImpl,
@@ -203,6 +204,7 @@ export async function executeAdd({
   yes?: boolean;
   catalog?: string;
   category?: string;
+  summaryMode?: "add" | "update";
   from?: string;
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
@@ -217,6 +219,7 @@ export async function executeAdd({
     force,
     dryRun,
     yes,
+    summaryMode,
     ...(catalog ? { catalog } : {}),
     ...(category ? { category } : {}),
     env,
@@ -236,6 +239,7 @@ export async function runAdd({
   yes = false,
   catalog,
   category,
+  summaryMode = "add",
   env = process.env,
   fetch: fetchImpl,
   runPackageManager,
@@ -250,6 +254,7 @@ export async function runAdd({
   yes?: boolean;
   catalog?: string;
   category?: string;
+  summaryMode?: "add" | "update";
   env?: Record<string, string | undefined>;
   fetch?: typeof fetch;
   runPackageManager?: RunPackageManager;
@@ -304,6 +309,7 @@ export async function runAdd({
         dependencyInstall: resolved.dependencyInstall,
         requested: resolved.requested,
         registryDependencies: resolved.registryDependencies,
+        mode: summaryMode,
       }),
     );
     return resolved.plan;
@@ -409,6 +415,7 @@ export async function runAdd({
       dependencyInstall: resolved.dependencyInstall,
       requested: resolved.requested,
       registryDependencies: resolved.registryDependencies,
+      mode: summaryMode,
     }),
   );
 

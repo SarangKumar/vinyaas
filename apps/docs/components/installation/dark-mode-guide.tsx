@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { CodeBlock } from "@/components/code-block";
 import { DocsArticle } from "@/components/docs-article";
 import { FrameworkIconBadge } from "@/components/installation/framework-icon";
 import { focusRing } from "@/components/focus-ring";
@@ -10,14 +11,6 @@ import type { InstallationFramework } from "@/lib/installation/frameworks";
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 const body = "text-foreground text-base leading-7";
-
-function BashBlock({ code }: { code: string }) {
-  return (
-    <pre className="border-border bg-card text-card-foreground overflow-x-auto rounded-md border p-4 font-mono text-[13px] leading-6">
-      <code>{code}</code>
-    </pre>
-  );
-}
 
 export function DarkModeGuide({
   framework,
@@ -29,7 +22,7 @@ export function DarkModeGuide({
   return (
     <DocsArticle
       title={`Dark Mode with ${framework.name}`}
-      description={`Enable light and dark themes in ${framework.name} using the class strategy Vinyaas tokens expect.`}
+      description={`Enable light and dark themes in ${framework.name} using the class strategy Vinyaas tokens expect. Default follows the device preference.`}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-5">
         <FrameworkIconBadge id={framework.id} />
@@ -50,6 +43,26 @@ export function DarkModeGuide({
       </div>
 
       <section className="flex flex-col gap-4">
+        <h2 id="default" className={sectionHeading}>
+          Default = system preference
+        </h2>
+        <p className={body}>
+          Until the visitor picks light or dark, follow{" "}
+          <code>prefers-color-scheme</code>. Do not write a stored preference on
+          first visit — only persist after an explicit toggle.
+        </p>
+        <CodeBlock
+          language="ts"
+          code={`const stored = localStorage.getItem("vinyaas-theme");
+const dark =
+  stored === "dark" ||
+  (stored !== "light" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches);
+document.documentElement.classList.toggle("dark", dark);`}
+        />
+      </section>
+
+      <section className="flex flex-col gap-4">
         <h2 id="tokens" className={sectionHeading}>
           Theme tokens
         </h2>
@@ -68,7 +81,8 @@ export function DarkModeGuide({
         <p className={body}>
           Flip appearance by toggling <code>dark</code> on the document element:
         </p>
-        <BashBlock
+        <CodeBlock
+          language="ts"
           code={`document.documentElement.classList.toggle("dark");`}
         />
         <p className={body}>

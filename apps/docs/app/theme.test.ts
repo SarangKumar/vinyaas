@@ -25,7 +25,7 @@ describe("docs theme", () => {
     expect(css).toContain(":root");
     expect(css).toContain(".dark");
 
-    expect(css).toContain("--radius: 0.75rem");
+    expect(css).toContain("--radius: 0.8rem");
     expect(css).toContain("--radius-lg: var(--radius)");
     expect(css).toContain("--background: oklch(1 0 0)");
     expect(css).toContain("--foreground: oklch(0.141 0.005 285.823)");
@@ -43,14 +43,14 @@ describe("docs theme", () => {
     expect(css).toContain("--card-foreground: oklch(0.141 0.005 285.823)");
     expect(css).toContain("--popover: oklch(1 0 0)");
     expect(css).toContain("--popover-foreground: oklch(0.141 0.005 285.823)");
-    expect(css).toContain("--border: oklch(0.945 0.003 286.32)");
-    expect(css).toContain("--input: oklch(0.945 0.003 286.32)");
+    expect(css).toContain("--border: oklch(0.92 0.004 286.32)");
+    expect(css).toContain("--input: oklch(0.92 0.004 286.32)");
     expect(css).toContain("--ring: oklch(0.705 0.015 286.067)");
-    expect(css).toContain("--chart-1: oklch(0.32 0.012 285.885)");
-    expect(css).toContain("--chart-2: oklch(0.42 0.01 285.885)");
-    expect(css).toContain("--chart-3: oklch(0.52 0.008 285.885)");
-    expect(css).toContain("--chart-4: oklch(0.62 0.006 285.885)");
-    expect(css).toContain("--chart-5: oklch(0.72 0.004 285.885)");
+    expect(css).toContain("--chart-1: oklch(0.2 0 0)");
+    expect(css).toContain("--chart-2: oklch(0.37 0 0)");
+    expect(css).toContain("--chart-3: oklch(0.54 0 0)");
+    expect(css).toContain("--chart-4: oklch(0.7 0 0)");
+    expect(css).toContain("--chart-5: oklch(0.84 0 0)");
     expect(css).not.toContain("--body:");
     expect(css).not.toContain("color-mix(");
 
@@ -60,12 +60,12 @@ describe("docs theme", () => {
     expect(css).toContain("--primary-foreground: oklch(0.21 0.006 285.885)");
     expect(css).toContain("--destructive: oklch(0.704 0.191 22.216)");
     expect(css).toContain("--ring: oklch(0.552 0.016 285.938)");
-    expect(css).toContain("--chart-1: oklch(0.88 0.01 286.32)");
-    expect(css).toContain("--chart-2: oklch(0.8 0.008 286.32)");
-    expect(css).toContain("--chart-3: oklch(0.72 0.006 286.32)");
-    expect(css).toContain("--chart-4: oklch(0.64 0.005 286.32)");
-    expect(css).toContain("--chart-5: oklch(0.56 0.004 286.32)");
-    expect(css).toContain("--border: oklch(1 0 0 / 8%)");
+    expect(css).toContain("--chart-1: oklch(0.97 0 0)");
+    expect(css).toContain("--chart-2: oklch(0.83 0 0)");
+    expect(css).toContain("--chart-3: oklch(0.68 0 0)");
+    expect(css).toContain("--chart-4: oklch(0.53 0 0)");
+    expect(css).toContain("--chart-5: oklch(0.4 0 0)");
+    expect(css).toContain("--border: oklch(1 0 0 / 10%)");
     expect(css).toContain("--sidebar: oklch(0.985 0 0)");
     expect(css).toContain("--sidebar: oklch(0.21 0.006 285.885)");
 
@@ -148,8 +148,8 @@ describe("docs theme", () => {
     );
     expect(css).not.toContain("--new:");
     expect(css).not.toContain("--color-new:");
-    expect(css).toContain("--playground-gap: 1rem");
-    expect(css).toContain("--playground-gap-2xl: 2.5rem");
+    expect(css).toContain("--playground-gap: 0.625rem");
+    expect(css).toContain("--playground-gap-2xl: 2.125rem");
     expect(css).toContain("--spacing-playground-gap: var(--playground-gap)");
     expect(css).toContain("--breakpoint-playground: 87.5rem");
     expect(css).toContain("--breakpoint-playground-wide: 118.75rem");

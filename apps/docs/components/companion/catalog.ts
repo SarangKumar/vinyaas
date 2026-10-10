@@ -286,6 +286,37 @@ import drakeCry2 from "@/companion/drake/animations/cry/2.png";
 import drakeCry3 from "@/companion/drake/animations/cry/3.png";
 import drakeCry4 from "@/companion/drake/animations/cry/4.png";
 
+import nyxMeta from "@/companion/nyx/companion.json";
+import nyxIdle from "@/companion/nyx/assets/idle.png";
+import nyxIdle1 from "@/companion/nyx/animations/idle/1.png";
+import nyxIdle2 from "@/companion/nyx/animations/idle/2.png";
+import nyxIdle3 from "@/companion/nyx/animations/idle/3.png";
+import nyxHappy1 from "@/companion/nyx/animations/happy/1.png";
+import nyxHappy2 from "@/companion/nyx/animations/happy/2.png";
+import nyxSleep1 from "@/companion/nyx/animations/sleep/1.png";
+import nyxSleep2 from "@/companion/nyx/animations/sleep/2.png";
+import nyxFall1 from "@/companion/nyx/animations/fall/1.png";
+import nyxFall2 from "@/companion/nyx/animations/fall/2.png";
+import nyxPuff1 from "@/companion/nyx/animations/puff/1.png";
+import nyxPuff2 from "@/companion/nyx/animations/puff/2.png";
+import nyxPuff3 from "@/companion/nyx/animations/puff/3.png";
+import nyxCry1 from "@/companion/nyx/animations/cry/1.png";
+import nyxCry2 from "@/companion/nyx/animations/cry/2.png";
+import nyxCry3 from "@/companion/nyx/animations/cry/3.png";
+import nyxCry4 from "@/companion/nyx/animations/cry/4.png";
+import nyxBlink1 from "@/companion/nyx/animations/blink/1.png";
+import nyxBlink2 from "@/companion/nyx/animations/blink/2.png";
+import nyxBlink3 from "@/companion/nyx/animations/blink/3.png";
+import nyxGlow1 from "@/companion/nyx/animations/glow/1.png";
+import nyxGlow2 from "@/companion/nyx/animations/glow/2.png";
+import nyxGlow3 from "@/companion/nyx/animations/glow/3.png";
+import nyxGlow4 from "@/companion/nyx/animations/glow/4.png";
+import nyxGlow5 from "@/companion/nyx/animations/glow/5.png";
+import nyxCelebrate1 from "@/companion/nyx/animations/celebrate/1.png";
+import nyxCelebrate2 from "@/companion/nyx/animations/celebrate/2.png";
+import nyxCelebrate3 from "@/companion/nyx/animations/celebrate/3.png";
+import nyxCelebrate4 from "@/companion/nyx/animations/celebrate/4.png";
+
 import {
   assertCompanionConfig,
   normalizeAnimationClipCompat,
@@ -647,6 +678,29 @@ export const companionCatalog: CompanionCatalogEntry[] = [
       fall: clip([drakeFall1, drakeFall2], 8, true),
       puff: clip([drakePuff1, drakePuff2, drakePuff3], 10, false),
       cry: clip([drakeCry1, drakeCry2, drakeCry3, drakeCry4], 8, true),
+    },
+  },
+  {
+    meta: assertCompanionConfig(nyxMeta),
+    idle: nyxIdle,
+    clips: {
+      idle: clip([nyxIdle1, nyxIdle2, nyxIdle3], 5, true),
+      happy: clip([nyxHappy1, nyxHappy2], 6, false),
+      sleep: clip([nyxSleep1, nyxSleep2], 3, true),
+      fall: clip([nyxFall1, nyxFall2], 8, true),
+      puff: clip([nyxPuff1, nyxPuff2, nyxPuff3], 10, false),
+      cry: clip([nyxCry1, nyxCry2, nyxCry3, nyxCry4], 8, true),
+      blink: clip([nyxBlink1, nyxBlink2, nyxBlink3], 8, false),
+      glow: clip(
+        [nyxGlow1, nyxGlow2, nyxGlow3, nyxGlow4, nyxGlow5],
+        10,
+        true,
+      ),
+      celebrate: clip(
+        [nyxCelebrate1, nyxCelebrate2, nyxCelebrate3, nyxCelebrate4],
+        12,
+        false,
+      ),
     },
   },
 ];

@@ -25,17 +25,17 @@ describe("theme playground model", () => {
   it("matches the current Vinyaas consumer baseline", () => {
     const theme = createDefaultTheme();
 
-    expect(theme.radius).toBe("0.75rem");
+    expect(theme.radius).toBe("0.5rem");
     expect(theme.fontSans).toBe("ui-sans-serif, system-ui, sans-serif");
     expect(theme.fontMono).toContain("ui-monospace");
     expect(theme.light.background).toBe("oklch(1 0 0)");
     expect(theme.light.foreground).toBe("oklch(0.141 0.005 285.823)");
     expect(theme.light.primary).toBe("oklch(0.21 0.006 285.885)");
-    expect(theme.light.chart1).toBe("oklch(0.32 0.012 285.885)");
-    expect(theme.light.chart5).toBe("oklch(0.72 0.004 285.885)");
+    expect(theme.light.chart1).toBe("oklch(0.2 0 0)");
+    expect(theme.light.chart5).toBe("oklch(0.84 0 0)");
     expect(theme.dark.background).toBe("oklch(0.141 0.005 285.823)");
     expect(theme.dark.primary).toBe("oklch(0.92 0.004 286.32)");
-    expect(theme.dark.chart1).toBe("oklch(0.88 0.01 286.32)");
+    expect(theme.dark.chart1).toBe("oklch(0.97 0 0)");
   });
 
   it("rejects malformed theme config", () => {
@@ -78,7 +78,7 @@ describe("generateThemeCss", () => {
     expect(css).toContain("--primary: oklch(0.21 0.006 285.885);");
     expect(css).toContain("--background: oklch(0.141 0.005 285.823);");
     expect(css).toContain("--primary: oklch(0.92 0.004 286.32);");
-    expect(css).toContain("--border: oklch(1 0 0 / 8%);");
+    expect(css).toContain("--border: oklch(1 0 0 / 10%);");
   });
 
   it("applies a custom primary color", () => {
@@ -121,9 +121,9 @@ describe("generateThemeCss", () => {
   it("includes chart variables and @theme color mappings", () => {
     const css = generateThemeCss(createDefaultTheme());
 
-    expect(css).toContain("--chart-1: oklch(0.32 0.012 285.885);");
-    expect(css).toContain("--chart-5: oklch(0.72 0.004 285.885);");
-    expect(css).toContain("--chart-1: oklch(0.88 0.01 286.32);");
+    expect(css).toContain("--chart-1: oklch(0.2 0 0);");
+    expect(css).toContain("--chart-5: oklch(0.84 0 0);");
+    expect(css).toContain("--chart-1: oklch(0.97 0 0);");
     expect(css).toContain("--color-chart-1: var(--chart-1);");
     expect(css).toContain("--color-chart-5: var(--chart-5);");
     expect(css).toContain("--color-background: var(--background);");

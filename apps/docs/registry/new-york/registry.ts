@@ -182,6 +182,45 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "toggle",
+    type: "registry:ui",
+    description: "A two-state button that stays pressed until toggled again.",
+    dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/toggle/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "toggle-group",
+    type: "registry:ui",
+    description:
+      "A set of toggles with single or multiple selection and joined or spaced layouts.",
+    dependencies: ["class-variance-authority", "clsx", "tailwind-merge"],
+    registryDependencies: ["toggle"],
+    files: [
+      {
+        path: "ui/toggle-group/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "score-ring",
+    type: "registry:ui",
+    description:
+      "A circular score meter whose color blends from a start to an end color.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/score-ring/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "switch",
     type: "registry:ui",
     description: "A switch control for binary on and off settings.",
@@ -614,6 +653,7 @@ const items: readonly RegistryItem[] = [
     type: "registry:ui",
     description: "A searchable list for pages and actions.",
     dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["kbd"],
     files: [
       {
         path: "ui/command/index.tsx",

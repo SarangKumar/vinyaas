@@ -36,8 +36,8 @@ const documents = [
   {
     id: "notes",
     title: "Deploy notes.md",
-    owner: "RM",
-    ownerName: "Rahul Mehta",
+    owner: "AM",
+    ownerName: "Aarav Mehta",
     modified: "Yesterday",
     status: "Private",
     kind: "MD",

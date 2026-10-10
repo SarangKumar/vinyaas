@@ -11,8 +11,10 @@ import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 import {
+  BasicNavigationDemo,
   DashboardNavigationDemo,
   DocsNavigationDemo,
+  MenuStage,
   ProductMegaMenuDemo,
   RichWorkspaceMenuDemo,
   SimpleNavigationDemo,
@@ -150,7 +152,11 @@ const examples: ComponentExample[] = [
     id: "simple",
     title: "Simple navigation",
     description: "Top-level links without panels.",
-    preview: <SimpleNavigationDemo />,
+    preview: (
+      <MenuStage>
+        <SimpleNavigationDemo />
+      </MenuStage>
+    ),
     code: `import {
   NavigationMenu,
   NavigationMenuItem,
@@ -179,7 +185,11 @@ export function SimpleNav() {
     title: "Product mega menu",
     description:
       "Compose Card, Badge, Button, and links inside NavigationMenuContent.",
-    preview: <ProductMegaMenuDemo />,
+    preview: (
+      <MenuStage>
+        <ProductMegaMenuDemo />
+      </MenuStage>
+    ),
     code: usage,
   },
   {
@@ -187,7 +197,11 @@ export function SimpleNav() {
     title: "Rich workspace menu",
     description:
       "Recent projects, status badges, avatar activity, and a create action.",
-    preview: <RichWorkspaceMenuDemo />,
+    preview: (
+      <MenuStage>
+        <RichWorkspaceMenuDemo />
+      </MenuStage>
+    ),
     code: usage,
   },
   {
@@ -195,7 +209,11 @@ export function SimpleNav() {
     title: "Dashboard navigation",
     description:
       "Dashboard links with a Projects panel for browse filters and recent cards.",
-    preview: <DashboardNavigationDemo />,
+    preview: (
+      <MenuStage>
+        <DashboardNavigationDemo />
+      </MenuStage>
+    ),
     code: usage,
   },
   {
@@ -203,7 +221,11 @@ export function SimpleNav() {
     title: "Documentation navigation",
     description:
       "Grouped component links across Inputs, Navigation, and Feedback.",
-    preview: <DocsNavigationDemo />,
+    preview: (
+      <MenuStage>
+        <DocsNavigationDemo />
+      </MenuStage>
+    ),
     code: usage,
   },
 ];
@@ -211,7 +233,11 @@ export function SimpleNav() {
 const inPractice: ComponentInPractice = {
   description:
     "A product header mixes a Product mega panel with top-level Docs, Pricing, and Blog links.",
-  preview: <SiteHeaderNavigationDemo />,
+  preview: (
+    <MenuStage>
+      <SiteHeaderNavigationDemo />
+    </MenuStage>
+  ),
   code: inPracticeCode,
 };
 
@@ -274,7 +300,9 @@ export default async function NavigationMenuPage() {
       }
       source={source}
     >
-      <ProductMegaMenuDemo />
+      <MenuStage>
+        <BasicNavigationDemo />
+      </MenuStage>
     </ComponentReference>
   );
 }

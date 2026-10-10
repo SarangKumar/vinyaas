@@ -38,16 +38,12 @@ export default function CompanionConfigurationPage() {
           machine and animation controller. The pipeline is:
         </p>
         <CodeBlock
+          language="pipeline"
           code={`companion.json
   → trigger resolver
   → interaction executor
   → runtime engine
   → renderer`}
-          leading={
-            <span className="text-muted-foreground font-mono text-xs">
-              pipeline
-            </span>
-          }
         />
         <p className={body}>
           Triggers and actions are generic. Runtime code never branches on a
@@ -115,9 +111,9 @@ export default function CompanionConfigurationPage() {
           </li>
         </ul>
         <p className={body}>
-          Paths are relative to the companion folder. The engine picks clips from
-          runtime state and interaction metadata — not from companion-specific
-          React branches.
+          Paths are relative to the companion folder. The engine picks clips
+          from runtime state and interaction metadata — not from
+          companion-specific React branches.
         </p>
       </section>
 
@@ -125,9 +121,7 @@ export default function CompanionConfigurationPage() {
         <h2 id="interactions" className={sectionHeading}>
           Interactions
         </h2>
-        <p className={body}>
-          Each interaction supports:
-        </p>
+        <p className={body}>Each interaction supports:</p>
         <ul className={`${body} list-disc space-y-2 pl-5`}>
           <li>
             <code>id</code> — stable interaction key.
@@ -142,10 +136,7 @@ export default function CompanionConfigurationPage() {
           </li>
           <li>
             <code>action</code> —{" "}
-            <code>
-              play_animation | change_state | jump | sleep | move
-            </code>
-            .
+            <code>play_animation | change_state | jump | sleep | move</code>.
           </li>
           <li>
             <code>animation</code> — clip id to play.
@@ -178,6 +169,7 @@ export default function CompanionConfigurationPage() {
           display name, traits, mood bias, and behavior preferences:
         </p>
         <CodeBlock
+          language="json"
           code={`"instances": {
   "spark": {
     "name": "Spark",
@@ -190,11 +182,6 @@ export default function CompanionConfigurationPage() {
     "behavior": { "energy": "calm", "idleTimeoutMs": 4800 }
   }
 }`}
-          leading={
-            <span className="text-muted-foreground font-mono text-xs">
-              json
-            </span>
-          }
         />
         <p className={body}>
           Deterministic moods are <code>happy</code>, <code>neutral</code>,{" "}
@@ -230,14 +217,7 @@ export default function CompanionConfigurationPage() {
           Ember&apos;s built-in metadata (paths are relative to the companion
           folder):
         </p>
-        <CodeBlock
-          code={example}
-          leading={
-            <span className="text-muted-foreground font-mono text-xs">
-              json
-            </span>
-          }
-        />
+        <CodeBlock language="json" code={example} />
       </section>
 
       <section className="flex flex-col gap-4">

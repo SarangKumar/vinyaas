@@ -7,73 +7,31 @@ import { pageMetadata } from "@/lib/page-metadata";
 import {
   getChangelogVersion,
   latestChangelogVersionId,
-  resolveChangelogVersionId,
 } from "./changelog-data";
-import { ChangelogVersionSelect } from "./changelog-version-select";
+import { ChangelogVersionContent, ChangelogView } from "./changelog-view";
 
 export const metadata: Metadata = pageMetadata({
   title: "Changelog",
   description:
-    "Release notes for Vinyaas through v1.3.0, including catalogs, accessibility, CLI, and registry updates.",
+    "Release notes for Vinyaas through v1.4.0, including catalogs, accessibility, CLI, and registry updates.",
 });
 
-const heading =
-  "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
-const subheading =
-  "text-foreground scroll-mt-8 text-base font-medium tracking-tight";
-const body = "text-foreground text-base leading-7";
-const list = "text-foreground list-disc pl-5 text-base leading-7";
-
-export default async function ChangelogPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ v?: string | string[] }>;
-}) {
-  const params = await searchParams;
-  const raw = Array.isArray(params.v) ? params.v[0] : params.v;
-  const versionId = resolveChangelogVersionId(raw);
-  const version = getChangelogVersion(versionId);
-
+/**
+ * Static page: the latest release is prerendered as the Suspense fallback and
+ * ChangelogView swaps in the `?v=` release on the client.
+ */
+export default function ChangelogPage() {
   return (
     <DocsArticle title="Changelog" description="What Vinyaas has shipped.">
-      <section className="flex flex-col gap-4">
-        <Suspense
-          fallback={
-            <div className="text-muted-foreground text-sm">
-              Version {latestChangelogVersionId}
-            </div>
-          }
-        >
-          <ChangelogVersionSelect selectedId={versionId} />
-        </Suspense>
-      </section>
-      <section
-        className="flex flex-col gap-4"
-        aria-labelledby="changelog-version-heading"
+      <Suspense
+        fallback={
+          <ChangelogVersionContent
+            version={getChangelogVersion(latestChangelogVersionId)}
+          />
+        }
       >
-        <h2 id="changelog-version-heading" className={heading}>
-          {version.label}
-        </h2>
-        <p className={body}>{version.summary}</p>
-        {version.sections.map((section) => {
-          const sectionId = `${version.id}-${section.title
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-|-$/g, "")}`;
-          return (
-            <div key={section.title} className="flex flex-col gap-3">
-              <h3 id={sectionId} className={subheading}>
-                {section.title}
-              </h3>
-              <ul className={list}>
-                {section.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
-      </section>
+        <ChangelogView />
+      </Suspense>
     </DocsArticle>
   );
 }

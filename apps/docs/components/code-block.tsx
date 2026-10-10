@@ -20,7 +20,7 @@ export type CodeSource = Partial<Record<CodeLanguage, string>>;
 
 /**
  * Renders a code sample.
- * TSX/JSX strings and dual sources follow the shared Redux language.
+ * TSX/JSX strings and dual sources follow the shared docs-store language.
  * Bash, JSON, CSS, and other languages stay fixed: no language switch.
  */
 export function CodeBlock({
@@ -68,7 +68,7 @@ export function CodeBlock({
 }
 
 /**
- * Every TSX/JSX example becomes a dual source so Redux can switch presentation.
+ * Every TSX/JSX example becomes a dual source so the docs store can switch presentation.
  * Non-TSX/JSX languages return null and stay fixed.
  */
 function expandSwitchableSource(

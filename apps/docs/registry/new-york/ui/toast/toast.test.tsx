@@ -68,7 +68,8 @@ describe("Toast", () => {
     expect(css).toContain("@keyframes vinyaas-toast-out");
     expect(css).toContain(".vinyaas-toast-in");
     expect(css).toContain(".vinyaas-toast-out");
-    expect(css).toContain("animation: vinyaas-toast-in 180ms ease-out");
+    expect(css).toContain("animation: vinyaas-toast-in 260ms");
+    expect(css).toContain("--vinyaas-toast-x");
     expect(css).toContain(
       "animation: vinyaas-toast-out 160ms ease-in forwards",
     );
@@ -102,8 +103,18 @@ describe("Toast", () => {
 
     expect(onUndo).toHaveBeenCalledOnce();
     expect(screen.getByRole("button", { name: "Undo" })).toHaveClass(
-      "h-7",
+      "h-[26px]",
+      "px-2.5",
+      "rounded-sm",
+      "font-semibold",
       "text-xs",
+    );
+    expect(screen.getAllByRole("button", { name: "Dismiss" })[0]).toHaveClass(
+      "rounded-md",
+      "[corner-shape:squircle]",
+      "hover:bg-accent",
+      "transition-colors",
+      "duration-150",
     );
 
     fireEvent.click(screen.getAllByRole("button", { name: "Dismiss" })[0]!);
@@ -111,6 +122,28 @@ describe("Toast", () => {
     await waitFor(() => {
       expect(screen.getAllByRole("status")).toHaveLength(1);
     });
+  });
+
+  it("places the action button beside the close button on the right", async () => {
+    render(<Toaster />);
+    await flushMount();
+    act(() => {
+      toast.add({
+        title: "Message archived",
+        description: "It moved to the archive.",
+        actionProps: { children: "Undo", onClick: () => {} },
+      });
+    });
+
+    const action = screen.getByRole("button", { name: "Undo" });
+    const close = screen.getByRole("button", { name: "Dismiss" });
+    const toastNode = screen.getByRole("status");
+
+    expect(action.parentElement).toBe(close.parentElement);
+    expect(action.nextElementSibling).toBe(close);
+    expect(toastNode.lastElementChild).toBe(action.parentElement);
+    expect(toastNode.contains(screen.getByText("Message archived"))).toBe(true);
+    expect(close.textContent).toBe("");
   });
 
   it("dismisses automatically and pauses while hovered", () => {
@@ -188,8 +221,111 @@ describe("Toast", () => {
 
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent("Could not save");
-    expect(alert).toHaveClass("bg-muted", "text-foreground");
-    expect(alert.querySelector("svg")).toHaveClass("text-destructive");
+    expect(alert).toHaveClass("bg-popover", "text-popover-foreground");
+    expect(alert.querySelector("[data-slot=toast-icon]")).toHaveAttribute(
+      "data-icon",
+      "error",
+    );
     expect(alert).not.toHaveClass("bg-destructive");
+  });
+
+  it("uses one surface for every state and a different icon per state", async () => {
+    render(<Toaster />);
+    await flushMount();
+
+    const types = [
+      "default",
+      "success",
+      "info",
+      "warning",
+      "error",
+      "loading",
+    ] as const;
+
+    act(() => {
+      for (const type of types) {
+        toast.add({ title: `Toast ${type}`, type, duration: Infinity });
+      }
+    });
+
+    const nodes = document.querySelectorAll("[data-type]");
+    const surfaces = new Set([...nodes].map((node) => node.className));
+    const icons = [...nodes].map(
+      (node) =>
+        node
+          .querySelector("[data-slot=toast-icon]")
+          ?.getAttribute("data-icon") ?? null,
+    );
+
+    expect(nodes).toHaveLength(types.length);
+    expect(surfaces.size).toBe(1);
+    expect(icons).toEqual([
+      null,
+      "success",
+      "info",
+      "warning",
+      "error",
+      "loading",
+    ]);
+    expect(screen.getByText("Toast info")).toHaveAttribute(
+      "data-slot",
+      "toast-title",
+    );
+  });
+
+  it("aligns the state icon with the title line", async () => {
+    render(<Toaster />);
+    await flushMount();
+    act(() => {
+      toast.add({
+        title: "Saved",
+        description: "Two lines of content.",
+        type: "success",
+      });
+    });
+
+    const node = screen.getByRole("status");
+
+    expect(node).toHaveClass("items-start");
+    expect(node.querySelector("[data-slot=toast-icon]")).toHaveClass("mt-0.5");
+  });
+
+  it("dismisses a plain loading toast after its duration", () => {
+    vi.useFakeTimers();
+    render(<Toaster />);
+    act(() => {
+      vi.advanceTimersByTime(0);
+    });
+
+    act(() => {
+      toast.add({ title: "Uploading", type: "loading", duration: 1000 });
+    });
+    expect(screen.getByText("Uploading")).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(1000 + 160);
+    });
+    expect(screen.queryByText("Uploading")).not.toBeInTheDocument();
+  });
+
+  it("keeps a toast.promise loading state until the promise settles", () => {
+    vi.useFakeTimers();
+    render(<Toaster />);
+    act(() => {
+      vi.advanceTimersByTime(0);
+    });
+
+    act(() => {
+      toast.promise(new Promise(() => {}), {
+        loading: { title: "Saving", duration: 1000 },
+        success: { title: "Saved" },
+        error: { title: "Failed" },
+      });
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+    expect(screen.getByText("Saving")).toBeInTheDocument();
   });
 });

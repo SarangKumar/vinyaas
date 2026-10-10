@@ -19,8 +19,7 @@ export function CommandSearchBlock() {
   return (
     <PlayBlock title="Search" description="Jump to a page or run a command.">
       <p className="text-muted-foreground text-xs">
-        Press <Kbd>⌘</Kbd>
-        <Kbd>K</Kbd>
+        Press <Kbd>⌘K</Kbd>
       </p>
       <Command className="bg-secondary border-border rounded-md border">
         <CommandInput

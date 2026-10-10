@@ -123,4 +123,29 @@ describe("Combobox", () => {
     });
     expect(await screen.findByText(/no results found/i)).toBeInTheDocument();
   });
+
+  it("sizes the dropdown to the trigger width", () => {
+    render(<Example />);
+    const trigger = screen.getByRole("combobox", { name: /select framework/i });
+    vi.spyOn(trigger, "getBoundingClientRect").mockReturnValue({
+      x: 0,
+      y: 0,
+      top: 0,
+      left: 0,
+      right: 240,
+      bottom: 36,
+      width: 240,
+      height: 36,
+      toJSON: () => ({}),
+    });
+
+    fireEvent.click(trigger);
+
+    const panel = screen.getByRole("dialog");
+
+    expect(panel).toHaveClass("w-[var(--popover-trigger-width,18rem)]");
+    expect(panel.style.getPropertyValue("--popover-trigger-width")).toBe(
+      "240px",
+    );
+  });
 });

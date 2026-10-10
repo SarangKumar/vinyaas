@@ -10,7 +10,7 @@ export function InputGroup({ className, ...props }: InputGroupProps) {
   return (
     <div
       className={cn(
-        "border-input bg-muted focus-within:ring-ring focus-within:ring-offset-background flex w-full items-center gap-2 rounded-md border px-3 focus-within:ring-2 focus-within:ring-offset-2",
+        "border-input bg-background focus-within:ring-ring focus-within:ring-offset-background box-border flex min-h-9 w-full items-center gap-2 rounded-md border px-3 focus-within:ring-2 focus-within:ring-offset-2",
         "has-[textarea]:items-start has-[textarea]:py-2",
         className,
       )}
@@ -50,7 +50,7 @@ export function InputGroupInput({ className, ...props }: InputGroupInputProps) {
   return (
     <input
       className={cn(
-        "text-foreground placeholder:text-muted-foreground h-9 min-w-0 flex-1 bg-transparent text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "text-foreground placeholder:text-muted-foreground h-[2.125rem] min-w-0 flex-1 bg-transparent text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}

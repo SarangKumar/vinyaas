@@ -81,17 +81,23 @@ describe("DocsMobileNav", () => {
     expect(screen.getByText("COMPANION")).toBeInTheDocument();
     expect(screen.getByText("GET STARTED")).toBeInTheDocument();
     expect(screen.getByText("SECTIONS")).toBeInTheDocument();
-    // Companion sits after the Components name list, before Get Started.
+    // GET STARTED → SECTIONS → COMPONENTS → COMPANION
     expect(
       screen
-        .getByText("COMPONENTS")
-        .compareDocumentPosition(screen.getByText("COMPANION")) &
+        .getByText("GET STARTED")
+        .compareDocumentPosition(screen.getByText("SECTIONS")) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(
       screen
-        .getByText("COMPANION")
-        .compareDocumentPosition(screen.getByText("GET STARTED")) &
+        .getByText("SECTIONS")
+        .compareDocumentPosition(screen.getByText("COMPONENTS")) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      screen
+        .getByText("COMPONENTS")
+        .compareDocumentPosition(screen.getByText("COMPANION")) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(screen.queryByText("RESOURCES")).toBeNull();
@@ -105,8 +111,12 @@ describe("DocsMobileNav", () => {
     ).toHaveAttribute("href", "/companion/custom");
     const resizable = screen.getByRole("link", { name: /Resizable/i });
     expect(resizable).toHaveAttribute("href", "/components/resizable");
+    expect(resizable.querySelector('[data-nav-indicator="new"]')).toBeNull();
+    const toggleGroup = screen.getByRole("link", {
+      name: /Toggle Group/i,
+    });
     expect(
-      resizable.querySelector('[data-nav-indicator="new"]'),
+      toggleGroup.querySelector('[data-nav-indicator="new"]'),
     ).toHaveAttribute("aria-label", "New");
     expect(
       screen.getAllByRole("link", { name: /Introduction/i })[1],
@@ -114,8 +124,11 @@ describe("DocsMobileNav", () => {
     expect(
       screen
         .getAllByRole("link", { name: /Introduction/i })[1]
-        ?.querySelector('[data-nav-indicator="beta"]'),
-    ).toBeTruthy();
+        ?.querySelector("[data-nav-indicator]"),
+    ).toBeNull();
+    expect(
+      screen.getByText("COMPANION").querySelector("[data-group-badge]"),
+    ).toHaveTextContent("Beta");
     expect(screen.getByRole("link", { name: "Changelog" })).toHaveAttribute(
       "href",
       "/changelog",

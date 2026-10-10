@@ -160,11 +160,29 @@ export function DialogTrigger({
   });
 }
 
+export type DialogSize = "sm" | "default" | "lg" | "xl" | "full";
+
+// Width and max height per size. "default" keeps the original 32rem / max-w-lg box.
+const dialogSizeClasses: Record<DialogSize, string> = {
+  sm: "max-h-[min(24rem,calc(100dvh-2rem))] sm:max-w-sm",
+  default: "max-h-[min(32rem,calc(100dvh-2rem))] sm:max-w-lg",
+  lg: "max-h-[min(40rem,calc(100dvh-2rem))] sm:max-w-3xl",
+  xl: "max-h-[min(48rem,calc(100dvh-2rem))] sm:max-w-5xl",
+  // Leaves a 4rem band on every side (2rem on phones) so a site header stays visible.
+  full: "h-[calc(100dvh-4rem)] max-h-[calc(100dvh-4rem)] sm:h-[calc(100dvh-8rem)] sm:max-h-[calc(100dvh-8rem)] sm:max-w-[min(80rem,calc(100%-8rem))]",
+};
+
+export type DialogContentProps = React.HTMLAttributes<HTMLDivElement> & {
+  /** Dialog box width and maximum height. */
+  size?: DialogSize;
+};
+
 export function DialogContent({
   className,
   children,
+  size = "default",
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+}: DialogContentProps) {
   const { open, setOpen, titleId, descriptionId } = useDialog();
   const contentRef = useRef<HTMLDivElement>(null);
   const [present, setPresent] = useState(open);
@@ -266,9 +284,11 @@ export function DialogContent({
         aria-describedby={descriptionId}
         tabIndex={-1}
         data-dialog-content=""
+        data-size={size}
         data-state={exiting ? "closed" : "open"}
         className={cn(
-          "border-border bg-background text-foreground relative z-10 flex max-h-[min(32rem,calc(100dvh-2rem))] w-full max-w-[calc(100%-2rem)] flex-col gap-4 overflow-y-auto rounded-lg border p-6 shadow-lg sm:max-w-lg",
+          "border-border bg-background text-foreground relative z-10 flex w-full max-w-[calc(100%-2rem)] flex-col gap-4 overflow-y-auto rounded-lg border p-6 shadow-lg",
+          dialogSizeClasses[size],
           exiting ? "vinyaas-dialog-out" : "vinyaas-dialog-in",
           className,
         )}
@@ -326,7 +346,8 @@ export function DialogFooter({
   return (
     <footer
       className={cn(
-        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        // mt-auto pins the actions to the bottom of tall dialogs; sm:justify-end keeps them right.
+        "mt-auto flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
         className,
       )}
       {...props}

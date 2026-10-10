@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { componentHref, components } from "@/components/component-meta";
 import { BookIcon, ComponentIcon, SearchIcon } from "@/components/icons";
 import { focusRing } from "@/components/focus-ring";
-import { Kbd } from "@/registry/new-york/ui/kbd";
+import { Kbd, KbdGroup } from "@/registry/new-york/ui/kbd";
 import {
   Command,
   CommandFooter,
@@ -183,7 +183,7 @@ const docPages: SearchPage[] = [
   {
     title: "Changelog",
     href: "/changelog",
-    description: "What shipped through v1.3.0.",
+    description: "What shipped through v1.4.0.",
     group: "Pages",
   },
   {
@@ -298,16 +298,7 @@ export function DocsSearchField() {
     >
       <SearchIcon className="size-4 shrink-0" />
       <span className="truncate">Search documentation...</span>
-      <Kbd className="ml-auto gap-1">
-        {hint === "⌘K" ? (
-          <>
-            <span>⌘</span>
-            <span>K</span>
-          </>
-        ) : (
-          hint
-        )}
-      </Kbd>
+      <Kbd className="ml-auto">{hint}</Kbd>
     </button>
   );
 }
@@ -470,11 +461,11 @@ function SearchDialog() {
           </CommandList>
           <CommandFooter>
             <span className="inline-flex items-center gap-1.5">
-              <Kbd className="gap-1">
-                <span>Tab</span>
-                <span>↑</span>
-                <span>↓</span>
-              </Kbd>
+              <KbdGroup>
+                <Kbd>Tab</Kbd>
+                <Kbd>↑</Kbd>
+                <Kbd>↓</Kbd>
+              </KbdGroup>
               <span>Navigate</span>
             </span>
             <span className="inline-flex items-center gap-1.5">

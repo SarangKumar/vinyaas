@@ -1,11 +1,14 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { components } from "./component-meta";
 import { DocsNavLinks } from "./docs-nav-links";
 
+const router = vi.hoisted(() => ({ prefetch: vi.fn(), push: vi.fn() }));
+
 vi.mock("next/navigation", () => ({
   usePathname: () => "/components/input",
+  useRouter: () => router,
 }));
 
 describe("DocsNavLinks", () => {
@@ -29,17 +32,24 @@ describe("DocsNavLinks", () => {
       within(nav).queryByRole("link", { name: "React + Vite" }),
     ).toBeNull();
 
+    // GET STARTED comes first.
+    expect(titles.slice(0, 7)).toEqual([
+      "Installation",
+      "components.json",
+      "Dark Mode",
+      "Theming",
+      "Typeset",
+      "Package Import",
+      "CLI",
+    ]);
+
     const sectionsStart = titles.indexOf("Home");
-    expect(titles.slice(sectionsStart, sectionsStart + 10)).toEqual([
+    expect(titles.slice(sectionsStart, sectionsStart + 6)).toEqual([
       "Home",
       "Introduction",
       "Components",
-      "Installation",
-      "CLI",
       "Catalogs",
       "Accessibility",
-      "Theming",
-      "Typeset",
       "Changelog",
     ]);
     expect(within(nav).getByRole("link", { name: "Home" })).toHaveAttribute(
@@ -70,13 +80,11 @@ describe("DocsNavLinks", () => {
       within(nav)
         .getAllByRole("link", { name: /Introduction/i })
         .at(-1)
-        ?.querySelector('[data-nav-indicator="beta"]'),
-    ).toBeTruthy();
-    expect(
-      within(nav)
-        .getByText("COMPANION")
-        .querySelector('[data-nav-indicator="beta"]'),
+        ?.querySelector("[data-nav-indicator]"),
     ).toBeNull();
+    expect(
+      within(nav).getByText("COMPANION").querySelector("[data-group-badge]"),
+    ).toHaveTextContent("Beta");
     expect(
       within(nav).getAllByRole("link", { name: "Installation" })[1],
     ).toHaveAttribute("href", "/companion/installation");
@@ -136,8 +144,12 @@ describe("DocsNavLinks", () => {
 
     const resizable = within(nav).getByRole("link", { name: /Resizable/i });
     expect(resizable).toHaveAttribute("href", "/components/resizable");
+    expect(resizable.querySelector('[data-nav-indicator="new"]')).toBeNull();
+    const toggleGroup = within(nav).getByRole("link", {
+      name: /Toggle Group/i,
+    });
     expect(
-      resizable.querySelector('[data-nav-indicator="new"]'),
+      toggleGroup.querySelector('[data-nav-indicator="new"]'),
     ).toHaveAttribute("aria-label", "New");
     expect(
       within(nav)
@@ -152,5 +164,21 @@ describe("DocsNavLinks", () => {
     expect(
       within(nav).getByRole("link", { name: "Button" }),
     ).not.toHaveAttribute("aria-current");
+  });
+
+  it("prefetches a sidebar route on hover or focus instead of on render", () => {
+    router.prefetch.mockClear();
+    render(<DocsNavLinks />);
+
+    const nav = screen.getByRole("navigation", { name: "Documentation" });
+    const cli = within(nav).getByRole("link", { name: "CLI" });
+
+    expect(router.prefetch).not.toHaveBeenCalled();
+
+    fireEvent.mouseEnter(cli);
+    expect(router.prefetch).toHaveBeenCalledWith("/cli");
+
+    fireEvent.focus(within(nav).getByRole("link", { name: "Button" }));
+    expect(router.prefetch).toHaveBeenCalledWith("/components/button");
   });
 });

@@ -43,6 +43,12 @@ export type DataTableColumn<TData> = {
   searchable?: boolean;
   /** When false, the column cannot be hidden. Defaults to true. */
   enableHiding?: boolean;
+  /**
+   * Column width (CSS length or px number). The table uses a fixed layout so
+   * sorting, paging, and search never resize columns; columns without a width
+   * share the remaining space equally.
+   */
+  width?: string | number;
 };
 
 export type DataTableProps<TData> = {
@@ -60,6 +66,8 @@ export type DataTableProps<TData> = {
   className?: string;
   /** When set, renders a trailing actions column. */
   renderRowActions?: (row: TData) => React.ReactNode;
+  /** Width of the trailing actions column. Defaults to 7rem. */
+  actionsWidth?: string | number;
 };
 
 type SortDirection = "asc" | "desc";
@@ -134,6 +142,38 @@ function searchValue<TData>(column: DataTableColumn<TData>, row: TData) {
   return "";
 }
 
+/**
+ * Fixed-size slot so switching between unsorted, ascending, and descending
+ * never changes the header width.
+ */
+function SortIcon({ direction }: { direction?: SortDirection }) {
+  return (
+    <svg
+      aria-hidden="true"
+      data-slot="data-table-sort-icon"
+      data-direction={direction ?? "none"}
+      viewBox="0 0 16 16"
+      className={cn(
+        "size-3.5 shrink-0 transition-colors",
+        direction ? "text-foreground" : "text-muted-foreground/60",
+      )}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {direction === "asc" ? (
+        <path d="M8 13V3M4 7l4-4 4 4" />
+      ) : direction === "desc" ? (
+        <path d="M8 3v10M4 9l4 4 4-4" />
+      ) : (
+        <path d="m5 6 3-3 3 3M5 10l3 3 3-3" />
+      )}
+    </svg>
+  );
+}
+
 function pageList(current: number, total: number) {
   if (total <= 5) {
     return Array.from({ length: total }, (_, index) => index + 1);
@@ -165,6 +205,7 @@ export function DataTable<TData>({
   emptyMessage = "No results found.",
   className,
   renderRowActions,
+  actionsWidth = "7rem",
 }: DataTableProps<TData>) {
   const searchId = useId();
   const [query, setQuery] = useState("");
@@ -421,7 +462,7 @@ export function DataTable<TData>({
         </div>
       ) : null}
 
-      <Table>
+      <Table className="table-fixed">
         <TableHeader>
           <TableRow>
             {selectable ? (
@@ -452,6 +493,11 @@ export function DataTable<TData>({
               return (
                 <TableHead
                   key={column.id}
+                  style={
+                    column.width !== undefined
+                      ? { width: column.width }
+                      : undefined
+                  }
                   aria-sort={
                     direction === "asc"
                       ? "ascending"
@@ -465,7 +511,7 @@ export function DataTable<TData>({
                   {column.sortable ? (
                     <button
                       type="button"
-                      className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex items-center gap-1.5 rounded-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
+                      className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex max-w-full items-center gap-1.5 rounded-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
                       aria-label={
                         direction === "asc"
                           ? `Sort ${label} descending`
@@ -476,13 +522,7 @@ export function DataTable<TData>({
                       onClick={() => toggleSort(column.id)}
                     >
                       {column.header}
-                      <span aria-hidden="true" className="text-xs tabular-nums">
-                        {direction === "asc"
-                          ? "↑"
-                          : direction === "desc"
-                            ? "↓"
-                            : "↕"}
-                      </span>
+                      <SortIcon direction={direction} />
                     </button>
                   ) : (
                     column.header
@@ -491,7 +531,7 @@ export function DataTable<TData>({
               );
             })}
             {renderRowActions ? (
-              <TableHead>
+              <TableHead style={{ width: actionsWidth }}>
                 <span className="sr-only">Actions</span>
               </TableHead>
             ) : null}

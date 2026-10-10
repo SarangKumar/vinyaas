@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { docsNav, type DocsNavItem } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
@@ -28,14 +28,20 @@ function NavLink({
   current: boolean;
   density: "default" | "comfortable";
 }) {
+  const router = useRouter();
   const comfortable = density === "comfortable";
   const base = comfortable
     ? "flex min-h-12 cursor-pointer items-center gap-2 rounded-md px-3 py-3 text-base"
-    : "flex min-h-8 cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-sm leading-[1.3125rem]";
+    : "flex min-h-8 cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-[0.75rem] leading-[1.3125rem]";
 
   return (
     <Link
       href={item.href}
+      // The sidebar lists ~80 routes; prefetching every visible link costs
+      // several hundred KB right after first load. Prefetch on intent instead.
+      prefetch={false}
+      onMouseEnter={() => router.prefetch(item.href)}
+      onFocus={() => router.prefetch(item.href)}
       aria-current={current ? "page" : undefined}
       className={
         current
@@ -88,6 +94,14 @@ export function DocsNavLinks({
               }
             >
               {group.title}
+              {group.badge ? (
+                <span
+                  data-group-badge=""
+                  className="bg-muted text-muted-foreground ml-2 rounded-sm px-1.5 py-px align-middle text-[0.625rem] font-semibold tracking-normal normal-case"
+                >
+                  {group.badge}
+                </span>
+              ) : null}
             </p>
           ) : null}
           <ul

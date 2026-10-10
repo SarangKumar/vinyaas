@@ -12,18 +12,21 @@ export interface AddSummaryInput {
     id: string;
     description: string;
   };
+  /** `update` uses overwrite wording for `vinyaas update`. */
+  mode?: "add" | "update";
 }
 
 export function formatAddSummary(input: AddSummaryInput): string {
   const installedRequested = requestedInstalled(input);
   const lines: string[] = [];
+  const isUpdate = input.mode === "update";
 
   if (installedRequested.length > 0 || input.plan.entries.length > 0) {
-    lines.push("✓ Added components", "");
+    lines.push(isUpdate ? "✓ Updated components" : "✓ Added components", "");
   }
 
   if (installedRequested.length > 0) {
-    lines.push("Installed");
+    lines.push(isUpdate ? "Updated" : "Installed");
     for (const name of installedRequested) {
       lines.push(`✓ ${name}`);
     }

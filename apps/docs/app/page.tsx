@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
 import { companionPath } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
-import logo from "@/components/logo.png";
+import { VinyaasMark } from "@/components/vinyaas-mark";
 
 const primaryLink = `bg-primary text-primary-foreground inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium no-underline ${focusRing}`;
 const secondaryLink = `border-border bg-background text-foreground hover:bg-muted inline-flex h-9 items-center justify-center rounded-md border px-4 text-sm font-medium no-underline ${focusRing}`;
@@ -32,14 +31,14 @@ const HomeShowcase = dynamic(
 export const metadata: Metadata = {
   title: "Vinyaas",
   description:
-    "Composable React components you install as source. The v1.3.0 catalog covers forms, overlays, feedback, and product UI.",
+    "Composable React components you install as source. The v1.4.0 catalog covers forms, overlays, feedback, and product UI.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "Vinyaas",
     description:
-      "Composable React components you install as source. v1.3.0 production catalog.",
+      "Composable React components you install as source. v1.4.0 production catalog.",
     type: "website",
     url: "/",
     images: [
@@ -63,16 +62,9 @@ export default function Home() {
       <section className="mx-auto flex w-full max-w-5xl flex-col items-center px-6 pt-14 pb-6 text-center sm:pt-16 sm:pb-8">
         <div
           data-home-brand
-          className="border-border/80 bg-card/40 flex size-16 items-center justify-center rounded-2xl border shadow-[0_0_40px_-12px_#A7B3FF66] sm:size-20"
+          className="size-16 drop-shadow-[0_0_28px_#A7B3FF55] sm:size-20"
         >
-          <Image
-            src={logo}
-            alt="Vinyaas"
-            width={64}
-            height={64}
-            priority
-            className="size-12 rounded-[0.9rem] sm:size-14"
-          />
+          <VinyaasMark priority className="size-full" />
         </div>
         <p className="text-muted-foreground mt-5 text-sm font-medium tracking-[0.16em] uppercase">
           Vinyaas

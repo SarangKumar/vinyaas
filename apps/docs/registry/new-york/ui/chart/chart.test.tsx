@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Bar, BarChart, Line, LineChart } from "recharts";
+import { Bar, BarChart, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { ChartContainer, type ChartConfig } from ".";
 
@@ -31,6 +31,24 @@ describe("Chart", () => {
     rerender(
       <ChartContainer config={config} className="h-48 w-full">
         <BarChart data={revenueData}>
+          <Bar
+            dataKey="revenue"
+            fill="var(--color-revenue)"
+            activeBar={false}
+          />
+        </BarChart>
+      </ChartContainer>,
+    );
+
+    expect(container.querySelector('[data-slot="chart"]')).toBeTruthy();
+  });
+
+  it("renders a horizontal bar chart with the vertical layout", () => {
+    const { container } = render(
+      <ChartContainer config={config} className="h-48 w-full">
+        <BarChart data={revenueData} layout="vertical">
+          <XAxis type="number" hide />
+          <YAxis dataKey="month" type="category" />
           <Bar
             dataKey="revenue"
             fill="var(--color-revenue)"

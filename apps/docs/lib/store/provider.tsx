@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
-import { Provider } from "react-redux";
 
 import { readStoredCodeLanguage } from "@/lib/store/hooks";
 import { setCodeLanguage } from "@/lib/store/slices/code-language";
@@ -27,11 +26,12 @@ function CodeLanguageHydrator() {
   return null;
 }
 
+/** Restores session state; the store itself is a module singleton. */
 export function DocsStoreProvider({ children }: { children: ReactNode }) {
   return (
-    <Provider store={store}>
+    <>
       <CodeLanguageHydrator />
       {children}
-    </Provider>
+    </>
   );
 }
