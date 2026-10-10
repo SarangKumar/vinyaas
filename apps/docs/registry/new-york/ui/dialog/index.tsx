@@ -168,7 +168,8 @@ const dialogSizeClasses: Record<DialogSize, string> = {
   default: "max-h-[min(32rem,calc(100dvh-2rem))] sm:max-w-lg",
   lg: "max-h-[min(40rem,calc(100dvh-2rem))] sm:max-w-3xl",
   xl: "max-h-[min(48rem,calc(100dvh-2rem))] sm:max-w-5xl",
-  full: "h-[calc(100dvh-2rem)] max-h-[calc(100dvh-2rem)] sm:max-w-[calc(100%-2rem)]",
+  // Leaves a 4rem band on every side (2rem on phones) so a site header stays visible.
+  full: "h-[calc(100dvh-4rem)] max-h-[calc(100dvh-4rem)] sm:h-[calc(100dvh-8rem)] sm:max-h-[calc(100dvh-8rem)] sm:max-w-[min(80rem,calc(100%-8rem))]",
 };
 
 export type DialogContentProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -345,7 +346,8 @@ export function DialogFooter({
   return (
     <footer
       className={cn(
-        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        // mt-auto pins the actions to the bottom of tall dialogs; sm:justify-end keeps them right.
+        "mt-auto flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
         className,
       )}
       {...props}

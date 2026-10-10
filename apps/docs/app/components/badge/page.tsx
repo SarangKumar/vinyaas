@@ -178,7 +178,7 @@ export function Saved() {
     description:
       "Default, secondary, destructive, outline, ghost, and link cover status, quiet labels, and link-like text.",
     preview: (
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
         <Badge>Default</Badge>
         <Badge variant="secondary">Secondary</Badge>
         <Badge variant="destructive">Destructive</Badge>
@@ -191,7 +191,7 @@ export function Saved() {
 
 export function StatusLabels() {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4">
+    <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
       <Badge>Default</Badge>
       <Badge variant="secondary">Secondary</Badge>
       <Badge variant="destructive">Destructive</Badge>
@@ -331,10 +331,12 @@ export default async function BadgePage() {
       }
       source={source}
     >
-      <Badge>Default</Badge>
-      <Badge variant="secondary">Secondary</Badge>
-      <Badge variant="outline">Outline</Badge>
-      <Badge variant="destructive">Destructive</Badge>
+      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
+        <Badge>Default</Badge>
+        <Badge variant="secondary">Secondary</Badge>
+        <Badge variant="outline">Outline</Badge>
+        <Badge variant="destructive">Destructive</Badge>
+      </div>
     </ComponentReference>
   );
 }

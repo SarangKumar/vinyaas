@@ -354,7 +354,8 @@ export default async function CommandPage() {
       install="vinyaas add command"
       manual={
         <p>
-          After <code>vinyaas init</code>, place the source at{" "}
+          After <code>vinyaas init</code>, add <code>kbd</code> (used by{" "}
+          <code>CommandShortcut</code>), then place the source at{" "}
           <code>components/ui/command/index.tsx</code>. It imports{" "}
           <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
           <code>clsx</code> and <code>tailwind-merge</code>.

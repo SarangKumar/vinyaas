@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { cookies } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 
 import { DocsShell } from "@/components/docs-shell";
 import { DocsStoreProvider } from "@/lib/store/provider";
 import { siteDescription, siteName, siteUrl } from "@/lib/site";
-import { themeStorageKey } from "@/components/theme";
 import { ThemeSync } from "@/components/theme-sync";
 
 import "./globals.css";
@@ -107,19 +105,17 @@ const websiteJsonLd = {
 };
 
 /**
- * Theme class comes from the cookie when the visitor has chosen light/dark.
- * ThemeSync applies the stored choice or falls back to prefers-color-scheme
- * after mount — no inline HTML injection.
+ * The layout reads no request data, so every page prerenders as static HTML
+ * served from the CDN (no server function per view). Before hydration,
+ * docs.css follows prefers-color-scheme; ThemeSync then applies a saved
+ * light/dark choice from localStorage — no cookie, no inline HTML injection.
  */
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const stored = (await cookies()).get(themeStorageKey)?.value;
-  const themeClass = stored === "dark" ? "dark" : "";
-
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased${themeClass ? ` ${themeClass}` : ""}`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         <script type="application/ld+json">

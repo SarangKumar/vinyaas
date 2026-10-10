@@ -10,7 +10,7 @@ import {
   CommandList,
   CommandShortcut,
 } from "@/registry/new-york/ui/command";
-import { Kbd } from "@/registry/new-york/ui/kbd";
+import { Kbd, KbdGroup } from "@/registry/new-york/ui/kbd";
 
 /**
  * Compact command search — no app-shell header or navbar.
@@ -19,8 +19,11 @@ export function CommandSearchBlock() {
   return (
     <PlayBlock title="Search" description="Jump to a page or run a command.">
       <p className="text-muted-foreground text-xs">
-        Press <Kbd>⌘</Kbd>
-        <Kbd>K</Kbd>
+        Press{" "}
+        <KbdGroup>
+          <Kbd>⌘</Kbd>
+          <Kbd>K</Kbd>
+        </KbdGroup>
       </p>
       <Command className="bg-secondary border-border rounded-md border">
         <CommandInput

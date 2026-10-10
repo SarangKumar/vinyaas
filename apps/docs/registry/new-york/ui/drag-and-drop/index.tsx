@@ -19,9 +19,13 @@ import {
   closestCenter,
   closestCorners,
   defaultDropAnimationSideEffects,
+  getFirstCollision,
+  pointerWithin,
+  rectIntersection,
   useDroppable,
   useSensor,
   useSensors,
+  type CollisionDetection,
   type DragEndEvent,
   type DragOverEvent,
   type DragStartEvent,
@@ -92,6 +96,43 @@ function flattenItems(items: DragDropItems): UniqueIdentifier[] {
     return items;
   }
   return Object.values(items).flat();
+}
+
+/**
+ * Board collision detection (after the dnd-kit multiple-containers recipe).
+ * `closestCorners` alone keeps choosing cards in a neighboring column, so an
+ * emptied column could never receive an item again. Prefer what the pointer
+ * is inside, then rect overlap; a hit on a non-empty column resolves to its
+ * closest card, and a hit on an empty column returns the column itself.
+ */
+function boardCollisionDetection(
+  items: Record<string, UniqueIdentifier[]>,
+): CollisionDetection {
+  return (args) => {
+    const pointerHits = pointerWithin(args);
+    const hits = pointerHits.length > 0 ? pointerHits : rectIntersection(args);
+    let overId = getFirstCollision(hits, "id");
+
+    if (overId == null) {
+      // Keyboard dragging has no pointer; fall back to corner distance.
+      return closestCorners(args);
+    }
+
+    const containerItems = items[String(overId)];
+
+    if (containerItems && containerItems.length > 0) {
+      overId =
+        closestCenter({
+          ...args,
+          droppableContainers: args.droppableContainers.filter(
+            (container) =>
+              container.id !== overId && containerItems.includes(container.id),
+          ),
+        })[0]?.id ?? overId;
+    }
+
+    return [{ id: overId }];
+  };
 }
 
 function findContainerId(
@@ -368,7 +409,13 @@ export function DragDrop({
       <DndContext
         id={dndId}
         sensors={sensors}
-        collisionDetection={multi ? closestCorners : closestCenter}
+        collisionDetection={
+          multi
+            ? boardCollisionDetection(
+                items as Record<string, UniqueIdentifier[]>,
+              )
+            : closestCenter
+        }
         accessibility={{ announcements: defaultAnnouncements }}
         onDragStart={handleDragStart}
         onDragOver={multi ? handleDragOver : undefined}

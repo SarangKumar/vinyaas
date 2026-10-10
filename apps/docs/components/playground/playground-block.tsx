@@ -33,7 +33,14 @@ export function PlaygroundBlock({
       )}
     >
       {title ? (
-        <header className="flex min-h-[4.75rem] min-w-0 flex-col gap-1">
+        // Only reserve two description lines when a description exists, so
+        // title-only cards (Typeset) do not show an empty band under the title.
+        <header
+          className={cn(
+            "flex min-w-0 flex-col gap-1",
+            description && "min-h-[4.75rem]",
+          )}
+        >
           <h2 className="text-foreground text-[0.9375rem] font-medium tracking-tight">
             {title}
           </h2>
@@ -41,11 +48,7 @@ export function PlaygroundBlock({
             <p className="text-muted-foreground line-clamp-2 text-sm leading-6">
               {description}
             </p>
-          ) : (
-            <p className="invisible text-sm leading-6" aria-hidden="true">
-              &nbsp;
-            </p>
-          )}
+          ) : null}
         </header>
       ) : null}
       <div className="flex max-w-full min-w-0 flex-1 flex-col gap-4 p-0.5 text-sm">

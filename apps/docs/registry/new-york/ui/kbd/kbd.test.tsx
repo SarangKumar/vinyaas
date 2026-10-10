@@ -2,7 +2,7 @@ import { createRef } from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { Kbd } from ".";
+import { Kbd, KbdGroup } from ".";
 
 describe("Kbd", () => {
   it("renders a native keyboard element", () => {
@@ -53,5 +53,21 @@ describe("Kbd", () => {
     expect(shift).toHaveAttribute("data-symbol");
     expect(command).toHaveClass("text-[0.9375rem]");
     expect(letter).toHaveClass("text-xs");
+  });
+
+  it("groups the keys of one shortcut", () => {
+    render(
+      <KbdGroup data-testid="group">
+        <Kbd>⌘</Kbd>
+        <Kbd>K</Kbd>
+      </KbdGroup>,
+    );
+
+    const group = screen.getByTestId("group");
+
+    expect(group.tagName).toBe("KBD");
+    expect(group).toHaveAttribute("data-slot", "kbd-group");
+    expect(group).toHaveClass("inline-flex", "gap-1");
+    expect(screen.getByText("⌘")).toHaveAttribute("data-symbol");
   });
 });

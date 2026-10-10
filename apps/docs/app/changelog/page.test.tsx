@@ -49,7 +49,7 @@ describe("Changelog page", () => {
   });
 
   it("selects the latest version by default and shows only that content", async () => {
-    render(await ChangelogPage({ searchParams: Promise.resolve({}) }));
+    render(ChangelogPage());
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Changelog" }),
@@ -87,11 +87,8 @@ describe("Changelog page", () => {
   });
 
   it("renders another version when selected via the query param", async () => {
-    render(
-      await ChangelogPage({
-        searchParams: Promise.resolve({ v: "1.2.0" }),
-      }),
-    );
+    navigation.search = "v=1.2.0";
+    render(ChangelogPage());
 
     await waitFor(() => {
       expect(
@@ -108,7 +105,7 @@ describe("Changelog page", () => {
   });
 
   it("updates the URL when the version selector changes", async () => {
-    render(await ChangelogPage({ searchParams: Promise.resolve({}) }));
+    render(ChangelogPage());
 
     fireEvent.click(
       screen.getByRole("combobox", { name: "Changelog version" }),
@@ -127,11 +124,8 @@ describe("Changelog page", () => {
       (component) => component.introducedIn === "0.1",
     );
 
-    render(
-      await ChangelogPage({
-        searchParams: Promise.resolve({ v: "0.1" }),
-      }),
-    );
+    navigation.search = "v=0.1";
+    render(ChangelogPage());
 
     expect(document.body.textContent).toContain(
       `It ships ${v01.length} component`,

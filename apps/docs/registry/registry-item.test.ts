@@ -589,7 +589,6 @@ describe("registry build output", () => {
     ["input-group", ["ui/input-group/index.tsx"], "InputGroupInput"],
     ["input-otp", ["ui/input-otp/index.tsx"], "InputOTPSlot"],
     ["file-upload", ["ui/file-upload/index.tsx"], "FileUploadDropzone"],
-    ["command", ["ui/command/index.tsx"], "CommandInput"],
     ["dropdown-menu", ["ui/dropdown-menu/index.tsx"], "DropdownMenuContent"],
     ["typography", ["ui/typography/index.tsx"], "TypographyH1"],
     ["tabs", ["ui/tabs/index.tsx"], 'role="tablist"'],
@@ -713,6 +712,40 @@ describe("registry build output", () => {
     expect(generated.files[0]?.content).toContain('role="alertdialog"');
     expect(generated.files[0]?.content).toContain('from "../button"');
     expect(generated.files[1]?.content).toBe(sourceCss);
+  });
+
+  it("keeps the new-york command artifact aligned and depends on kbd", async () => {
+    const source = await fs.readFile(
+      path.join(docsRoot, "registry/new-york/ui/command/index.tsx"),
+      "utf8",
+    );
+    const generated = JSON.parse(
+      await fs.readFile(
+        path.join(docsRoot, "public/r/new-york/command.json"),
+        "utf8",
+      ),
+    ) as {
+      $schema: string;
+      registryDependencies?: string[];
+      files: { path: string; content: string }[];
+    };
+    const item = newYork.find((entry) => entry.name === "command");
+
+    if (!item) {
+      throw new Error("Expected a command registry item");
+    }
+
+    const files = await readRegistryItemFiles(item, async (relativePath) => {
+      expect(relativePath).toBe("ui/command/index.tsx");
+      return source;
+    });
+
+    expect(generated).toEqual(
+      serializeBuiltItem(item, files, generated.$schema),
+    );
+    expect(generated.registryDependencies).toEqual(["kbd"]);
+    expect(generated.files[0]?.content).toContain('from "../kbd"');
+    expect(generated.files[0]?.content).toContain("CommandInput");
   });
 
   it("keeps the new-york toggle-group artifact aligned and depends on toggle", async () => {

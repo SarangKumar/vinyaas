@@ -165,4 +165,40 @@ describe("Textarea", () => {
       document.body.firstElementChild,
     );
   });
+
+  it("grows with content up to maxRows and then scrolls", () => {
+    render(<Textarea aria-label="Message" maxRows={3} />);
+
+    const field = screen.getByRole("textbox", {
+      name: "Message",
+    }) as HTMLTextAreaElement;
+    // jsdom has no layout: line height falls back to 16px * 1.5 = 24px, so 3 rows = 72px.
+    let contentHeight = 30;
+    Object.defineProperty(field, "scrollHeight", {
+      configurable: true,
+      get: () => contentHeight,
+    });
+
+    fireEvent.change(field, { target: { value: "one\ntwo" } });
+    expect(field).toHaveAttribute("rows", "1");
+    expect(field).toHaveAttribute("data-auto-grow");
+    expect(field).toHaveClass("resize-none");
+    expect(field.style.height).toBe("30px");
+    expect(field.style.overflowY).toBe("hidden");
+
+    contentHeight = 200;
+    fireEvent.change(field, { target: { value: "1\n2\n3\n4\n5\n6" } });
+    expect(field.style.height).toBe("72px");
+    expect(field.style.overflowY).toBe("auto");
+  });
+
+  it("keeps the native resize behavior without maxRows", () => {
+    render(<Textarea aria-label="Message" />);
+
+    const field = screen.getByRole("textbox", { name: "Message" });
+
+    expect(field).toHaveClass("resize-y", "min-h-20");
+    expect(field).not.toHaveAttribute("data-auto-grow");
+    expect(field.style.height).toBe("");
+  });
 });

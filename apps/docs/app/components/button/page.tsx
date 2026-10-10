@@ -174,7 +174,7 @@ const examples: ComponentExample[] = [
     description:
       "Outline, ghost, and secondary are quiet actions. Destructive is for delete. Link is inline.",
     preview: (
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
         <Button>Save</Button>
         <Button variant="outline">Cancel</Button>
         <Button variant="ghost">Skip</Button>
@@ -187,7 +187,7 @@ const examples: ComponentExample[] = [
 
 export function Actions() {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4">
+    <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
       <Button>Save</Button>
       <Button variant="outline">Cancel</Button>
       <Button variant="ghost">Skip</Button>
@@ -205,7 +205,7 @@ export function Actions() {
     description:
       "default matches Input. xs, sm, and lg change the text button. Icon sizes are square.",
     preview: (
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
         <Button size="xs">Extra small</Button>
         <Button size="sm">Small</Button>
         <Button>Default</Button>
@@ -219,7 +219,7 @@ export function Actions() {
 
 export function Sizes() {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4">
+    <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
       <Button size="xs">Extra small</Button>
       <Button size="sm">Small</Button>
       <Button>Default</Button>
@@ -337,10 +337,12 @@ export default async function ButtonPage() {
       }
       source={source}
     >
-      <Button>Save</Button>
-      <Button variant="outline">Cancel</Button>
-      <Button variant="secondary">Draft</Button>
-      <Button variant="destructive">Delete</Button>
+      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
+        <Button>Save</Button>
+        <Button variant="outline">Cancel</Button>
+        <Button variant="secondary">Draft</Button>
+        <Button variant="destructive">Delete</Button>
+      </div>
     </ComponentReference>
   );
 }

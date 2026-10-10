@@ -11,6 +11,7 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogTitle,
   DialogTrigger,
 } from ".";
@@ -151,5 +152,28 @@ describe("Dialog", () => {
 
     expect(dialog).toHaveAttribute("data-size", "default");
     expect(dialog).toHaveClass("sm:max-w-lg");
+  });
+
+  it("keeps the full size inset from the viewport and pins the footer to the bottom", async () => {
+    render(
+      <Dialog defaultOpen>
+        <DialogContent size="full">
+          <DialogTitle>Editor</DialogTitle>
+          <DialogDescription>Full size.</DialogDescription>
+          <DialogFooter data-testid="footer">
+            <button type="button">Close</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>,
+    );
+
+    const dialog = await screen.findByRole("dialog");
+
+    expect(dialog).toHaveClass("sm:h-[calc(100dvh-8rem)]");
+    expect(dialog).not.toHaveClass("h-[calc(100dvh-2rem)]");
+    expect(screen.getByTestId("footer")).toHaveClass(
+      "mt-auto",
+      "sm:justify-end",
+    );
   });
 });

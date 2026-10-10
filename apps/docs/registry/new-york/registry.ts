@@ -653,6 +653,7 @@ const items: readonly RegistryItem[] = [
     type: "registry:ui",
     description: "A searchable list for pages and actions.",
     dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["kbd"],
     files: [
       {
         path: "ui/command/index.tsx",

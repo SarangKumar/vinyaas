@@ -26,3 +26,20 @@ export function Kbd({ className, children, ref, ...props }: KbdProps) {
     </kbd>
   );
 }
+
+export type KbdGroupProps = React.ComponentProps<"kbd">;
+
+/**
+ * Groups keys of one shortcut, e.g. <KbdGroup><Kbd>⌘</Kbd><Kbd>K</Kbd></KbdGroup>.
+ * Use one Kbd per key so symbol keys get their size adjustment.
+ */
+export function KbdGroup({ className, ref, ...props }: KbdGroupProps) {
+  return (
+    <kbd
+      ref={ref}
+      data-slot="kbd-group"
+      className={cn("inline-flex items-center gap-1", className)}
+      {...props}
+    />
+  );
+}

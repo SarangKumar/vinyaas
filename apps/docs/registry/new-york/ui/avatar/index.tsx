@@ -155,7 +155,9 @@ export type AvatarBadgeProps = React.ComponentProps<"span"> & {
 /**
  * Anchors to the bottom-right of the Avatar. Without children it renders a
  * status dot (give it an `aria-label`; it defaults to the status name). With
- * children it renders a small text label such as "PRO" or "Admin".
+ * text children it renders a one-line label such as "PRO" or "Admin"; with a
+ * single icon child it renders a round dot holding that symbol (add an
+ * `aria-label`, since the icon itself is decorative).
  */
 export function AvatarBadge({
   className,
@@ -172,14 +174,18 @@ export function AvatarBadge({
       ref={ref}
       data-slot="avatar-badge"
       data-status={status}
-      {...(hasContent
-        ? {}
-        : { role: "img", "aria-label": props["aria-label"] ?? status })}
+      // A named badge (dot, or icon with aria-label) is exposed as an image;
+      // a plain text label is read as its text.
+      {...(!hasContent || props["aria-label"]
+        ? { role: "img", "aria-label": props["aria-label"] ?? status }
+        : {})}
       className={cn(
         "ring-background absolute flex items-center justify-center ring-2",
         badgeStatusClasses[status],
         hasContent
-          ? "right-0 bottom-0 min-h-4 translate-x-1/4 translate-y-1/4 rounded-full px-1 text-[10px] leading-none font-semibold uppercase"
+          ? // whitespace-nowrap keeps labels like "ADMIN" on one line; a lone icon
+            // child (a check, crown, …) renders as a round size-4 dot instead.
+            "right-0 bottom-0 min-h-4 min-w-4 translate-x-1/4 translate-y-1/4 rounded-full px-1 text-[10px] leading-none font-semibold whitespace-nowrap uppercase has-[>svg:only-child]:size-4 has-[>svg:only-child]:px-0 [&_svg]:size-2.5 [&_svg]:shrink-0"
           : "right-0 bottom-0 size-2.5 rounded-full",
         className,
       )}

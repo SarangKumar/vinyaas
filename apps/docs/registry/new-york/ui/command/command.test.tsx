@@ -116,6 +116,8 @@ describe("Command", () => {
     expect(multiline).toHaveClass("[&>svg]:mt-0.5");
     expect(multiline.querySelector("svg")).toBe(multiline.firstElementChild);
     expect(screen.getByText("Enter")).toHaveClass("ml-auto", "mt-0.5");
+    // The shortcut is a Kbd, so it matches Kbd elsewhere in the app.
+    expect(screen.getByText("Enter").tagName).toBe("KBD");
     expect(single).toHaveClass("items-start");
     expect(disabled).toBeDisabled();
     expect(disabled).toHaveClass("items-start");

@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   applyTheme,
+  clearLegacyThemeCookie,
   preferredTheme,
   readStoredTheme,
   syncDocumentTheme,
@@ -11,7 +12,7 @@ import {
 describe("theme preference", () => {
   afterEach(() => {
     localStorage.clear();
-    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.remove("dark", "light");
     document.cookie = `${themeStorageKey}=; Path=/; Max-Age=0`;
     vi.unstubAllGlobals();
   });
@@ -36,13 +37,16 @@ describe("theme preference", () => {
 
     expect(document.documentElement.classList.contains("dark")).toBe(true);
     expect(localStorage.getItem(themeStorageKey)).toBe("dark");
-    expect(document.cookie).toContain(`${themeStorageKey}=dark`);
+    // Static pages: the choice is not mirrored into a request cookie.
+    expect(document.cookie).not.toContain(themeStorageKey);
 
     applyTheme("light");
 
     expect(document.documentElement.classList.contains("dark")).toBe(false);
+    // .light opts out of the docs.css system-dark fallback.
+    expect(document.documentElement.classList.contains("light")).toBe(true);
     expect(localStorage.getItem(themeStorageKey)).toBe("light");
-    expect(document.cookie).toContain(`${themeStorageKey}=light`);
+    expect(document.cookie).not.toContain(themeStorageKey);
   });
 
   it("restores a saved dark theme without overwriting storage", () => {
@@ -53,7 +57,7 @@ describe("theme preference", () => {
 
     expect(document.documentElement.classList.contains("dark")).toBe(true);
     expect(localStorage.getItem(themeStorageKey)).toBe("dark");
-    expect(document.cookie).toContain(`${themeStorageKey}=dark`);
+    expect(document.cookie).not.toContain(themeStorageKey);
   });
 
   it("restores a saved light theme when the document is dark", () => {
@@ -73,7 +77,16 @@ describe("theme preference", () => {
     syncDocumentTheme();
 
     expect(document.documentElement.classList.contains("dark")).toBe(true);
+    expect(document.documentElement.classList.contains("light")).toBe(false);
     expect(localStorage.getItem(themeStorageKey)).toBeNull();
+  });
+
+  it("expires the legacy theme cookie", () => {
+    document.cookie = `${themeStorageKey}=dark; Path=/`;
+
+    clearLegacyThemeCookie();
+
+    expect(document.cookie).not.toContain(themeStorageKey);
   });
 
   it("notifies companions when the theme class actually changes", () => {

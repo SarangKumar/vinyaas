@@ -187,6 +187,73 @@ const examples: ComponentExample[] = [
 </Avatar>`,
   },
   {
+    id: "symbol-badge",
+    title: "Symbol in the dot",
+    description:
+      "Pass a single icon to AvatarBadge to show a symbol inside the dot, such as a verified check or an owner crown. Name it with aria-label.",
+    preview: (
+      <div className="flex items-center gap-4">
+        <Avatar>
+          <AvatarFallback>SK</AvatarFallback>
+          <AvatarBadge status="online" aria-label="Verified">
+            <svg
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3.5 8.5 6.5 11.5 12.5 4.5" />
+            </svg>
+          </AvatarBadge>
+        </Avatar>
+        <Avatar>
+          <AvatarFallback>AL</AvatarFallback>
+          <AvatarBadge aria-label="Owner">
+            <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+              <path d="M2 5l3 2.5L8 3l3 4.5L14 5l-1.2 7H3.2Z" />
+            </svg>
+          </AvatarBadge>
+        </Avatar>
+        <Avatar>
+          <AvatarFallback>PS</AvatarFallback>
+          <AvatarBadge status="busy" aria-label="Do not disturb">
+            <svg
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <path d="M4 8h8" />
+            </svg>
+          </AvatarBadge>
+        </Avatar>
+      </div>
+    ),
+    code: `<Avatar>
+  <AvatarFallback>SK</AvatarFallback>
+  <AvatarBadge status="online" aria-label="Verified">
+    <CheckIcon />
+  </AvatarBadge>
+</Avatar>
+<Avatar>
+  <AvatarFallback>AL</AvatarFallback>
+  <AvatarBadge aria-label="Owner">
+    <CrownIcon />
+  </AvatarBadge>
+</Avatar>
+<Avatar>
+  <AvatarFallback>PS</AvatarFallback>
+  <AvatarBadge status="busy" aria-label="Do not disturb">
+    <MinusIcon />
+  </AvatarBadge>
+</Avatar>`,
+  },
+  {
     id: "decorative",
     title: "Decorative image",
     description:
@@ -341,14 +408,16 @@ export default async function AvatarPage() {
       }
       source={source}
     >
-      <Avatar>
-        <AvatarImage src="/avatars/portrait.svg" alt="Sarang Kumar" />
-        <AvatarFallback>SK</AvatarFallback>
-      </Avatar>
-      <Avatar>
-        <AvatarImage src="/avatars/missing.png" alt="Ada Lovelace" />
-        <AvatarFallback>AL</AvatarFallback>
-      </Avatar>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Avatar>
+          <AvatarImage src="/avatars/portrait.svg" alt="Sarang Kumar" />
+          <AvatarFallback>SK</AvatarFallback>
+        </Avatar>
+        <Avatar>
+          <AvatarImage src="/avatars/missing.png" alt="Ada Lovelace" />
+          <AvatarFallback>AL</AvatarFallback>
+        </Avatar>
+      </div>
     </ComponentReference>
   );
 }

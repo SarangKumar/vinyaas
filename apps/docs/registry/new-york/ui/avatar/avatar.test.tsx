@@ -168,4 +168,31 @@ describe("Avatar", () => {
     expect(container.firstElementChild).not.toHaveClass("overflow-hidden");
     expect(screen.getByRole("img", { name: "Away" })).toBeInTheDocument();
   });
+
+  it("keeps long text labels on one line", () => {
+    render(
+      <Avatar>
+        <AvatarFallback>SK</AvatarFallback>
+        <AvatarBadge status="busy">Admin</AvatarBadge>
+      </Avatar>,
+    );
+
+    expect(screen.getByText("Admin")).toHaveClass("whitespace-nowrap");
+  });
+
+  it("renders a named icon badge as a round symbol dot", () => {
+    render(
+      <Avatar>
+        <AvatarFallback>SK</AvatarFallback>
+        <AvatarBadge status="online" aria-label="Verified">
+          <svg aria-hidden="true" viewBox="0 0 16 16" />
+        </AvatarBadge>
+      </Avatar>,
+    );
+
+    const badge = screen.getByRole("img", { name: "Verified" });
+
+    expect(badge).toHaveClass("has-[>svg:only-child]:size-4");
+    expect(badge.querySelector("svg")).toBeInTheDocument();
+  });
 });

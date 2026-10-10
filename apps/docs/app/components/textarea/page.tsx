@@ -68,6 +68,12 @@ const api: ApiRow[] = [
       "Shows a current/maxLength counter below the field, aligned right. Without maxLength it shows only the current length.",
   },
   {
+    prop: "maxRows",
+    type: "number",
+    description:
+      "Grow with the content up to this many rows, then scroll. rows sets the starting height (default 1 while growing). Turns off manual resizing.",
+  },
+  {
     prop: "containerClassName",
     type: "string",
     description:
@@ -147,6 +153,23 @@ const examples: ComponentExample[] = [
   maxLength={120}
   showCount
 />`,
+  },
+  {
+    id: "auto-grow",
+    title: "Auto-grow with maxRows",
+    description:
+      "With maxRows the field starts at rows lines, grows as you type, and starts scrolling once it reaches maxRows. Type a few lines to see it.",
+    preview: (
+      <div className="w-full max-w-sm">
+        <Textarea
+          aria-label="Reply"
+          placeholder="Write a reply…"
+          rows={2}
+          maxRows={6}
+        />
+      </div>
+    ),
+    code: `<Textarea aria-label="Reply" placeholder="Write a reply…" rows={2} maxRows={6} />`,
   },
   {
     id: "label",

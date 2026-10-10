@@ -1,32 +1,30 @@
 "use client";
 
-import {
-  useDispatch,
-  useSelector,
-  type TypedUseSelectorHook,
-} from "react-redux";
+import { useSyncExternalStore } from "react";
 
 import type { CodeLanguage } from "@/components/code-languages";
 import {
   isCodeLanguage,
   setCodeLanguage,
 } from "@/lib/store/slices/code-language";
-import type { AppDispatch, RootState } from "@/lib/store/store";
+import { store } from "@/lib/store/store";
 
 export const codeLanguageStorageKey = "vinyaas-code-language";
 
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+// Server and first client render use TSX; the hydrator restores the session choice.
+const serverLanguage = (): CodeLanguage => "tsx";
 
 export function useCodeLanguage() {
-  return useAppSelector((state) => state.codeLanguage.value);
+  return useSyncExternalStore(
+    store.subscribe,
+    () => store.getState().codeLanguage.value,
+    serverLanguage,
+  );
 }
 
 export function useSetCodeLanguage() {
-  const dispatch = useAppDispatch();
-
   return (language: CodeLanguage) => {
-    dispatch(setCodeLanguage(language));
+    store.dispatch(setCodeLanguage(language));
     window.sessionStorage.setItem(codeLanguageStorageKey, language);
   };
 }

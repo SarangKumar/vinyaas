@@ -35,10 +35,10 @@
    * and shrinks on smaller viewports.
    * Aligns with Tailwind spacing: 4=1rem, 6=1.5rem, 8=2rem, 10=2.5rem.
    */
-  --playground-gap: 1rem;
-  --playground-gap-md: 1.5rem;
-  --playground-gap-xl: 2rem;
-  --playground-gap-2xl: 2.5rem;
+  --playground-gap: 0.625rem;
+  --playground-gap-md: 1.125rem;
+  --playground-gap-xl: 1.625rem;
+  --playground-gap-2xl: 2.125rem;
   --playground-pad: 1.5rem;
   --playground-pad-lg: 1.5rem;
   --playground-pad-xl: 3rem;
@@ -330,5 +330,58 @@ code[data-language] .hljs-operator {
    */
   #docs-content[data-print-from-scroll="true"] > * {
     transform: translateY(var(--print-scroll-offset, 0));
+  }
+}
+
+/*
+ * Subsection rhythm: an h3 that follows other content inside a docs section
+ * (CLI flags, Installation > CLI / Manual, …) gets extra space above it so it
+ * reads as a new subsection, not a continuation of the previous block.
+ */
+[data-docs-article] > section > h3:not(:first-child) {
+  margin-top: 1.25rem;
+}
+
+/*
+ * System-dark fallback for the docs site. Pages are static, so the server
+ * cannot know a saved theme. Until ThemeSync adds .dark or .light after
+ * hydration, follow prefers-color-scheme. Mirrors the .dark tokens in
+ * globals.css — keep the two in sync. `.light` (an explicit light choice)
+ * opts out.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    --background: oklch(0.141 0.005 285.823);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.21 0.006 285.885);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.21 0.006 285.885);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.92 0.004 286.32);
+    --primary-foreground: oklch(0.21 0.006 285.885);
+    --secondary: oklch(0.274 0.006 286.033);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.274 0.006 286.033);
+    --muted-foreground: oklch(0.705 0.015 286.067);
+    --accent: oklch(0.274 0.006 286.033);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 8%);
+    --input: oklch(1 0 0 / 12%);
+    --ring: oklch(0.552 0.016 285.938);
+    --chart-1: oklch(0.88 0.01 286.32);
+    --chart-2: oklch(0.8 0.008 286.32);
+    --chart-3: oklch(0.72 0.006 286.32);
+    --chart-4: oklch(0.64 0.005 286.32);
+    --chart-5: oklch(0.56 0.004 286.32);
+    --sidebar: oklch(0.21 0.006 285.885);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.274 0.006 286.033);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 8%);
+    --sidebar-ring: oklch(0.552 0.016 285.938);
   }
 }

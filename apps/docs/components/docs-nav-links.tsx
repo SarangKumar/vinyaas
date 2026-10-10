@@ -31,7 +31,7 @@ function NavLink({
   const comfortable = density === "comfortable";
   const base = comfortable
     ? "flex min-h-12 cursor-pointer items-center gap-2 rounded-md px-3 py-3 text-base"
-    : "flex min-h-8 cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-sm leading-[1.3125rem]";
+    : "flex min-h-8 cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-[0.75rem] leading-[1.3125rem]";
 
   return (
     <Link

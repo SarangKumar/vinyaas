@@ -103,7 +103,7 @@ describe("Toast", () => {
 
     expect(onUndo).toHaveBeenCalledOnce();
     expect(screen.getByRole("button", { name: "Undo" })).toHaveClass(
-      "h-7",
+      "h-6",
       "text-xs",
     );
 
@@ -211,8 +211,55 @@ describe("Toast", () => {
 
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent("Could not save");
-    expect(alert).toHaveClass("bg-muted", "text-foreground");
-    expect(alert.querySelector("svg")).toHaveClass("text-destructive");
+    expect(alert).toHaveClass("bg-popover", "text-popover-foreground");
+    expect(alert.querySelector("[data-slot=toast-icon]")).toHaveAttribute(
+      "data-icon",
+      "error",
+    );
     expect(alert).not.toHaveClass("bg-destructive");
+  });
+
+  it("uses one surface for every state and a different icon per state", async () => {
+    render(<Toaster />);
+    await flushMount();
+
+    const types = [
+      "default",
+      "success",
+      "info",
+      "warning",
+      "error",
+      "loading",
+    ] as const;
+
+    act(() => {
+      for (const type of types) {
+        toast.add({ title: `Toast ${type}`, type, duration: Infinity });
+      }
+    });
+
+    const nodes = document.querySelectorAll("[data-type]");
+    const surfaces = new Set([...nodes].map((node) => node.className));
+    const icons = [...nodes].map(
+      (node) =>
+        node
+          .querySelector("[data-slot=toast-icon]")
+          ?.getAttribute("data-icon") ?? null,
+    );
+
+    expect(nodes).toHaveLength(types.length);
+    expect(surfaces.size).toBe(1);
+    expect(icons).toEqual([
+      null,
+      "success",
+      "info",
+      "warning",
+      "error",
+      "loading",
+    ]);
+    expect(screen.getByText("Toast info")).toHaveAttribute(
+      "data-slot",
+      "toast-title",
+    );
   });
 });

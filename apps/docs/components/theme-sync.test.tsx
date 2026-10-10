@@ -13,7 +13,7 @@ vi.mock("next/navigation", () => ({
 describe("ThemeSync", () => {
   afterEach(() => {
     localStorage.clear();
-    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.remove("dark", "light");
     pathname.value = "/";
     vi.unstubAllGlobals();
   });
@@ -42,6 +42,7 @@ describe("ThemeSync", () => {
     render(<ThemeSync />);
 
     expect(document.documentElement.classList.contains("dark")).toBe(false);
+    expect(document.documentElement.classList.contains("light")).toBe(true);
     expect(localStorage.getItem(themeStorageKey)).toBe("light");
   });
 

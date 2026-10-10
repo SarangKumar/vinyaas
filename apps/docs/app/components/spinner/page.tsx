@@ -6,7 +6,6 @@ import type {
   ComponentInPractice,
 } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { RefreshIcon } from "@/components/icons";
 import { Spinner } from "@/registry/new-york/ui/spinner";
 import { FormSubmitSpinner, SubmitSpinner } from "./spinner-demos";
 import type { Metadata } from "next";
@@ -139,19 +138,49 @@ export function RefreshingData() {
     id: "custom-icon",
     title: "Customization",
     description:
-      "Swap the default graphic for another icon component. The label names the work that is in progress.",
+      "Swap the default graphic for another icon, here a macOS-style activity indicator whose spokes step around the circle. The label names the work that is in progress.",
     preview: (
       <span className="inline-flex items-center gap-2 text-sm">
-        <RefreshIcon className="size-4 animate-spin motion-reduce:animate-none" />
+        <MacLoaderIcon className="size-4" />
         Refreshing data...
       </span>
     ),
-    code: `import { RefreshIcon } from "@/components/icons";
+    code: `import { cn } from "@/lib/utils";
+
+// macOS-style activity indicator: 8 spokes that fade around the circle.
+// steps(8) rotates one spoke at a time instead of a smooth spin.
+function MacLoaderIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={cn(
+        "animate-[spin_0.8s_steps(8)_infinite] motion-reduce:animate-none",
+        className,
+      )}
+    >
+      {Array.from({ length: 8 }, (_, index) => (
+        <line
+          key={index}
+          x1="12"
+          y1="3"
+          x2="12"
+          y2="7.5"
+          stroke="currentColor"
+          strokeWidth="2.25"
+          strokeLinecap="round"
+          opacity={1 - index * 0.11}
+          transform={\`rotate(\${-index * 45} 12 12)\`}
+        />
+      ))}
+    </svg>
+  );
+}
 
 export function RefreshingNote() {
   return (
-    <span className="inline-flex items-center gap-2 text-sm">
-      <RefreshIcon className="size-4 animate-spin motion-reduce:animate-none" />
+    <span role="status" className="inline-flex items-center gap-2 text-sm">
+      <MacLoaderIcon className="size-4" />
       Refreshing data...
     </span>
   );
@@ -159,6 +188,32 @@ export function RefreshingNote() {
 `,
   },
 ];
+
+/** macOS-style activity indicator used by the Customization example. */
+function MacLoaderIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={`animate-[spin_0.8s_steps(8)_infinite] motion-reduce:animate-none ${className ?? ""}`}
+    >
+      {Array.from({ length: 8 }, (_, index) => (
+        <line
+          key={index}
+          x1="12"
+          y1="3"
+          x2="12"
+          y2="7.5"
+          stroke="currentColor"
+          strokeWidth="2.25"
+          strokeLinecap="round"
+          opacity={1 - index * 0.11}
+          transform={`rotate(${-index * 45} 12 12)`}
+        />
+      ))}
+    </svg>
+  );
+}
 
 const inPractice: ComponentInPractice = {
   description:
