@@ -7,7 +7,7 @@ import { type CodeLanguage, type DemoCode } from "@/components/code-languages";
 
 /**
  * One preview and its source. String and dual TSX/JSX sources both follow the
- * shared Redux preference inside CodeBlock. Bash and other languages stay fixed.
+ * shared docs-store preference inside CodeBlock. Bash and other languages stay fixed.
  *
  * Preview chrome centers content horizontally and vertically. Full-bleed demos
  * (tables, sidebars, forms) should set `w-full` on their root; compact widgets

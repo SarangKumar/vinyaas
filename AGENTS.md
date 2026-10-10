@@ -64,6 +64,12 @@ A new component touches several places that tests keep in sync:
 6. `pnpm registry:build`, then update the tests that enumerate components (`component-meta.test.ts`, `docs-nav.test.ts`, `app/components/page.test.tsx`, `registry-item.test.ts` item count).
 7. The changelog entry in `apps/docs/app/changelog/changelog-data.ts`.
 
+### Docs site
+
+- Keep docs routes static. Do not read `cookies()`, `headers()`, or `searchParams` in layouts or pages; read query state on the client (see `app/changelog/changelog-view.tsx`). Check with `next build` that routes show `○`/`●`, not `ƒ`.
+- The site theme follows `prefers-color-scheme` before hydration (`app/docs.css` mirrors the `.dark` tokens from `app/globals.css`; keep them in sync), then `ThemeSync` applies the saved choice from localStorage.
+- `/cli` renders each command's `--help` from `apps/docs/app/cli/cli-help.ts`. When CLI commands or options change, regenerate it from `createProgram()` (80-column `helpInformation()`); `app/cli/cli-help.test.ts` fails on drift.
+
 ### CLI and Releases
 
 The CLI is in `packages/cli/`. Packaged output must work independently of the local development environment.

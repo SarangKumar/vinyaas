@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { docsNav, type DocsNavItem } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
@@ -28,6 +28,7 @@ function NavLink({
   current: boolean;
   density: "default" | "comfortable";
 }) {
+  const router = useRouter();
   const comfortable = density === "comfortable";
   const base = comfortable
     ? "flex min-h-12 cursor-pointer items-center gap-2 rounded-md px-3 py-3 text-base"
@@ -36,6 +37,11 @@ function NavLink({
   return (
     <Link
       href={item.href}
+      // The sidebar lists ~80 routes; prefetching every visible link costs
+      // several hundred KB right after first load. Prefetch on intent instead.
+      prefetch={false}
+      onMouseEnter={() => router.prefetch(item.href)}
+      onFocus={() => router.prefetch(item.href)}
       aria-current={current ? "page" : undefined}
       className={
         current

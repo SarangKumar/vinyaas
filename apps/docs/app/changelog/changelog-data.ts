@@ -24,6 +24,44 @@ const v11 = components.filter(
  */
 export const changelogVersions: ChangelogVersion[] = [
   {
+    id: "1.3.2",
+    label: "v1.3.2",
+    summary:
+      "v1.3.2 is a fit-and-finish and performance release: auto-growing Textarea, Kbd shortcuts that read evenly, a restyled Toast, Avatar symbol badges, a working empty-column drop in Drag & Drop, a static and lighter docs site, a refreshed site theme, an llm.txt map, and command options on the CLI page.",
+    sections: [
+      {
+        title: "Component improvements",
+        items: [
+          `Textarea: maxRows grows the field with its content (starting at rows) and scrolls once the limit is reached. showCount still shows a current/maxLength counter below the field.`,
+          `Kbd: mixed labels such as ⌘K render as one key with every character at the same height. KbdGroup groups separate keys of one shortcut.`,
+          `Command: CommandShortcut renders Kbd (command now depends on the kbd registry item), and the search field is 36px tall like Input and Button.`,
+          `Input Group: the field stays 36px including its border, matching Input, Button, Select, Combobox, Toggle, and Command.`,
+          `Toast: one popover surface for every state, a distinct icon per state (success, info, warning, error, loading), sonner-style type sizes, a compact primary action next to the close icon, and the icon aligned with the title line.`,
+          `Avatar: text badges stay on one line (for example ADMIN), and a single icon child renders a round symbol dot such as a verified check.`,
+          `Dialog: size="full" stays clear of the site header, and DialogFooter pins its actions to the bottom right of tall dialogs.`,
+          `Drag & Drop: boards use pointer-first collision detection, so a column that was emptied accepts items again.`,
+        ],
+      },
+      {
+        title: "Docs & site",
+        items: [
+          `Every docs route is prerendered as static HTML. The theme no longer uses a cookie: before hydration the site follows the system color scheme, then applies a saved light or dark choice from localStorage.`,
+          `Lighter first load: the docs drop Redux for a tiny built-in store, and sidebar links prefetch on hover or focus instead of all at once.`,
+          `New site theme with a 0.5rem radius and five neutral chart colors spread from black to white.`,
+          `llm.txt (also at llms.txt) lists every docs page and component for language models; it is the last Get Started link.`,
+          `CLI page: each command shows package-manager tabs and its --help options.`,
+          `Navigation Menu previews leave room for the open panel; Table examples show the exact code behind each preview; the Spinner customization uses a macOS-style activity indicator.`,
+          `Spacing: subsections get more room above them, playground and homepage gaps are 6px tighter, the homepage showcase is trimmed on laptop screens, and sidebar links are 1px smaller.`,
+          `Badge, Button, and Avatar previews sit in one row; the Typeset playground no longer reserves empty space under card titles; Score Ring is documented but not on the homepage.`,
+        ],
+      },
+      {
+        title: "Release",
+        items: [`CLI, docs, and workspace manifests are versioned 1.3.2.`],
+      },
+    ],
+  },
+  {
     id: "1.3.1",
     label: "v1.3.1",
     summary:
@@ -241,7 +279,7 @@ export const changelogVersions: ChangelogVersion[] = [
   },
 ];
 
-export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.3.1";
+export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.3.2";
 
 export function resolveChangelogVersionId(
   value: string | null | undefined,

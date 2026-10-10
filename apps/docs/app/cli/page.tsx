@@ -1,30 +1,37 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { CliHelpBlock } from "@/components/cli-help-block";
 import { CodeBlock } from "@/components/code-block";
 import { DocsArticle } from "@/components/docs-article";
 import { focusRing } from "@/components/focus-ring";
 import { InstallCommand } from "@/components/install-command";
-import { packageInstallCommands } from "@/components/package-managers";
+import {
+  cliCommands,
+  packageInstallCommands,
+} from "@/components/package-managers";
 import { componentsJsonPath, installationPath } from "@/components/docs-nav";
 import { pageMetadata } from "@/lib/page-metadata";
+
+import { cliHelp } from "./cli-help";
 
 export const metadata: Metadata = pageMetadata({
   title: "CLI",
   description:
-    "Vinyaas CLI v1.3.1: init, doctor, add by name/catalog/category, update/upgrade, catalogs, status, list, search, and info.",
+    "Vinyaas CLI v1.3.2: init, doctor, add by name/catalog/category, update/upgrade, catalogs, status, list, search, and info.",
   path: "/cli",
 });
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 const body = "text-foreground text-base leading-7";
+const optionsHeading = "text-foreground mt-2 text-sm font-semibold";
 
 export default function CliPage() {
   return (
     <DocsArticle
       title="CLI"
-      description="The vinyaas package on npm (v1.3.1) installs UI as editable source. Framework create-app flows live on Installation."
+      description="The vinyaas package on npm (v1.3.2) installs UI as editable source. Framework create-app flows live on Installation."
     >
       <section className="flex flex-col gap-4">
         <h2 id="overview" className={sectionHeading}>
@@ -87,6 +94,10 @@ export default function CliPage() {
         <CodeBlock language="bash" code="vinyaas init" />
         <CodeBlock language="bash" code="vinyaas init --yes" />
 
+        <InstallCommand commands={cliCommands("init")} />
+        <p className={optionsHeading}>Options</p>
+        <CliHelpBlock help={cliHelp.init} />
+
         <h3
           id="doctor"
           className="text-foreground scroll-mt-8 text-base font-semibold"
@@ -145,6 +156,10 @@ Registry
 
 No issues found.`}
         />
+
+        <InstallCommand commands={cliCommands("doctor")} />
+        <p className={optionsHeading}>Options</p>
+        <CliHelpBlock help={cliHelp.doctor} />
       </section>
 
       <section className="flex flex-col gap-4">
@@ -167,6 +182,10 @@ No issues found.`}
         <CodeBlock language="bash" code="vinyaas add button" />
         <CodeBlock language="bash" code="vinyaas add button card badge" />
         <CodeBlock language="bash" code="vinyaas add button card --yes" />
+
+        <InstallCommand commands={cliCommands("add button")} />
+        <p className={optionsHeading}>Options</p>
+        <CliHelpBlock help={cliHelp.add} />
 
         <h3
           id="catalog-install"
@@ -297,6 +316,10 @@ No issues found.`}
           </li>
         </ul>
 
+        <InstallCommand commands={cliCommands("update")} />
+        <p className={optionsHeading}>Options</p>
+        <CliHelpBlock help={cliHelp.update} />
+
         <h3
           id="status"
           className="text-foreground scroll-mt-8 text-base font-semibold"
@@ -310,6 +333,9 @@ No issues found.`}
         </p>
         <CodeBlock language="bash" code="vinyaas status" />
         <CodeBlock language="bash" code="vinyaas status --json" />
+        <InstallCommand commands={cliCommands("status")} />
+        <p className={optionsHeading}>Options</p>
+        <CliHelpBlock help={cliHelp.status} />
       </section>
 
       <section className="flex flex-col gap-4">
@@ -339,6 +365,22 @@ No issues found.`}
           description, docs URL, files, and dependencies. Filter with{" "}
           <code>--category</code>.
         </p>
+
+        <InstallCommand commands={cliCommands("catalog list")} />
+        <p className={optionsHeading}>catalog options</p>
+        <CliHelpBlock help={cliHelp.catalog} />
+
+        <InstallCommand commands={cliCommands("list")} />
+        <p className={optionsHeading}>list options</p>
+        <CliHelpBlock help={cliHelp.list} />
+
+        <InstallCommand commands={cliCommands("search button")} />
+        <p className={optionsHeading}>search options</p>
+        <CliHelpBlock help={cliHelp.search} />
+
+        <InstallCommand commands={cliCommands("info button")} />
+        <p className={optionsHeading}>info options</p>
+        <CliHelpBlock help={cliHelp.info} />
       </section>
 
       <section className="flex flex-col gap-4">
@@ -401,7 +443,7 @@ No issues found.`}
           Version
         </h2>
         <p className={body}>
-          Print the installed CLI version (currently v1.3.1).
+          Print the installed CLI version (currently v1.3.2).
         </p>
         <CodeBlock language="bash" code="vinyaas --version" />
       </section>

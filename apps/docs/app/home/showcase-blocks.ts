@@ -58,10 +58,12 @@ import { components } from "@/components/component-meta";
  * Sidebar stay docs-only.
  */
 
-/** Shell / nav primitives that are too dense for homepage masonry cards. */
+/** New components kept off the homepage masonry (dense shell/nav primitives, and Score Ring). */
 export const homepageExcludedNewComponents = [
   "navigation-menu",
   "sidebar",
+  // Kept off the homepage by request; documented at /components/score-ring.
+  "score-ring",
 ] as const;
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
@@ -95,7 +97,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   { id: "chart", weight: 6, components: ["chart"], Block: ChartBlock },
   {
     id: "analytics",
-    weight: 6,
+    weight: 5,
     components: [
       "select",
       "badge",
@@ -104,7 +106,6 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
       "label",
       "toggle",
       "toggle-group",
-      "score-ring",
     ],
     Block: AnalyticsBlock,
   },

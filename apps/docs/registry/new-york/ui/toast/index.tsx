@@ -183,7 +183,7 @@ function ToastIcon({ type }: { type: ToastType }) {
         aria-hidden="true"
         data-slot="toast-icon"
         data-icon="loading"
-        className="text-muted-foreground size-4 shrink-0 animate-[spin_0.8s_steps(8)_infinite] motion-reduce:animate-none"
+        className="text-muted-foreground mt-0.5 size-4 shrink-0 animate-[spin_0.8s_steps(8)_infinite] motion-reduce:animate-none"
       >
         {Array.from({ length: 8 }, (_, index) => (
           <line
@@ -209,7 +209,7 @@ function ToastIcon({ type }: { type: ToastType }) {
       aria-hidden="true"
       data-slot="toast-icon"
       data-icon={type}
-      className="size-4 shrink-0"
+      className="mt-0.5 size-4 shrink-0"
       fill="currentColor"
     >
       {type === "success" ? (
@@ -336,7 +336,7 @@ export function Toaster({
           aria-busy={item.type === "loading" ? true : undefined}
           // Every state shares one popover surface; only the icon changes.
           className={cn(
-            "border-border bg-popover text-popover-foreground pointer-events-auto flex w-full items-center gap-2 rounded-lg border p-4 text-[13px] leading-normal shadow-lg",
+            "border-border bg-popover text-popover-foreground pointer-events-auto flex w-full items-start gap-2 rounded-lg border p-4 text-[13px] leading-normal shadow-lg",
             item.exiting ? "vinyaas-toast-out" : "vinyaas-toast-in",
           )}
           onMouseEnter={() => pause(item.id)}
@@ -362,7 +362,8 @@ export function Toaster({
               </p>
             ) : null}
           </div>
-          <div className="flex shrink-0 items-center gap-1">
+          {/* Icon and title share the first line; actions stay centered on the toast. */}
+          <div className="flex shrink-0 items-center gap-1 self-center">
             {item.actionProps ? (
               <button
                 type="button"

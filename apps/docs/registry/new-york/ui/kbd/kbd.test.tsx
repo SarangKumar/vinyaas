@@ -70,4 +70,19 @@ describe("Kbd", () => {
     expect(group).toHaveClass("inline-flex", "gap-1");
     expect(screen.getByText("⌘")).toHaveAttribute("data-symbol");
   });
+
+  it("renders a mixed shortcut such as ⌘K as one key with an enlarged symbol", () => {
+    render(<Kbd>⌘K</Kbd>);
+
+    const key = screen.getByText(
+      (_, element) =>
+        element?.tagName === "KBD" && element.textContent === "⌘K",
+    );
+    const glyph = key.querySelector("[data-symbol-glyph]");
+
+    expect(key).not.toHaveAttribute("data-symbol");
+    expect(key).toHaveClass("h-5", "font-mono");
+    expect(glyph).toHaveTextContent("⌘");
+    expect(glyph).toHaveClass("text-[0.9375rem]");
+  });
 });

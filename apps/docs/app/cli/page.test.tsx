@@ -13,7 +13,7 @@ function renderWithStore(ui: React.ReactElement) {
 }
 
 describe("CLI docs", () => {
-  it("renders the v1.3.1 CLI guide with setup, install, and discover sections", () => {
+  it("renders the v1.3.2 CLI guide with setup, install, and discover sections", () => {
     renderWithStore(<CliPage />);
 
     expect(
@@ -88,7 +88,7 @@ describe("CLI docs", () => {
     expect(body).toContain("vinyaas info button");
     expect(body).toContain("REGISTRY_BASE_PATH");
     expect(body).toContain("vinyaas --version");
-    expect(body).toContain("v1.3.1");
+    expect(body).toContain("v1.3.2");
     expect(body).not.toContain("dist/index.js vinyaas");
     expect(body).not.toMatch(/node packages\/cli\/dist\/index\.js vinyaas/);
     expect(body).not.toContain("vinyaas vinyaas");
@@ -101,7 +101,7 @@ describe("CLI docs", () => {
       screen.getByRole("link", { name: "components.json" }),
     ).toHaveAttribute("href", "/components-json");
     expect(metadata.title).toBe("CLI");
-    expect(metadata.description).toMatch(/v1\.3\.1/);
+    expect(metadata.description).toMatch(/v1\.3\.2/);
     expect(metadata.alternates).toMatchObject({ canonical: "/cli" });
   });
 });

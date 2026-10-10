@@ -8,6 +8,9 @@ import {
 import { changelogPath, companionPath } from "@/components/docs-nav";
 import { focusRing } from "@/components/focus-ring";
 
+// Links here use prefetch={false}: the card lists ~25 routes on every page and
+// prefetching them all would dominate the first-load traffic.
+
 /** Companions introduced after the v1.2 Ember / Soul / Moss set. */
 const NEW_COMPANIONS = [
   { id: "flint", name: "Flint" },
@@ -44,7 +47,11 @@ export function DocsFeatureCard() {
           {newlyIntroduced.map((component, index) => (
             <span key={component.slug}>
               {index > 0 ? ", " : null}
-              <Link href={componentHref(component.slug)} className={inlineLink}>
+              <Link
+                prefetch={false}
+                href={componentHref(component.slug)}
+                className={inlineLink}
+              >
                 {component.name}
               </Link>
             </span>
@@ -62,6 +69,7 @@ export function DocsFeatureCard() {
           <span key={companion.id}>
             {index > 0 ? ", " : null}
             <Link
+              prefetch={false}
               href={`${companionPath}/${companion.id}`}
               className={inlineLink}
             >
@@ -70,12 +78,13 @@ export function DocsFeatureCard() {
           </span>
         ))}
         .{" "}
-        <Link href={companionPath} className={inlineLink}>
+        <Link prefetch={false} href={companionPath} className={inlineLink}>
           Meet them all
         </Link>
         .
       </p>
       <Link
+        prefetch={false}
         href={changelogPath}
         className={`text-muted-foreground hover:text-foreground mt-2.5 inline-flex text-xs underline underline-offset-4 ${focusRing} rounded-sm`}
       >

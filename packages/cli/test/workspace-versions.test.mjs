@@ -12,17 +12,17 @@ function readPackage(relativePath) {
 }
 
 describe("workspace package versions", () => {
-  it("versions CLI and docs independently for the v1.3.1 release", () => {
+  it("versions CLI and docs independently for the v1.3.2 release", () => {
     const root = readPackage("package.json");
     const cli = readPackage("packages/cli/package.json");
     const docs = readPackage("apps/docs/package.json");
 
     assert.equal(root.name, "vinyaas-monorepo");
     assert.equal(root.private, true);
-    assert.equal(root.version, "1.3.1");
+    assert.equal(root.version, "1.3.2");
 
     assert.equal(cli.name, "vinyaas");
-    assert.equal(cli.version, "1.3.1");
+    assert.equal(cli.version, "1.3.2");
     assert.equal(cli.bin.vinyaas, "dist/index.js");
     assert.equal(cli.publishConfig?.access, "public");
     assert.match(cli.description, /registry-driven React component/i);
@@ -33,7 +33,6 @@ describe("workspace package versions", () => {
 
     assert.equal(docs.name, "docs");
     assert.equal(docs.private, true);
-    assert.equal(docs.version, "1.3.1");
+    assert.equal(docs.version, "1.3.2");
   });
 });
-

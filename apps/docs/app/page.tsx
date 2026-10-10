@@ -31,14 +31,14 @@ const HomeShowcase = dynamic(
 export const metadata: Metadata = {
   title: "Vinyaas",
   description:
-    "Composable React components you install as source. The v1.3.1 catalog covers forms, overlays, feedback, and product UI.",
+    "Composable React components you install as source. The v1.3.2 catalog covers forms, overlays, feedback, and product UI.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "Vinyaas",
     description:
-      "Composable React components you install as source. v1.3.1 production catalog.",
+      "Composable React components you install as source. v1.3.2 production catalog.",
     type: "website",
     url: "/",
     images: [

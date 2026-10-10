@@ -93,7 +93,7 @@ describe("components catalog", () => {
     expect(document.body.textContent).toContain(
       `The catalog has ${components.length} independently installable`,
     );
-    expect(document.body.textContent).toContain("v1.3.1");
+    expect(document.body.textContent).toContain("v1.3.2");
   });
 });
 

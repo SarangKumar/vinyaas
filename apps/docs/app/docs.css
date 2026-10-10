@@ -33,7 +33,7 @@
   /*
    * Homepage playground rhythm. --gap is set from these on the shell
    * and shrinks on smaller viewports.
-   * Aligns with Tailwind spacing: 4=1rem, 6=1.5rem, 8=2rem, 10=2.5rem.
+   * Each step is 6px tighter than the Tailwind 4/6/8/10 spacing it started from.
    */
   --playground-gap: 0.625rem;
   --playground-gap-md: 1.125rem;
@@ -367,21 +367,22 @@ code[data-language] .hljs-operator {
     --accent: oklch(0.274 0.006 286.033);
     --accent-foreground: oklch(0.985 0 0);
     --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 8%);
-    --input: oklch(1 0 0 / 12%);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.552 0.016 285.938);
-    --chart-1: oklch(0.88 0.01 286.32);
-    --chart-2: oklch(0.8 0.008 286.32);
-    --chart-3: oklch(0.72 0.006 286.32);
-    --chart-4: oklch(0.64 0.005 286.32);
-    --chart-5: oklch(0.56 0.004 286.32);
+    /* Charts: five neutral steps from white to mid-dark gray (distinct on near-black). */
+    --chart-1: oklch(0.97 0 0);
+    --chart-2: oklch(0.83 0 0);
+    --chart-3: oklch(0.68 0 0);
+    --chart-4: oklch(0.53 0 0);
+    --chart-5: oklch(0.4 0 0);
     --sidebar: oklch(0.21 0.006 285.885);
     --sidebar-foreground: oklch(0.985 0 0);
     --sidebar-primary: oklch(0.488 0.243 264.376);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(0.274 0.006 286.033);
     --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 8%);
+    --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.552 0.016 285.938);
   }
 }

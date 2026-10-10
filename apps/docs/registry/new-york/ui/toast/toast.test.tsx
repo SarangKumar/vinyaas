@@ -262,4 +262,21 @@ describe("Toast", () => {
       "toast-title",
     );
   });
+
+  it("aligns the state icon with the title line", async () => {
+    render(<Toaster />);
+    await flushMount();
+    act(() => {
+      toast.add({
+        title: "Saved",
+        description: "Two lines of content.",
+        type: "success",
+      });
+    });
+
+    const node = screen.getByRole("status");
+
+    expect(node).toHaveClass("items-start");
+    expect(node.querySelector("[data-slot=toast-icon]")).toHaveClass("mt-0.5");
+  });
 });

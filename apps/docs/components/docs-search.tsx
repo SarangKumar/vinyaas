@@ -183,7 +183,7 @@ const docPages: SearchPage[] = [
   {
     title: "Changelog",
     href: "/changelog",
-    description: "What shipped through v1.3.1.",
+    description: "What shipped through v1.3.2.",
     group: "Pages",
   },
   {
@@ -298,14 +298,7 @@ export function DocsSearchField() {
     >
       <SearchIcon className="size-4 shrink-0" />
       <span className="truncate">Search documentation...</span>
-      {hint === "⌘K" ? (
-        <KbdGroup className="ml-auto">
-          <Kbd>⌘</Kbd>
-          <Kbd>K</Kbd>
-        </KbdGroup>
-      ) : (
-        <Kbd className="ml-auto">{hint}</Kbd>
-      )}
+      <Kbd className="ml-auto">{hint}</Kbd>
     </button>
   );
 }

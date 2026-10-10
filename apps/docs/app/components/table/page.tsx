@@ -88,6 +88,10 @@ export function Team() {
           <TableCell>Ada Lovelace</TableCell>
           <TableCell>Writer</TableCell>
         </TableRow>
+        <TableRow>
+          <TableCell>Grace Hopper</TableCell>
+          <TableCell>Scientist</TableCell>
+        </TableRow>
       </TableBody>
     </Table>
   );
@@ -117,11 +121,17 @@ const examples: ComponentExample[] = [
   <TableHeader>
     <TableRow>
       <TableHead>Name</TableHead>
+      <TableHead>Role</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     <TableRow>
       <TableCell>Ada Lovelace</TableCell>
+      <TableCell>Writer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Grace Hopper</TableCell>
+      <TableCell>Scientist</TableCell>
     </TableRow>
   </TableBody>
 </Table>`,
@@ -136,8 +146,19 @@ const examples: ComponentExample[] = [
   <TableHeader>
     <TableRow>
       <TableHead>Name</TableHead>
+      <TableHead>Role</TableHead>
     </TableRow>
   </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Ada Lovelace</TableCell>
+      <TableCell>Writer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Grace Hopper</TableCell>
+      <TableCell>Scientist</TableCell>
+    </TableRow>
+  </TableBody>
 </Table>`,
   },
   {
@@ -145,11 +166,30 @@ const examples: ComponentExample[] = [
     title: "Footer",
     description: "TableFooter is a native tfoot for a summary row.",
     preview: <TeamTable footer />,
-    code: `<TableFooter>
-  <TableRow>
-    <TableCell>2 people</TableCell>
-  </TableRow>
-</TableFooter>`,
+    code: `<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead>Role</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Ada Lovelace</TableCell>
+      <TableCell>Writer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Grace Hopper</TableCell>
+      <TableCell>Scientist</TableCell>
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell>2 people</TableCell>
+      <TableCell />
+    </TableRow>
+  </TableFooter>
+</Table>`,
   },
   {
     id: "responsive",
@@ -161,7 +201,7 @@ const examples: ComponentExample[] = [
         <TeamTable wide />
       </div>
     ),
-    code: `<div className="overflow-x-auto">
+    code: `<div className="w-full max-w-md overflow-x-auto">
   <Table className="min-w-[40rem]">
     <TableHeader>
       <TableRow>
@@ -169,6 +209,16 @@ const examples: ComponentExample[] = [
         <TableHead>Role</TableHead>
       </TableRow>
     </TableHeader>
+    <TableBody>
+      <TableRow>
+        <TableCell>Ada Lovelace</TableCell>
+        <TableCell>Writer</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>Grace Hopper</TableCell>
+        <TableCell>Scientist</TableCell>
+      </TableRow>
+    </TableBody>
   </Table>
 </div>`,
   },
@@ -342,7 +392,7 @@ export default async function TablePage() {
       }
       source={source}
     >
-      <TeamTable caption="Team" />
+      <TeamTable />
     </ComponentReference>
   );
 }

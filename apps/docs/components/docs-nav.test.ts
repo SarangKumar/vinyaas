@@ -72,6 +72,7 @@ describe("documentation navigation", () => {
       "Typeset",
       "Package Import",
       "CLI",
+      "llm.txt",
     ]);
     expect(getStarted?.every((item) => !item.children?.length)).toBe(true);
 

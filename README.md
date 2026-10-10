@@ -2,7 +2,7 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
-**v1.3.1** is the current release. It adds Toggle, Toggle Group, and Score Ring, `vinyaas update` (alias `upgrade`), form, dialog, resizable, data table, toast, and chart refinements, registry-owned catalogs, a release-wide accessibility contract, and CLI catalog/`--dry-run` UX on top of the existing installable set (forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities). Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
+**v1.3.2** is the current release. It adds an auto-growing Textarea (`maxRows`), single-key `⌘K` Kbd labels, a restyled Toast, a static and lighter docs site, and `/llm.txt`, on top of v1.3.1's Toggle, Toggle Group, Score Ring, `vinyaas update` (alias `upgrade`), form, dialog, resizable, data table, toast, and chart refinements, registry-owned catalogs, a release-wide accessibility contract, and CLI catalog/`--dry-run` UX on top of the existing installable set (forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities). Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
 
 ## Prerequisites
 

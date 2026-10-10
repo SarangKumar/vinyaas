@@ -63,6 +63,9 @@ export const darkModePath = "/dark-mode";
 
 export const changelogPath = "/changelog";
 
+/** Plain-text docs map for LLMs (llms.txt convention). */
+export const llmsTxtPath = "/llm.txt";
+
 export type DocsNavItem = {
   title: string;
   href: string;
@@ -107,6 +110,7 @@ export const docsNav: DocsNavGroup[] = [
       { title: "Typeset", href: typesetPath },
       { title: "Package Import", href: packageImportPath },
       { title: "CLI", href: cliPath },
+      { title: "llm.txt", href: llmsTxtPath },
     ],
   },
   {

@@ -83,12 +83,13 @@ describe("installable command registry", () => {
           baseUrl,
         });
 
+        // CommandShortcut renders Kbd, so kbd resolves first.
         assert.deepEqual(
           items.map((item) => item.name),
-          ["command"],
+          ["kbd", "command"],
         );
-        assert.equal(items[0].registryDependencies, undefined);
-        assert.deepEqual(items[0].dependencies, ["clsx", "tailwind-merge"]);
+        assert.deepEqual(items[1].registryDependencies, ["kbd"]);
+        assert.deepEqual(items[1].dependencies, ["clsx", "tailwind-merge"]);
 
         await writeFile(
           join(cwd, "package.json"),
@@ -146,8 +147,9 @@ describe("installable command registry", () => {
         await run(process.execPath, [cli, "add", "command"], cwd, {
           REGISTRY_BASE_URL: baseUrl,
         });
-        assert.deepEqual(requested.slice(requestedBeforeAdd), [
+        assert.deepEqual(requested.slice(requestedBeforeAdd).sort(), [
           "r/new-york/command.json",
+          "r/new-york/kbd.json",
         ]);
         await writeFile(
           join(cwd, "components/ui/command/example.tsx"),
@@ -177,6 +179,11 @@ describe("installable command registry", () => {
 
         assert.match(installed, /from "@\/lib\/utils"/);
         assert.match(installed, /CommandInput/);
+        assert.match(installed, /from "\.\.\/kbd"/);
+        assert.match(
+          await readFile(join(cwd, "components/ui/kbd/index.tsx"), "utf8"),
+          /export function Kbd/,
+        );
         assert.match(utils, /export function cn/);
         assert.match(config, /"style": "new-york"/);
         assert.deepEqual(

@@ -1,11 +1,14 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { components } from "./component-meta";
 import { DocsNavLinks } from "./docs-nav-links";
 
+const router = vi.hoisted(() => ({ prefetch: vi.fn(), push: vi.fn() }));
+
 vi.mock("next/navigation", () => ({
   usePathname: () => "/components/input",
+  useRouter: () => router,
 }));
 
 describe("DocsNavLinks", () => {
@@ -159,5 +162,21 @@ describe("DocsNavLinks", () => {
     expect(
       within(nav).getByRole("link", { name: "Button" }),
     ).not.toHaveAttribute("aria-current");
+  });
+
+  it("prefetches a sidebar route on hover or focus instead of on render", () => {
+    router.prefetch.mockClear();
+    render(<DocsNavLinks />);
+
+    const nav = screen.getByRole("navigation", { name: "Documentation" });
+    const cli = within(nav).getByRole("link", { name: "CLI" });
+
+    expect(router.prefetch).not.toHaveBeenCalled();
+
+    fireEvent.mouseEnter(cli);
+    expect(router.prefetch).toHaveBeenCalledWith("/cli");
+
+    fireEvent.focus(within(nav).getByRole("link", { name: "Button" }));
+    expect(router.prefetch).toHaveBeenCalledWith("/components/button");
   });
 });

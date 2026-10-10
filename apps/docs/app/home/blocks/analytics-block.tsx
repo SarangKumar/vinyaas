@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/new-york/ui/select";
-import { ScoreRing } from "@/registry/new-york/ui/score-ring";
 import { Separator } from "@/registry/new-york/ui/separator";
 import { Toggle } from "@/registry/new-york/ui/toggle";
 import {
@@ -80,15 +79,6 @@ export function AnalyticsBlock() {
         ))}
       </div>
       <Separator />
-      <div className="flex min-w-0 items-center gap-3">
-        <ScoreRing size="sm" value={86} label="Health score" />
-        <div className="min-w-0">
-          <p className="text-sm font-medium">Workspace health</p>
-          <p className="text-muted-foreground text-xs">
-            Based on activity and retention.
-          </p>
-        </div>
-      </div>
       <dl className="grid min-w-0 gap-3 text-sm">
         {highlights.map((item) => (
           <div

@@ -24,15 +24,23 @@ vi.mock("next/navigation", () => ({
 
 describe("changelog data", () => {
   it("defaults to the latest released version", () => {
-    expect(latestChangelogVersionId).toBe("1.3.1");
-    expect(resolveChangelogVersionId(undefined)).toBe("1.3.1");
-    expect(resolveChangelogVersionId("nope")).toBe("1.3.1");
+    expect(latestChangelogVersionId).toBe("1.3.2");
+    expect(resolveChangelogVersionId(undefined)).toBe("1.3.2");
+    expect(resolveChangelogVersionId("nope")).toBe("1.3.2");
     expect(changelogVersions[0]?.id).toBe(latestChangelogVersionId);
   });
 
   it("lists known versions without gap or shadcn marketing copy", () => {
     const ids = changelogVersions.map((version) => version.id);
-    expect(ids).toEqual(["1.3.1", "1.3.0", "1.2.0", "1.1.0", "1.0.0", "0.1"]);
+    expect(ids).toEqual([
+      "1.3.2",
+      "1.3.1",
+      "1.3.0",
+      "1.2.0",
+      "1.1.0",
+      "1.0.0",
+      "0.1",
+    ]);
     const text = JSON.stringify(changelogVersions);
     expect(text).not.toMatch(/shadcn/i);
     expect(text).not.toContain("Not in this version");
@@ -57,7 +65,7 @@ describe("Changelog page", () => {
     await waitFor(() => {
       expect(
         screen.getByRole("combobox", { name: "Changelog version" }),
-      ).toHaveTextContent("v1.3.1");
+      ).toHaveTextContent("v1.3.2");
     });
     expect(screen.queryByPlaceholderText("Search versions…")).toBeNull();
     fireEvent.click(
@@ -65,12 +73,32 @@ describe("Changelog page", () => {
     );
     expect(screen.getByPlaceholderText("Search versions…")).toBeInTheDocument();
     fireEvent.keyDown(document, { key: "Escape" });
-    expect(screen.getByRole("heading", { name: "v1.3.1" })).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "v1.2.0" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "v1.3.2" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "v1.3.1" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "v0.1" })).toBeNull();
+    expect(
+      screen.getByRole("heading", { name: "Component improvements" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Docs & site" }),
     ).toBeInTheDocument();
+    expect(document.body.textContent).toContain("maxRows");
+    expect(document.body.textContent).toContain("llm.txt");
+    expect(document.body.textContent).toContain(`v${currentVersion}`);
+    expect(document.body.textContent).not.toContain("ui.shadcn.com");
+    expect(document.body.textContent).not.toContain("Not in this version");
+    expect(screen.queryByRole("heading", { name: "Planned" })).toBeNull();
+  });
+
+  it("keeps the v1.3.1 notes behind ?v=1.3.1", async () => {
+    navigation.search = "v=1.3.1";
+    render(ChangelogPage());
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: "v1.3.1" }),
+      ).toBeInTheDocument();
+    });
     expect(
       screen.getByRole("heading", { name: "Companions" }),
     ).toBeInTheDocument();
@@ -79,11 +107,6 @@ describe("Changelog page", () => {
     ).toBeInTheDocument();
     expect(document.body.textContent).toContain("Nyx");
     expect(document.body.textContent).toContain("theme_change");
-    expect(document.body.textContent).toContain("system preference");
-    expect(document.body.textContent).toContain(`v${currentVersion}`);
-    expect(document.body.textContent).not.toContain("ui.shadcn.com");
-    expect(document.body.textContent).not.toContain("Not in this version");
-    expect(screen.queryByRole("heading", { name: "Planned" })).toBeNull();
   });
 
   it("renders another version when selected via the query param", async () => {
