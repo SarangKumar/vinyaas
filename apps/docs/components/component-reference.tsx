@@ -2,7 +2,11 @@ import type { ReactNode } from "react";
 
 import { ApiTable, type ApiRow } from "@/components/api-table";
 import { CodeBlock } from "@/components/code-block";
-import { ComponentDemo } from "@/components/component-demo";
+import {
+  ComponentDemo,
+  type ControlDef,
+  type ControlValues,
+} from "@/components/component-demo";
 import type { CodeLanguage, DemoCode } from "@/components/code-languages";
 import { DocsArticle } from "@/components/docs-article";
 import {
@@ -20,17 +24,19 @@ export type ComponentExample = {
   id: string;
   title: string;
   description: string;
-  preview: ReactNode;
-  code: DemoCode;
+  preview: ReactNode | ((values: ControlValues) => ReactNode);
+  code: DemoCode | ((values: ControlValues) => DemoCode);
   language?: CodeLanguage;
+  controls?: ControlDef[];
 };
 
 /** Realistic multi-component composition shown immediately before API. */
 export type ComponentInPractice = {
   description: string;
-  preview: ReactNode;
-  code: DemoCode;
+  preview: ReactNode | ((values: ControlValues) => ReactNode);
+  code: DemoCode | ((values: ControlValues) => DemoCode);
   language?: CodeLanguage;
+  controls?: ControlDef[];
 };
 
 /**
@@ -47,6 +53,7 @@ export function ComponentReference({
   manual,
   usage,
   examples,
+  examplesSlot,
   inPractice,
   api,
   accessibility,
@@ -60,6 +67,8 @@ export function ComponentReference({
   manual?: ReactNode;
   usage: string;
   examples?: ComponentExample[];
+  /** Rendered in the Examples section in place of generated example cards. */
+  examplesSlot?: ReactNode;
   inPractice?: ComponentInPractice;
   api?: ApiRow[];
   accessibility?: ReactNode;
@@ -67,7 +76,14 @@ export function ComponentReference({
   children: ReactNode;
 }) {
   return (
-    <DocsArticle title={title} description={description}>
+    <DocsArticle
+      title={title}
+      description={description}
+      breadcrumbs={[
+        { label: "Components", href: "/components" },
+        { label: title },
+      ]}
+    >
       {overview ? (
         <section className="flex flex-col gap-4">
           <h2 id="overview" className={sectionHeading}>
@@ -111,7 +127,14 @@ export function ComponentReference({
         </h2>
         <CodeBlock code={usage} language="tsx" />
       </section>
-      {examples && examples.length > 0 ? (
+      {examplesSlot ? (
+        <section className="flex flex-col gap-10">
+          <h2 id="examples" className={sectionHeading}>
+            Examples
+          </h2>
+          {examplesSlot}
+        </section>
+      ) : examples && examples.length > 0 ? (
         <section className="flex flex-col gap-10">
           <h2 id="examples" className={sectionHeading}>
             Examples
@@ -126,6 +149,7 @@ export function ComponentReference({
                 preview={example.preview}
                 code={example.code}
                 language={example.language}
+                controls={example.controls}
               />
             </div>
           ))}
@@ -141,6 +165,7 @@ export function ComponentReference({
             preview={inPractice.preview}
             code={inPractice.code}
             language={inPractice.language}
+            controls={inPractice.controls}
           />
         </section>
       ) : null}

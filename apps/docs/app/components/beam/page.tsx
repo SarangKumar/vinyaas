@@ -1,20 +1,11 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ApiRow } from "@/components/api-table";
-import type {
-  ComponentExample,
-  ComponentInPractice,
-} from "@/components/component-reference";
+import type { ComponentInPractice } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
-import {
-  BeamDemo,
-  AIFlowDemo,
-  SyncDemo,
-  HubDemo,
-  PipelineDemo,
-} from "./beam-demos";
+import { BeamDemo, BeamInteractiveSection, PipelineDemo } from "./beam-demos";
 
 export const metadata: Metadata = componentPageMetadata("beam");
 
@@ -136,128 +127,6 @@ const api: ApiRow[] = [
   },
 ];
 
-const examples: ComponentExample[] = [
-  {
-    id: "default",
-    title: "Default",
-    description:
-      "A dotted arc with a glowing ray pulse from source to destination.",
-    preview: <BeamDemo />,
-    code: `"use client";
-import { useRef } from "react";
-import { Beam, BeamNode } from "@/components/ui/beam";
-
-export function Demo() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const fromRef = useRef<HTMLDivElement>(null);
-  const toRef = useRef<HTMLDivElement>(null);
-
-  return (
-    <div ref={containerRef} className="relative flex items-center justify-center gap-20 py-8">
-      <BeamNode ref={fromRef}><SourceIcon /></BeamNode>
-      <BeamNode ref={toRef} highlight><DestIcon /></BeamNode>
-      <Beam containerRef={containerRef} fromRef={fromRef} toRef={toRef} />
-    </div>
-  );
-}`,
-  },
-  {
-    id: "ai-flow",
-    title: "AI processing flow",
-    description:
-      "Documents feed into an AI model and results come out — two staggered beams show data moving through stages.",
-    preview: <AIFlowDemo />,
-    code: `"use client";
-import { useRef } from "react";
-import { Beam, BeamNode } from "@/components/ui/beam";
-
-export function Demo() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const docsRef = useRef<HTMLDivElement>(null);
-  const modelRef = useRef<HTMLDivElement>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
-
-  return (
-    <div ref={containerRef} className="relative flex w-full items-center justify-between px-6 py-10">
-      <div className="flex flex-col items-center gap-2">
-        <BeamNode ref={docsRef}><DocumentIcon /></BeamNode>
-        <span className="text-xs text-muted-foreground">Documents</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <BeamNode ref={modelRef} highlight size="lg"><BrainIcon /></BeamNode>
-        <span className="text-xs text-muted-foreground">AI Model</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <BeamNode ref={resultRef}><ChartIcon /></BeamNode>
-        <span className="text-xs text-muted-foreground">Results</span>
-      </div>
-      <Beam containerRef={containerRef} fromRef={docsRef} toRef={modelRef} duration={2.5} />
-      <Beam containerRef={containerRef} fromRef={modelRef} toRef={resultRef} duration={2.5} delay={0.6} />
-    </div>
-  );
-}`,
-  },
-  {
-    id: "bidirectional",
-    title: "Bidirectional sync",
-    description:
-      "Two beams with opposite curvature and reverse create a looping sync between two nodes.",
-    preview: <SyncDemo />,
-    code: `"use client";
-import { useRef } from "react";
-import { Beam, BeamNode } from "@/components/ui/beam";
-
-export function Demo() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const leftRef = useRef<HTMLDivElement>(null);
-  const rightRef = useRef<HTMLDivElement>(null);
-
-  return (
-    <div ref={containerRef} className="relative flex items-center justify-center gap-28 py-10">
-      <BeamNode ref={leftRef} highlight><DatabaseIcon /></BeamNode>
-      <BeamNode ref={rightRef} highlight><CloudIcon /></BeamNode>
-      {/* Forward */}
-      <Beam containerRef={containerRef} fromRef={leftRef} toRef={rightRef} curvature={-40} duration={2} track="dashed" />
-      {/* Reverse */}
-      <Beam containerRef={containerRef} fromRef={leftRef} toRef={rightRef} curvature={40} reverse duration={2} delay={1} track="dashed" />
-    </div>
-  );
-}`,
-  },
-  {
-    id: "hub",
-    title: "Hub and spoke",
-    description:
-      "A central API gateway receives a request and fans out to auth and storage in parallel.",
-    preview: <HubDemo />,
-    code: `"use client";
-import { useRef } from "react";
-import { Beam, BeamNode } from "@/components/ui/beam";
-
-export function Demo() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const hubRef = useRef<HTMLDivElement>(null);
-  const topRef = useRef<HTMLDivElement>(null);
-  const leftRef = useRef<HTMLDivElement>(null);
-  const rightRef = useRef<HTMLDivElement>(null);
-
-  return (
-    <div ref={containerRef} className="relative flex flex-col items-center gap-4 py-6">
-      <BeamNode ref={topRef} size="sm"><ClientIcon /></BeamNode>
-      <BeamNode ref={hubRef} highlight size="lg"><GatewayIcon /></BeamNode>
-      <div className="flex w-full justify-around">
-        <BeamNode ref={leftRef} size="sm"><AuthIcon /></BeamNode>
-        <BeamNode ref={rightRef} size="sm"><StorageIcon /></BeamNode>
-      </div>
-      <Beam containerRef={containerRef} fromRef={topRef} toRef={hubRef} duration={2} />
-      <Beam containerRef={containerRef} fromRef={hubRef} toRef={leftRef} duration={2} delay={0.4} />
-      <Beam containerRef={containerRef} fromRef={hubRef} toRef={rightRef} duration={2} delay={0.8} />
-    </div>
-  );
-}`,
-  },
-];
-
 const inPracticeSource = `"use client";
 import { useRef } from "react";
 import { Beam, BeamNode } from "@/components/ui/beam";
@@ -350,7 +219,21 @@ export default async function BeamPage() {
         </p>
       }
       usage={usage}
-      examples={examples}
+      examplesSlot={
+        <div className="flex flex-col gap-3">
+          <h3
+            id="interactive"
+            className="text-foreground scroll-mt-8 text-base font-semibold tracking-tight"
+          >
+            Interactive
+          </h3>
+          <p className="text-muted-foreground text-base">
+            Adjust curvature, duration, track style, pulse shape, and more using
+            the Customize panel below.
+          </p>
+          <BeamInteractiveSection />
+        </div>
+      }
       inPractice={inPractice}
       api={api}
       accessibility={

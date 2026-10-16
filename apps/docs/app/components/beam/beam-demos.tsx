@@ -2,6 +2,16 @@
 
 import { useRef } from "react";
 import { Beam, BeamNode } from "@/registry/new-york/ui/beam";
+import type {
+  BeamTrack,
+  BeamShape,
+  BeamPulse,
+} from "@/registry/new-york/ui/beam";
+import {
+  ComponentDemo,
+  type ControlDef,
+  type ControlValues,
+} from "@/components/component-demo";
 
 /* ── Basic demo ──────────────────────────────────────────────────────────── */
 
@@ -296,6 +306,191 @@ export function HubDemo() {
         toRef={bottomRightRef}
         duration={2}
         delay={0.8}
+      />
+    </div>
+  );
+}
+
+/* ── Interactive single-beam demo (used with controls panel) ─────────────── */
+
+const beamControls: ControlDef[] = [
+  {
+    key: "curvature",
+    label: "Curvature",
+    type: "range",
+    default: 0,
+    min: -120,
+    max: 120,
+  },
+  {
+    key: "duration",
+    label: "Duration",
+    type: "range",
+    default: 3,
+    min: 0.5,
+    max: 10,
+    step: 0.5,
+    unit: "s",
+  },
+  {
+    key: "pulseLength",
+    label: "Pulse Length",
+    type: "range",
+    default: 0.2,
+    min: 0.05,
+    max: 0.8,
+    step: 0.05,
+  },
+  {
+    key: "width",
+    label: "Width",
+    type: "range",
+    default: 1,
+    min: 1,
+    max: 6,
+    step: 0.5,
+  },
+  { key: "gap", label: "Gap", type: "range", default: 6, min: 0, max: 24 },
+  {
+    key: "pulseColor",
+    label: "Pulse Color",
+    type: "color",
+    default: "#8b5cf6",
+  },
+  {
+    key: "track",
+    label: "Track",
+    type: "select",
+    default: "dotted",
+    options: [
+      { value: "dotted", label: "Dotted" },
+      { value: "dashed", label: "Dashed" },
+      { value: "solid", label: "Solid" },
+    ],
+  },
+  {
+    key: "shape",
+    label: "Shape",
+    type: "select",
+    default: "arc",
+    options: [
+      { value: "arc", label: "Arc" },
+      { value: "curve", label: "Curve" },
+    ],
+  },
+  {
+    key: "pulse",
+    label: "Pulse",
+    type: "select",
+    default: "ray",
+    options: [
+      { value: "ray", label: "Ray" },
+      { value: "dot", label: "Dot" },
+    ],
+  },
+  { key: "reverse", label: "Reverse", type: "toggle", default: false },
+  { key: "arrow", label: "Arrow", type: "toggle", default: false },
+];
+
+function beamCode(v: ControlValues): string {
+  const extraProps = [
+    v.curvature !== 0 && `  curvature={${v.curvature}}`,
+    v.duration !== 3 && `  duration={${v.duration}}`,
+    v.pulseLength !== 0.2 && `  pulseLength={${v.pulseLength}}`,
+    v.width !== 1 && `  width={${v.width}}`,
+    v.gap !== 6 && `  gap={${v.gap}}`,
+    v.pulseColor !== "#8b5cf6" && `  pulseColor="${v.pulseColor}"`,
+    v.track !== "dotted" && `  track="${v.track}"`,
+    v.shape !== "arc" && `  shape="${v.shape}"`,
+    v.pulse !== "ray" && `  pulse="${v.pulse}"`,
+    v.reverse && `  reverse`,
+    v.arrow && `  arrow`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return `"use client";
+import { useRef } from "react";
+import { Beam, BeamNode } from "@/components/ui/beam";
+
+export function Demo() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const fromRef = useRef<HTMLDivElement>(null);
+  const toRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div ref={containerRef} className="relative flex items-center justify-center gap-40 py-10">
+      <BeamNode ref={fromRef}>{/* source icon */}</BeamNode>
+      <BeamNode ref={toRef} highlight>{/* dest icon */}</BeamNode>
+      <Beam
+        containerRef={containerRef}
+        fromRef={fromRef}
+        toRef={toRef}${extraProps ? "\n" + extraProps : ""}
+      />
+    </div>
+  );
+}`;
+}
+
+/** Self-contained interactive demo — keeps beamCode/beamControls on the client. */
+export function BeamInteractiveSection() {
+  return (
+    <ComponentDemo
+      preview={BeamInteractivePreview}
+      code={beamCode}
+      controls={beamControls}
+    />
+  );
+}
+
+function BeamInteractivePreview(values: ControlValues) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const fromRef = useRef<HTMLDivElement>(null);
+  const toRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative flex w-full items-center justify-center gap-40 py-10"
+    >
+      <BeamNode ref={fromRef}>
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          aria-hidden
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path d="M3 12h3m12 0h3M12 3v3m0 12v3" />
+        </svg>
+      </BeamNode>
+      <BeamNode ref={toRef} highlight>
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          aria-hidden
+        >
+          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+        </svg>
+      </BeamNode>
+      <Beam
+        containerRef={containerRef}
+        fromRef={fromRef}
+        toRef={toRef}
+        curvature={values.curvature as number}
+        duration={values.duration as number}
+        pulseLength={values.pulseLength as number}
+        width={values.width as number}
+        gap={values.gap as number}
+        pulseColor={values.pulseColor as string}
+        track={values.track as BeamTrack}
+        shape={values.shape as BeamShape}
+        pulse={values.pulse as BeamPulse}
+        reverse={values.reverse as boolean}
+        arrow={values.arrow as boolean}
       />
     </div>
   );

@@ -50,6 +50,14 @@ export const changelogVersions: ChangelogVersion[] = [
         ],
       },
       {
+        title: "Docs & site",
+        items: [
+          `Component demos were rebuilt around a toolbar that sits above the frame: Preview and Code are now toggled views rather than a stacked preview-plus-source, with desktop, tablet, and mobile width presets, a refresh control, and a drag handle on the right edge that resizes the frame down to 320px while showing the current width.`,
+          `Demos can now expose a Customize panel below the frame. Controls (color, text, long text, range, toggle, and select) drive the preview and the generated source at the same time, so a single interactive demo replaces several near-identical static examples. Beam is the first page to use it.`,
+          `Documentation pages widened from 48rem to 52rem, giving examples, API tables, and code blocks more room without stretching body copy; demo code blocks render at 12px.`,
+        ],
+      },
+      {
         title: "CLI",
         items: [
           `Install tracking moved from \`.vinyaas/manifest.json\` into \`components.json\` (under the \`installedComponents\` key). Vinyaas no longer creates or needs the \`.vinyaas/\` folder. The config file that \`vinyaas init\` already writes is now the single source of truth for both project config and installed-component tracking.`,

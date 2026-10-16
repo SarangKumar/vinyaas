@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { ReactNode } from "react";
 
@@ -333,6 +333,10 @@ describe("composed examples", () => {
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Recent activity")).toBeInTheDocument();
     expect(screen.getAllByText("v1.0.0").length).toBeGreaterThan(0);
+    // Demo source sits behind the Code tab.
+    for (const tab of screen.getAllByRole("button", { name: "Code" })) {
+      fireEvent.click(tab);
+    }
     expect(document.body.textContent).toContain(
       'from "@/components/ui/select"',
     );

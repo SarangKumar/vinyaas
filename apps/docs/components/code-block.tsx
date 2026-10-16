@@ -229,14 +229,14 @@ function CodeFrame({
           tabIndex={expanded ? 0 : undefined}
           className={
             collapsed
-              ? `m-0 ${collapsedMaxClass} overflow-hidden font-mono text-[13px] leading-6`
+              ? `m-0 ${collapsedMaxClass} overflow-hidden font-mono text-[12px] leading-6`
               : expanded
                 ? numbered
-                  ? `m-0 ${expandedMaxClass} overflow-auto font-mono text-[13px] leading-6`
-                  : `m-0 ${expandedMaxClass} overflow-auto px-0 py-4 font-mono text-[13px] leading-6`
+                  ? `m-0 ${expandedMaxClass} overflow-auto font-mono text-[12px] leading-6`
+                  : `m-0 ${expandedMaxClass} overflow-auto px-0 py-4 font-mono text-[12px] leading-6`
                 : numbered
-                  ? "m-0 overflow-x-auto font-mono text-[13px] leading-6"
-                  : "m-0 overflow-x-auto px-0 py-4 font-mono text-[13px] leading-6"
+                  ? "m-0 overflow-x-auto font-mono text-[12px] leading-6"
+                  : "m-0 overflow-x-auto px-0 py-4 font-mono text-[12px] leading-6"
           }
         >
           {numbered ? (

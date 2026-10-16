@@ -8,7 +8,7 @@ export function Table({
   ...props
 }: React.ComponentProps<"table">) {
   return (
-    <div className="w-full min-w-0 overflow-x-auto">
+    <div className="border-border bg-background w-full min-w-0 overflow-x-auto rounded-3xl border">
       <table
         ref={ref}
         className={cn("w-full caption-bottom text-sm", className)}
@@ -23,7 +23,10 @@ export function TableHeader({
   ...props
 }: React.ComponentProps<"thead">) {
   return (
-    <thead className={cn("border-border border-b", className)} {...props} />
+    <thead
+      className={cn("border-border/50 bg-card border-b", className)}
+      {...props}
+    />
   );
 }
 
@@ -49,7 +52,10 @@ export function TableFooter({
 export function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
-      className={cn("border-border/50 hover:bg-accent/40 border-b", className)}
+      className={cn(
+        "border-border/40 hover:bg-accent/30 border-b last:border-b-0",
+        className,
+      )}
       {...props}
     />
   );
@@ -59,7 +65,7 @@ export function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
     <th
       className={cn(
-        "text-muted-foreground h-10 px-3 text-left align-middle font-medium",
+        "text-muted-foreground h-11 px-4 text-left align-middle text-xs font-medium tracking-widest uppercase",
         className,
       )}
       {...props}
@@ -68,7 +74,9 @@ export function TableHead({ className, ...props }: React.ComponentProps<"th">) {
 }
 
 export function TableCell({ className, ...props }: React.ComponentProps<"td">) {
-  return <td className={cn("px-3 py-2 align-middle", className)} {...props} />;
+  return (
+    <td className={cn("px-4 py-3.5 align-middle", className)} {...props} />
+  );
 }
 
 export function TableCaption({
