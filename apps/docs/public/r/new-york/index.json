@@ -51,6 +51,13 @@
       "category": "data-display"
     },
     {
+      "name": "beam",
+      "type": "registry:ui",
+      "description": "An animated connector between two elements with a glowing pulse that travels along the path.",
+      "docs": "https://vinyaas.vercel.app/components/beam",
+      "category": "utilities"
+    },
+    {
       "name": "breadcrumb",
       "type": "registry:ui",
       "description": "A trail of links for the current page.",
@@ -167,6 +174,13 @@
       "type": "registry:ui",
       "description": "Accessible field structure for labels, descriptions, and validation messages.",
       "docs": "https://vinyaas.vercel.app/components/form",
+      "category": "forms"
+    },
+    {
+      "name": "fuse-button",
+      "type": "registry:ui",
+      "description": "A button with a burning fuse that gives users a countdown to undo a destructive action.",
+      "docs": "https://vinyaas.vercel.app/components/fuse-button",
       "category": "forms"
     },
     {

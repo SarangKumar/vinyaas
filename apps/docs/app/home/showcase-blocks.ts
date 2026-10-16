@@ -58,12 +58,15 @@ import { components } from "@/components/component-meta";
  * Sidebar stay docs-only.
  */
 
-/** New components kept off the homepage masonry (dense shell/nav primitives, and Score Ring). */
+/** New components kept off the homepage masonry (dense shell/nav primitives, Score Ring, and decorator components). */
 export const homepageExcludedNewComponents = [
   "navigation-menu",
   "sidebar",
   // Kept off the homepage by request; documented at /components/score-ring.
   "score-ring",
+  // Decorator/utility components — best shown on their own docs pages.
+  "beam",
+  "fuse-button",
 ] as const;
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */

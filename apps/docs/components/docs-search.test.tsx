@@ -28,7 +28,7 @@ describe("documentation search", () => {
     expect(
       await screen.findByRole("option", { name: /Introduction/ }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: /Button/ })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: /^Button/ })).toBeInTheDocument();
     expect(document.querySelector("[data-dialog-content]")).toHaveClass(
       "bg-popover",
     );

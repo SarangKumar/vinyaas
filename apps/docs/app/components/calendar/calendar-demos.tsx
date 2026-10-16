@@ -87,6 +87,26 @@ export function MonthNavigationDemo() {
   );
 }
 
+export function MultipleCalendarDemo() {
+  const [dates, setDates] = useState<Date[] | undefined>();
+
+  return (
+    <div className="flex w-full max-w-sm flex-col items-center gap-3">
+      <Calendar
+        mode="multiple"
+        selected={dates}
+        onSelect={setDates}
+        className="rounded-md border"
+      />
+      <p className="text-muted-foreground text-sm leading-6">
+        {dates && dates.length > 0
+          ? `${dates.length} date${dates.length === 1 ? "" : "s"} selected`
+          : "No dates selected"}
+      </p>
+    </div>
+  );
+}
+
 export function RangeCalendarDemo() {
   const [range, setRange] = useState<DateRange | undefined>({
     from: new Date(2026, 2, 10),

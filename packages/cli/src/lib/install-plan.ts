@@ -349,7 +349,10 @@ async function resolveRegistryFilePath(
   }
 
   const directory = await resolveNamespaceDirectory(cwd, config, namespace);
-  const destination = path.resolve(directory, ...segments.slice(1));
+  const destination = remapExtension(
+    path.resolve(directory, ...segments.slice(1)),
+    config.tsx,
+  );
 
   if (!isInsideProject(cwd, destination)) {
     throw new CliError(
@@ -430,4 +433,12 @@ function registrySegments(registryPath: string): string[] {
 
 function isNamespace(segment: string): segment is RegistryNamespace {
   return (supportedNamespaces as readonly string[]).includes(segment);
+}
+
+/** When tsx is false, remap .tsx → .jsx and .ts → .js so files land with the right extension. */
+function remapExtension(filePath: string, tsx: boolean): string {
+  if (tsx) return filePath;
+  if (filePath.endsWith(".tsx")) return `${filePath.slice(0, -4)}.jsx`;
+  if (filePath.endsWith(".ts")) return `${filePath.slice(0, -3)}.js`;
+  return filePath;
 }

@@ -226,6 +226,71 @@ components/ui/button/index.tsx
 
 The current Button item does not declare CSS, environment variables, or a documentation URL, so those steps do not change `app/globals.css` and do not print an environment or documentation section.
 
+## Components
+
+**58 components** across forms, layout, navigation, feedback, data display, charts, typography, and utilities.
+
+| Name            | Slug              | Category     |
+| --------------- | ----------------- | ------------ |
+| Accordion       | `accordion`       | layout       |
+| Alert           | `alert`           | feedback     |
+| Alert Dialog    | `alert-dialog`    | feedback     |
+| Aspect Ratio    | `aspect-ratio`    | layout       |
+| Attachment      | `attachment`      | data-display |
+| Avatar          | `avatar`          | data-display |
+| Badge           | `badge`           | data-display |
+| Beam            | `beam`            | utilities    |
+| Breadcrumb      | `breadcrumb`      | navigation   |
+| Button          | `button`          | forms        |
+| Calendar        | `calendar`        | forms        |
+| Card            | `card`            | layout       |
+| Chart           | `chart`           | charts       |
+| Checkbox        | `checkbox`        | forms        |
+| Combobox        | `combobox`        | forms        |
+| Command         | `command`         | navigation   |
+| Data Table      | `data-table`      | data-display |
+| Date Picker     | `date-picker`     | forms        |
+| Dialog          | `dialog`          | feedback     |
+| Drag & Drop     | `drag-and-drop`   | layout       |
+| Drawer          | `drawer`          | feedback     |
+| Dropdown Menu   | `dropdown-menu`   | feedback     |
+| Empty State     | `empty-state`     | feedback     |
+| File Upload     | `file-upload`     | forms        |
+| Form            | `form`            | forms        |
+| Fuse Button     | `fuse-button`     | forms        |
+| Hover Card      | `hover-card`      | feedback     |
+| Input           | `input`           | forms        |
+| Input Group     | `input-group`     | forms        |
+| Input OTP       | `input-otp`       | forms        |
+| Kbd             | `kbd`             | data-display |
+| Label           | `label`           | forms        |
+| Marker          | `marker`          | utilities    |
+| Native Select   | `native-select`   | forms        |
+| Navigation Menu | `navigation-menu` | navigation   |
+| Pagination      | `pagination`      | navigation   |
+| Popover         | `popover`         | feedback     |
+| Progress        | `progress`        | feedback     |
+| Radio Group     | `radio-group`     | forms        |
+| Resizable       | `resizable`       | layout       |
+| Score Ring      | `score-ring`      | data-display |
+| Scroll Area     | `scroll-area`     | layout       |
+| Select          | `select`          | forms        |
+| Separator       | `separator`       | layout       |
+| Sheet           | `sheet`           | feedback     |
+| Sidebar         | `sidebar`         | navigation   |
+| Skeleton        | `skeleton`        | data-display |
+| Slider          | `slider`          | forms        |
+| Spinner         | `spinner`         | feedback     |
+| Switch          | `switch`          | forms        |
+| Table           | `table`           | data-display |
+| Tabs            | `tabs`            | navigation   |
+| Textarea        | `textarea`        | forms        |
+| Toast           | `toast`           | feedback     |
+| Toggle          | `toggle`          | forms        |
+| Toggle Group    | `toggle-group`    | forms        |
+| Tooltip         | `tooltip`         | feedback     |
+| Typography      | `typography`      | typography   |
+
 ## Component conventions
 
 Registry components follow the Button layout conventions:

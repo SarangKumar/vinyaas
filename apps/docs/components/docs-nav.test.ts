@@ -131,17 +131,18 @@ describe("documentation navigation", () => {
     );
     expect(items?.some((item) => item.title === "Typography")).toBe(true);
     expect(items?.every((item) => !("isNew" in item))).toBe(true);
-    expect(items?.find((item) => item.title === "Toggle")?.indicator).toBe(
-      "new",
-    );
+    expect(items?.find((item) => item.title === "Beam")?.indicator).toBe("new");
     expect(
       items?.find((item) => item.title === "Button")?.indicator,
+    ).toBeUndefined();
+    expect(
+      items?.find((item) => item.title === "Toggle")?.indicator,
     ).toBeUndefined();
     expect(
       items
         ?.filter((item) => item.indicator === "new")
         .map((item) => item.title),
-    ).toEqual(["Score Ring", "Toggle", "Toggle Group"]);
+    ).toEqual(["Beam", "Fuse Button"]);
     expect(
       items?.find((item) => item.title === "Select")?.indicator,
     ).toBeUndefined();

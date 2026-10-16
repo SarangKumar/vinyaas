@@ -217,7 +217,7 @@ export function ComboboxTrigger({
         )}
         {...props}
       >
-        <span className="truncate">{display}</span>
+        <span className="min-w-0 flex-1 truncate">{display}</span>
         <ChevronDownIcon className="text-muted-foreground size-4 shrink-0 opacity-70" />
       </Button>
     </PopoverTrigger>

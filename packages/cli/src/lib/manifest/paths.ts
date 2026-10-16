@@ -1,2 +1,2 @@
-/** Project-relative path for the install manifest. */
-export const MANIFEST_RELATIVE_PATH = ".vinyaas/manifest.json";
+/** Project-relative path where Vinyaas stores install tracking data. */
+export const MANIFEST_RELATIVE_PATH = "components.json";

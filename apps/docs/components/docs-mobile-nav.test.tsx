@@ -112,12 +112,13 @@ describe("DocsMobileNav", () => {
     const resizable = screen.getByRole("link", { name: /Resizable/i });
     expect(resizable).toHaveAttribute("href", "/components/resizable");
     expect(resizable.querySelector('[data-nav-indicator="new"]')).toBeNull();
-    const toggleGroup = screen.getByRole("link", {
-      name: /Toggle Group/i,
-    });
-    expect(
-      toggleGroup.querySelector('[data-nav-indicator="new"]'),
-    ).toHaveAttribute("aria-label", "New");
+    const beam = screen.getByRole("link", { name: /^Beam/i });
+    expect(beam.querySelector('[data-nav-indicator="new"]')).toHaveAttribute(
+      "aria-label",
+      "New",
+    );
+    const toggleGroup = screen.getByRole("link", { name: /Toggle Group/i });
+    expect(toggleGroup.querySelector('[data-nav-indicator="new"]')).toBeNull();
     expect(
       screen.getAllByRole("link", { name: /Introduction/i })[1],
     ).toHaveAttribute("href", "/companion");

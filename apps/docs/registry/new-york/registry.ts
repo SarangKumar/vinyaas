@@ -760,6 +760,37 @@ const items: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "beam",
+    type: "registry:ui",
+    description:
+      "An animated connector between two elements with a glowing pulse that travels along the path.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/beam/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/beam/beam.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "fuse-button",
+    type: "registry:ui",
+    description:
+      "A button with a burning fuse that gives users a countdown to undo a destructive action.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/fuse-button/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
 
 export const registry: readonly RegistryItem[] = items.map((item) => {

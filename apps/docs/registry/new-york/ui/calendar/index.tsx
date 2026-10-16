@@ -92,10 +92,15 @@ export function Calendar({
         day: cn(
           // Fixed square cell — keeps selected/hover fills the same size.
           "relative size-9 shrink-0 p-0 text-center text-sm focus-within:relative focus-within:z-20",
-          "[&:has([aria-selected])]:bg-accent [&:has([aria-selected])]:rounded-md",
-          "[&:has([aria-selected].day-range-end)]:rounded-r-md",
+          // Accent band fills range cells; single-selection gets no cell bg (primary circle suffices).
+          "[&:has([aria-selected].day-range-start)]:bg-accent",
+          "[&:has([aria-selected].day-range-end)]:bg-accent",
+          "[&:has([aria-selected].day-range-middle)]:bg-accent",
+          // Round only at the true edges of the range — middle cells stay flat.
           "[&:has([aria-selected].day-range-start)]:rounded-l-md",
+          "[&:has([aria-selected].day-range-end)]:rounded-r-md",
           "[&:has([aria-selected].day-outside)]:bg-accent/50",
+          // Cap at week-row boundaries for partial rows.
           "first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md",
           classNames?.day,
         ),
@@ -107,16 +112,11 @@ export function Calendar({
           "focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           classNames?.day_button,
         ),
-        range_start: cn(
-          "day-range-start bg-primary text-primary-foreground rounded-l-md",
-          classNames?.range_start,
-        ),
-        range_end: cn(
-          "day-range-end bg-primary text-primary-foreground rounded-r-md",
-          classNames?.range_end,
-        ),
+        range_start: cn("day-range-start", classNames?.range_start),
+        range_end: cn("day-range-end", classNames?.range_end),
         range_middle: cn(
-          "aria-selected:bg-accent aria-selected:text-accent-foreground rounded-none",
+          // Override `selected`'s bg-primary so the cell accent band shows through.
+          "day-range-middle !bg-transparent text-foreground",
           classNames?.range_middle,
         ),
         selected: cn(

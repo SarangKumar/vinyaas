@@ -316,7 +316,7 @@ export function PopoverContent({
         left: point?.left ?? -9999,
       }}
       className={cn(
-        "border-border bg-muted text-foreground z-50 max-h-[min(24rem,calc(100dvh-2rem))] w-72 max-w-[calc(100vw-1rem)] overflow-x-hidden overflow-y-auto rounded-md border p-4 text-sm shadow-sm focus-visible:outline-none",
+        "border-border bg-muted text-foreground z-[60] max-h-[min(24rem,calc(100dvh-2rem))] w-72 max-w-[calc(100vw-1rem)] overflow-x-hidden overflow-y-auto rounded-md border p-4 text-sm shadow-sm focus-visible:outline-none",
         className,
       )}
     >

@@ -15,6 +15,7 @@ import {
   DisabledDatesDemo,
   MeetingScheduleInPracticeDemo,
   MonthNavigationDemo,
+  MultipleCalendarDemo,
   RangeCalendarDemo,
   SelectedDateDemo,
 } from "./calendar-demos";
@@ -206,6 +207,21 @@ today.setHours(0, 0, 0, 0);
     specific month.
   </p>
 </div>`,
+  },
+  {
+    id: "multiple",
+    title: "Multiple dates",
+    description:
+      "Toggle individual dates on and off. Each click adds or removes a day.",
+    preview: <MultipleCalendarDemo />,
+    code: `const [dates, setDates] = useState<Date[] | undefined>([]);
+
+<Calendar
+  mode="multiple"
+  selected={dates}
+  onSelect={setDates}
+  className="rounded-md border"
+/>`,
   },
   {
     id: "range",

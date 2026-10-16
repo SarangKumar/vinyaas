@@ -30,6 +30,7 @@ describe("component metadata", () => {
       "Attachment",
       "Avatar",
       "Badge",
+      "Beam",
       "Breadcrumb",
       "Button",
       "Calendar",
@@ -47,6 +48,7 @@ describe("component metadata", () => {
       "Empty State",
       "File Upload",
       "Form",
+      "Fuse Button",
       "Hover Card",
       "Input",
       "Input Group",
@@ -83,7 +85,7 @@ describe("component metadata", () => {
   });
 
   it("tracks introduction versions and derives the current new set", () => {
-    expect(currentVersion).toBe("1.4.0");
+    expect(currentVersion).toBe("1.5.0");
     expect(
       components
         .filter((component) => component.introducedIn === "0.1")
@@ -126,22 +128,33 @@ describe("component metadata", () => {
         .sort(),
     ).toEqual(["score-ring", "toggle", "toggle-group"]);
     expect(
+      components
+        .filter((component) => component.introducedIn === "1.5.0")
+        .map((component) => component.slug)
+        .sort(),
+    ).toEqual(["beam", "fuse-button"]);
+    expect(
       components.filter((component) => component.introducedIn === "1.3.1"),
     ).toHaveLength(0);
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 23);
+    ).toBe(components.length - 25);
     expect(
       newComponents()
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["score-ring", "toggle", "toggle-group"]);
+    ).toEqual(["beam", "fuse-button"]);
+    expect(
+      isNewComponent(
+        components.find((component) => component.slug === "beam")!,
+      ),
+    ).toBe(true);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "toggle")!,
       ),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "pagination")!,

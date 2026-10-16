@@ -19,10 +19,51 @@ const v10 = components.filter(
 const v11 = components.filter(
   (component) => component.introducedIn === "1.1.0",
 );
+const v15 = components.filter(
+  (component) => component.introducedIn === "1.5.0",
+);
+
 /**
  * Newest first. `id` values are used in `?v=` and must stay stable.
  */
 export const changelogVersions: ChangelogVersion[] = [
+  {
+    id: "1.5.0",
+    label: "v1.5.0",
+    summary: `v1.5.0 adds ${v15.length} components (Beam and Fuse Button), raises the date picker and other popovers above dialogs, tightens table row hover so buttons inside rows stay readable, and fixes the chevron alignment in Combobox and Select.`,
+    sections: [
+      {
+        title: "Components",
+        items: [
+          `Beam — an animated connector between two elements with a glowing ray or dot pulse that travels along a dotted, dashed, or solid arc or S-curve. BeamNode provides ready-made round icon endpoints.`,
+          `Fuse Button — a button whose lit state is a burning-border countdown. Pressing while the fuse burns calls onUndo; burning out calls onFire. Supports rect and circle shapes and all Button sizes including icon.`,
+        ],
+      },
+      {
+        title: "Component improvements",
+        items: [
+          `Popover: z-index raised from 50 to 60 so date pickers and comboboxes open above dialog overlays (Dialog is z-50).`,
+          `Table: row hover uses bg-accent/40 instead of bg-accent, so interactive elements (buttons, icons) inside rows keep their own hover state visible.`,
+          `Combobox: the display span inside ComboboxTrigger now carries min-w-0 flex-1 so long option labels truncate correctly and the chevron always stays at the far right.`,
+          `Native Select, Select, Combobox: chevron reliably appears at the right edge regardless of text length.`,
+        ],
+      },
+      {
+        title: "CLI",
+        items: [
+          `Install tracking moved from \`.vinyaas/manifest.json\` into \`components.json\` (under the \`installedComponents\` key). Vinyaas no longer creates or needs the \`.vinyaas/\` folder. The config file that \`vinyaas init\` already writes is now the single source of truth for both project config and installed-component tracking.`,
+          `JSX support: when \`tsx\` is \`false\` in \`components.json\`, Vinyaas now writes component files as \`.jsx\` (and \`.js\`) instead of \`.tsx\`. Projects using Babel with \`@babel/preset-typescript\` or other transpile setups that handle JSX work as before.`,
+        ],
+      },
+      {
+        title: "Release",
+        items: [
+          `Minor release. No breaking changes. All packages versioned 1.5.0.`,
+          `Migration: if you have a \`.vinyaas/manifest.json\` from a previous install, it is no longer read. Run \`vinyaas add --force\` on your components to re-track them in \`components.json\`, then delete \`.vinyaas/\`.`,
+        ],
+      },
+    ],
+  },
   {
     id: "1.4.0",
     label: "v1.4.0",

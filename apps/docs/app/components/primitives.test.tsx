@@ -44,12 +44,26 @@ import TypographyPage from "./typography/page";
 import TogglePage from "./toggle/page";
 import ToggleGroupPage from "./toggle-group/page";
 import ScoreRingPage from "./score-ring/page";
+import BeamPage from "./beam/page";
+import FuseButtonPage from "./fuse-button/page";
 
 function renderDocs(node: ReactNode) {
   return render(<DocsStoreProvider>{node}</DocsStoreProvider>);
 }
 
 const pages = [
+  {
+    load: BeamPage,
+    title: "Beam",
+    command: "npx vinyaas add beam",
+    api: "containerRef",
+  },
+  {
+    load: FuseButtonPage,
+    title: "Fuse Button",
+    command: "npx vinyaas add fuse-button",
+    api: "onActivate",
+  },
   {
     load: TogglePage,
     title: "Toggle",
