@@ -88,6 +88,7 @@ export const registryComponentCategories: Readonly<
   typography: "typography",
   beam: "utilities",
   "fuse-button": "forms",
+  "user-cursor": "utilities",
 };
 
 export function isRegistryCategory(value: string): value is RegistryCategory {

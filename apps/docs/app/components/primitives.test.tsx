@@ -46,12 +46,19 @@ import ToggleGroupPage from "./toggle-group/page";
 import ScoreRingPage from "./score-ring/page";
 import BeamPage from "./beam/page";
 import FuseButtonPage from "./fuse-button/page";
+import UserCursorPage from "./user-cursor/page";
 
 function renderDocs(node: ReactNode) {
   return render(<DocsStoreProvider>{node}</DocsStoreProvider>);
 }
 
 const pages = [
+  {
+    load: UserCursorPage,
+    title: "User Cursor",
+    command: "npx vinyaas add user-cursor",
+    api: "name",
+  },
   {
     load: BeamPage,
     title: "Beam",

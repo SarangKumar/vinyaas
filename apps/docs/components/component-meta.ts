@@ -393,6 +393,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     description: "Semantic text styles for titles, body, and supporting copy.",
     introducedIn: "1.0.0",
   },
+  {
+    name: "User Cursor",
+    slug: "user-cursor",
+    description: "A Figma-style collaborative cursor with a name label.",
+    introducedIn: "1.5.0",
+  },
 ];
 
 function withRegistryCategory(source: ComponentMetaSource): ComponentMeta {

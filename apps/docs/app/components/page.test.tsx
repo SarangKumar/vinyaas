@@ -24,6 +24,7 @@ describe("components catalog", () => {
     expect(newlyIntroduced.map((component) => component.slug).sort()).toEqual([
       "beam",
       "fuse-button",
+      "user-cursor",
     ]);
 
     const newSection = screen.getByRole("heading", {

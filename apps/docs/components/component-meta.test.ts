@@ -81,6 +81,7 @@ describe("component metadata", () => {
       "Toggle Group",
       "Tooltip",
       "Typography",
+      "User Cursor",
     ]);
   });
 
@@ -132,19 +133,19 @@ describe("component metadata", () => {
         .filter((component) => component.introducedIn === "1.5.0")
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["beam", "fuse-button"]);
+    ).toEqual(["beam", "fuse-button", "user-cursor"]);
     expect(
       components.filter((component) => component.introducedIn === "1.3.1"),
     ).toHaveLength(0);
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 25);
+    ).toBe(components.length - 26);
     expect(
       newComponents()
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["beam", "fuse-button"]);
+    ).toEqual(["beam", "fuse-button", "user-cursor"]);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "beam")!,

@@ -30,13 +30,14 @@ export const changelogVersions: ChangelogVersion[] = [
   {
     id: "1.5.0",
     label: "v1.5.0",
-    summary: `v1.5.0 adds ${v15.length} components (Beam and Fuse Button), raises the date picker and other popovers above dialogs, tightens table row hover so buttons inside rows stay readable, and fixes the chevron alignment in Combobox and Select.`,
+    summary: `v1.5.0 adds ${v15.length} components (Beam, Fuse Button, and User Cursor), raises the date picker and other popovers above dialogs, tightens table row hover so buttons inside rows stay readable, and fixes the chevron alignment in Combobox and Select.`,
     sections: [
       {
         title: "Components",
         items: [
           `Beam — an animated connector between two elements with a glowing ray or dot pulse that travels along a dotted, dashed, or solid arc or S-curve. BeamNode provides ready-made round icon endpoints.`,
           `Fuse Button — a button whose lit state is a burning-border countdown. Pressing while the fuse burns calls onUndo; burning out calls onFire. Supports rect and circle shapes and all Button sizes including icon.`,
+          `User Cursor — a Figma-style collaborative cursor: an arrow pointer with a rounded pill label showing the user's name. Color-coded per user; purely presentational so it works with any multiplayer or canvas setup.`,
         ],
       },
       {

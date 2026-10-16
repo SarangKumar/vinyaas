@@ -791,6 +791,19 @@ const items: readonly RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "user-cursor",
+    type: "registry:ui",
+    description:
+      "A Figma-style collaborative cursor with an arrow pointer and a rounded name label.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/user-cursor/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
 
 export const registry: readonly RegistryItem[] = items.map((item) => {

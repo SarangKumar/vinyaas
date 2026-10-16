@@ -67,6 +67,7 @@ export const homepageExcludedNewComponents = [
   // Decorator/utility components — best shown on their own docs pages.
   "beam",
   "fuse-button",
+  "user-cursor",
 ] as const;
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
