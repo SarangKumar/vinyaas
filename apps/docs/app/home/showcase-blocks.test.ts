@@ -52,7 +52,7 @@ describe("homepage showcase blocks", () => {
     expect(showcaseBlockIds()).toContain("sheet");
     expect(showcaseBlockIds()).toContain("calendar");
     expect(showcaseBlockIds()).toContain("date-picker");
-    expect(showcaseBlockIds()).toContain("combobox");
+    expect(showcaseBlockIds()).toContain("fuse-button");
     expect(showcaseBlockIds()).toContain("empty-state");
     expect(showcaseBlockIds()).toContain("form");
     expect(showcaseBlockIds()).not.toContain("filter");
@@ -83,7 +83,7 @@ describe("homepage showcase blocks", () => {
     // v1.3.1: 32 real demos so 4-column desktops get 8 cards each.
     expect(showcaseBlockIds()).toContain("primitives");
     expect(showcaseBlockIds()).toContain("command");
-    expect(showcaseBlockIds()).toContain("documents");
+    expect(showcaseBlockIds()).toContain("user-cursor");
     expect(showcaseBlockIds()).toContain("activity");
     expect(showcaseBlockIds()).toContain("analytics");
     expect(showcaseBlockIds()).toContain("loading");

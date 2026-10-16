@@ -9,6 +9,7 @@ import { ComponentReference } from "@/components/component-reference";
 import { Button } from "@/registry/new-york/ui/button";
 import { Label } from "@/registry/new-york/ui/label";
 import { RangeSlider, Slider } from "@/registry/new-york/ui/slider";
+import { SliderPreview } from "./slider-previews";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -243,6 +244,15 @@ export default async function SliderPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={SliderPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        onValueChange: { exclude: true },
+        defaultValue: { min: 0, max: 100, step: 1 },
+        min: { min: 0, max: 50, step: 1 },
+        max: { min: 50, max: 200, step: 1 },
+        step: { min: 1, max: 20, step: 1 },
+      }}
       accessibility={
         <p>
           The control is a native slider. Keyboard users change it with the

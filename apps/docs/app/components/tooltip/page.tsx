@@ -14,6 +14,7 @@ import {
 } from "./tooltip-demos";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { TooltipPreview } from "./tooltip-previews";
 
 export const metadata: Metadata = componentPageMetadata("tooltip");
 
@@ -190,6 +191,10 @@ export default async function TooltipPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={TooltipPreview}
+      controlOverrides={{
+        content: { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

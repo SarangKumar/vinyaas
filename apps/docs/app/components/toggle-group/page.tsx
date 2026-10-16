@@ -12,6 +12,7 @@ import {
 } from "@/registry/new-york/ui/toggle-group";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { ToggleGroupPreview } from "./toggle-group-previews";
 import {
   AlignCenterIcon,
   AlignLeftIcon,
@@ -435,6 +436,13 @@ export default async function ToggleGroupPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={ToggleGroupPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        defaultValue: { exclude: true },
+        onValueChange: { exclude: true },
+        multiple: { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

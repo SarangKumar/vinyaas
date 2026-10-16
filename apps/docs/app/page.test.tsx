@@ -157,7 +157,7 @@ describe("homepage", () => {
       screen.getByRole("heading", { name: "Deadline" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Assignee" }),
+      screen.getByRole("heading", { name: "Fuse button" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Empty workspace" }),
@@ -197,7 +197,7 @@ describe("homepage", () => {
       screen.getByRole("button", { name: /pick a deadline/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("combobox", { name: /maya chen|select assignee/i }),
+      screen.getByRole("heading", { name: "Multiplayer cursors" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /create project/i }),

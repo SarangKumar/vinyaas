@@ -3,8 +3,10 @@
 import { useState } from "react";
 import {
   UserCursor,
+  type CursorVariant,
   type LabelVariant,
 } from "@/registry/new-york/ui/user-cursor";
+import type { ControlValues } from "@/components/component-demo";
 
 const DEMO_USERS = [
   { name: "Alice", color: "#7c3aed" },
@@ -66,22 +68,56 @@ export function HoverDemo() {
   );
 }
 
-const VARIANTS: { variant: LabelVariant; label: string }[] = [
+const LABEL_VARIANTS: { variant: LabelVariant; label: string }[] = [
   { variant: "rounded", label: "Rounded" },
   { variant: "pill", label: "Pill" },
   { variant: "bubble", label: "Bubble" },
+  { variant: "chat", label: "Chat" },
   { variant: "square", label: "Square" },
 ];
 
 export function VariantsDemo() {
   return (
     <div className="flex flex-wrap items-start gap-8">
-      {VARIANTS.map(({ variant, label }) => (
+      {LABEL_VARIANTS.map(({ variant, label }) => (
         <div key={variant} className="flex flex-col items-start gap-3">
           <UserCursor name="Alice" color="#7c3aed" labelVariant={variant} />
           <span className="text-muted-foreground text-xs">{label}</span>
         </div>
       ))}
+    </div>
+  );
+}
+
+const CURSOR_VARIANTS: { variant: CursorVariant; label: string }[] = [
+  { variant: "default", label: "Default" },
+  { variant: "minimal", label: "Minimal" },
+];
+
+export function CursorVariantsDemo() {
+  return (
+    <div className="flex flex-wrap items-start gap-8">
+      {CURSOR_VARIANTS.map(({ variant, label }) => (
+        <div key={variant} className="flex flex-col items-start gap-3">
+          <UserCursor name="Alice" color="#7c3aed" cursorVariant={variant} />
+          <span className="text-muted-foreground text-xs">{label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Live preview component for the main Preview Customize panel. */
+export function UserCursorPreview({ values }: { values: ControlValues }) {
+  return (
+    <div className="flex h-32 w-full items-center justify-center">
+      <UserCursor
+        name={(values.name as string) || "Alice"}
+        color={(values.color as string) || "#7c3aed"}
+        labelVariant={values.labelVariant as LabelVariant}
+        cursorVariant={values.cursorVariant as CursorVariant}
+        labelHidden={values.labelHidden as boolean}
+      />
     </div>
   );
 }

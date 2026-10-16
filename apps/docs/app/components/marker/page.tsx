@@ -22,6 +22,7 @@ import {
 import { Spinner } from "@/registry/new-york/ui/spinner";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { MarkerPreview } from "./marker-previews";
 
 export const metadata: Metadata = componentPageMetadata("marker");
 
@@ -305,6 +306,7 @@ export default async function MarkerPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={MarkerPreview}
       accessibility={
         <ul className="list-disc pl-5">
           <li>The root has no role unless you pass one.</li>

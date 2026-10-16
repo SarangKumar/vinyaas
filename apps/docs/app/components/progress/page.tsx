@@ -11,6 +11,7 @@ import { Label } from "@/registry/new-york/ui/label";
 import { Progress } from "@/registry/new-york/ui/progress";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { ProgressPreview } from "./progress-previews";
 
 export const metadata: Metadata = componentPageMetadata("progress");
 
@@ -172,6 +173,11 @@ export default async function ProgressPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={ProgressPreview}
+      controlOverrides={{
+        value: { min: 0, max: 100, step: 5 },
+        max: { exclude: true },
+      }}
       accessibility={
         <>
           <p>

@@ -19,6 +19,7 @@ import {
 import { Spinner } from "@/registry/new-york/ui/spinner";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { AttachmentPreview } from "./attachment-previews";
 
 export const metadata: Metadata = componentPageMetadata("attachment");
 
@@ -598,6 +599,8 @@ export default async function AttachmentPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={AttachmentPreview}
+      controlOverrides={{ variant: { exclude: true } }}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

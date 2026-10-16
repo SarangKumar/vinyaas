@@ -13,6 +13,7 @@ import type {
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { ScrollAreaPreview } from "./scroll-area-previews";
 
 export const metadata: Metadata = componentPageMetadata("scroll-area");
 
@@ -363,6 +364,7 @@ export default async function ScrollAreaPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={ScrollAreaPreview}
       api={api}
       accessibility={
         <p>

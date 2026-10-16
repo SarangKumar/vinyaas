@@ -16,6 +16,7 @@ import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
 import { VerificationCodeDemo } from "./input-otp-demos";
+import { InputOTPPreview } from "./input-otp-previews";
 
 export const metadata: Metadata = componentPageMetadata("input-otp");
 
@@ -308,6 +309,13 @@ export default async function InputOTPPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={InputOTPPreview}
+      controlOverrides={{
+        length: { min: 4, max: 8, step: 1 },
+        value: { exclude: true },
+        onChange: { exclude: true },
+        onComplete: { exclude: true },
+      }}
       api={api}
       accessibility={
         <ul className="list-disc pl-5">

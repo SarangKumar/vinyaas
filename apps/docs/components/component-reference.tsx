@@ -2,11 +2,13 @@ import type { ReactNode } from "react";
 
 import { ApiTable, type ApiRow } from "@/components/api-table";
 import { CodeBlock } from "@/components/code-block";
+import { ComponentDemoWithAutoControls } from "@/components/component-demo-auto";
 import {
   ComponentDemo,
   type ControlDef,
   type ControlValues,
 } from "@/components/component-demo";
+import type { ControlOverride } from "@/components/control-schema";
 import type { CodeLanguage, DemoCode } from "@/components/code-languages";
 import { DocsArticle } from "@/components/docs-article";
 import {
@@ -18,6 +20,14 @@ import { cliCommands } from "@/components/package-managers";
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
+
+/** "User Cursor" → "UserCursor", "Data Table" → "DataTable" */
+function tagFromTitle(title: string): string {
+  return title
+    .split(/\s+/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join("");
+}
 const subsectionHeading =
   "text-foreground scroll-mt-8 text-base font-semibold tracking-tight";
 export type ComponentExample = {
@@ -54,6 +64,9 @@ export function ComponentReference({
   usage,
   examples,
   examplesSlot,
+  previewSection,
+  livePreview: LivePreview,
+  controlOverrides,
   inPractice,
   api,
   accessibility,
@@ -69,11 +82,29 @@ export function ComponentReference({
   examples?: ComponentExample[];
   /** Rendered in the Examples section in place of generated example cards. */
   examplesSlot?: ReactNode;
+  /**
+   * Replaces the entire Preview section content. Useful when the demo needs
+   * its own bespoke setup (e.g. Beam's interactive example).
+   */
+  previewSection?: ReactNode;
+  /**
+   * A `"use client"` component that receives `{ values: ControlValues }` and
+   * renders the component with the current control values. When provided,
+   * `ComponentDemoWithAutoControls` derives the controls from `api` and
+   * updates both the preview and Code tab in real time.
+   */
+  livePreview?: React.ComponentType<{ values: ControlValues }>;
+  /**
+   * Per-prop tuning forwarded to `controlsFromApi`, e.g. turning a CSS-variable
+   * string into a color picker. Only needed when the type string is not enough.
+   */
+  controlOverrides?: Record<string, ControlOverride>;
   inPractice?: ComponentInPractice;
   api?: ApiRow[];
   accessibility?: ReactNode;
   source: string;
-  children: ReactNode;
+  /** Static preview shown when neither `previewSection` nor `livePreview` is provided. */
+  children?: ReactNode;
 }) {
   return (
     <DocsArticle
@@ -98,7 +129,17 @@ export function ComponentReference({
         <h2 id="preview" className={sectionHeading}>
           Preview
         </h2>
-        <ComponentDemo preview={children} code={usage} />
+        {previewSection ?? (
+          <ComponentDemoWithAutoControls
+            api={api ?? []}
+            usage={usage}
+            componentTag={tagFromTitle(title)}
+            LivePreview={LivePreview}
+            controlOverrides={controlOverrides}
+          >
+            {children}
+          </ComponentDemoWithAutoControls>
+        )}
       </section>
       <section className="flex flex-col gap-6">
         <h2 id="installation" className={sectionHeading}>

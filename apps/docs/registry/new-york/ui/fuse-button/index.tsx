@@ -202,7 +202,7 @@ export function FuseButton({
       disabled={active ? false : disabled}
       onClick={() => (active ? onUndo() : onActivate())}
       className={cn(
-        shape === "circle" && "aspect-square rounded-full",
+        shape === "circle" && "aspect-square overflow-hidden rounded-full",
         active && "relative overflow-hidden tabular-nums",
         className,
       )}

@@ -25,6 +25,7 @@ import {
 } from "@/registry/new-york/ui/tabs";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { TabsPreview } from "./tabs-previews";
 
 export const metadata: Metadata = componentPageMetadata("tabs");
 
@@ -872,6 +873,13 @@ export default async function TabsPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={TabsPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        defaultValue: { exclude: true },
+        onValueChange: { exclude: true },
+        forceMount: { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

@@ -13,6 +13,7 @@ import { Separator } from "@/registry/new-york/ui/separator";
 import { Switch } from "@/registry/new-york/ui/switch";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { SeparatorPreview } from "./separator-previews";
 
 export const metadata: Metadata = componentPageMetadata("separator");
 
@@ -229,6 +230,7 @@ export default async function SeparatorPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={SeparatorPreview}
       accessibility={
         <>
           <p>

@@ -211,7 +211,7 @@ export function ComboboxTrigger({
         disabled={combobox.disabled || disabledProp}
         data-empty={!combobox.value ? "" : undefined}
         className={cn(
-          "inline-flex w-full min-w-0 items-center justify-between gap-2 font-normal",
+          "inline-flex w-full min-w-0 items-center justify-between gap-2 text-left font-normal",
           !combobox.value && "text-muted-foreground",
           className,
         )}

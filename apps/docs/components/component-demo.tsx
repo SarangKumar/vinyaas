@@ -167,7 +167,7 @@ function PhoneIcon() {
   );
 }
 
-function RefreshIcon({ size = 13 }: { size?: number }) {
+export function RefreshIcon({ size = 13 }: { size?: number }) {
   return (
     <svg
       width={size}
@@ -234,7 +234,7 @@ const SCREEN_PRESETS = [
 const TICK_BACKGROUND =
   "repeating-linear-gradient(to right, var(--muted-foreground) 0 1px, transparent 1px 10%)";
 
-function ControlCell({
+export function ControlCell({
   control,
   value,
   onChange,
@@ -289,7 +289,9 @@ function ControlCell({
           <span className="text-foreground ml-auto font-mono text-xs">
             {value as string}
           </span>
-          <label className="shrink-0 cursor-pointer">
+          {/* Relative wrapper so the invisible input sits exactly over the
+              swatch — the OS color picker then opens near the button. */}
+          <label className="relative shrink-0 cursor-pointer">
             <span
               className="border-border block size-5 rounded-md border"
               style={{ background: value as string }}
@@ -298,7 +300,7 @@ function ControlCell({
               type="color"
               value={value as string}
               onChange={(e) => onChange(e.target.value)}
-              className="sr-only"
+              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
             />
           </label>
         </>

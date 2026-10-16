@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
 import { Badge } from "@/registry/new-york/ui/badge";
@@ -53,6 +53,61 @@ function MoreIcon() {
       <circle cx="12" cy="12" r="1.5" />
       <circle cx="19" cy="12" r="1.5" />
     </svg>
+  );
+}
+
+const resizableRows = [
+  { name: "Ada Lovelace", role: "Writer", dept: "Computing" },
+  { name: "Grace Hopper", role: "Scientist", dept: "Engineering" },
+  { name: "Alan Turing", role: "Mathematician", dept: "Computing" },
+];
+
+export function ResizableColumnsTable() {
+  const nameRef = useRef<HTMLTableCellElement>(null);
+  const roleRef = useRef<HTMLTableCellElement>(null);
+
+  return (
+    <div className="w-full max-w-lg overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {/* resize: horizontal lets the user drag the column edge */}
+            <TableHead
+              ref={nameRef}
+              style={{
+                resize: "horizontal",
+                overflow: "hidden",
+                minWidth: "8rem",
+                width: "12rem",
+              }}
+            >
+              Name
+            </TableHead>
+            <TableHead
+              ref={roleRef}
+              style={{
+                resize: "horizontal",
+                overflow: "hidden",
+                minWidth: "6rem",
+                width: "9rem",
+              }}
+            >
+              Role
+            </TableHead>
+            <TableHead>Department</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {resizableRows.map((row) => (
+            <TableRow key={row.name}>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.role}</TableCell>
+              <TableCell>{row.dept}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 

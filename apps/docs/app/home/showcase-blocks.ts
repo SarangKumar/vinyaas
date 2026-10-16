@@ -5,7 +5,7 @@ import { AnalyticsBlock } from "@/app/home/blocks/analytics-block";
 import { CalendarBlock } from "@/app/home/blocks/calendar-block";
 import { ChartBlock } from "@/app/home/blocks/chart-block";
 import { ChatBlock } from "@/app/home/blocks/chat-block";
-import { ComboboxBlock } from "@/app/home/blocks/combobox-block";
+import { FuseButtonBlock } from "@/app/home/blocks/fuse-button-block";
 import { CommandSearchBlock } from "@/app/home/blocks/command-search-block";
 import { CompanionBlock } from "@/app/home/blocks/companion-block";
 import { ConnectDeviceBlock } from "@/app/home/blocks/connect-device-block";
@@ -24,7 +24,7 @@ import { PaginationBlock } from "@/app/home/blocks/pagination-block";
 import { PaymentConfirmationBlock } from "@/app/home/blocks/payment-confirmation-block";
 import { PaymentMethodBlock } from "@/app/home/blocks/payment-method-block";
 import { PrimitivesKitBlock } from "@/app/home/blocks/primitives-kit-block";
-import { RecentDocumentsBlock } from "@/app/home/blocks/recent-documents-block";
+import { UserCursorBlock } from "@/app/home/blocks/user-cursor-block";
 import { ResizableBlock } from "@/app/home/blocks/resizable-block";
 import { ScheduleBlock } from "@/app/home/blocks/schedule-block";
 import { SelectBlock } from "@/app/home/blocks/select-block";
@@ -66,8 +66,6 @@ export const homepageExcludedNewComponents = [
   "score-ring",
   // Decorator/utility components — best shown on their own docs pages.
   "beam",
-  "fuse-button",
-  "user-cursor",
 ] as const;
 
 /** Fixed homepage showcase cardinality — product rule, not incidental. */
@@ -146,18 +144,10 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     Block: DataTableBlock,
   },
   {
-    id: "documents",
-    weight: 6,
-    components: [
-      "table",
-      "input",
-      "label",
-      "badge",
-      "button",
-      "avatar",
-      "dropdown-menu",
-    ],
-    Block: RecentDocumentsBlock,
+    id: "user-cursor",
+    weight: 3,
+    components: ["user-cursor"],
+    Block: UserCursorBlock,
   },
   {
     id: "calendar",
@@ -178,10 +168,10 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
     Block: ScheduleBlock,
   },
   {
-    id: "combobox",
+    id: "fuse-button",
     weight: 2,
-    components: ["combobox", "label"],
-    Block: ComboboxBlock,
+    components: ["fuse-button"],
+    Block: FuseButtonBlock,
   },
   {
     id: "empty-state",

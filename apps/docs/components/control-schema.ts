@@ -13,14 +13,30 @@ export type ControlOverride = {
   max?: number;
   step?: number;
   unit?: string;
+  /** Override the default value independently of min/max. */
+  default?: number | string | boolean;
   /** Render a string prop as a color picker starting at this hex value. */
   color?: string;
+  /** Force a string prop into a select with these options. */
+  options?: string[];
   /** Keep this prop out of the panel. */
   exclude?: boolean;
 };
 
 const HEX = /^#[0-9a-f]{3,8}$/i;
 const QUOTED = /^"([\s\S]*)"$/;
+
+/** Structural / styling props that are never useful as playground controls. */
+const ALWAYS_EXCLUDED = new Set([
+  "className",
+  "style",
+  "id",
+  "role",
+  "children",
+  "asChild",
+  "ref",
+  "key",
+]);
 
 /** Props whose types are never adjustable through a form control. */
 function isAdjustableType(type: string): boolean {
@@ -67,7 +83,15 @@ export function controlsFromApi(
   for (const row of rows) {
     const override = overrides[row.prop] ?? {};
     const type = row.type.trim();
-    if (override.exclude || !isAdjustableType(type)) continue;
+    const propName = row.prop;
+    if (
+      override.exclude ||
+      ALWAYS_EXCLUDED.has(propName) ||
+      propName.startsWith("aria-") ||
+      propName.startsWith("on") ||
+      !isAdjustableType(type)
+    )
+      continue;
 
     const label = labelFor(row.prop);
     const raw = row.defaultValue?.trim();
@@ -84,11 +108,17 @@ export function controlsFromApi(
 
     if (type === "number") {
       const parsed = raw === undefined ? Number.NaN : Number(unquote(raw));
+      const numDefault =
+        override.default !== undefined
+          ? (override.default as number)
+          : Number.isFinite(parsed)
+            ? parsed
+            : (override.min ?? 0);
       controls.push({
         key: row.prop,
         label,
         type: "range",
-        default: Number.isFinite(parsed) ? parsed : (override.min ?? 0),
+        default: numDefault,
         min: override.min ?? 0,
         max: override.max ?? 100,
         ...(override.step === undefined ? {} : { step: override.step }),
@@ -98,19 +128,30 @@ export function controlsFromApi(
     }
 
     const union = parseLiteralUnion(type);
-    if (union) {
+    if (union ?? override.options) {
+      const opts = override.options ?? union!;
       controls.push({
         key: row.prop,
         label,
         type: "select",
-        default: raw ? unquote(raw) : union[0]!,
-        options: union.map((value) => ({ value, label: titleCase(value) })),
+        default:
+          override.default !== undefined
+            ? (override.default as string)
+            : raw
+              ? unquote(raw)
+              : opts[0]!,
+        options: opts.map((value) => ({ value, label: titleCase(value) })),
       });
       continue;
     }
 
     if (type === "string") {
-      const fallback = raw ? unquote(raw) : "";
+      const fallback =
+        override.default !== undefined
+          ? (override.default as string)
+          : raw
+            ? unquote(raw)
+            : "";
       if (override.color ?? HEX.test(fallback)) {
         controls.push({
           key: row.prop,

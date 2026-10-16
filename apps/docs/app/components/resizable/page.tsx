@@ -12,6 +12,7 @@ import {
 } from "@/registry/new-york/ui/resizable";
 
 import { examples, inPractice, usage } from "./examples";
+import { ResizablePreview } from "./resizable-previews";
 
 export const metadata: Metadata = componentPageMetadata("resizable");
 
@@ -109,6 +110,14 @@ export default async function ResizablePage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={ResizablePreview}
+      controlOverrides={{
+        defaultSize: { exclude: true },
+        minSize: { exclude: true },
+        maxSize: { exclude: true },
+        disableCursor: { exclude: true },
+        disabled: { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

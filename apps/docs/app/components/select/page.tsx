@@ -8,6 +8,7 @@ import type {
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { SelectPreview } from "./select-previews";
 
 import {
   BasicSelectDemo,
@@ -260,6 +261,14 @@ export default async function SelectPage() {
     <ComponentReference
       title="Select"
       description="A custom select with grouped options and accessible listbox behavior."
+      livePreview={SelectPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        defaultValue: { exclude: true },
+        onValueChange: { exclude: true },
+        "open / onOpenChange": { exclude: true },
+        name: { exclude: true },
+      }}
       overview={
         <>
           <p>

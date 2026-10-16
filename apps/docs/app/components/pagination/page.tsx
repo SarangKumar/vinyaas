@@ -16,6 +16,7 @@ import {
   GalleryPaginationDemo,
   LongRangePaginationDemo,
 } from "./pagination-demos";
+import { PaginationPreview } from "./pagination-previews";
 
 export const metadata: Metadata = componentPageMetadata("pagination");
 
@@ -398,6 +399,14 @@ export default async function PaginationPage() {
         </p>
       }
       usage={usage}
+      livePreview={PaginationPreview}
+      controlOverrides={{
+        "aria-label": { exclude: true },
+        href: { exclude: true },
+        isActive: { exclude: true },
+        size: { exclude: true },
+        className: { exclude: true },
+      }}
       examples={examples}
       inPractice={inPractice}
       api={api}

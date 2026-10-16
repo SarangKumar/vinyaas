@@ -210,7 +210,12 @@ export function RevenueLinePreview() {
     <ChartContainer config={revenueConfig} className="h-48 w-full max-w-lg">
       <LineChart data={monthlyRevenue} accessibilityLayer>
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+        <XAxis
+          dataKey="month"
+          tickLine={false}
+          axisLine={false}
+          padding={{ left: 16, right: 16 }}
+        />
         <YAxis hide />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Line
@@ -293,7 +298,12 @@ export function SignupsAreaPreview() {
     <ChartContainer config={signupsConfig} className="h-48 w-full max-w-lg">
       <AreaChart data={signupTrend} accessibilityLayer>
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+        <XAxis
+          dataKey="month"
+          tickLine={false}
+          axisLine={false}
+          padding={{ left: 16, right: 16 }}
+        />
         <YAxis hide />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Area
@@ -316,7 +326,12 @@ export function LegendPreview() {
     <ChartContainer config={dashboardConfig} className="h-52 w-full max-w-lg">
       <LineChart data={multiSeries} accessibilityLayer>
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+        <XAxis
+          dataKey="month"
+          tickLine={false}
+          axisLine={false}
+          padding={{ left: 16, right: 16 }}
+        />
         <YAxis hide />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />

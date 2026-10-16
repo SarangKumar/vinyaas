@@ -14,6 +14,7 @@ import {
   NotificationDrawerPreview,
   ShoppingFilterPreview,
 } from "./drawer-demos";
+import { DrawerPreview } from "./drawer-previews";
 
 export const metadata: Metadata = componentPageMetadata("drawer");
 
@@ -353,6 +354,12 @@ export default async function DrawerPage() {
     <ComponentReference
       title="Drawer"
       description="A panel that slides in from the edge of the screen."
+      livePreview={DrawerPreview}
+      controlOverrides={{
+        open: { exclude: true },
+        defaultOpen: { exclude: true },
+        onOpenChange: { exclude: true },
+      }}
       overview={
         <>
           <p>

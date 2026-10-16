@@ -18,6 +18,7 @@ import {
 } from "@/registry/new-york/ui/input-group";
 import { Kbd } from "@/registry/new-york/ui/kbd";
 import { Label } from "@/registry/new-york/ui/label";
+import { InputGroupPreview } from "./input-group-previews";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -74,6 +75,23 @@ const api: ApiRow[] = [
     prop: "className",
     type: "string",
     description: "Merged onto the group, addon, field, or button with cn.",
+  },
+  {
+    prop: "disabled",
+    type: "boolean",
+    description:
+      "Forwarded to InputGroupInput, InputGroupTextarea, and InputGroupButton.",
+  },
+  {
+    prop: "placeholder",
+    type: "string",
+    description: "Forwarded to InputGroupInput or InputGroupTextarea.",
+  },
+  {
+    prop: "variant",
+    type: '"icon" | "text" | "currency" | "action"',
+    defaultValue: '"icon"',
+    description: "Demo layout variant shown in the preview.",
   },
 ];
 
@@ -236,6 +254,11 @@ export default async function InputGroupPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={InputGroupPreview}
+      controlOverrides={{
+        className: { exclude: true },
+        placeholder: { default: "Search…" },
+      }}
       accessibility={
         <ul className="list-disc pl-5">
           <li>Name the input or textarea with aria-label or a label.</li>

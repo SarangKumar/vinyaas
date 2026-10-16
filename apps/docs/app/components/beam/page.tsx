@@ -5,7 +5,7 @@ import type { ComponentInPractice } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
-import { BeamDemo, BeamInteractiveSection, PipelineDemo } from "./beam-demos";
+import { BeamInteractiveSection, PipelineDemo } from "./beam-demos";
 
 export const metadata: Metadata = componentPageMetadata("beam");
 
@@ -119,21 +119,7 @@ export default async function BeamPage() {
         </p>
       }
       usage={usage}
-      examplesSlot={
-        <div className="flex flex-col gap-3">
-          <h3
-            id="interactive"
-            className="text-foreground scroll-mt-8 text-base font-semibold tracking-tight"
-          >
-            Interactive
-          </h3>
-          <p className="text-muted-foreground text-base">
-            Adjust curvature, duration, track style, pulse shape, and more using
-            the Customize panel below.
-          </p>
-          <BeamInteractiveSection />
-        </div>
-      }
+      previewSection={<BeamInteractiveSection />}
       inPractice={inPractice}
       api={api}
       accessibility={
@@ -155,8 +141,6 @@ export default async function BeamPage() {
         </>
       }
       source={source}
-    >
-      <BeamDemo />
-    </ComponentReference>
+    />
   );
 }

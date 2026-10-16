@@ -9,6 +9,7 @@ import { ComponentReference } from "@/components/component-reference";
 import { Button } from "@/registry/new-york/ui/button";
 import { Label } from "@/registry/new-york/ui/label";
 import { Textarea } from "@/registry/new-york/ui/textarea";
+import { TextareaPreview } from "./textarea-previews";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -304,6 +305,17 @@ export default async function TextareaPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={TextareaPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        defaultValue: { exclude: true },
+        "aria-invalid": { exclude: true },
+        containerClassName: { exclude: true },
+        cols: { exclude: true },
+        rows: { min: 2, max: 12, step: 1 },
+        maxRows: { min: 2, max: 20, step: 1 },
+        placeholder: { default: "Write something…" },
+      }}
       accessibility={
         <>
           <p>Textarea is a native textarea. It does not add an ARIA role.</p>

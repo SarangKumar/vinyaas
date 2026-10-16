@@ -13,6 +13,7 @@ import {
 } from "@/registry/new-york/ui/empty-state";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { EmptyStatePreview } from "./empty-state-previews";
 
 import {
   BasicEmptyDemo,
@@ -245,6 +246,7 @@ export default async function EmptyStatePage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={EmptyStatePreview}
       api={api}
       accessibility={
         <>

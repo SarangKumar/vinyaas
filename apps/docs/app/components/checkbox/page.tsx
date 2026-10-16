@@ -9,6 +9,7 @@ import { ComponentReference } from "@/components/component-reference";
 import { Button } from "@/registry/new-york/ui/button";
 import { Checkbox } from "@/registry/new-york/ui/checkbox";
 import { Label } from "@/registry/new-york/ui/label";
+import { CheckboxPreview } from "./checkbox-previews";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -272,6 +273,13 @@ export default async function CheckboxPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={CheckboxPreview}
+      controlOverrides={{
+        defaultChecked: { exclude: true },
+        name: { exclude: true },
+        value: { exclude: true },
+        required: { exclude: true },
+      }}
       accessibility={
         <>
           <p>Checkbox is a native checkbox. It does not add an ARIA role.</p>

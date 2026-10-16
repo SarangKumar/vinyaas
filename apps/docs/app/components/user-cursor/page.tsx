@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import type { ApiRow } from "@/components/api-table";
 import type {
   ComponentExample,
   ComponentInPractice,
@@ -14,7 +13,10 @@ import {
   LabelHiddenDemo,
   CanvasDemo,
   VariantsDemo,
+  CursorVariantsDemo,
+  UserCursorPreview,
 } from "./user-cursor-demos";
+import { api } from "./user-cursor-api";
 
 export const metadata: Metadata = componentPageMetadata("user-cursor");
 
@@ -25,45 +27,12 @@ export function Demo() {
 }
 `;
 
-const api: ApiRow[] = [
-  {
-    prop: "name",
-    type: "string",
-    description: "Display name shown in the label next to the cursor pointer.",
-  },
-  {
-    prop: "color",
-    type: "string",
-    defaultValue: '"var(--primary)"',
-    description:
-      "Accent color for both the cursor fill and label background. Accepts any CSS color value.",
-  },
-  {
-    prop: "labelVariant",
-    type: '"rounded" | "pill" | "bubble" | "square"',
-    defaultValue: '"rounded"',
-    description:
-      'Visual shape of the name label. "rounded" is the default compact rectangle; "pill" is fully capsule-shaped; "bubble" adds a speech-bubble tail; "square" removes all rounding.',
-  },
-  {
-    prop: "labelHidden",
-    type: "boolean",
-    defaultValue: "false",
-    description: "Hide the name label. Useful when only the pointer is needed.",
-  },
-  {
-    prop: "className",
-    type: "string",
-    description: "Extra classes applied to the wrapper element.",
-  },
-];
-
 const examples: ComponentExample[] = [
   {
-    id: "variants",
+    id: "label-variants",
     title: "Label variants",
     description:
-      "Choose from four label shapes via the labelVariant prop. The default is rounded.",
+      "Choose from five label shapes via the labelVariant prop. The default is rounded.",
     preview: <VariantsDemo />,
     code: `import { UserCursor } from "@/components/ui/user-cursor";
 
@@ -73,7 +42,25 @@ export function Demo() {
       <UserCursor name="Alice" color="#7c3aed" labelVariant="rounded" />
       <UserCursor name="Alice" color="#7c3aed" labelVariant="pill" />
       <UserCursor name="Alice" color="#7c3aed" labelVariant="bubble" />
+      <UserCursor name="Alice" color="#7c3aed" labelVariant="chat" />
       <UserCursor name="Alice" color="#7c3aed" labelVariant="square" />
+    </div>
+  );
+}`,
+  },
+  {
+    id: "cursor-variants",
+    title: "Cursor variants",
+    description:
+      'Two arrow shapes: "default" has a diagonal stem; "minimal" is a clean Figma-style triangular arrow.',
+    preview: <CursorVariantsDemo />,
+    code: `import { UserCursor } from "@/components/ui/user-cursor";
+
+export function Demo() {
+  return (
+    <div className="flex flex-wrap items-start gap-8">
+      <UserCursor name="Alice" color="#7c3aed" cursorVariant="default" />
+      <UserCursor name="Alice" color="#7c3aed" cursorVariant="minimal" />
     </div>
   );
 }`,
@@ -226,6 +213,11 @@ export default async function UserCursorPage() {
           </p>
         </>
       }
+      livePreview={UserCursorPreview}
+      controlOverrides={{
+        color: { color: "#7c3aed" },
+        className: { exclude: true },
+      }}
       install="vinyaas add user-cursor"
       manual={
         <p>
@@ -259,8 +251,6 @@ export default async function UserCursorPage() {
         </>
       }
       source={source}
-    >
-      <HoverDemo />
-    </ComponentReference>
+    />
   );
 }

@@ -10,6 +10,7 @@ import { Toggle } from "@/registry/new-york/ui/toggle";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 import { BoldIcon, ItalicIcon } from "./icons";
+import { TogglePreview } from "./toggle-previews";
 
 export const metadata: Metadata = componentPageMetadata("toggle");
 
@@ -216,6 +217,11 @@ export default async function TogglePage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={TogglePreview}
+      controlOverrides={{
+        pressed: { exclude: true },
+        onPressedChange: { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

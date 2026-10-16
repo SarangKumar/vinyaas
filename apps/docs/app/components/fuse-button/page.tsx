@@ -9,6 +9,7 @@ import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 import { DefaultDemo, CircleDemo, InPracticeDemo } from "./fuse-button-demos";
+import { FuseButtonPreview } from "./fuse-button-previews";
 
 export const metadata: Metadata = componentPageMetadata("fuse-button");
 
@@ -225,6 +226,16 @@ export default async function FuseButtonPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={FuseButtonPreview}
+      controlOverrides={{
+        active: { exclude: true },
+        onActivate: { exclude: true },
+        onFire: { exclude: true },
+        onUndo: { exclude: true },
+        undoLabel: { exclude: true },
+        size: { default: "icon" },
+        duration: { min: 1000, max: 10000, step: 500, unit: "ms" },
+      }}
       api={api}
       accessibility={
         <>

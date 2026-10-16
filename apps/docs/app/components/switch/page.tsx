@@ -10,6 +10,7 @@ import { Button } from "@/registry/new-york/ui/button";
 import { Label } from "@/registry/new-york/ui/label";
 import { Switch } from "@/registry/new-york/ui/switch";
 import { ControlledSwitch } from "./controlled-switch";
+import { SwitchPreview } from "./switch-previews";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -298,6 +299,14 @@ export default async function SwitchPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={SwitchPreview}
+      controlOverrides={{
+        checked: { exclude: true },
+        name: { exclude: true },
+        value: { exclude: true },
+        required: { exclude: true },
+        onCheckedChange: { exclude: true },
+      }}
       accessibility={
         <>
           <p>

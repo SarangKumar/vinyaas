@@ -6,7 +6,7 @@ import type {
   ComponentInPractice,
 } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { CustomerTable } from "./table-demos";
+import { CustomerTable, ResizableColumnsTable } from "./table-demos";
 import {
   Table,
   TableBody,
@@ -190,6 +190,35 @@ const examples: ComponentExample[] = [
     </TableRow>
   </TableFooter>
 </Table>`,
+  },
+  {
+    id: "resizable-columns",
+    title: "Resizable columns",
+    description:
+      "Add resize: horizontal and overflow: hidden to TableHead to let the user drag column widths.",
+    preview: <ResizableColumnsTable />,
+    code: `<div className="overflow-x-auto">
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead style={{ resize: "horizontal", overflow: "hidden", minWidth: "8rem", width: "12rem" }}>
+          Name
+        </TableHead>
+        <TableHead style={{ resize: "horizontal", overflow: "hidden", minWidth: "6rem", width: "9rem" }}>
+          Role
+        </TableHead>
+        <TableHead>Department</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow>
+        <TableCell>Ada Lovelace</TableCell>
+        <TableCell>Writer</TableCell>
+        <TableCell>Computing</TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</div>`,
   },
   {
     id: "responsive",
