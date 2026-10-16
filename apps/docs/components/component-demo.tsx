@@ -193,7 +193,7 @@ function GripHandle({ dragging }: { dragging: boolean }) {
   return (
     <div
       className={cn(
-        "flex h-20 w-2.5 items-center justify-center rounded-full transition-colors",
+        "flex h-16 w-2 items-center justify-center rounded-full transition-colors",
         dragging
           ? "bg-primary"
           : "bg-muted-foreground/35 group-hover:bg-muted-foreground/70",
@@ -213,6 +213,12 @@ function GripHandle({ dragging }: { dragging: boolean }) {
     </div>
   );
 }
+
+// ─── Sizing ───────────────────────────────────────────────────────────────────
+
+const MIN_PREVIEW_WIDTH = 320;
+/** Container width kept free so the edge-straddling drag handle stays visible. */
+const GRIP_RESERVE = 0;
 
 // ─── Screen presets ───────────────────────────────────────────────────────────
 
@@ -399,6 +405,13 @@ export function ComponentDemo({
   const [sizeLabelFading, setSizeLabelFading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
+  // The handle straddles the frame's right edge, so the frame can never use the
+  // full container width or the handle's outer half would sit out of bounds.
+  const maxPreviewWidth = Math.max(
+    MIN_PREVIEW_WIDTH,
+    containerWidth - GRIP_RESERVE,
+  );
+
   // ── Refs ────────────────────────────────────────────────────────────────────
   const outerRef = useRef<HTMLDivElement>(null);
   const dragStartX = useRef(0);
@@ -457,9 +470,9 @@ export function ComponentDemo({
 
     function onMove(e: MouseEvent) {
       const next = Math.max(
-        320,
+        MIN_PREVIEW_WIDTH,
         Math.min(
-          containerWidth,
+          maxPreviewWidth,
           dragStartWidth.current + (e.clientX - dragStartX.current),
         ),
       );
@@ -478,12 +491,12 @@ export function ComponentDemo({
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseup", onUp);
     };
-  }, [isDragging, containerWidth]);
+  }, [isDragging, maxPreviewWidth]);
 
   // ── Preset handler ──────────────────────────────────────────────────────────
   function handlePreset(width: number) {
     setScreenPreset(width);
-    setPreviewWidth(Math.min(width, containerWidth));
+    setPreviewWidth(Math.min(width, maxPreviewWidth));
     showSizeLabel();
     scheduleFadeOut();
   }
@@ -574,98 +587,95 @@ export function ComponentDemo({
       </div>
 
       {/* ── Content: box + resize grip ── */}
-      <div
-        ref={outerRef}
-        className="relative flex items-stretch overflow-hidden rounded-3xl"
-      >
-        {/* Muted + dotted grid background — fills the gutter outside the preview box */}
+      <div ref={outerRef} className="relative flex items-stretch rounded-3xl">
+        {/* Clipped background layer — grid + fill, clips to rounded corners.
+            Kept separate so the grip handle can overflow freely. */}
         {activeTab === "preview" && (
-          <svg
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full"
-          >
-            <defs>
-              <pattern
-                id={`grid-${gridId}`}
-                width="24"
-                height="24"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 24 0 L 0 0 0 24"
-                  fill="none"
-                  stroke="var(--muted-foreground)"
-                  strokeOpacity="0.4"
-                  strokeWidth="1"
-                  strokeDasharray="3 4"
-                />
-              </pattern>
-            </defs>
-            <rect
-              width="100%"
-              height="100%"
-              fill="var(--muted)"
-              opacity="0.35"
-            />
-            <rect width="100%" height="100%" fill={`url(#grid-${gridId})`} />
-          </svg>
+          <div className="bg-muted/25 pointer-events-none absolute inset-0 overflow-hidden rounded-3xl">
+            <svg aria-hidden="true" className="h-full w-full">
+              <defs>
+                <pattern
+                  id={`grid-${gridId}`}
+                  width="48"
+                  height="48"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path
+                    d="M 48 0 L 0 0 0 48"
+                    fill="none"
+                    stroke="var(--muted-foreground)"
+                    strokeOpacity="0.18"
+                    strokeWidth="1"
+                    strokeDasharray="3 5"
+                  />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill={`url(#grid-${gridId})`} />
+            </svg>
+          </div>
         )}
-
-        {/* Box */}
+        {/* Frame wrapper: sized to the preview width so the handle tracks it. */}
         <div
           style={
             activeTab === "preview"
-              ? { width: effectiveWidth, minWidth: 320, maxWidth: "100%" }
+              ? {
+                  width: effectiveWidth,
+                  minWidth: MIN_PREVIEW_WIDTH,
+                  maxWidth: "100%",
+                }
               : { width: "100%" }
           }
-          className="border-border bg-background relative z-10 min-w-0 overflow-hidden rounded-3xl border"
+          className="relative z-10 min-w-0"
         >
-          {/* Preview */}
-          {activeTab === "preview" && (
-            <div className="relative">
-              <div
-                key={refreshKey}
-                className="bg-background flex min-h-125 w-full items-center justify-center overflow-x-auto overflow-y-visible px-4 py-8 text-sm sm:px-6 sm:py-10"
-              >
-                <div className="flex w-full max-w-full flex-col items-center justify-center overflow-visible p-1 **:data-[demo-align=start]:w-full **:data-[demo-align=start]:items-stretch **:data-[demo-align=start]:self-stretch">
-                  {resolvedPreview}
-                </div>
-              </div>
-
-              {/* Size label */}
-              {sizeLabelVisible && (
+          <div className="border-border bg-background overflow-hidden rounded-3xl border">
+            {/* Preview */}
+            {activeTab === "preview" && (
+              <div className="relative">
                 <div
-                  className={cn(
-                    "border-border bg-popover text-popover-foreground pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border px-2.5 py-0.5 text-xs tabular-nums shadow-sm",
-                    "transition-opacity duration-500",
-                    sizeLabelFading ? "opacity-0" : "opacity-100",
-                  )}
+                  key={refreshKey}
+                  className="bg-background flex min-h-125 w-full items-center justify-center overflow-x-auto overflow-y-visible px-4 py-8 text-sm sm:px-6 sm:py-10"
                 >
-                  {effectiveWidth}px
+                  <div className="flex w-full max-w-full flex-col items-center justify-center overflow-visible p-1 **:data-[demo-align=start]:w-full **:data-[demo-align=start]:items-stretch **:data-[demo-align=start]:self-stretch">
+                    {resolvedPreview}
+                  </div>
                 </div>
-              )}
+
+                {/* Size label */}
+                {sizeLabelVisible && (
+                  <div
+                    className={cn(
+                      "border-border bg-popover text-popover-foreground pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border px-2.5 py-0.5 text-xs tabular-nums shadow-sm",
+                      "transition-opacity duration-500",
+                      sizeLabelFading ? "opacity-0" : "opacity-100",
+                    )}
+                  >
+                    {effectiveWidth}px
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Code */}
+            {activeTab === "code" &&
+              (typeof resolvedCode === "string" ? (
+                <CodeBlock attached code={resolvedCode} language={language} />
+              ) : (
+                <CodeBlock attached source={resolvedCode} />
+              ))}
+          </div>
+
+          {/* Resize grip — straddles the frame's right edge and moves with it.
+              The hit area is far wider than the visible pill. */}
+          {activeTab === "preview" && (
+            <div
+              onMouseDown={handleDragStart}
+              title="Drag to resize"
+              className="group absolute top-1/2 right-0 z-20 flex h-20 w-6 translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center select-none"
+            >
+              <GripHandle dragging={isDragging} />
             </div>
           )}
-
-          {/* Code */}
-          {activeTab === "code" &&
-            (typeof resolvedCode === "string" ? (
-              <CodeBlock attached code={resolvedCode} language={language} />
-            ) : (
-              <CodeBlock attached source={resolvedCode} />
-            ))}
         </div>
-
-        {/* Resize grip — preview mode only */}
-        {activeTab === "preview" && (
-          <div
-            onMouseDown={handleDragStart}
-            title="Drag to resize"
-            className="group relative z-10 flex w-5 shrink-0 cursor-col-resize items-center justify-center select-none"
-          >
-            <GripHandle dragging={isDragging} />
-          </div>
-        )}
       </div>
 
       {/* ── Customize section (below the box, always visible when controls present) ── */}

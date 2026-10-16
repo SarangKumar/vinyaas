@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { UserCursor } from "@/registry/new-york/ui/user-cursor";
+import {
+  UserCursor,
+  type LabelVariant,
+} from "@/registry/new-york/ui/user-cursor";
 
 const DEMO_USERS = [
   { name: "Alice", color: "#7c3aed" },
@@ -59,6 +62,26 @@ export function HoverDemo() {
           <UserCursor name="You" color="#7c3aed" />
         </div>
       )}
+    </div>
+  );
+}
+
+const VARIANTS: { variant: LabelVariant; label: string }[] = [
+  { variant: "rounded", label: "Rounded" },
+  { variant: "pill", label: "Pill" },
+  { variant: "bubble", label: "Bubble" },
+  { variant: "square", label: "Square" },
+];
+
+export function VariantsDemo() {
+  return (
+    <div className="flex flex-wrap items-start gap-8">
+      {VARIANTS.map(({ variant, label }) => (
+        <div key={variant} className="flex flex-col items-start gap-3">
+          <UserCursor name="Alice" color="#7c3aed" labelVariant={variant} />
+          <span className="text-muted-foreground text-xs">{label}</span>
+        </div>
+      ))}
     </div>
   );
 }

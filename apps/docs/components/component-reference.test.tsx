@@ -93,7 +93,6 @@ describe("ComponentReference", () => {
             prop: "variant",
             type: '"default" | "outline" | "destructive"',
             defaultValue: '"default"',
-            description: "Visual style.",
           },
         ]}
         accessibility={<p>Enter and Space activate it.</p>}
@@ -132,7 +131,7 @@ describe("ComponentReference", () => {
       screen.getByRole("heading", { name: "Accessibility" }),
     ).toHaveAttribute("id", "accessibility");
     expect(
-      screen.getByRole("columnheader", { name: "Prop" }),
+      screen.getByRole("columnheader", { name: "Name" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("columnheader", { name: "Type" }),

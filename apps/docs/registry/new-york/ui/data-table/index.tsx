@@ -49,6 +49,8 @@ export type DataTableColumn<TData> = {
    * share the remaining space equally.
    */
   width?: string | number;
+  /** Adds a drag handle on the right edge of the header so the column width can be adjusted. */
+  resizable?: boolean;
 };
 
 export type DataTableProps<TData> = {
@@ -213,6 +215,27 @@ export function DataTable<TData>({
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [page, setPage] = useState(1);
   const [hidden, setHidden] = useState<Set<string>>(() => new Set());
+  const [colWidths, setColWidths] = useState<Record<string, number>>({});
+
+  function startColResize(columnId: string, e: React.MouseEvent) {
+    e.preventDefault();
+    const th = (e.currentTarget as HTMLElement).closest("th");
+    const startX = e.clientX;
+    const startW = th?.getBoundingClientRect().width ?? 80;
+
+    function onMove(ev: MouseEvent) {
+      setColWidths((prev) => ({
+        ...prev,
+        [columnId]: Math.max(40, startW + (ev.clientX - startX)),
+      }));
+    }
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    }
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }
 
   const pageSize =
     typeof pagination === "number"
@@ -493,11 +516,12 @@ export function DataTable<TData>({
               return (
                 <TableHead
                   key={column.id}
-                  style={
-                    column.width !== undefined
-                      ? { width: column.width }
-                      : undefined
+                  className={
+                    column.resizable ? "relative select-none" : undefined
                   }
+                  style={{
+                    width: colWidths[column.id] ?? column.width,
+                  }}
                   aria-sort={
                     direction === "asc"
                       ? "ascending"
@@ -526,6 +550,15 @@ export function DataTable<TData>({
                     </button>
                   ) : (
                     column.header
+                  )}
+                  {column.resizable && (
+                    <span
+                      aria-hidden="true"
+                      onMouseDown={(e) => startColResize(column.id, e)}
+                      className="group/handle absolute top-0 right-0 bottom-0 z-10 flex w-3 cursor-col-resize items-stretch justify-end"
+                    >
+                      <span className="bg-border/50 group-hover/handle:bg-primary/60 w-px transition-colors" />
+                    </span>
                   )}
                 </TableHead>
               );

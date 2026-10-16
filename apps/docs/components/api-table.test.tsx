@@ -12,7 +12,7 @@ const globalsCss = readFileSync(
 );
 
 describe("ApiTable", () => {
-  it("renders prop, type, and default columns at full container width", () => {
+  it("renders name, type, and default columns at full container width", () => {
     render(
       <ApiTable
         rows={[
@@ -20,7 +20,6 @@ describe("ApiTable", () => {
             prop: "type",
             type: '"single" | "multiple"',
             defaultValue: '"single"',
-            description: "ignored in the table",
           },
           {
             prop: "value",
@@ -35,7 +34,7 @@ describe("ApiTable", () => {
 
     expect(wrap).toHaveClass("w-full", "overflow-x-auto");
     expect(table).toHaveClass("w-full", "table-fixed");
-    expect(screen.getByRole("columnheader", { name: "Prop" })).toBeTruthy();
+    expect(screen.getByRole("columnheader", { name: "Name" })).toBeTruthy();
     expect(screen.getByRole("columnheader", { name: "Type" })).toBeTruthy();
     expect(screen.getByRole("columnheader", { name: "Default" })).toBeTruthy();
     expect(
@@ -43,6 +42,26 @@ describe("ApiTable", () => {
     ).toBeNull();
     expect(screen.getByText("type").closest("th")).toBeTruthy();
     expect(document.querySelectorAll("col")).toHaveLength(3);
+  });
+
+  it("renders description column when any row has a description", () => {
+    render(
+      <ApiTable
+        rows={[
+          {
+            prop: "variant",
+            type: "string",
+            defaultValue: '"default"',
+            description: "Visual style of the element.",
+          },
+        ]}
+      />,
+    );
+
+    expect(
+      screen.getByRole("columnheader", { name: "Description" }),
+    ).toBeTruthy();
+    expect(document.querySelectorAll("col")).toHaveLength(4);
   });
 
   it("keeps docs tables on table layout so w-full columns can span the card", () => {

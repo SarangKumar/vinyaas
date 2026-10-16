@@ -13,6 +13,7 @@ import {
   HoverDemo,
   LabelHiddenDemo,
   CanvasDemo,
+  VariantsDemo,
 } from "./user-cursor-demos";
 
 export const metadata: Metadata = componentPageMetadata("user-cursor");
@@ -38,6 +39,13 @@ const api: ApiRow[] = [
       "Accent color for both the cursor fill and label background. Accepts any CSS color value.",
   },
   {
+    prop: "labelVariant",
+    type: '"rounded" | "pill" | "bubble" | "square"',
+    defaultValue: '"rounded"',
+    description:
+      'Visual shape of the name label. "rounded" is the default compact rectangle; "pill" is fully capsule-shaped; "bubble" adds a speech-bubble tail; "square" removes all rounding.',
+  },
+  {
     prop: "labelHidden",
     type: "boolean",
     defaultValue: "false",
@@ -51,6 +59,25 @@ const api: ApiRow[] = [
 ];
 
 const examples: ComponentExample[] = [
+  {
+    id: "variants",
+    title: "Label variants",
+    description:
+      "Choose from four label shapes via the labelVariant prop. The default is rounded.",
+    preview: <VariantsDemo />,
+    code: `import { UserCursor } from "@/components/ui/user-cursor";
+
+export function Demo() {
+  return (
+    <div className="flex flex-wrap items-start gap-8">
+      <UserCursor name="Alice" color="#7c3aed" labelVariant="rounded" />
+      <UserCursor name="Alice" color="#7c3aed" labelVariant="pill" />
+      <UserCursor name="Alice" color="#7c3aed" labelVariant="bubble" />
+      <UserCursor name="Alice" color="#7c3aed" labelVariant="square" />
+    </div>
+  );
+}`,
+  },
   {
     id: "hover",
     title: "Hover to try",

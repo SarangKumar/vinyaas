@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 
+export type LabelVariant = "rounded" | "pill" | "bubble" | "square";
+
 export interface UserCursorProps {
   /** Display name shown on the label. */
   name: string;
@@ -7,18 +9,27 @@ export interface UserCursorProps {
   color?: string;
   /** Hide the name label; useful when only the pointer is needed. */
   labelHidden?: boolean;
+  /**
+   * Visual style of the name label.
+   * - `"rounded"` — compact rectangle with rounded corners (default)
+   * - `"pill"` — fully capsule-shaped
+   * - `"bubble"` — speech-bubble with a small tail pointing toward the cursor tip
+   * - `"square"` — flat rectangle, no rounding
+   */
+  labelVariant?: LabelVariant;
   className?: string;
 }
 
 /**
  * A collaborative cursor matching the style from Figma and cursor.chat:
- * a thin, sharp arrow pointer with a rounded-rectangle name tag anchored
- * to its tip. Both the arrow and the label share the `color` prop.
+ * a thin, sharp arrow pointer with a name tag anchored to its tip.
+ * The label shape is controlled by `labelVariant`.
  */
 export function UserCursor({
   name,
   color = "var(--primary)",
   labelHidden = false,
+  labelVariant = "rounded",
   className,
 }: UserCursorProps) {
   return (
@@ -28,7 +39,6 @@ export function UserCursor({
     >
       {/*
         Thin angular arrow — matches the cursor.chat / Figma style.
-        The path draws a clean pointer: no white outline, no bottom serif.
         Coordinates: origin at tip (0,0), grows down-right.
       */}
       <svg
@@ -54,9 +64,29 @@ export function UserCursor({
       {!labelHidden && (
         <span
           data-slot="user-cursor-label"
-          className="mt-3 -ml-0.5 max-w-[160px] truncate rounded-md px-2.5 py-1 text-xs leading-none font-semibold text-white shadow-sm"
+          data-variant={labelVariant}
+          className={cn(
+            "relative mt-3 -ml-0.5 max-w-[160px] truncate px-2.5 py-1 text-xs leading-none font-semibold text-white shadow-sm",
+            labelVariant === "rounded" && "rounded-md",
+            labelVariant === "pill" && "rounded-full px-3",
+            labelVariant === "bubble" && "mt-4 rounded-xl",
+            labelVariant === "square" && "rounded-none",
+          )}
           style={{ backgroundColor: color }}
         >
+          {labelVariant === "bubble" && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-[5px] left-2"
+              style={{
+                width: 0,
+                height: 0,
+                borderLeft: "4px solid transparent",
+                borderRight: "4px solid transparent",
+                borderBottom: `5px solid ${color}`,
+              }}
+            />
+          )}
           {name}
         </span>
       )}

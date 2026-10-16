@@ -36,4 +36,28 @@ describe("UserCursor", () => {
     const { container } = render(<UserCursor name="Dan" />);
     expect(container.querySelector("svg")).toHaveAttribute("aria-hidden");
   });
+
+  it("applies data-variant to the label", () => {
+    const { container } = render(<UserCursor name="Eve" labelVariant="pill" />);
+    const label = container.querySelector("[data-slot='user-cursor-label']");
+    expect(label).toHaveAttribute("data-variant", "pill");
+  });
+
+  it("renders a bubble tail element for the bubble variant", () => {
+    const { container } = render(
+      <UserCursor name="Frank" labelVariant="bubble" color="#7c3aed" />,
+    );
+    const label = container.querySelector("[data-slot='user-cursor-label']");
+    // bubble tail is an aria-hidden span inside the label
+    const tail = label?.querySelector("[aria-hidden='true']");
+    expect(tail).toBeTruthy();
+  });
+
+  it("does not render a bubble tail for non-bubble variants", () => {
+    const { container } = render(
+      <UserCursor name="Grace" labelVariant="pill" />,
+    );
+    const label = container.querySelector("[data-slot='user-cursor-label']");
+    expect(label?.querySelector("[aria-hidden='true']")).toBeNull();
+  });
 });
