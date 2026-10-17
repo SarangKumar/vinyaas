@@ -23,8 +23,7 @@ export const metadata: Metadata = pageMetadata({
 const heading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
 
-const nameGrid =
-  "grid grid-cols-2 gap-x-6 gap-y-1 md:grid-cols-3";
+const nameGrid = "grid grid-cols-2 gap-x-6 gap-y-1 md:grid-cols-3";
 
 export default function ComponentsPage() {
   const catalog = [...components].sort((a, b) => a.name.localeCompare(b.name));
@@ -62,7 +61,7 @@ export default function ComponentsPage() {
                     {item.name}
                     <span
                       data-nav-indicator="new"
-                      className="bg-foreground/70 size-1.5 shrink-0 rounded-full"
+                      className="bg-primary size-1.5 shrink-0 rounded-full"
                       aria-label="New"
                     />
                     <span className="text-muted-foreground text-xs font-normal">
@@ -101,7 +100,7 @@ function NameGrid({ items }: { items: readonly ComponentMeta[] }) {
             {isNewComponent(item) ? (
               <span
                 data-nav-indicator="new"
-                className="bg-foreground/70 size-1.5 shrink-0 rounded-full"
+                className="bg-primary size-1.5 shrink-0 rounded-full"
                 aria-label="New"
               />
             ) : null}

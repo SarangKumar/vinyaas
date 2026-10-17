@@ -12,7 +12,9 @@ function NavIndicator({ kind }: { kind: "beta" | "new" }) {
   return (
     <span
       data-nav-indicator={kind}
-      className="bg-foreground/70 size-1.5 shrink-0 rounded-full"
+      className={`size-1.5 shrink-0 rounded-full ${
+        kind === "new" ? "bg-primary" : "bg-foreground/70"
+      }`}
       aria-label={label}
       title={label}
     />

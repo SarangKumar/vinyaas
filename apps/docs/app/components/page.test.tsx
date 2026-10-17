@@ -46,7 +46,10 @@ describe("components catalog", () => {
     expect(lists.length).toBeGreaterThanOrEqual(2);
     const allGrid = lists.at(-1)!;
     expect(allGrid).toHaveClass("grid", "grid-cols-2", "md:grid-cols-3");
-    expect(allGrid.querySelectorAll(".bg-primary").length).toBe(0);
+    // The "new" dot is the only primary-colored decoration in the grid.
+    expect(
+      allGrid.querySelectorAll(".bg-primary:not([data-nav-indicator])").length,
+    ).toBe(0);
     expect(allGrid.querySelector("svg")).toBeNull();
 
     const all = [...components]
@@ -59,9 +62,9 @@ describe("components catalog", () => {
     const beamLink = allGrid.querySelector(
       'a[href="/components/beam"]',
     ) as HTMLElement | null;
-    expect(
-      beamLink?.querySelector('[data-nav-indicator="new"]'),
-    ).toHaveAttribute("aria-label", "New");
+    const beamDot = beamLink?.querySelector('[data-nav-indicator="new"]');
+    expect(beamDot).toHaveAttribute("aria-label", "New");
+    expect(beamDot).toHaveClass("bg-primary");
     // v1.4.0 components lose the dot in the v1.5.0 line.
     const toggleLink = allGrid.querySelector(
       'a[href="/components/toggle"]',

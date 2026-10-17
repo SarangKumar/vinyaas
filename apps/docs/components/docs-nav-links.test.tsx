@@ -140,7 +140,10 @@ describe("DocsNavLinks", () => {
       "/components/tabs",
     );
     expect(within(nav).queryByText(", new")).toBeNull();
-    expect(nav.querySelector(".bg-primary")).toBeNull();
+    // The "new" dot is the only primary-colored decoration the nav carries.
+    expect(
+      nav.querySelector(".bg-primary:not([data-nav-indicator])"),
+    ).toBeNull();
 
     const resizable = within(nav).getByRole("link", { name: /Resizable/i });
     expect(resizable).toHaveAttribute("href", "/components/resizable");
@@ -148,10 +151,9 @@ describe("DocsNavLinks", () => {
     const beam = within(nav).getByRole("link", {
       name: /^Beam/i,
     });
-    expect(beam.querySelector('[data-nav-indicator="new"]')).toHaveAttribute(
-      "aria-label",
-      "New",
-    );
+    const beamDot = beam.querySelector('[data-nav-indicator="new"]');
+    expect(beamDot).toHaveAttribute("aria-label", "New");
+    expect(beamDot).toHaveClass("bg-primary");
     const toggleGroup = within(nav).getByRole("link", {
       name: /Toggle Group/i,
     });

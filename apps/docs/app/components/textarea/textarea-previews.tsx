@@ -12,7 +12,8 @@ export function TextareaPreview({ values }: { values: ControlValues }) {
       showCount={values.showCount as boolean}
       rows={(values.rows as number) || 4}
       maxRows={values.maxRows as number}
-      className="w-full max-w-sm"
+      // Width goes on the wrapper so the counter stays at the field's corner.
+      containerClassName="w-full max-w-sm"
     />
   );
 }

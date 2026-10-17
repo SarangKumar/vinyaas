@@ -135,6 +135,9 @@ describe("Textarea", () => {
 
     expect(count).toHaveAttribute("data-slot", "textarea-count");
     expect(field.parentElement).toContainElement(count);
+    // Pinned just below the field's bottom-right corner, out of flow.
+    expect(field.parentElement).toHaveClass("relative", "pb-5");
+    expect(count).toHaveClass("absolute", "right-0", "bottom-0");
     expect(field).toHaveAttribute("aria-describedby", count.id);
     expect(count).not.toHaveClass("text-destructive");
 

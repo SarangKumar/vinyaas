@@ -3,7 +3,16 @@ import type { Metadata } from "next";
 import { DocsArticle } from "@/components/docs-article";
 import { companionCatalog } from "@/components/companion/catalog";
 import { CompanionSprite } from "@/components/companion/companion-sprite";
+import { docsBodyClassName } from "@/components/docs-prose";
 import { pageMetadata } from "@/lib/page-metadata";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/registry/new-york/ui/table";
 
 export const metadata: Metadata = pageMetadata({
   title: "Companion Animations",
@@ -14,7 +23,7 @@ export const metadata: Metadata = pageMetadata({
 
 const sectionHeading =
   "text-foreground scroll-mt-8 text-xl font-semibold tracking-tight";
-const body = "text-foreground text-base leading-7";
+const body = docsBodyClassName;
 
 const CLIP_ROLES = [
   {
@@ -95,35 +104,35 @@ export default function CompanionAnimationsPage() {
           The renderer picks a clip from runtime state or an interaction&apos;s{" "}
           <code>animation</code> field.
         </p>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
-            <thead>
-              <tr className="border-border border-b">
-                <th className="py-2 pr-3 font-medium">Clip</th>
-                <th className="py-2 pr-3 font-medium">Role</th>
-                <th className="py-2 font-medium">Ember frames</th>
-              </tr>
-            </thead>
-            <tbody>
-              {CLIP_ROLES.map((clip) => {
-                const clipFrames =
-                  ember?.clips[clip.id as keyof typeof ember.clips];
-                const frames = clipFrames ? clipFrames.frames.length : "—";
-                return (
-                  <tr key={clip.id} className="border-border border-b">
-                    <td className="py-3 pr-3 align-top">
-                      <code>{clip.id}</code>
-                    </td>
-                    <td className="text-muted-foreground py-3 pr-3 align-top">
-                      {clip.summary}
-                    </td>
-                    <td className="py-3 align-top">{frames}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <Table className="min-w-[36rem]">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Clip</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Ember frames</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {CLIP_ROLES.map((clip) => {
+              const clipFrames =
+                ember?.clips[clip.id as keyof typeof ember.clips];
+              const frames = clipFrames ? clipFrames.frames.length : "—";
+              return (
+                <TableRow key={clip.id}>
+                  <TableCell className="text-foreground align-top">
+                    <code>{clip.id}</code>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground align-top">
+                    {clip.summary}
+                  </TableCell>
+                  <TableCell className="text-foreground align-top">
+                    {frames}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
         {ember ? (
           <div className="flex flex-wrap items-end gap-6 pt-2">
             {CLIP_ROLES.map((clip) => {
@@ -158,48 +167,46 @@ export default function CompanionAnimationsPage() {
           rises (localStorage). Manual-trigger moves need Bond 3+ and are still
           reserved for future UI.
         </p>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[40rem] border-collapse text-left text-sm">
-            <thead>
-              <tr className="border-border border-b">
-                <th className="py-2 pr-3 font-medium">Move</th>
-                <th className="py-2 pr-3 font-medium">Trigger</th>
-                <th className="py-2 pr-3 font-medium">Action</th>
-                <th className="py-2 pr-3 font-medium">Clip</th>
-                <th className="py-2 font-medium">Host status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(ember?.meta.interactions ?? []).map((item) => {
-                const active =
-                  item.trigger !== "manual" &&
-                  !["celebrate", "wake", "follow-cursor"].includes(item.id);
-                return (
-                  <tr key={item.id} className="border-border border-b">
-                    <td className="py-3 pr-3 align-top">
-                      <code>{item.id}</code>
-                      <div className="text-muted-foreground mt-0.5 text-xs">
-                        {item.description}
-                      </div>
-                    </td>
-                    <td className="py-3 pr-3 align-top">
-                      <code>{item.trigger}</code>
-                    </td>
-                    <td className="py-3 pr-3 align-top">
-                      <code>{item.action}</code>
-                    </td>
-                    <td className="py-3 pr-3 align-top">
-                      <code>{item.animation ?? "—"}</code>
-                    </td>
-                    <td className="py-3 align-top">
-                      {active ? "Active" : "Defined / gated"}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <Table className="min-w-[40rem]">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Move</TableHead>
+              <TableHead>Trigger</TableHead>
+              <TableHead>Action</TableHead>
+              <TableHead>Clip</TableHead>
+              <TableHead>Host status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {(ember?.meta.interactions ?? []).map((item) => {
+              const active =
+                item.trigger !== "manual" &&
+                !["celebrate", "wake", "follow-cursor"].includes(item.id);
+              return (
+                <TableRow key={item.id}>
+                  <TableCell className="text-foreground align-top">
+                    <code>{item.id}</code>
+                    <div className="text-muted-foreground mt-0.5 text-xs">
+                      {item.description}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-foreground align-top">
+                    <code>{item.trigger}</code>
+                  </TableCell>
+                  <TableCell className="text-foreground align-top">
+                    <code>{item.action}</code>
+                  </TableCell>
+                  <TableCell className="text-foreground align-top">
+                    <code>{item.animation ?? "—"}</code>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground align-top">
+                    {active ? "Active" : "Defined / gated"}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </section>
 
       <section className="flex flex-col gap-4">

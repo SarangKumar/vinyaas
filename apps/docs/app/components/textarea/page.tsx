@@ -66,7 +66,7 @@ const api: ApiRow[] = [
     type: "boolean",
     defaultValue: "false",
     description:
-      "Shows a current/maxLength counter below the field, aligned right. Without maxLength it shows only the current length.",
+      "Shows a current/maxLength counter pinned just under the field's bottom-right corner, outside the box. Without maxLength it shows only the current length.",
   },
   {
     prop: "maxRows",
@@ -78,7 +78,7 @@ const api: ApiRow[] = [
     prop: "containerClassName",
     type: "string",
     description:
-      "Merged onto the wrapper that holds the field and counter when showCount is set.",
+      "Merged onto the wrapper that holds the field and counter when showCount is set. The counter is anchored to this wrapper, so set width here rather than on className.",
   },
   {
     prop: "rows",
@@ -136,7 +136,7 @@ const examples: ComponentExample[] = [
     id: "character-count",
     title: "Character count",
     description:
-      "With maxLength and showCount, the current length and limit show below the field on the right. The counter turns destructive at the limit and is linked with aria-describedby.",
+      "With maxLength and showCount, the current length and limit sit just under the field's bottom-right corner, outside the box. The counter turns destructive at the limit and is linked with aria-describedby.",
     preview: (
       <div className="w-full max-w-sm">
         <Textarea
