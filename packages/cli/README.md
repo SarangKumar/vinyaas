@@ -165,6 +165,75 @@ Human output includes category, description, and docs when present. `--json` is 
 
 Most project commands accept `--cwd <path>` to target another directory.
 
+## Components
+
+**60 components** across forms, layout, navigation, feedback, data display, charts, typography, and utilities. Install any of them by slug: `vinyaas add <slug>`.
+
+| Name            | Slug              | Category     |
+| --------------- | ----------------- | ------------ |
+| Accordion       | `accordion`       | layout       |
+| Alert           | `alert`           | feedback     |
+| Alert Dialog    | `alert-dialog`    | feedback     |
+| Aspect Ratio    | `aspect-ratio`    | layout       |
+| Attachment      | `attachment`      | data-display |
+| Avatar          | `avatar`          | data-display |
+| Badge           | `badge`           | data-display |
+| Beam            | `beam`            | utilities    |
+| Breadcrumb      | `breadcrumb`      | navigation   |
+| Button          | `button`          | forms        |
+| Calendar        | `calendar`        | forms        |
+| Card            | `card`            | layout       |
+| Chart           | `chart`           | charts       |
+| Checkbox        | `checkbox`        | forms        |
+| Combobox        | `combobox`        | forms        |
+| Command         | `command`         | navigation   |
+| Data Table      | `data-table`      | data-display |
+| Date Picker     | `date-picker`     | forms        |
+| Dialog          | `dialog`          | feedback     |
+| Drag & Drop     | `drag-and-drop`   | layout       |
+| Drawer          | `drawer`          | feedback     |
+| Dropdown Menu   | `dropdown-menu`   | feedback     |
+| Empty State     | `empty-state`     | feedback     |
+| File Upload     | `file-upload`     | forms        |
+| Form            | `form`            | forms        |
+| Fuse Button     | `fuse-button`     | forms        |
+| Hover Card      | `hover-card`      | feedback     |
+| Input           | `input`           | forms        |
+| Input Group     | `input-group`     | forms        |
+| Input OTP       | `input-otp`       | forms        |
+| Kbd             | `kbd`             | data-display |
+| Label           | `label`           | forms        |
+| Marker          | `marker`          | utilities    |
+| Multi Input     | `multi-input`     | forms        |
+| Native Select   | `native-select`   | forms        |
+| Navigation Menu | `navigation-menu` | navigation   |
+| Pagination      | `pagination`      | navigation   |
+| Popover         | `popover`         | feedback     |
+| Progress        | `progress`        | feedback     |
+| Radio Group     | `radio-group`     | forms        |
+| Resizable       | `resizable`       | layout       |
+| Score Ring      | `score-ring`      | data-display |
+| Scroll Area     | `scroll-area`     | layout       |
+| Select          | `select`          | forms        |
+| Separator       | `separator`       | layout       |
+| Sheet           | `sheet`           | feedback     |
+| Sidebar         | `sidebar`         | navigation   |
+| Skeleton        | `skeleton`        | data-display |
+| Slider          | `slider`          | forms        |
+| Spinner         | `spinner`         | feedback     |
+| Switch          | `switch`          | forms        |
+| Table           | `table`           | data-display |
+| Tabs            | `tabs`            | navigation   |
+| Textarea        | `textarea`        | forms        |
+| Toast           | `toast`           | feedback     |
+| Toggle          | `toggle`          | forms        |
+| Toggle Group    | `toggle-group`    | forms        |
+| Tooltip         | `tooltip`         | feedback     |
+| Typography      | `typography`      | typography   |
+| User Cursor     | `user-cursor`     | utilities    |
+
+Run `vinyaas list` for the live registry listing and `vinyaas info <slug>` for files and dependencies.
+
 ## components.json
 
 `components.json` is local project configuration (style, aliases, Tailwind CSS path). The registry publishes component metadata and source separately.
@@ -225,8 +294,6 @@ npm publish --access public
 ## Documentation
 
 For Next.js, React + Vite, or React (fresh, existing, or shadcn-style projects), follow the [Installation](https://vinyaas.vercel.app/installation) guides. Framework-specific create-app steps live there; the shared CLI flow is `vinyaas init` → `vinyaas add`.
-
-## Documentation
 
 - CLI: [https://vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli)
 - Installation: [https://vinyaas.vercel.app/installation](https://vinyaas.vercel.app/installation)

@@ -228,7 +228,7 @@ The current Button item does not declare CSS, environment variables, or a docume
 
 ## Components
 
-**58 components** across forms, layout, navigation, feedback, data display, charts, typography, and utilities.
+**60 components** across forms, layout, navigation, feedback, data display, charts, typography, and utilities.
 
 | Name            | Slug              | Category     |
 | --------------- | ----------------- | ------------ |
@@ -265,6 +265,7 @@ The current Button item does not declare CSS, environment variables, or a docume
 | Kbd             | `kbd`             | data-display |
 | Label           | `label`           | forms        |
 | Marker          | `marker`          | utilities    |
+| Multi Input     | `multi-input`     | forms        |
 | Native Select   | `native-select`   | forms        |
 | Navigation Menu | `navigation-menu` | navigation   |
 | Pagination      | `pagination`      | navigation   |
@@ -290,6 +291,7 @@ The current Button item does not declare CSS, environment variables, or a docume
 | Toggle Group    | `toggle-group`    | forms        |
 | Tooltip         | `tooltip`         | feedback     |
 | Typography      | `typography`      | typography   |
+| User Cursor     | `user-cursor`     | utilities    |
 
 ## Component conventions
 
