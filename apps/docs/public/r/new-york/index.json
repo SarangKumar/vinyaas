@@ -233,6 +233,13 @@
       "category": "utilities"
     },
     {
+      "name": "multi-input",
+      "type": "registry:ui",
+      "description": "A field that collects several values as removable chips in one row.",
+      "docs": "https://vinyaas.vercel.app/components/multi-input",
+      "category": "forms"
+    },
+    {
       "name": "native-select",
       "type": "registry:ui",
       "description": "A styled native select with a chevron and consistent field chrome.",

@@ -16,6 +16,7 @@ import {
   docsMutedBodyClassName,
 } from "@/components/docs-prose";
 import { InstallCommand } from "@/components/install-command";
+import { InstallTabs } from "@/components/install-tabs";
 import { cliCommands } from "@/components/package-managers";
 
 const sectionHeading =
@@ -53,7 +54,11 @@ export type ComponentInPractice = {
  * Shared layout for a component documentation page.
  *
  * Order: Preview → Installation → Usage → Examples → In practice → API →
- * Accessibility → Source. Optional sections stay out when unused.
+ * Accessibility. Optional sections stay out when unused.
+ *
+ * Installation is a CLI/Manual toggle group: the CLI tab holds the `vinyaas
+ * add` command, the Manual tab holds the dependency and placement notes plus
+ * the component source, so the source is no longer a trailing section.
  */
 export function ComponentReference({
   title,
@@ -77,6 +82,11 @@ export function ComponentReference({
   description: string;
   overview?: ReactNode;
   install: string;
+  /**
+   * Manual-installation notes: which npm packages and registry items the
+   * component needs and where its files belong. Rendered above the source in
+   * the Manual tab.
+   */
   manual?: ReactNode;
   usage: string;
   examples?: ComponentExample[];
@@ -145,22 +155,32 @@ export function ComponentReference({
         <h2 id="installation" className={sectionHeading}>
           Installation
         </h2>
-        <div className="flex flex-col gap-3">
-          <h3 id="cli" className={subsectionHeading}>
-            CLI
-          </h3>
-          <InstallCommand
-            commands={cliCommands(install.replace(/^vinyaas\s+/, ""))}
-          />
-        </div>
-        {manual ? (
-          <div className={`${docsBodyClassName} flex flex-col gap-3`}>
-            <h3 id="manual" className={subsectionHeading}>
-              Manual
-            </h3>
-            {manual}
-          </div>
-        ) : null}
+        <InstallTabs
+          cli={
+            <>
+              <p className={docsMutedBodyClassName}>
+                Add the component with the CLI. It copies the files in and
+                installs anything they depend on.
+              </p>
+              <InstallCommand
+                commands={cliCommands(install.replace(/^vinyaas\s+/, ""))}
+              />
+            </>
+          }
+          manual={
+            <>
+              {manual ? (
+                <div className={`${docsBodyClassName} flex flex-col gap-3`}>
+                  {manual}
+                </div>
+              ) : null}
+              <p className={docsMutedBodyClassName}>
+                Copy and paste the following code into your project.
+              </p>
+              <CodeBlock code={source} language="tsx" />
+            </>
+          }
+        />
       </section>
       <section className="flex flex-col gap-4">
         <h2 id="usage" className={sectionHeading}>
@@ -229,12 +249,6 @@ export function ComponentReference({
           {accessibility}
         </section>
       ) : null}
-      <section className="flex flex-col gap-4">
-        <h2 id="source" className={sectionHeading}>
-          Source
-        </h2>
-        <CodeBlock code={source} language="tsx" />
-      </section>
     </DocsArticle>
   );
 }

@@ -142,7 +142,7 @@ describe("documentation navigation", () => {
       items
         ?.filter((item) => item.indicator === "new")
         .map((item) => item.title),
-    ).toEqual(["Beam", "Fuse Button", "User Cursor"]);
+    ).toEqual(["Beam", "Fuse Button", "Multi Input", "User Cursor"]);
     expect(
       items?.find((item) => item.title === "Select")?.indicator,
     ).toBeUndefined();

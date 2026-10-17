@@ -30,13 +30,14 @@ export const changelogVersions: ChangelogVersion[] = [
   {
     id: "1.5.0",
     label: "v1.5.0",
-    summary: `v1.5.0 adds ${v15.length} components (Beam, Fuse Button, and User Cursor), raises the date picker and other popovers above dialogs, tightens table row hover so buttons inside rows stay readable, and fixes the chevron alignment in Combobox and Select.`,
+    summary: `v1.5.0 adds ${v15.length} components (Beam, Fuse Button, Multi Input, and User Cursor), raises the date picker and other popovers above dialogs, tightens table row hover so buttons inside rows stay readable, and fixes the chevron alignment in Combobox and Select.`,
     sections: [
       {
         title: "Components",
         items: [
           `Beam — an animated connector between two elements with a glowing ray or dot pulse that travels along a dotted, dashed, or solid arc or S-curve. BeamNode provides ready-made round icon endpoints.`,
           `Fuse Button — a button whose lit state is a burning-border countdown. Pressing while the fuse burns calls onUndo; burning out calls onFire. Supports rect and circle shapes and all Button sizes including icon.`,
+          `Multi Input — one field that collects several values as removable chips. Entries commit on Enter, on a separator character while typing or pasting, or on blur; \`max\`, \`validate\`, and \`allowDuplicates\` control what lands in the list, and \`name\` submits one hidden input per value. Part of the form catalog.`,
           `User Cursor — a Figma-style collaborative cursor: an arrow pointer with a rounded pill label showing the user's name. Color-coded per user; purely presentational so it works with any multiplayer or canvas setup.`,
         ],
       },
@@ -55,6 +56,7 @@ export const changelogVersions: ChangelogVersion[] = [
           `Component demos were rebuilt around a toolbar that sits above the frame: Preview and Code are now toggled views rather than a stacked preview-plus-source, with desktop, tablet, and mobile width presets, a refresh control, and a drag handle on the right edge that resizes the frame down to 320px while showing the current width.`,
           `Demos can now expose a Customize panel below the frame. Controls (color, text, long text, range, toggle, and select) drive the preview and the generated source at the same time, so a single interactive demo replaces several near-identical static examples. Beam is the first page to use it.`,
           `Documentation pages widened from 48rem to 52rem, giving examples, API tables, and code blocks more room without stretching body copy; demo code blocks render at 12px.`,
+          `Installation is now a CLI/Manual toggle group on every component page. The CLI tab keeps the \`npx vinyaas add\` command, and the Manual tab holds the dependency and file-placement notes followed by the component source — so the source moved out of the trailing Source section and into the step that asks for it. Section order is Preview, Installation, Usage, Examples.`,
         ],
       },
       {

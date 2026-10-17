@@ -31,6 +31,7 @@ export const componentCatalogs: readonly ComponentCatalogDefinition[] = [
       "input",
       "label",
       "textarea",
+      "multi-input",
       "native-select",
       "select",
       "combobox",

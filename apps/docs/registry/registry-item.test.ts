@@ -909,7 +909,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).resolves.toBeUndefined();
     expect(newYork.some((item) => item.name === "select")).toBe(true);
-    expect(newYork).toHaveLength(59);
+    expect(newYork).toHaveLength(60);
   });
 
   it("publishes Calendar, Date Picker, Combobox, Empty State, and Form", async () => {

@@ -17,7 +17,7 @@ export function ResizablePreview({ values }: { values: ControlValues }) {
       variant={values.variant as ResizableVariant}
       className={`border-border rounded-md border ${isVertical ? "max-h-[220px] min-h-[220px]" : "min-h-[160px]"} w-full max-w-2xl`}
     >
-      <ResizablePanel defaultSize="40%" minSize="20%">
+      <ResizablePanel defaultSize="40" minSize="20">
         <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-sm">
           {isVertical ? "Top" : "Sidebar"}
         </div>
@@ -26,7 +26,7 @@ export function ResizablePreview({ values }: { values: ControlValues }) {
         withHandle={(values.withHandle as boolean) || undefined}
         aria-label="Resize"
       />
-      <ResizablePanel defaultSize="60%">
+      <ResizablePanel defaultSize="60">
         <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-sm">
           {isVertical ? "Bottom" : "Main"}
         </div>

@@ -287,6 +287,16 @@ export default async function CalendarPage() {
         </>
       }
       install="vinyaas add calendar"
+      manual={
+        <p>
+          After <code>vinyaas init</code>, add <code>button</code>, then place
+          the source at <code>components/ui/calendar/index.tsx</code>. It
+          imports <code>cn</code> from <code>@/lib/utils</code>. The project
+          also needs <code>react-day-picker</code>, <code>date-fns</code>,{" "}
+          <code>class-variance-authority</code>, <code>clsx</code>, and{" "}
+          <code>tailwind-merge</code>.
+        </p>
+      }
       usage={usage}
       examples={examples}
       inPractice={inPractice}

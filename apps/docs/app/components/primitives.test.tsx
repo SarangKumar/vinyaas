@@ -38,6 +38,7 @@ import DropdownMenuPage from "./dropdown-menu/page";
 import InputPage from "./input/page";
 import InputGroupPage from "./input-group/page";
 import InputOTPPage from "./input-otp/page";
+import MultiInputPage from "./multi-input/page";
 import FileUploadPage from "./file-upload/page";
 import CommandPage from "./command/page";
 import TypographyPage from "./typography/page";
@@ -70,6 +71,12 @@ const pages = [
     title: "Fuse Button",
     command: "npx vinyaas add fuse-button",
     api: "onActivate",
+  },
+  {
+    load: MultiInputPage,
+    title: "Multi Input",
+    command: "npx vinyaas add multi-input",
+    api: "onValueChange",
   },
   {
     load: TogglePage,
@@ -362,6 +369,8 @@ describe("composed examples", () => {
         node.textContent?.includes('<Button variant="outline">Cancel</Button>'),
       ),
     ).toBe(true);
+    // The registry source now sits behind Installation's Manual tab.
+    fireEvent.click(screen.getByRole("tab", { name: "Manual" }));
     expect(
       [...document.querySelectorAll("code")].some((node) =>
         node.textContent?.includes("bg-background"),
@@ -521,12 +530,14 @@ describe("composed examples", () => {
     ).toBeGreaterThan(0);
     expect(
       [...document.querySelectorAll("code")].some((node) =>
-        node.textContent?.includes("DropdownMenuSubTrigger"),
+        node.textContent?.includes('variant="destructive"'),
       ),
     ).toBe(true);
+    // The full source now sits behind Installation's Manual tab.
+    fireEvent.click(screen.getByRole("tab", { name: "Manual" }));
     expect(
       [...document.querySelectorAll("code")].some((node) =>
-        node.textContent?.includes('variant="destructive"'),
+        node.textContent?.includes("DropdownMenuSubTrigger"),
       ),
     ).toBe(true);
 
@@ -601,9 +612,10 @@ describe("new component pages", () => {
       expect(
         screen.getByRole("heading", { name: "Accessibility" }),
       ).toBeInTheDocument();
-      expect(
-        screen.getByRole("heading", { name: "Source" }),
-      ).toBeInTheDocument();
+      // The source lives in the Installation section's Manual tab now.
+      expect(screen.queryByRole("heading", { name: "Source" })).toBeNull();
+      expect(screen.getByRole("tab", { name: "CLI" })).toBeInTheDocument();
+      expect(screen.getByRole("tab", { name: "Manual" })).toBeInTheDocument();
 
       const headings = screen
         .getAllByRole("heading", { level: 2 })
@@ -617,8 +629,11 @@ describe("new component pages", () => {
       expect(headings.indexOf("Accessibility")).toBeGreaterThan(
         headings.indexOf("API"),
       );
-      expect(headings.indexOf("Source")).toBeGreaterThan(
-        headings.indexOf("Accessibility"),
+      expect(headings.indexOf("Usage")).toBeGreaterThan(
+        headings.indexOf("Installation"),
+      );
+      expect(headings.indexOf("Examples")).toBeGreaterThan(
+        headings.indexOf("Usage"),
       );
 
       expect(

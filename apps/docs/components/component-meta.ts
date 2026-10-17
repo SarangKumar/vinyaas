@@ -237,6 +237,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.0.0",
   },
   {
+    name: "Multi Input",
+    slug: "multi-input",
+    description: "A field that collects several values as removable chips.",
+    introducedIn: "1.5.0",
+  },
+  {
     name: "Native Select",
     slug: "native-select",
     description: "A composed native select with options and groups.",

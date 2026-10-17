@@ -243,6 +243,14 @@ export default async function EmptyStatePage() {
         </p>
       }
       install="vinyaas add empty-state"
+      manual={
+        <p>
+          After <code>vinyaas init</code>, place the source at{" "}
+          <code>components/ui/empty-state/index.tsx</code>. It imports{" "}
+          <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
+          <code>clsx</code> and <code>tailwind-merge</code>.
+        </p>
+      }
       usage={usage}
       examples={examples}
       inPractice={inPractice}

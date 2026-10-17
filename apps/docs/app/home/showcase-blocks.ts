@@ -187,8 +187,8 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   },
   {
     id: "form",
-    weight: 4,
-    components: ["form", "input", "label", "button", "switch"],
+    weight: 5,
+    components: ["form", "input", "multi-input", "label", "button", "switch"],
     Block: FormBlock,
   },
   {

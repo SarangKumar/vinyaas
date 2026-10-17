@@ -11,13 +11,14 @@ import {
   FormLabel,
 } from "@/registry/new-york/ui/form";
 import { Input } from "@/registry/new-york/ui/input";
+import { MultiInput } from "@/registry/new-york/ui/multi-input";
 import { Switch } from "@/registry/new-york/ui/switch";
 
 export function FormBlock() {
   return (
     <PlayBlock
       title="Profile form"
-      description="Labels, description, and a preference switch."
+      description="Labels, a chip field for teams, and a preference switch."
     >
       <Form
         className="gap-4"
@@ -36,6 +37,19 @@ export function FormBlock() {
               />
             </FormControl>
             <FormDescription>Used for account notifications.</FormDescription>
+          </FormItem>
+        </FormField>
+        <FormField name="teams">
+          <FormItem>
+            <FormLabel>Teams</FormLabel>
+            <FormControl>
+              <MultiInput
+                name="teams"
+                defaultValue={["design", "platform"]}
+                placeholder="Add a team…"
+              />
+            </FormControl>
+            <FormDescription>Press Enter or type a comma.</FormDescription>
           </FormItem>
         </FormField>
         <FormField name="digest">

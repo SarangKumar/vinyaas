@@ -61,6 +61,7 @@ export const registryComponentCategories: Readonly<
   kbd: "data-display",
   label: "forms",
   marker: "utilities",
+  "multi-input": "forms",
   "native-select": "forms",
   "navigation-menu": "navigation",
   select: "forms",

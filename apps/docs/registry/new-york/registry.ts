@@ -637,6 +637,19 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "multi-input",
+    type: "registry:ui",
+    description:
+      "A field that collects several values as removable chips in one row.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/multi-input/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "file-upload",
     type: "registry:ui",
     description: "A native file picker that also accepts a drag and drop.",

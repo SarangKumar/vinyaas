@@ -56,6 +56,7 @@ describe("component metadata", () => {
       "Kbd",
       "Label",
       "Marker",
+      "Multi Input",
       "Native Select",
       "Navigation Menu",
       "Pagination",
@@ -133,19 +134,19 @@ describe("component metadata", () => {
         .filter((component) => component.introducedIn === "1.5.0")
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["beam", "fuse-button", "user-cursor"]);
+    ).toEqual(["beam", "fuse-button", "multi-input", "user-cursor"]);
     expect(
       components.filter((component) => component.introducedIn === "1.3.1"),
     ).toHaveLength(0);
     expect(
       components.filter((component) => component.introducedIn === "1.0.0")
         .length,
-    ).toBe(components.length - 26);
+    ).toBe(components.length - 27);
     expect(
       newComponents()
         .map((component) => component.slug)
         .sort(),
-    ).toEqual(["beam", "fuse-button", "user-cursor"]);
+    ).toEqual(["beam", "fuse-button", "multi-input", "user-cursor"]);
     expect(
       isNewComponent(
         components.find((component) => component.slug === "beam")!,
