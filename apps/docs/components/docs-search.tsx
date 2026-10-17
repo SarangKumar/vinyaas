@@ -183,7 +183,7 @@ const docPages: SearchPage[] = [
   {
     title: "Changelog",
     href: "/changelog",
-    description: "What shipped through v1.4.0.",
+    description: "What shipped through v1.5.0.",
     group: "Pages",
   },
   {

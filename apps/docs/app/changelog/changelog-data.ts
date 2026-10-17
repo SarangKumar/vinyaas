@@ -319,7 +319,7 @@ export const changelogVersions: ChangelogVersion[] = [
   },
 ];
 
-export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.4.0";
+export const latestChangelogVersionId = changelogVersions[0]?.id ?? "1.5.0";
 
 export function resolveChangelogVersionId(
   value: string | null | undefined,

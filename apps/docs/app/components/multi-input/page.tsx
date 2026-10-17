@@ -6,10 +6,13 @@ import type {
   ComponentInPractice,
 } from "@/components/component-reference";
 import { ComponentReference } from "@/components/component-reference";
-import { Button } from "@/registry/new-york/ui/button";
 import { Label } from "@/registry/new-york/ui/label";
 import { MultiInput } from "@/registry/new-york/ui/multi-input";
-import { MultiInputPreview } from "./multi-input-previews";
+import {
+  InviteFormDemo,
+  MultiInputPreview,
+  ValidatedDemo,
+} from "./multi-input-previews";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -226,14 +229,7 @@ export function Emails() {
     title: "Validation",
     description:
       "A rejected entry stays in the field and marks it invalid, so the text can be corrected instead of lost.",
-    preview: (
-      <MultiInput
-        aria-label="Email recipients"
-        className="max-w-sm"
-        validate={(value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)}
-        placeholder="ada@example.com"
-      />
-    ),
+    preview: <ValidatedDemo />,
     code: `import { MultiInput } from "@/components/ui/multi-input";
 
 const EMAIL = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
@@ -309,24 +305,7 @@ export function States() {
 const inPractice: ComponentInPractice = {
   description:
     "An invite form collects addresses with a comma or a space, validates each one as it is committed, and caps the list at ten.",
-  preview: (
-    <form className="grid w-full max-w-md gap-3 text-left">
-      <Label htmlFor="practice-invite-emails">Invite teammates</Label>
-      <MultiInput
-        id="practice-invite-emails"
-        name="emails"
-        separators={[",", " "]}
-        validate={(value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)}
-        max={10}
-        defaultValue={["ada@vinyaas.dev"]}
-        placeholder="ada@example.com"
-      />
-      <p className="text-muted-foreground text-sm">
-        Separate addresses with a comma or a space.
-      </p>
-      <Button type="submit">Send invites</Button>
-    </form>
-  ),
+  preview: <InviteFormDemo />,
   code: inviteFormCode,
 };
 
