@@ -6,6 +6,7 @@ import { DocsShell } from "@/components/docs-shell";
 import { DocsStoreProvider } from "@/lib/store/provider";
 import { siteDescription, siteName, siteUrl } from "@/lib/site";
 import { ThemeSync } from "@/components/theme-sync";
+import { AppliedThemeSync } from "@/components/applied-theme";
 
 import "./globals.css";
 import "./docs.css";
@@ -109,6 +110,7 @@ const websiteJsonLd = {
  * served from the CDN (no server function per view). Before hydration,
  * docs.css follows prefers-color-scheme; ThemeSync then applies a saved
  * light/dark choice from localStorage — no cookie, no inline HTML injection.
+ * AppliedThemeSync does the same for a theme applied from /themes.
  */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -125,6 +127,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="bg-background text-foreground h-full overflow-hidden font-sans">
         <ThemeSync />
+        <AppliedThemeSync />
         <DocsShell>
           <DocsStoreProvider>{children}</DocsStoreProvider>
         </DocsShell>

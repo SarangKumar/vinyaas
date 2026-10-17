@@ -22,7 +22,7 @@ export function formatStatusReport(manifest: VinyaasManifest | null): string {
     "",
     ...components.map((name) => `✓ ${name}`),
     "",
-    "Manifest:",
+    "Tracked in:",
     MANIFEST_RELATIVE_PATH,
   ].join("\n");
 }

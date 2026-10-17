@@ -7,8 +7,13 @@ import {
 } from "@testing-library/react";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { AppliedThemeSync } from "@/components/applied-theme";
 import { DocsStoreProvider } from "@/lib/store/provider";
-import { getThemePreset } from "@/lib/theme-playground";
+import {
+  appliedThemeStorageKey,
+  defaultSelection,
+  getThemePreset,
+} from "@/lib/theme-playground";
 
 import { themeExamples } from "./examples";
 import ThemesPage, { metadata } from "./page";
@@ -40,16 +45,70 @@ function renderThemes() {
   );
 }
 
+/** The site-wide applier lives in the root layout, so tests mount it too. */
+function renderThemesWithSite() {
+  return render(
+    <DocsStoreProvider>
+      <AppliedThemeSync />
+      <ThemesPage />
+    </DocsStoreProvider>,
+  );
+}
+
+function applyButton() {
+  return screen.getByRole("button", { name: "Apply theme to the site" });
+}
+
+function resetButton() {
+  return screen.getByRole("button", { name: "Reset to the default theme" });
+}
+
 describe("Themes playground page", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     document.documentElement.classList.remove("dark");
+    document.documentElement.removeAttribute("style");
+    document.documentElement.removeAttribute("data-applied-theme");
+    localStorage.clear();
   });
 
   it("exports SEO metadata for the themes playground", () => {
     expect(metadata.title).toBe("Themes");
     expect(metadata.description).toMatch(/theme presets/i);
     expect(metadata.alternates).toMatchObject({ canonical: "/themes" });
+  });
+
+  it("themes overlay layers that portal out of the preview wrapper", async () => {
+    renderThemes();
+
+    const wrapper = document.querySelector("[data-theme-playground]");
+    expect(wrapper).toBeTruthy();
+    // The marker the portal rules key off has to sit on <body>, because the
+    // layers themselves are body children.
+    expect(document.body.classList.contains("vinyaas-theme-preview")).toBe(
+      true,
+    );
+
+    const portalCss = [...document.querySelectorAll("style")]
+      .map((node) => node.textContent ?? "")
+      .find((css) => css.includes("vinyaas-theme-preview"));
+    expect(portalCss).toBeTruthy();
+    // Scoped to the layer roles, so page chrome keeps the site theme.
+    expect(portalCss).toContain('body.vinyaas-theme-preview > [role="dialog"]');
+    expect(portalCss).toContain(
+      'body.vinyaas-theme-preview > [role="listbox"]',
+    );
+    // `--popover` is only ever read by a portalled layer, so it is the token
+    // that proves the preview reaches them.
+    const { theme } = getThemePreset(defaultSelection.presetId);
+    expect(portalCss).toContain(`--popover: ${theme.light.popover};`);
+    expect(portalCss).toContain("--radius:");
+
+    // Opening a Select really does escape the wrapper.
+    fireEvent.click(screen.getByRole("combobox", { name: "Role" }));
+    const listbox = await waitFor(() => screen.getByRole("listbox"));
+    expect(wrapper?.contains(listbox)).toBe(false);
+    expect(document.body.contains(listbox)).toBe(true);
   });
 
   it("renders presets, radius, masonry compositions, and Copy code dialog", () => {
@@ -90,12 +149,18 @@ describe("Themes playground page", () => {
     expect(screen.queryByText("June 2025")).not.toBeInTheDocument();
     expect(screen.queryByText("Total Revenue")).not.toBeInTheDocument();
     expect(document.querySelector("[data-playground-content]")).toBeTruthy();
-    expect(document.querySelector("[data-playground-grid]")?.className).toMatch(
-      /xl:columns-4/,
-    );
+    const grid = document.querySelector("[data-playground-grid]");
+
+    expect(grid?.className).toMatch(/\bgrid\b/);
+    expect(grid?.className).not.toMatch(/columns-/);
+    // Every card sits in one of the column stacks, and the stacks are the
+    // grid's only children, so all columns share a top edge.
     expect(
-      document.querySelector("[data-playground-grid]")?.className,
-    ).not.toMatch(/columns-5/);
+      Number(grid?.getAttribute("data-playground-columns")),
+    ).toBeGreaterThanOrEqual(1);
+    expect(document.querySelectorAll("[data-playground-column]").length).toBe(
+      Number(grid?.getAttribute("data-playground-columns")),
+    );
     expect(document.querySelector("[data-playground-grid]")).toHaveAttribute(
       "data-playground-mode",
       "playground",
@@ -131,6 +196,100 @@ describe("Themes playground page", () => {
     expect(
       getComputedStyle(document.documentElement).getPropertyValue("--primary"),
     ).toBe(beforePrimary);
+  });
+
+  it("holds a selection in preview until Apply, then marks it applied", () => {
+    renderThemesWithSite();
+
+    const root = document.documentElement;
+    expect(screen.getByText("Preview only")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Violet" }));
+
+    // Still preview: the strip says so and the document is untouched.
+    expect(screen.getByText("Preview only")).toBeInTheDocument();
+    expect(root.style.getPropertyValue("--primary")).toBe("");
+
+    fireEvent.click(applyButton());
+
+    expect(screen.getByText("Applied to site")).toBeInTheDocument();
+    expect(root.style.getPropertyValue("--primary")).toBe(
+      getThemePreset("violet").theme.light.primary,
+    );
+    expect(localStorage.getItem(appliedThemeStorageKey)).toBe(
+      JSON.stringify({ presetId: "violet", radius: "0.75rem" }),
+    );
+  });
+
+  it("disables Apply while the selection already matches the site", () => {
+    renderThemesWithSite();
+
+    // Nothing applied yet, so applying the opening selection is a real change.
+    expect(applyButton()).toBeEnabled();
+
+    fireEvent.click(applyButton());
+    expect(applyButton()).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("button", { name: "1.25" }));
+    expect(applyButton()).toBeEnabled();
+
+    fireEvent.click(screen.getByRole("button", { name: "0.75" }));
+    expect(applyButton()).toBeDisabled();
+  });
+
+  it("restores the default theme and selection on Reset", () => {
+    renderThemesWithSite();
+
+    fireEvent.click(screen.getByRole("button", { name: "Green" }));
+    fireEvent.click(screen.getByRole("button", { name: "1" }));
+    fireEvent.click(applyButton());
+
+    expect(document.documentElement.style.getPropertyValue("--radius")).toBe(
+      "1rem",
+    );
+
+    fireEvent.click(resetButton());
+
+    expect(localStorage.getItem(appliedThemeStorageKey)).toBeNull();
+    expect(document.documentElement.style.getPropertyValue("--radius")).toBe(
+      "",
+    );
+    expect(
+      document.documentElement.getAttribute("data-applied-theme"),
+    ).toBeNull();
+    // The selector returns to the default preset and radius.
+    expect(screen.getByRole("button", { name: "Default" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "0.75" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(resetButton()).toBeDisabled();
+  });
+
+  it("opens the selector on the applied theme after a refresh", () => {
+    localStorage.setItem(
+      appliedThemeStorageKey,
+      JSON.stringify({ presetId: "blue", radius: "0.5rem" }),
+    );
+
+    renderThemesWithSite();
+
+    expect(screen.getByRole("button", { name: "Blue" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "0.5" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByText("Applied to site")).toBeInTheDocument();
+    expect(applyButton()).toBeDisabled();
+    expect(document.documentElement.style.getPropertyValue("--primary")).toBe(
+      getThemePreset("blue").theme.light.primary,
+    );
   });
 
   it("opens a code dialog and copies generated theme CSS from the header", async () => {

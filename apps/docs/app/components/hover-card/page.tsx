@@ -16,6 +16,7 @@ import {
 } from "@/registry/new-york/ui/hover-card";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { HoverCardPreview } from "./hover-card-previews";
 
 export const metadata: Metadata = componentPageMetadata("hover-card");
 
@@ -333,6 +334,13 @@ export default async function HoverCardPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={HoverCardPreview}
+      controlOverrides={{
+        open: { exclude: true },
+        onOpenChange: { exclude: true },
+        openDelay: { min: 0, max: 1000, step: 50 },
+        closeDelay: { min: 0, max: 1000, step: 50 },
+      }}
       api={api}
       accessibility={
         <p>

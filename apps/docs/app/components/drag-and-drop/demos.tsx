@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 
+import {
+  ComponentDemo,
+  type ControlDef,
+  type ControlValues,
+} from "@/components/component-demo";
 import { Avatar, AvatarFallback } from "@/registry/new-york/ui/avatar";
 import { Badge } from "@/registry/new-york/ui/badge";
 import { Button } from "@/registry/new-york/ui/button";
@@ -18,6 +23,7 @@ import {
   DragDropHandle,
   DragDropItem,
   DragDropList,
+  type DragDropOrientation,
 } from "@/registry/new-york/ui/drag-and-drop";
 import { Separator } from "@/registry/new-york/ui/separator";
 
@@ -499,5 +505,148 @@ export function KanbanBoard() {
         </DragDrop>
       </div>
     </div>
+  );
+}
+
+/* ── Interactive demo (used with the Customize panel) ─────────────────────── */
+
+const interactiveItems = ["Task A", "Task B", "Task C", "Task D"];
+
+const dragDropControls: ControlDef[] = [
+  {
+    key: "orientation",
+    label: "Orientation",
+    type: "select",
+    default: "vertical",
+    options: [
+      { value: "vertical", label: "Vertical" },
+      { value: "horizontal", label: "Horizontal" },
+    ],
+  },
+  {
+    key: "activator",
+    label: "Activator",
+    type: "select",
+    default: "handle",
+    options: [
+      { value: "handle", label: "Handle" },
+      { value: "whole-item", label: "Whole Item" },
+    ],
+  },
+  {
+    key: "disableOne",
+    label: "Disable Task C",
+    type: "toggle",
+    default: false,
+  },
+  { key: "showIndex", label: "Show Position", type: "toggle", default: false },
+];
+
+function DragDropInteractivePreview(values: ControlValues) {
+  const [items, setItems] = useState(interactiveItems);
+  const orientation = values.orientation as DragDropOrientation;
+  const withHandle = values.activator === "handle";
+  const disabledIds = values.disableOne ? ["Task C"] : undefined;
+
+  return (
+    <DragDrop
+      id="drag-drop-interactive"
+      items={items}
+      onReorder={(next) => setItems(next as string[])}
+      orientation={orientation}
+      disabledIds={disabledIds}
+      className="w-full max-w-md"
+    >
+      <DragDropList
+        className={orientation === "horizontal" ? "flex-row" : undefined}
+      >
+        {items.map((item, index) => (
+          <DragDropItem
+            key={item}
+            id={item}
+            className="flex items-center gap-2 p-2"
+          >
+            {withHandle ? (
+              <DragDropHandle aria-label={`Reorder ${item}`} />
+            ) : null}
+            <span className="text-sm">{item}</span>
+            {values.showIndex ? (
+              <Badge variant="secondary" className="ml-auto">
+                {index + 1}
+              </Badge>
+            ) : null}
+          </DragDropItem>
+        ))}
+      </DragDropList>
+    </DragDrop>
+  );
+}
+
+function dragDropCode(values: ControlValues): string {
+  const withHandle = values.activator === "handle";
+  const rootProps = [
+    `  id="tasks"`,
+    `  items={items}`,
+    `  onReorder={(next) => setItems(next as string[])}`,
+    values.orientation === "vertical"
+      ? null
+      : `  orientation="${values.orientation}"`,
+    values.disableOne ? `  disabledIds={["Task C"]}` : null,
+  ].filter(Boolean);
+
+  const listProps =
+    values.orientation === "horizontal" ? ` className="flex-row"` : "";
+
+  const itemChildren = [
+    withHandle
+      ? `          <DragDropHandle aria-label={\`Reorder \${item}\`} />`
+      : null,
+    `          <span className="text-sm">{item}</span>`,
+    values.showIndex
+      ? `          <Badge variant="secondary" className="ml-auto">{index + 1}</Badge>`
+      : null,
+  ].filter(Boolean);
+
+  const mapArgs = values.showIndex ? "(item, index)" : "(item)";
+  const badgeImport = values.showIndex
+    ? `import { Badge } from "@/components/ui/badge";\n`
+    : "";
+
+  return `"use client";
+import { useState } from "react";
+import {
+  DragDrop,
+  DragDropHandle,
+  DragDropItem,
+  DragDropList,
+} from "@/components/ui/drag-and-drop";
+${badgeImport}
+export function Demo() {
+  const [items, setItems] = useState(["Task A", "Task B", "Task C", "Task D"]);
+
+  return (
+    <DragDrop
+${rootProps.map((line) => `  ${line}`).join("\n")}
+    >
+      <DragDropList${listProps}>
+        {items.map(${mapArgs} => (
+          <DragDropItem key={item} id={item} className="flex items-center gap-2 p-2">
+${itemChildren.join("\n")}
+          </DragDropItem>
+        ))}
+      </DragDropList>
+    </DragDrop>
+  );
+}`;
+}
+
+/** Keeps the controls and the snippet generator on the client. */
+export function DragDropInteractiveSection() {
+  return (
+    <ComponentDemo
+      preview={DragDropInteractivePreview}
+      code={dragDropCode}
+      controls={dragDropControls}
+    />
   );
 }

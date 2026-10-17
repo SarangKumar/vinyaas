@@ -12,6 +12,7 @@ import {
 } from "@/registry/new-york/ui/resizable";
 
 import { examples, inPractice, usage } from "./examples";
+import { ResizablePreview } from "./resizable-previews";
 
 export const metadata: Metadata = componentPageMetadata("resizable");
 
@@ -34,14 +35,14 @@ const api: ApiRow[] = [
     type: '"default" | "blocks"',
     defaultValue: '"default"',
     description:
-      "ResizablePanelGroup: default splits one surface with a thin line. blocks renders each panel as its own bordered block with a small gutter and a three-dot grip.",
+      "ResizablePanelGroup: default splits one surface with a thin line. blocks renders each panel as its own bordered block with a small gutter, which is the drag target.",
   },
   {
     prop: "withHandle",
     type: "boolean",
     defaultValue: "false",
     description:
-      "ResizableHandle: show a visible grip affordance. Defaults to true inside a blocks group.",
+      "ResizableHandle: show a visible grip affordance — the dot grip in a default group, the three-dot grip in the blocks gutter.",
   },
   {
     prop: "aria-label",
@@ -109,6 +110,14 @@ export default async function ResizablePage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={ResizablePreview}
+      controlOverrides={{
+        defaultSize: { exclude: true },
+        minSize: { exclude: true },
+        maxSize: { exclude: true },
+        disableCursor: { exclude: true },
+        disabled: { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

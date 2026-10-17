@@ -15,6 +15,7 @@ import {
 import { ScoreRing } from "@/registry/new-york/ui/score-ring";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { ScoreRingPreview } from "./score-ring-previews";
 
 export const metadata: Metadata = componentPageMetadata("score-ring");
 
@@ -263,6 +264,14 @@ export default async function ScoreRingPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={ScoreRingPreview}
+      controlOverrides={{
+        value: { min: 0, max: 100, step: 5 },
+        max: { exclude: true },
+        fromColor: { color: "#ef4444" },
+        toColor: { color: "#22c55e" },
+        label: { exclude: true },
+      }}
       accessibility={
         <>
           <p>

@@ -20,6 +20,7 @@ import {
 } from "@/registry/new-york/ui/card";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { AspectRatioPreview } from "./aspect-ratio-previews";
 
 export const metadata: Metadata = componentPageMetadata("aspect-ratio");
 
@@ -266,6 +267,10 @@ export default async function AspectRatioPage() {
     <ComponentReference
       title="Aspect Ratio"
       description="Displays content within a desired ratio."
+      livePreview={AspectRatioPreview}
+      controlOverrides={{
+        ratio: { min: 0.25, max: 4, step: 0.25, default: 1.5 },
+      }}
       overview={
         <p>
           AspectRatio keeps children inside a fixed width-to-height frame. Pass{" "}

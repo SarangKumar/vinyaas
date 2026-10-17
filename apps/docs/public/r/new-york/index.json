@@ -51,6 +51,13 @@
       "category": "data-display"
     },
     {
+      "name": "beam",
+      "type": "registry:ui",
+      "description": "An animated connector between two elements with a glowing pulse that travels along the path.",
+      "docs": "https://vinyaas.vercel.app/components/beam",
+      "category": "utilities"
+    },
+    {
       "name": "breadcrumb",
       "type": "registry:ui",
       "description": "A trail of links for the current page.",
@@ -170,6 +177,13 @@
       "category": "forms"
     },
     {
+      "name": "fuse-button",
+      "type": "registry:ui",
+      "description": "A button with a burning fuse that gives users a countdown to undo a destructive action.",
+      "docs": "https://vinyaas.vercel.app/components/fuse-button",
+      "category": "forms"
+    },
+    {
       "name": "hover-card",
       "type": "registry:ui",
       "description": "A preview that opens when a link or button is hovered or focused.",
@@ -217,6 +231,13 @@
       "description": "An inline status, bordered row, or labeled divider.",
       "docs": "https://vinyaas.vercel.app/components/marker",
       "category": "utilities"
+    },
+    {
+      "name": "multi-input",
+      "type": "registry:ui",
+      "description": "A field that collects several values as removable chips, free-form or from a dropdown.",
+      "docs": "https://vinyaas.vercel.app/components/multi-input",
+      "category": "forms"
     },
     {
       "name": "native-select",
@@ -392,6 +413,13 @@
       "description": "Semantic text styles for titles, body, and supporting copy.",
       "docs": "https://vinyaas.vercel.app/components/typography",
       "category": "typography"
+    },
+    {
+      "name": "user-cursor",
+      "type": "registry:ui",
+      "description": "A Figma-style collaborative cursor with an arrow pointer and a rounded name label.",
+      "docs": "https://vinyaas.vercel.app/components/user-cursor",
+      "category": "utilities"
     }
   ]
 }

@@ -1,7 +1,8 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import type { InstallPlan } from "../install-plan.ts";
+import { parseJsonConfig } from "../parse-jsonc.ts";
 import { readPackageVersion } from "../version.ts";
 import { MANIFEST_RELATIVE_PATH } from "./paths.ts";
 import type { ManifestComponent, VinyaasManifest } from "./types.ts";
@@ -17,8 +18,8 @@ export function manifestPath(cwd: string): string {
 }
 
 /**
- * Reads `.vinyaas/manifest.json` when present.
- * Returns null when missing. Does not invent components from the filesystem.
+ * Reads `installedComponents` from `components.json`.
+ * Returns null when the file or field is missing.
  */
 export async function readManifest(
   cwd: string,
@@ -35,17 +36,57 @@ export async function readManifest(
     throw error;
   }
 
-  return parseManifest(source);
+  const parsed = parseJsonConfig(source);
+
+  if (
+    typeof parsed !== "object" ||
+    parsed === null ||
+    Array.isArray(parsed) ||
+    !("installedComponents" in parsed)
+  ) {
+    return null;
+  }
+
+  const raw = (parsed as Record<string, unknown>).installedComponents;
+
+  return {
+    version: readPackageVersion(),
+    components: parseInstalledComponents(raw),
+  };
 }
 
-/** Writes the manifest after a successful install only. */
+/**
+ * Merges the `installedComponents` key into the existing `components.json`.
+ * Preserves all other keys (style, aliases, tailwind, $schema, etc.).
+ */
 export async function writeManifest(
   cwd: string,
   manifest: VinyaasManifest,
 ): Promise<void> {
   const absolute = manifestPath(cwd);
-  await mkdir(path.dirname(absolute), { recursive: true });
-  await writeFile(absolute, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+
+  let existing: Record<string, unknown> = {};
+
+  try {
+    const source = await readFile(absolute, "utf8");
+    const parsed = parseJsonConfig(source);
+
+    if (
+      typeof parsed === "object" &&
+      parsed !== null &&
+      !Array.isArray(parsed)
+    ) {
+      existing = parsed as Record<string, unknown>;
+    }
+  } catch (error) {
+    if (!isNotFound(error)) {
+      throw error;
+    }
+  }
+
+  const updated = { ...existing, installedComponents: manifest.components };
+
+  await writeFile(absolute, `${JSON.stringify(updated, null, 2)}\n`, "utf8");
 }
 
 /**
@@ -126,39 +167,34 @@ export function todayIsoDate(now = new Date()): string {
   return now.toISOString().slice(0, 10);
 }
 
-function parseManifest(source: string): VinyaasManifest {
-  const parsed = JSON.parse(source) as unknown;
-
-  if (
-    typeof parsed !== "object" ||
-    parsed === null ||
-    Array.isArray(parsed) ||
-    typeof (parsed as { version?: unknown }).version !== "string" ||
-    typeof (parsed as { components?: unknown }).components !== "object" ||
-    (parsed as { components: unknown }).components === null ||
-    Array.isArray((parsed as { components: unknown }).components)
-  ) {
-    throw new Error("Could not read .vinyaas/manifest.json.");
+function parseInstalledComponents(
+  input: unknown,
+): Record<string, ManifestComponent> {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) {
+    throw new Error("Could not read installedComponents from components.json.");
   }
 
   const components: Record<string, ManifestComponent> = {};
-  const rawComponents = (parsed as { components: Record<string, unknown> })
-    .components;
+  const raw = input as Record<string, unknown>;
 
-  for (const [name, value] of Object.entries(rawComponents)) {
+  for (const [name, value] of Object.entries(raw)) {
     if (
       typeof value !== "object" ||
       value === null ||
       !Array.isArray((value as { files?: unknown }).files) ||
       typeof (value as { installedAt?: unknown }).installedAt !== "string"
     ) {
-      throw new Error("Could not read .vinyaas/manifest.json.");
+      throw new Error(
+        "Could not read installedComponents from components.json.",
+      );
     }
 
     const files = (value as { files: unknown[] }).files;
 
     if (!files.every((file) => typeof file === "string")) {
-      throw new Error("Could not read .vinyaas/manifest.json.");
+      throw new Error(
+        "Could not read installedComponents from components.json.",
+      );
     }
 
     components[name] = {
@@ -167,10 +203,7 @@ function parseManifest(source: string): VinyaasManifest {
     };
   }
 
-  return {
-    version: (parsed as { version: string }).version,
-    components,
-  };
+  return components;
 }
 
 function isNotFound(error: unknown): boolean {

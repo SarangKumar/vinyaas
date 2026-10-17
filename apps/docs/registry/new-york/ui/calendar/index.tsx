@@ -92,35 +92,40 @@ export function Calendar({
         day: cn(
           // Fixed square cell — keeps selected/hover fills the same size.
           "relative size-9 shrink-0 p-0 text-center text-sm focus-within:relative focus-within:z-20",
-          "[&:has([aria-selected])]:bg-accent [&:has([aria-selected])]:rounded-md",
-          "[&:has([aria-selected].day-range-end)]:rounded-r-md",
-          "[&:has([aria-selected].day-range-start)]:rounded-l-md",
-          "[&:has([aria-selected].day-outside)]:bg-accent/50",
-          "first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md",
+          // Range band is a tint of primary. /20 is visible against the surface
+          // while still letting the solid endpoint circles read as "stronger".
+          "[&:has([aria-selected].day-range-start)]:bg-primary/20",
+          "[&:has([aria-selected].day-range-end)]:bg-primary/20",
+          "[&:has([aria-selected].day-range-middle)]:bg-primary/20",
+          // Pill-cap rounding only at the true range boundaries; middle cells
+          // stay flat so the band reads as one continuous stripe.
+          "[&:has([aria-selected].day-range-start)]:rounded-l-full",
+          "[&:has([aria-selected].day-range-end)]:rounded-r-full",
+          "[&:has([aria-selected].day-outside)]:bg-primary/10",
+          // Cap at week-row boundaries for partial rows.
+          "first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-full",
           classNames?.day,
         ),
         day_button: cn(
           buttonVariants({ variant: "ghost" }),
           // Explicit square — avoid icon-sm max-* clamps that fight size-9.
-          "size-9 min-h-9 min-w-9 max-h-9 max-w-9 rounded-md p-0 font-normal aria-selected:opacity-100",
+          // rounded-full makes single-day selections and range endpoints circles.
+          "size-9 min-h-9 min-w-9 max-h-9 max-w-9 rounded-full p-0 font-normal aria-selected:opacity-100",
           "hover:bg-accent hover:text-accent-foreground",
-          "focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          "focus-visible:rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           classNames?.day_button,
         ),
-        range_start: cn(
-          "day-range-start bg-primary text-primary-foreground rounded-l-md",
-          classNames?.range_start,
-        ),
-        range_end: cn(
-          "day-range-end bg-primary text-primary-foreground rounded-r-md",
-          classNames?.range_end,
-        ),
+        range_start: cn("day-range-start", classNames?.range_start),
+        range_end: cn("day-range-end", classNames?.range_end),
         range_middle: cn(
-          "aria-selected:bg-accent aria-selected:text-accent-foreground rounded-none",
+          // Override `selected`'s bg-primary so the cell range band shows through.
+          // text-foreground keeps the in-range numbers readable against the tinted band.
+          "day-range-middle !bg-transparent !text-foreground",
           classNames?.range_middle,
         ),
         selected: cn(
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md",
+          // Solid circle for the range endpoints and single-day selections.
+          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-full",
           classNames?.selected,
         ),
         today: cn(
@@ -128,7 +133,7 @@ export function Calendar({
           classNames?.today,
         ),
         outside: cn(
-          "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-40",
+          "day-outside text-muted-foreground opacity-50 aria-selected:bg-transparent aria-selected:text-muted-foreground aria-selected:opacity-60",
           classNames?.outside,
         ),
         disabled: cn("text-muted-foreground opacity-40", classNames?.disabled),

@@ -655,7 +655,9 @@ export function SelectContent({
     };
   }, [select]);
 
-  if (!select.open || select.disabled) {
+  // `defaultOpen` can make this render during SSR, where there is no document
+  // to portal into.
+  if (!select.open || select.disabled || typeof document === "undefined") {
     return null;
   }
 

@@ -71,7 +71,7 @@ describe("installation docs", () => {
       document.querySelector("[data-docs-article] .grid")?.className,
     ).not.toContain("lg:grid-cols-3");
     expect(document.querySelector("[data-docs-article]")?.className).toContain(
-      "max-w-3xl",
+      "max-w-3.5xl",
     );
     expect(metadata.title).toBe("Installation");
     expect(metadata.alternates).toMatchObject({ canonical: "/installation" });

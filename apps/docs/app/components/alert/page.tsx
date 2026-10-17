@@ -20,6 +20,7 @@ import type {
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { AlertPreview } from "./alert-previews";
 
 export const metadata: Metadata = componentPageMetadata("alert");
 
@@ -292,6 +293,7 @@ export default async function AlertPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={AlertPreview}
       accessibility={
         <p>
           The root is an alert, so assistive technology can announce it. The

@@ -68,7 +68,7 @@ export default function IntroductionPage() {
   return (
     <article
       data-docs-article
-      className="mx-auto flex w-full max-w-3xl min-w-0 flex-col gap-16 px-6 pt-12 pb-24"
+      className="max-w-3.5xl mx-auto flex w-full min-w-0 flex-col gap-16 px-6 pt-12 pb-24"
     >
       <header className="flex flex-col gap-6">
         <p className="text-muted-foreground text-sm font-medium tracking-wide uppercase">

@@ -12,9 +12,11 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 import {
   BasicCalendarDemo,
+  CalendarInteractiveSection,
   DisabledDatesDemo,
   MeetingScheduleInPracticeDemo,
   MonthNavigationDemo,
+  MultipleCalendarDemo,
   RangeCalendarDemo,
   SelectedDateDemo,
 } from "./calendar-demos";
@@ -208,6 +210,21 @@ today.setHours(0, 0, 0, 0);
 </div>`,
   },
   {
+    id: "multiple",
+    title: "Multiple dates",
+    description:
+      "Toggle individual dates on and off. Each click adds or removes a day.",
+    preview: <MultipleCalendarDemo />,
+    code: `const [dates, setDates] = useState<Date[] | undefined>([]);
+
+<Calendar
+  mode="multiple"
+  selected={dates}
+  onSelect={setDates}
+  className="rounded-md border"
+/>`,
+  },
+  {
     id: "range",
     title: "Date range",
     description: "Pick a start and end date with in-range highlighting.",
@@ -271,7 +288,18 @@ export default async function CalendarPage() {
         </>
       }
       install="vinyaas add calendar"
+      manual={
+        <p>
+          After <code>vinyaas init</code>, add <code>button</code>, then place
+          the source at <code>components/ui/calendar/index.tsx</code>. It
+          imports <code>cn</code> from <code>@/lib/utils</code>. The project
+          also needs <code>react-day-picker</code>, <code>date-fns</code>,{" "}
+          <code>class-variance-authority</code>, <code>clsx</code>, and{" "}
+          <code>tailwind-merge</code>.
+        </p>
+      }
       usage={usage}
+      previewSection={<CalendarInteractiveSection />}
       examples={examples}
       inPractice={inPractice}
       api={api}

@@ -1,0 +1,30 @@
+/*
+ * Beam pulse animation. The stroke-dashoffset moves from --beam-from to --beam-to
+ * over --beam-duration, repeating from --beam-delay.
+ * data-reverse reverses direction for a return path.
+ */
+
+@keyframes vinyaas-beam-pulse {
+  from {
+    stroke-dashoffset: var(--beam-from);
+  }
+  to {
+    stroke-dashoffset: var(--beam-to);
+  }
+}
+
+.vinyaas-beam-pulse {
+  animation: vinyaas-beam-pulse var(--beam-duration, 3s) var(--beam-delay, 0s)
+    linear infinite;
+}
+
+.vinyaas-beam-pulse[data-reverse=""] {
+  animation-direction: reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyaas-beam-pulse {
+    animation: none;
+    opacity: 0;
+  }
+}

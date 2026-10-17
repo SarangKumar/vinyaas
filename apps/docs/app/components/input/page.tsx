@@ -10,6 +10,7 @@ import { Button } from "@/registry/new-york/ui/button";
 import { Checkbox } from "@/registry/new-york/ui/checkbox";
 import { Input } from "@/registry/new-york/ui/input";
 import { Label } from "@/registry/new-york/ui/label";
+import { InputPreview } from "./input-previews";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -267,6 +268,24 @@ export default async function InputPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={InputPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        defaultValue: { exclude: true },
+        "aria-invalid": { exclude: true },
+        type: {
+          options: [
+            "text",
+            "email",
+            "password",
+            "number",
+            "search",
+            "url",
+            "tel",
+          ],
+        },
+        placeholder: { default: "Type something…" },
+      }}
       accessibility={
         <>
           <p>Input is a native input. It does not add an ARIA role.</p>

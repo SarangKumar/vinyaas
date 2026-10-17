@@ -11,8 +11,10 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 import {
   BasicDataTableDemo,
+  DataTableInteractiveSection,
   EmptyDataTableDemo,
   LoadingDataTableDemo,
+  PageSizeDataTableDemo,
   ProjectsDataTableDemo,
   SearchDataTableDemo,
   SelectionDataTableDemo,
@@ -182,6 +184,18 @@ const api: ApiRow[] = [
     description: "Client-side pagination. A number sets the page size.",
   },
   {
+    prop: "pageSizeOptions",
+    type: "number[]",
+    description:
+      "Row-count choices offered beside the pager as a toggle group. Needs pagination, and is hidden below two choices. Picking one returns to page 1.",
+  },
+  {
+    prop: "pageSizeLabel",
+    type: "string",
+    defaultValue: '"Rows per page"',
+    description: "Names the row-count toggle group.",
+  },
+  {
     prop: "actionsWidth",
     type: "string | number",
     defaultValue: '"7rem"',
@@ -266,6 +280,20 @@ const examples: ComponentExample[] = [
 `,
   },
   {
+    id: "page-size",
+    title: "Rows per page",
+    description:
+      "pageSizeOptions renders a toggle group beside the pager, so the reader picks how many rows a page holds. pagination still sets the starting size.",
+    preview: <PageSizeDataTableDemo />,
+    code: `<DataTable
+  columns={columns}
+  data={data}
+  pagination={3}
+  pageSizeOptions={[3, 5, 10]}
+/>
+`,
+  },
+  {
     id: "loading",
     title: "Loading",
     description: "Skeleton rows while data is loading.",
@@ -323,6 +351,7 @@ export default async function DataTablePage() {
         </p>
       }
       usage={usage}
+      previewSection={<DataTableInteractiveSection />}
       examples={examples}
       inPractice={inPractice}
       api={api}

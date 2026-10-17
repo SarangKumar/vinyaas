@@ -24,6 +24,7 @@ import {
   PaginationEllipsis,
 } from "../pagination";
 import { Skeleton } from "../skeleton";
+import { ToggleGroup, ToggleGroupItem } from "../toggle-group";
 import {
   Table,
   TableBody,
@@ -49,6 +50,8 @@ export type DataTableColumn<TData> = {
    * share the remaining space equally.
    */
   width?: string | number;
+  /** Adds a drag handle on the right edge of the header so the column width can be adjusted. */
+  resizable?: boolean;
 };
 
 export type DataTableProps<TData> = {
@@ -60,6 +63,14 @@ export type DataTableProps<TData> = {
   selectable?: boolean;
   /** Enable client-side pagination. Pass a number for page size (default 5). */
   pagination?: boolean | number;
+  /**
+   * Row-count choices offered next to the pager as a toggle group. Needs
+   * `pagination`; the group is hidden when fewer than two choices are given.
+   * The starting choice is `pagination`'s number when it is one of these.
+   */
+  pageSizeOptions?: readonly number[];
+  /** Label above the row-count toggle group. */
+  pageSizeLabel?: string;
   columnVisibility?: boolean;
   loading?: boolean;
   emptyMessage?: string;
@@ -200,6 +211,8 @@ export function DataTable<TData>({
   searchPlaceholder = "Search…",
   selectable = false,
   pagination = false,
+  pageSizeOptions,
+  pageSizeLabel = "Rows per page",
   columnVisibility = false,
   loading = false,
   emptyMessage = "No results found.",
@@ -212,14 +225,63 @@ export function DataTable<TData>({
   const [sort, setSort] = useState<SortState>(null);
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [page, setPage] = useState(1);
+  const [chosenPageSize, setChosenPageSize] = useState<number | null>(null);
   const [hidden, setHidden] = useState<Set<string>>(() => new Set());
+  const [colWidths, setColWidths] = useState<Record<string, number>>({});
 
-  const pageSize =
+  function startColResize(columnId: string, e: React.MouseEvent) {
+    e.preventDefault();
+    const th = (e.currentTarget as HTMLElement).closest("th");
+    const startX = e.clientX;
+    const startW = th?.getBoundingClientRect().width ?? 80;
+
+    function onMove(ev: MouseEvent) {
+      setColWidths((prev) => ({
+        ...prev,
+        [columnId]: Math.max(40, startW + (ev.clientX - startX)),
+      }));
+    }
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    }
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }
+
+  // Sorted, de-duplicated, and positive so the group reads left to right and
+  // every item maps to a usable page size.
+  const sizeChoices = useMemo(
+    () =>
+      [...new Set(pageSizeOptions ?? [])]
+        .filter((size) => Number.isFinite(size) && size > 0)
+        .map((size) => Math.floor(size))
+        .sort((left, right) => left - right),
+    [pageSizeOptions],
+  );
+  const showSizeChoices = Boolean(pagination) && sizeChoices.length > 1;
+
+  const defaultPageSize =
     typeof pagination === "number"
       ? Math.max(1, pagination)
       : pagination
         ? 5
         : data.length || 1;
+
+  // `pagination`'s own number starts the group off when it is one of the
+  // choices, so a table keeps its documented page size until the user picks.
+  const startingPageSize = showSizeChoices
+    ? sizeChoices.includes(defaultPageSize)
+      ? defaultPageSize
+      : sizeChoices[0]!
+    : defaultPageSize;
+
+  // The chosen size wins while it is still on offer, so narrowing the prop
+  // never leaves the table on a size the group can no longer show.
+  const pageSize =
+    chosenPageSize !== null && sizeChoices.includes(chosenPageSize)
+      ? chosenPageSize
+      : startingPageSize;
 
   const visibleColumns = useMemo(
     () => columns.filter((column) => !hidden.has(column.id)),
@@ -493,11 +555,12 @@ export function DataTable<TData>({
               return (
                 <TableHead
                   key={column.id}
-                  style={
-                    column.width !== undefined
-                      ? { width: column.width }
-                      : undefined
+                  className={
+                    column.resizable ? "relative select-none" : undefined
                   }
+                  style={{
+                    width: colWidths[column.id] ?? column.width,
+                  }}
                   aria-sort={
                     direction === "asc"
                       ? "ascending"
@@ -526,6 +589,15 @@ export function DataTable<TData>({
                     </button>
                   ) : (
                     column.header
+                  )}
+                  {column.resizable && (
+                    <span
+                      aria-hidden="true"
+                      onMouseDown={(e) => startColResize(column.id, e)}
+                      className="group/handle absolute top-0 right-0 bottom-0 z-10 flex w-3 cursor-col-resize items-stretch justify-end"
+                    >
+                      <span className="bg-border/50 group-hover/handle:bg-primary/60 w-px transition-colors" />
+                    </span>
                   )}
                 </TableHead>
               );
@@ -603,14 +675,51 @@ export function DataTable<TData>({
 
       {pagination ? (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-muted-foreground text-sm tabular-nums">
-            {sorted.length === 0
-              ? "0 results"
-              : `Showing ${(currentPage - 1) * pageSize + 1}–${Math.min(
-                  currentPage * pageSize,
-                  sorted.length,
-                )} of ${sorted.length}`}
-          </p>
+          <div className="flex min-w-0 flex-wrap items-center gap-3">
+            <p className="text-muted-foreground text-sm tabular-nums">
+              {sorted.length === 0
+                ? "0 results"
+                : `Showing ${(currentPage - 1) * pageSize + 1}–${Math.min(
+                    currentPage * pageSize,
+                    sorted.length,
+                  )} of ${sorted.length}`}
+            </p>
+            {showSizeChoices ? (
+              <div className="flex items-center gap-2">
+                <span
+                  id={`${searchId}-page-size`}
+                  className="text-muted-foreground text-sm"
+                >
+                  {pageSizeLabel}
+                </span>
+                <ToggleGroup
+                  size="sm"
+                  spacing={0}
+                  variant="outline"
+                  disabled={loading}
+                  aria-labelledby={`${searchId}-page-size`}
+                  value={[String(pageSize)]}
+                  onValueChange={(next) => {
+                    const choice = Number(next[0]);
+
+                    if (!Number.isFinite(choice)) {
+                      return;
+                    }
+
+                    setChosenPageSize(choice);
+                    // Row n of the old paging is meaningless at the new size.
+                    setPage(1);
+                  }}
+                >
+                  {sizeChoices.map((size) => (
+                    <ToggleGroupItem key={size} value={String(size)}>
+                      {size}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
+            ) : null}
+          </div>
           <Pagination className="mx-0 w-auto justify-end">
             <PaginationContent>
               <PaginationItem>

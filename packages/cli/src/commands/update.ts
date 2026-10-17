@@ -50,7 +50,7 @@ export function registerUpdateCommand(program: Command): void {
         "  $ vinyaas upgrade button card",
         "",
         "Updates overwrite local component files with the latest registry source.",
-        "With no names, every component in `.vinyaas/manifest.json` is updated",
+        "With no names, every component in `components.json` (installedComponents) is updated",
         "after confirmation (unless --yes).",
         "Only components already installed via Vinyaas can be updated.",
       ].join("\n"),
@@ -122,7 +122,7 @@ export async function executeUpdate({
     throw new CliError(
       error instanceof Error
         ? error.message
-        : "Could not read .vinyaas/manifest.json.",
+        : "Could not read installedComponents from components.json.",
     );
   }
 

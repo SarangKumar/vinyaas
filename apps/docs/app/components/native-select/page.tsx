@@ -15,6 +15,7 @@ import {
 } from "@/registry/new-york/ui/native-select";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { NativeSelectPreview } from "./native-select-previews";
 
 export const metadata: Metadata = componentPageMetadata("native-select");
 
@@ -305,6 +306,12 @@ export default async function NativeSelectPage() {
     <ComponentReference
       title="Native Select"
       description="A composed native select."
+      livePreview={NativeSelectPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        defaultValue: { exclude: true },
+        name: { exclude: true },
+      }}
       overview={
         <>
           <p>

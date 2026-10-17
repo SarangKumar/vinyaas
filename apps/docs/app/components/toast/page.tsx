@@ -16,6 +16,7 @@ import {
 } from "./toast-demos";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { ToastPreview } from "./toast-previews";
 
 export const metadata: Metadata = componentPageMetadata("toast");
 
@@ -251,6 +252,14 @@ export default async function ToastPage() {
     <ComponentReference
       title="Toast"
       description="A temporary notice."
+      livePreview={ToastPreview}
+      controlOverrides={{
+        actionProps: { exclude: true },
+        position: { exclude: true },
+        description: { exclude: true },
+        title: { exclude: true },
+        duration: { min: 1000, max: 10000, step: 500 },
+      }}
       overview={
         <>
           <p>

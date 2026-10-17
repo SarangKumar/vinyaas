@@ -270,6 +270,7 @@ const items: readonly RegistryItem[] = [
       "button",
       "dropdown-menu",
       "skeleton",
+      "toggle-group",
     ],
     files: [
       {
@@ -637,6 +638,19 @@ const items: readonly RegistryItem[] = [
     ],
   },
   {
+    name: "multi-input",
+    type: "registry:ui",
+    description:
+      "A field that collects several values as removable chips, free-form or from a dropdown.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/multi-input/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "file-upload",
     type: "registry:ui",
     description: "A native file picker that also accepts a drag and drop.",
@@ -756,6 +770,50 @@ const items: readonly RegistryItem[] = [
     files: [
       {
         path: "ui/form/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "beam",
+    type: "registry:ui",
+    description:
+      "An animated connector between two elements with a glowing pulse that travels along the path.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/beam/index.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "ui/beam/beam.css",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "fuse-button",
+    type: "registry:ui",
+    description:
+      "A button with a burning fuse that gives users a countdown to undo a destructive action.",
+    dependencies: ["clsx", "tailwind-merge"],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/fuse-button/index.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "user-cursor",
+    type: "registry:ui",
+    description:
+      "A Figma-style collaborative cursor with an arrow pointer and a rounded name label.",
+    dependencies: ["clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/user-cursor/index.tsx",
         type: "registry:ui",
       },
     ],

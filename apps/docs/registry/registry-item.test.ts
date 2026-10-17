@@ -831,6 +831,7 @@ describe("registry build output", () => {
       "button",
       "dropdown-menu",
       "skeleton",
+      "toggle-group",
     ]);
     expect(item.registryDependencies).toEqual([
       "table",
@@ -840,6 +841,7 @@ describe("registry build output", () => {
       "button",
       "dropdown-menu",
       "skeleton",
+      "toggle-group",
     ]);
     expect(generated.files).toHaveLength(1);
     expect(generated.files[0]?.content).toBe(source);
@@ -909,7 +911,7 @@ describe("registry build output", () => {
 
     await expect(fs.access(outputPath)).resolves.toBeUndefined();
     expect(newYork.some((item) => item.name === "select")).toBe(true);
-    expect(newYork).toHaveLength(56);
+    expect(newYork).toHaveLength(60);
   });
 
   it("publishes Calendar, Date Picker, Combobox, Empty State, and Form", async () => {

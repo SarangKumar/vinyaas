@@ -43,6 +43,7 @@ export const componentsConfigFields = [
   "tsx",
   "tailwind",
   "aliases",
+  "installedComponents",
 ] as const;
 
 export const componentsConfigRequiredFields = [

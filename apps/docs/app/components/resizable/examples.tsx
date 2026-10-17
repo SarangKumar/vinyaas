@@ -111,7 +111,7 @@ export const examples: ComponentExample[] = [
     id: "blocks",
     title: "Separate blocks",
     description:
-      'variant="blocks" turns each panel into its own bordered block with a small gutter between them. The gutter is the drag target and shows a three-dot grip, which rotates for vertical groups.',
+      'variant="blocks" turns each panel into its own bordered block with a small gutter between them. The gutter is the drag target; add withHandle to mark it with a three-dot grip, which rotates for vertical groups.',
     preview: (
       <ResizablePanelGroup
         orientation="horizontal"
@@ -123,7 +123,7 @@ export const examples: ComponentExample[] = [
             Inbox
           </div>
         </ResizablePanel>
-        <ResizableHandle aria-label="Resize inbox" />
+        <ResizableHandle withHandle aria-label="Resize inbox" />
         <ResizablePanel
           defaultSize="65%"
           className="overflow-visible rounded-none border-0 bg-transparent"
@@ -134,7 +134,7 @@ export const examples: ComponentExample[] = [
                 Message
               </div>
             </ResizablePanel>
-            <ResizableHandle aria-label="Resize reply" />
+            <ResizableHandle withHandle aria-label="Resize reply" />
             <ResizablePanel defaultSize="40%" minSize="20%">
               <div className="text-muted-foreground flex h-full items-center justify-center p-4 text-sm">
                 Reply
@@ -148,13 +148,13 @@ export const examples: ComponentExample[] = [
   <ResizablePanel defaultSize="35%" minSize="20%" maxSize="60%">
     <div>Inbox</div>
   </ResizablePanel>
-  <ResizableHandle aria-label="Resize inbox" />
+  <ResizableHandle withHandle aria-label="Resize inbox" />
   <ResizablePanel defaultSize="65%" className="overflow-visible rounded-none border-0 bg-transparent">
     <ResizablePanelGroup orientation="vertical" variant="blocks">
       <ResizablePanel defaultSize="60%" minSize="25%">
         <div>Message</div>
       </ResizablePanel>
-      <ResizableHandle aria-label="Resize reply" />
+      <ResizableHandle withHandle aria-label="Resize reply" />
       <ResizablePanel defaultSize="40%" minSize="20%">
         <div>Reply</div>
       </ResizablePanel>

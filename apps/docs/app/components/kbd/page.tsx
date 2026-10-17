@@ -9,6 +9,7 @@ import { ComponentReference } from "@/components/component-reference";
 import { Kbd, KbdGroup } from "@/registry/new-york/ui/kbd";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { KbdPreview } from "./kbd-previews";
 
 export const metadata: Metadata = componentPageMetadata("kbd");
 
@@ -75,6 +76,12 @@ export function ShortcutLegend() {
 `;
 
 const api: ApiRow[] = [
+  {
+    prop: "label",
+    type: "string",
+    defaultValue: '"⌘"',
+    description: "The key label shown in the preview (one key at a time).",
+  },
   {
     prop: "children",
     type: "ReactNode",
@@ -255,6 +262,12 @@ export default async function KbdPage() {
         </p>
       }
       usage={usage}
+      livePreview={KbdPreview}
+      controlOverrides={{
+        label: { default: "⌘" },
+        children: { exclude: true },
+        className: { exclude: true },
+      }}
       examples={examples}
       inPractice={inPractice}
       api={api}

@@ -61,6 +61,7 @@ export const registryComponentCategories: Readonly<
   kbd: "data-display",
   label: "forms",
   marker: "utilities",
+  "multi-input": "forms",
   "native-select": "forms",
   "navigation-menu": "navigation",
   select: "forms",
@@ -86,6 +87,9 @@ export const registryComponentCategories: Readonly<
   "toggle-group": "forms",
   tooltip: "feedback",
   typography: "typography",
+  beam: "utilities",
+  "fuse-button": "forms",
+  "user-cursor": "utilities",
 };
 
 export function isRegistryCategory(value: string): value is RegistryCategory {

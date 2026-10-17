@@ -44,15 +44,17 @@
   --playground-pad-xl: 3rem;
 
   /*
-   * CodeBlock theme — same neutral hue as globals (~286), dual-mode.
-   * Light: bright, high-chroma tokens on soft paper.
-   * Dark: nested charcoal with readable mid-lightness syntax.
+   * CodeBlock surfaces are derived from the theme, not fixed neutrals, so a
+   * preset applied from /themes (or previewed in it) carries into the code
+   * frame, its header, and the language toggle. The mix toward --foreground
+   * nests the panel above --card in both modes and picks up the theme hue.
+   * Only the syntax hues below stay mode-specific.
    */
-  --syntax-editor: oklch(0.98 0.004 286);
-  --syntax-chrome: oklch(0.96 0.004 286);
-  --syntax-border: oklch(0.9 0.008 286);
-  --syntax-plain: oklch(0.32 0.02 286);
-  --syntax-comment: oklch(0.52 0.03 286);
+  --syntax-editor: color-mix(in oklch, var(--card) 97%, var(--foreground));
+  --syntax-chrome: color-mix(in oklch, var(--card) 93%, var(--foreground));
+  --syntax-border: var(--border);
+  --syntax-plain: var(--card-foreground);
+  --syntax-comment: var(--muted-foreground);
   --syntax-keyword: oklch(0.52 0.22 300);
   --syntax-fn: oklch(0.5 0.2 255);
   --syntax-string: oklch(0.5 0.18 150);
@@ -67,12 +69,7 @@
 .dark {
   --sidebar-foreground: var(--foreground);
 
-  /* Nested against --background 0.141 / --card 0.21 — brighter syntax */
-  --syntax-editor: oklch(0.185 0.005 286);
-  --syntax-chrome: oklch(0.22 0.005 286);
-  --syntax-border: oklch(1 0 0 / 10%);
-  --syntax-plain: oklch(0.94 0.01 286);
-  --syntax-comment: oklch(0.68 0.02 286);
+  /* Surfaces follow --card / --border / --muted-foreground from :root. */
   --syntax-keyword: oklch(0.84 0.12 300);
   --syntax-fn: oklch(0.84 0.11 255);
   --syntax-string: oklch(0.84 0.12 150);
@@ -384,5 +381,19 @@ code[data-language] .hljs-operator {
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.552 0.016 285.938);
+
+    /*
+     * Syntax hues only — the code frame surfaces derive from --card and
+     * --border above, so they follow this block on their own. Mirrors .dark.
+     */
+    --syntax-keyword: oklch(0.84 0.12 300);
+    --syntax-fn: oklch(0.84 0.11 255);
+    --syntax-string: oklch(0.84 0.12 150);
+    --syntax-number: oklch(0.84 0.12 55);
+    --syntax-param: oklch(0.9 0.02 286);
+    --syntax-type: oklch(0.84 0.1 195);
+    --syntax-tag: oklch(0.84 0.11 255);
+    --syntax-attribute: oklch(0.84 0.1 210);
+    --syntax-punct: oklch(0.76 0.02 286);
   }
 }

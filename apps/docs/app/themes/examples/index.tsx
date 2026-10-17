@@ -679,15 +679,19 @@ export const themeExamples: ThemeExample[] = [
     title: "Calendar",
     description: "Selected range, today accents, and month navigation.",
     preview: (
-      <Calendar
-        mode="range"
-        defaultMonth={new Date(2026, 2, 1)}
-        selected={{
-          from: new Date(2026, 2, 10),
-          to: new Date(2026, 2, 16),
-        }}
-        className="rounded-md border"
-      />
+      // The calendar has a fixed month-grid width, so it needs centering to
+      // sit in the middle of the card instead of hugging the left edge.
+      <div className="flex min-w-0 justify-center">
+        <Calendar
+          mode="range"
+          defaultMonth={new Date(2026, 2, 1)}
+          selected={{
+            from: new Date(2026, 2, 10),
+            to: new Date(2026, 2, 16),
+          }}
+          className="rounded-md border"
+        />
+      </div>
     ),
   },
   {

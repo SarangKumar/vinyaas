@@ -1,4 +1,9 @@
-import { render, screen, type RenderResult } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  type RenderResult,
+} from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { ReactNode } from "react";
 
@@ -39,7 +44,7 @@ describe("ComponentReference", () => {
         node.textContent?.includes("<Input />"),
       ),
     ).toBe(true);
-    expect(screen.getByRole("heading", { name: "Source" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Source" })).toBeNull();
     expect(screen.getByRole("heading", { name: "Preview" })).toHaveAttribute(
       "id",
       "preview",
@@ -51,14 +56,50 @@ describe("ComponentReference", () => {
       "id",
       "usage",
     );
-    expect(screen.getByRole("heading", { name: "Source" })).toHaveAttribute(
-      "id",
-      "source",
-    );
-    expect(screen.getByRole("heading", { name: "CLI" })).toHaveAttribute(
+    expect(screen.getByRole("tab", { name: "CLI" })).toHaveAttribute(
       "id",
       "cli",
     );
+    expect(screen.getByRole("tab", { name: "Manual" })).toHaveAttribute(
+      "id",
+      "manual",
+    );
+  });
+
+  it("shows the CLI command first and the source behind the Manual tab", () => {
+    renderDocs(
+      <ComponentReference
+        title="Input"
+        description="A text field."
+        install="vinyaas add input"
+        manual={<p>Place it at components/ui/input/index.tsx.</p>}
+        usage="<Input />"
+        source="export function Input() {}"
+      >
+        <input aria-label="Email" />
+      </ComponentReference>,
+    );
+
+    // CLI is the default tab, so neither the notes nor the source are mounted.
+    expect(screen.getByRole("tab", { name: "CLI" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(
+      screen.queryByText("Place it at components/ui/input/index.tsx."),
+    ).toBeNull();
+
+    fireEvent.click(screen.getByRole("tab", { name: "Manual" }));
+
+    expect(
+      screen.getByText("Place it at components/ui/input/index.tsx."),
+    ).toBeInTheDocument();
+    expect(
+      [...document.querySelectorAll("code")].some((node) =>
+        node.textContent?.includes("export function Input() {}"),
+      ),
+    ).toBe(true);
+    expect(screen.queryByText("npx vinyaas add input")).toBeNull();
   });
 
   it("renders optional documentation sections with stable ids", () => {
@@ -93,7 +134,6 @@ describe("ComponentReference", () => {
             prop: "variant",
             type: '"default" | "outline" | "destructive"',
             defaultValue: '"default"',
-            description: "Visual style.",
           },
         ]}
         accessibility={<p>Enter and Space activate it.</p>}
@@ -107,7 +147,7 @@ describe("ComponentReference", () => {
       "id",
       "overview",
     );
-    expect(screen.getByRole("heading", { name: "Manual" })).toHaveAttribute(
+    expect(screen.getByRole("tab", { name: "Manual" })).toHaveAttribute(
       "id",
       "manual",
     );
@@ -132,7 +172,7 @@ describe("ComponentReference", () => {
       screen.getByRole("heading", { name: "Accessibility" }),
     ).toHaveAttribute("id", "accessibility");
     expect(
-      screen.getByRole("columnheader", { name: "Prop" }),
+      screen.getByRole("columnheader", { name: "Name" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("columnheader", { name: "Type" }),
@@ -188,12 +228,16 @@ describe("ComponentReference", () => {
     const inPracticeIndex = headings.indexOf("In practice");
     const apiIndex = headings.indexOf("API");
     const accessibilityIndex = headings.indexOf("Accessibility");
-    const sourceIndex = headings.indexOf("Source");
+    const installationIndex = headings.indexOf("Installation");
+    const usageIndex = headings.indexOf("Usage");
 
-    expect(examplesIndex).toBeGreaterThan(-1);
+    expect(installationIndex).toBeGreaterThan(-1);
+    expect(usageIndex).toBeGreaterThan(installationIndex);
+    expect(examplesIndex).toBeGreaterThan(usageIndex);
     expect(inPracticeIndex).toBeGreaterThan(examplesIndex);
     expect(apiIndex).toBeGreaterThan(inPracticeIndex);
     expect(accessibilityIndex).toBeGreaterThan(apiIndex);
-    expect(sourceIndex).toBeGreaterThan(accessibilityIndex);
+    // Source moved into the Manual tab, so it is no longer a trailing section.
+    expect(headings).not.toContain("Source");
   });
 });

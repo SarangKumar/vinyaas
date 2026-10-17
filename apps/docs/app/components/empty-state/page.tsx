@@ -13,6 +13,7 @@ import {
 } from "@/registry/new-york/ui/empty-state";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { EmptyStatePreview } from "./empty-state-previews";
 
 import {
   BasicEmptyDemo,
@@ -242,9 +243,23 @@ export default async function EmptyStatePage() {
         </p>
       }
       install="vinyaas add empty-state"
+      manual={
+        <p>
+          After <code>vinyaas init</code>, place the source at{" "}
+          <code>components/ui/empty-state/index.tsx</code>. It imports{" "}
+          <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
+          <code>clsx</code> and <code>tailwind-merge</code>.
+        </p>
+      }
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={EmptyStatePreview}
+      controlOverrides={{
+        // Documented in the API table, but a free-text class is not a useful
+        // playground control.
+        "Empty className": { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

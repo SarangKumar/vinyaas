@@ -15,6 +15,7 @@ import {
 import { ProfileSettings } from "./profile-settings";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { PopoverPreview } from "./popover-previews";
 
 export const metadata: Metadata = componentPageMetadata("popover");
 
@@ -242,6 +243,12 @@ export default async function PopoverPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={PopoverPreview}
+      controlOverrides={{
+        open: { exclude: true },
+        defaultOpen: { exclude: true },
+        onOpenChange: { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

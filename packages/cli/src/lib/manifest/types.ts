@@ -7,7 +7,7 @@ export interface ManifestComponent {
 
 /**
  * Project-local install state owned by Vinyaas.
- * Separate from components.json (consumer configuration).
+ * Stored as `installedComponents` inside `components.json`.
  */
 export interface VinyaasManifest {
   version: string;

@@ -6,7 +6,8 @@ import type { ApiRow } from "@/components/api-table";
 import { ComponentReference } from "@/components/component-reference";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
-import { Preview, examples, inPractice, usage } from "./examples";
+import { examples, inPractice, usage } from "./examples";
+import { DragDropInteractiveSection } from "./demos";
 
 export const metadata: Metadata = componentPageMetadata("drag-and-drop");
 
@@ -96,6 +97,7 @@ export default async function DragAndDropPage() {
         </p>
       }
       usage={usage}
+      previewSection={<DragDropInteractiveSection />}
       examples={examples}
       inPractice={inPractice}
       api={api}
@@ -139,8 +141,6 @@ export default async function DragAndDropPage() {
         </>
       }
       source={source}
-    >
-      <Preview />
-    </ComponentReference>
+    />
   );
 }

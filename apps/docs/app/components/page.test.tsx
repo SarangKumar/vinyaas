@@ -22,24 +22,21 @@ describe("components catalog", () => {
 
     const newlyIntroduced = newComponents();
     expect(newlyIntroduced.map((component) => component.slug).sort()).toEqual([
-      "score-ring",
-      "toggle",
-      "toggle-group",
+      "beam",
+      "fuse-button",
+      "multi-input",
+      "user-cursor",
     ]);
 
     const newSection = screen.getByRole("heading", {
       name: "New Components",
     }).parentElement;
     expect(newSection).toBeTruthy();
-    const toggle = within(newSection!).getByRole("link", {
-      name: /two-state button/i,
+    const beam = within(newSection!).getByRole("link", {
+      name: /glowing pulse/i,
     });
-    expect(toggle).toHaveAttribute("href", "/components/toggle");
-    expect(toggle.textContent).toMatch(/v1\.4\.0/);
-    expect(toggle.querySelector('[data-nav-indicator="new"]')).toHaveAttribute(
-      "aria-label",
-      "New",
-    );
+    expect(beam).toHaveAttribute("href", "/components/beam");
+    expect(beam.textContent).toMatch(/v1\.5\.0/);
     expect(
       within(newSection!).queryByRole("link", { name: /Resizable/i }),
     ).toBeNull();
@@ -49,7 +46,10 @@ describe("components catalog", () => {
     expect(lists.length).toBeGreaterThanOrEqual(2);
     const allGrid = lists.at(-1)!;
     expect(allGrid).toHaveClass("grid", "grid-cols-2", "md:grid-cols-3");
-    expect(allGrid.querySelectorAll(".bg-primary").length).toBe(0);
+    // The "new" dot is the only primary-colored decoration in the grid.
+    expect(
+      allGrid.querySelectorAll(".bg-primary:not([data-nav-indicator])").length,
+    ).toBe(0);
     expect(allGrid.querySelector("svg")).toBeNull();
 
     const all = [...components]
@@ -59,13 +59,17 @@ describe("components catalog", () => {
     expect(names(allGrid)).toEqual(all);
     expect(all).toContain("Button");
     expect(all).toHaveLength(components.length);
+    const beamLink = allGrid.querySelector(
+      'a[href="/components/beam"]',
+    ) as HTMLElement | null;
+    const beamDot = beamLink?.querySelector('[data-nav-indicator="new"]');
+    expect(beamDot).toHaveAttribute("aria-label", "New");
+    expect(beamDot).toHaveClass("bg-primary");
+    // v1.4.0 components lose the dot in the v1.5.0 line.
     const toggleLink = allGrid.querySelector(
       'a[href="/components/toggle"]',
     ) as HTMLElement | null;
-    expect(
-      toggleLink?.querySelector('[data-nav-indicator="new"]'),
-    ).toHaveAttribute("aria-label", "New");
-    // v1.3.0 components lose the dot in the v1.4 line.
+    expect(toggleLink?.querySelector('[data-nav-indicator="new"]')).toBeNull();
     const selectLink = allGrid.querySelector(
       'a[href="/components/select"]',
     ) as HTMLElement | null;
@@ -77,7 +81,7 @@ describe("components catalog", () => {
     expect(document.body.textContent).toContain(
       `The catalog has ${components.length} independently installable`,
     );
-    expect(document.body.textContent).toContain("v1.4.0");
+    expect(document.body.textContent).toContain("v1.5.0");
   });
 });
 

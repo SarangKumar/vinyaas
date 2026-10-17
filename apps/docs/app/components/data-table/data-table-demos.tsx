@@ -2,6 +2,11 @@
 
 import type { ReactNode } from "react";
 
+import {
+  ComponentDemo,
+  type ControlDef,
+  type ControlValues,
+} from "@/components/component-demo";
 import { Badge } from "@/registry/new-york/ui/badge";
 import { Button } from "@/registry/new-york/ui/button";
 import {
@@ -262,6 +267,118 @@ export function EmptyDataTableDemo() {
       searchPlaceholder="Search projects..."
       emptyMessage="No results found."
       className="w-full max-w-2xl text-left"
+    />
+  );
+}
+
+export function PageSizeDataTableDemo() {
+  return (
+    <DataTable
+      columns={projectColumns.slice(0, 3)}
+      data={projects}
+      pagination={3}
+      pageSizeOptions={[3, 5, 10]}
+      className="w-full max-w-2xl text-left"
+    />
+  );
+}
+
+/* ── Interactive demo (used with the Customize panel) ─────────────────────── */
+
+const dataTableControls: ControlDef[] = [
+  {
+    key: "pageSize",
+    label: "Rows Per Page",
+    type: "range",
+    default: 3,
+    min: 1,
+    max: 6,
+  },
+  {
+    key: "pageSizeOptions",
+    label: "Row Choices",
+    type: "select",
+    default: "3,5,10",
+    options: [
+      { value: "none", label: "None" },
+      { value: "3,5,10", label: "3 · 5 · 10" },
+      { value: "2,4,6", label: "2 · 4 · 6" },
+      { value: "5,10,20", label: "5 · 10 · 20" },
+    ],
+  },
+  {
+    key: "pageSizeLabel",
+    label: "Choices Label",
+    type: "text",
+    default: "Rows per page",
+    when: (values) => values.pageSizeOptions !== "none",
+  },
+  { key: "searchable", label: "Searchable", type: "toggle", default: false },
+  { key: "selectable", label: "Selectable", type: "toggle", default: false },
+  {
+    key: "columnVisibility",
+    label: "Column Visibility",
+    type: "toggle",
+    default: false,
+  },
+  { key: "loading", label: "Loading", type: "toggle", default: false },
+];
+
+function parsePageSizeOptions(value: string): number[] | undefined {
+  if (value === "none") {
+    return undefined;
+  }
+
+  return value.split(",").map(Number);
+}
+
+function DataTableInteractivePreview(values: ControlValues) {
+  return (
+    <DataTable
+      columns={projectColumns.slice(0, 3)}
+      data={projects}
+      pagination={values.pageSize as number}
+      pageSizeOptions={parsePageSizeOptions(values.pageSizeOptions as string)}
+      pageSizeLabel={values.pageSizeLabel as string}
+      searchable={values.searchable as boolean}
+      selectable={values.selectable as boolean}
+      columnVisibility={values.columnVisibility as boolean}
+      loading={values.loading as boolean}
+      className="w-full max-w-2xl text-left"
+    />
+  );
+}
+
+function dataTableCode(values: ControlValues): string {
+  const options = parsePageSizeOptions(values.pageSizeOptions as string);
+  const props = [
+    `  columns={columns}`,
+    `  data={projects}`,
+    `  pagination={${values.pageSize}}`,
+    options ? `  pageSizeOptions={[${options.join(", ")}]}` : null,
+    options && values.pageSizeLabel !== "Rows per page"
+      ? `  pageSizeLabel="${values.pageSizeLabel}"`
+      : null,
+    values.searchable ? `  searchable` : null,
+    values.selectable ? `  selectable` : null,
+    values.columnVisibility ? `  columnVisibility` : null,
+    values.loading ? `  loading` : null,
+  ].filter(Boolean);
+
+  return `import { DataTable } from "@/components/ui/data-table";
+
+<DataTable
+${props.join("\n")}
+/>`;
+}
+
+/** Keeps the controls and the snippet generator on the client. */
+export function DataTableInteractiveSection() {
+  return (
+    <ComponentDemo
+      preview={DataTableInteractivePreview}
+      code={dataTableCode}
+      controls={dataTableControls}
     />
   );
 }

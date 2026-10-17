@@ -81,7 +81,7 @@ describe("DocsShell", () => {
     ).toContain("What's new");
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
-    ).toMatch(/Toggle|Score Ring/);
+    ).toMatch(/Beam|Fuse Button/);
     expect(
       document.querySelector("[data-docs-feature-card]")?.textContent,
     ).not.toMatch(/Resizable|Sidebar|Flint/);

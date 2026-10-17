@@ -11,6 +11,7 @@ import { Label } from "@/registry/new-york/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { RadioGroupPreview } from "./radio-group-previews";
 
 export const metadata: Metadata = componentPageMetadata("radio-group");
 
@@ -313,6 +314,13 @@ export default async function RadioGroupPage() {
     <ComponentReference
       title="Radio Group"
       description="A set of mutually exclusive options."
+      livePreview={RadioGroupPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        defaultValue: { exclude: true },
+        onValueChange: { exclude: true },
+        name: { exclude: true },
+      }}
       overview={
         <p>
           Radio Group renders native radio inputs that share a name. Use it when

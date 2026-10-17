@@ -23,7 +23,7 @@ export function registerStatusCommand(program: Command): void {
         "  $ vinyaas status --json",
         "  $ vinyaas status --cwd ./my-app",
         "",
-        "Vinyaas tracks installed components in `.vinyaas/manifest.json`.",
+        "Vinyaas tracks installed components in `components.json`.",
         "Use `vinyaas update` to overwrite them with the latest registry versions.",
       ].join("\n"),
     )
@@ -62,7 +62,7 @@ export async function executeStatus({
     throw new CliError(
       error instanceof Error
         ? error.message
-        : "Could not read .vinyaas/manifest.json.",
+        : "Could not read installedComponents from components.json.",
     );
   }
 

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { createDefaultTheme, themePreviewStyle } from "./index";
+import {
+  createDefaultTheme,
+  siteThemeVariables,
+  themePreviewStyle,
+} from "./index";
 
 describe("themePreviewStyle", () => {
   it("maps the active mode tokens onto scoped CSS variables", () => {
@@ -16,5 +20,21 @@ describe("themePreviewStyle", () => {
     expect(light.colorScheme).toBe("light");
     expect(dark["--primary"]).toBe(theme.dark.primary);
     expect(dark.colorScheme).toBe("dark");
+  });
+
+  it("derives sidebar tokens so they follow the preview instead of globals.css", () => {
+    const theme = createDefaultTheme();
+
+    const light = themePreviewStyle(theme, "light");
+    const dark = themePreviewStyle(theme, "dark");
+    const site = siteThemeVariables(theme, "light");
+
+    expect(light["--sidebar"]).toBe("var(--background)");
+    expect(dark["--sidebar"]).toBe("var(--card)");
+    expect(light["--sidebar-accent"]).toBe("var(--accent)");
+    // Preview and site-wide apply must agree, or applying a theme would shift
+    // the sidebar away from what the preview showed.
+    expect(site["--sidebar"]).toBe(light["--sidebar"]);
+    expect(site["--sidebar-ring"]).toBe(light["--sidebar-ring"]);
   });
 });

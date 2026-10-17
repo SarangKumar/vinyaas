@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import { InstallCommand } from "./install-command";
 import { CodeBlock } from "./code-block";
-import { ComponentDemo } from "./component-demo";
+import { ComponentDemo, type ControlDef } from "./component-demo";
 import { DocsStoreProvider } from "@/lib/store/provider";
 import { setCodeLanguage } from "@/lib/store/slices/code-language";
 import { store } from "@/lib/store/store";
@@ -52,18 +52,21 @@ export function SaveButton() {
       />,
     );
 
+    // Preview is the default view; the source lives behind the Code tab.
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
-    expect(
-      document.querySelector(".bg-background.min-h-40")?.parentElement,
-    ).toHaveClass("border-border", "rounded-md", "border");
+    const previewPane = document.querySelector(".bg-background.min-h-125");
+    expect(previewPane).toHaveClass("text-sm", "px-4", "sm:px-6");
+    expect(previewPane?.parentElement?.parentElement).toHaveClass(
+      "border-border",
+      "rounded-3xl",
+      "border",
+    );
+    expect(document.querySelector("code")).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Code" }));
+
     expect(document.querySelector("[data-code-frame]")).toHaveClass(
       "rounded-b-md",
-    );
-    expect(document.querySelector(".bg-background.min-h-40")).toHaveClass(
-      "text-sm",
-      "px-4",
-      "sm:min-h-48",
-      "sm:px-6",
     );
     expect(document.querySelector("code")?.textContent).toContain(
       "export function SaveButton",
@@ -90,6 +93,7 @@ export function SaveButton() {
       <ComponentDemo preview={<span>Preview</span>} code={longSource} />,
     );
 
+    fireEvent.click(screen.getByRole("button", { name: "Code" }));
     fireEvent.click(
       screen.getByRole("button", { name: "View full code example" }),
     );
@@ -129,6 +133,11 @@ export function Alone(props: Name) {
     );
 
     await settle();
+
+    // Both demos default to Preview; reveal their source panels.
+    for (const tab of screen.getAllByRole("button", { name: "Code" })) {
+      fireEvent.click(tab);
+    }
 
     const codes = () => [...document.querySelectorAll("code")];
 
@@ -192,6 +201,7 @@ export function Alone(props: Name) {
     );
 
     await settle();
+    fireEvent.click(screen.getByRole("button", { name: "Code" }));
     expect(document.querySelector("code")).toHaveAttribute(
       "data-language",
       "tsx",
@@ -203,6 +213,7 @@ export function Alone(props: Name) {
 
     renderDemo(<ComponentDemo preview={<span>Preview</span>} code={pair} />);
     await settle();
+    fireEvent.click(screen.getByRole("button", { name: "Code" }));
     expect(document.querySelector("code")).toHaveAttribute(
       "data-language",
       "jsx",
@@ -211,5 +222,106 @@ export function Alone(props: Name) {
       "aria-selected",
       "true",
     );
+  });
+
+  describe("Customize panel", () => {
+    const controls: ControlDef[] = [
+      { key: "tint", label: "Tint", type: "color", default: "#8b5cf6" },
+      { key: "title", label: "Title", type: "text", default: "Hello" },
+      { key: "body", label: "Body", type: "longtext", default: "Lorem" },
+      {
+        key: "size",
+        label: "Size",
+        type: "range",
+        default: 4,
+        min: 0,
+        max: 10,
+        unit: "px",
+      },
+      { key: "loop", label: "Loop", type: "toggle", default: false },
+      {
+        key: "shape",
+        label: "Shape",
+        type: "select",
+        default: "arc",
+        options: [
+          { value: "arc", label: "Arc" },
+          { value: "curve", label: "Curve" },
+        ],
+      },
+    ];
+
+    function renderControlled() {
+      return renderDemo(
+        <ComponentDemo
+          preview={(v) => <span>preview:{String(v.size)}</span>}
+          code={(v) => `size=${v.size};loop=${v.loop};shape=${v.shape}`}
+          controls={controls}
+        />,
+      );
+    }
+
+    it("renders every control type on the customize panel", () => {
+      renderControlled();
+
+      expect(
+        screen.getByRole("heading", { name: "Customize" }),
+      ).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Reset" })).toBeInTheDocument();
+
+      for (const control of controls) {
+        expect(screen.getByTitle(control.label)).toBeInTheDocument();
+      }
+
+      expect(screen.getByRole("slider")).toHaveValue("4");
+      expect(screen.getByRole("switch")).toHaveAttribute(
+        "aria-checked",
+        "false",
+      );
+      expect(screen.getByRole("combobox")).toHaveValue("arc");
+      expect(screen.getByDisplayValue("#8b5cf6")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Hello")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Lorem")).toBeInTheDocument();
+    });
+
+    it("drives the preview and the generated source from control values", () => {
+      renderControlled();
+
+      expect(screen.getByText(/preview:4/)).toBeInTheDocument();
+
+      fireEvent.change(screen.getByRole("slider"), { target: { value: "9" } });
+      fireEvent.click(screen.getByRole("switch"));
+      fireEvent.change(screen.getByRole("combobox"), {
+        target: { value: "curve" },
+      });
+
+      expect(screen.getByText(/preview:9/)).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole("button", { name: "Code" }));
+      expect(document.querySelector("code")?.textContent).toContain(
+        "size=9;loop=true;shape=curve",
+      );
+    });
+
+    it("restores component defaults when Reset is pressed", () => {
+      renderControlled();
+
+      fireEvent.change(screen.getByRole("slider"), { target: { value: "9" } });
+      fireEvent.click(screen.getByRole("switch"));
+      expect(screen.getByRole("switch")).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+
+      fireEvent.click(screen.getByRole("button", { name: "Reset" }));
+
+      expect(screen.getByRole("slider")).toHaveValue("4");
+      expect(screen.getByRole("switch")).toHaveAttribute(
+        "aria-checked",
+        "false",
+      );
+      expect(screen.getByRole("combobox")).toHaveValue("arc");
+      expect(screen.getByText(/preview:4/)).toBeInTheDocument();
+    });
   });
 });

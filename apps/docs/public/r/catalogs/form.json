@@ -10,6 +10,7 @@
         "input",
         "label",
         "textarea",
+        "multi-input",
         "native-select",
         "select",
         "combobox",

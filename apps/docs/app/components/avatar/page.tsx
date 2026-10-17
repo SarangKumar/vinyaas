@@ -17,6 +17,7 @@ import { Button } from "@/registry/new-york/ui/button";
 import { Separator } from "@/registry/new-york/ui/separator";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { AvatarPreview } from "./avatar-previews";
 
 export const metadata: Metadata = componentPageMetadata("avatar");
 
@@ -383,6 +384,8 @@ export default async function AvatarPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={AvatarPreview}
+      controlOverrides={{ src: { exclude: true }, alt: { exclude: true } }}
       api={api}
       accessibility={
         <>

@@ -11,9 +11,16 @@ import React, {
 import { cn } from "@/lib/utils";
 
 export type TextareaProps = React.ComponentProps<"textarea"> & {
-  /** Show a `length/maxLength` counter below the field, aligned right. */
+  /**
+   * Show a `length/maxLength` counter pinned just under the field's
+   * bottom-right corner, outside the box.
+   */
   showCount?: boolean;
-  /** Classes for the wrapper rendered when `showCount` is set. */
+  /**
+   * Classes for the wrapper rendered when `showCount` is set. The counter is
+   * anchored to this wrapper, so width constraints belong here (or on an outer
+   * element) rather than on `className`, which sizes the field alone.
+   */
   containerClassName?: string;
   /**
    * Grow with the content up to this many rows, then scroll. `rows` sets the
@@ -119,13 +126,16 @@ export function Textarea({
   const atLimit = maxLength !== undefined && length >= maxLength;
 
   return (
-    <div className={cn("flex w-full flex-col gap-1.5", containerClassName)}>
+    // The counter is taken out of flow and anchored to the wrapper's
+    // bottom-right corner; `pb-5` reserves the band it sits in so following
+    // content does not collide with it.
+    <div className={cn("relative w-full pb-5", containerClassName)}>
       {field}
       <p
         id={countId}
         data-slot="textarea-count"
         className={cn(
-          "text-muted-foreground self-end text-xs tabular-nums",
+          "text-muted-foreground absolute right-0 bottom-0 text-xs tabular-nums",
           atLimit && "text-destructive",
         )}
       >

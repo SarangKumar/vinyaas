@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { DocsStoreProvider } from "@/lib/store/provider";
@@ -43,6 +43,10 @@ describe("Accordion docs page", () => {
       within(panel!).getByText(/Starter, Pro, and Business/),
     ).toBeInTheDocument();
 
+    // Demo source sits behind the Code tab.
+    for (const tab of screen.getAllByRole("button", { name: "Code" })) {
+      fireEvent.click(tab);
+    }
     expect(
       [...document.querySelectorAll("code")].some((node) =>
         node.textContent?.includes("BillingFaq"),

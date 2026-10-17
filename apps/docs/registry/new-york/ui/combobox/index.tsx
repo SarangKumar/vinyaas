@@ -211,13 +211,13 @@ export function ComboboxTrigger({
         disabled={combobox.disabled || disabledProp}
         data-empty={!combobox.value ? "" : undefined}
         className={cn(
-          "inline-flex w-full min-w-0 items-center justify-between gap-2 font-normal",
+          "inline-flex w-full min-w-0 items-center justify-between gap-2 text-left font-normal",
           !combobox.value && "text-muted-foreground",
           className,
         )}
         {...props}
       >
-        <span className="truncate">{display}</span>
+        <span className="min-w-0 flex-1 truncate">{display}</span>
         <ChevronDownIcon className="text-muted-foreground size-4 shrink-0 opacity-70" />
       </Button>
     </PopoverTrigger>

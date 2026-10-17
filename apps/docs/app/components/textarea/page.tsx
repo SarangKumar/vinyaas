@@ -9,6 +9,7 @@ import { ComponentReference } from "@/components/component-reference";
 import { Button } from "@/registry/new-york/ui/button";
 import { Label } from "@/registry/new-york/ui/label";
 import { Textarea } from "@/registry/new-york/ui/textarea";
+import { TextareaPreview } from "./textarea-previews";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
 
@@ -65,7 +66,7 @@ const api: ApiRow[] = [
     type: "boolean",
     defaultValue: "false",
     description:
-      "Shows a current/maxLength counter below the field, aligned right. Without maxLength it shows only the current length.",
+      "Shows a current/maxLength counter pinned just under the field's bottom-right corner, outside the box. Without maxLength it shows only the current length.",
   },
   {
     prop: "maxRows",
@@ -77,7 +78,7 @@ const api: ApiRow[] = [
     prop: "containerClassName",
     type: "string",
     description:
-      "Merged onto the wrapper that holds the field and counter when showCount is set.",
+      "Merged onto the wrapper that holds the field and counter when showCount is set. The counter is anchored to this wrapper, so set width here rather than on className.",
   },
   {
     prop: "rows",
@@ -135,7 +136,7 @@ const examples: ComponentExample[] = [
     id: "character-count",
     title: "Character count",
     description:
-      "With maxLength and showCount, the current length and limit show below the field on the right. The counter turns destructive at the limit and is linked with aria-describedby.",
+      "With maxLength and showCount, the current length and limit sit just under the field's bottom-right corner, outside the box. The counter turns destructive at the limit and is linked with aria-describedby.",
     preview: (
       <div className="w-full max-w-sm">
         <Textarea
@@ -304,6 +305,17 @@ export default async function TextareaPage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
+      livePreview={TextareaPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        defaultValue: { exclude: true },
+        "aria-invalid": { exclude: true },
+        containerClassName: { exclude: true },
+        cols: { exclude: true },
+        rows: { min: 2, max: 12, step: 1 },
+        maxRows: { min: 2, max: 20, step: 1 },
+        placeholder: { default: "Write something…" },
+      }}
       accessibility={
         <>
           <p>Textarea is a native textarea. It does not add an ARIA role.</p>

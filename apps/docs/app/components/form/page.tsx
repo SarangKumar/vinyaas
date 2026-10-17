@@ -891,6 +891,14 @@ export default async function FormPage() {
         </>
       }
       install="vinyaas add form"
+      manual={
+        <p>
+          After <code>vinyaas init</code>, add <code>label</code>, then place
+          the source at <code>components/ui/form/index.tsx</code>. It imports{" "}
+          <code>cn</code> from <code>@/lib/utils</code>. The project also needs{" "}
+          <code>clsx</code> and <code>tailwind-merge</code>.
+        </p>
+      }
       usage={usage}
       examples={examples}
       inPractice={inPractice}

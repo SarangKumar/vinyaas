@@ -94,6 +94,9 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  /* Docs article width: midway between 3xl (48rem) and 4xl (56rem). */
+  --container-3_5xl: 54rem;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

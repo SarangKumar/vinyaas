@@ -12,6 +12,7 @@ import { Input } from "@/registry/new-york/ui/input";
 import { Label } from "@/registry/new-york/ui/label";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { ButtonInteractiveSection } from "./button-demos";
 
 export const metadata: Metadata = componentPageMetadata("button");
 
@@ -169,70 +170,6 @@ const api: ApiRow[] = [
 
 const examples: ComponentExample[] = [
   {
-    id: "variants",
-    title: "Variants",
-    description:
-      "Outline, ghost, and secondary are quiet actions. Destructive is for delete. Link is inline.",
-    preview: (
-      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
-        <Button>Save</Button>
-        <Button variant="outline">Cancel</Button>
-        <Button variant="ghost">Skip</Button>
-        <Button variant="secondary">Draft</Button>
-        <Button variant="destructive">Delete</Button>
-        <Button variant="link">Learn more</Button>
-      </div>
-    ),
-    code: `import { Button } from "@/components/ui/button";
-
-export function Actions() {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
-      <Button>Save</Button>
-      <Button variant="outline">Cancel</Button>
-      <Button variant="ghost">Skip</Button>
-      <Button variant="secondary">Draft</Button>
-      <Button variant="destructive">Delete</Button>
-      <Button variant="link">Learn more</Button>
-    </div>
-  );
-}
-`,
-  },
-  {
-    id: "sizes",
-    title: "Sizes",
-    description:
-      "default matches Input. xs, sm, and lg change the text button. Icon sizes are square.",
-    preview: (
-      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
-        <Button size="xs">Extra small</Button>
-        <Button size="sm">Small</Button>
-        <Button>Default</Button>
-        <Button size="lg">Large</Button>
-        <Button size="icon" aria-label="Add">
-          +
-        </Button>
-      </div>
-    ),
-    code: `import { Button } from "@/components/ui/button";
-
-export function Sizes() {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
-      <Button size="xs">Extra small</Button>
-      <Button size="sm">Small</Button>
-      <Button>Default</Button>
-      <Button size="lg">Large</Button>
-      <Button size="icon" aria-label="Add">
-        +
-      </Button>
-    </div>
-  );
-}
-`,
-  },
-  {
     id: "with-a-field",
     title: "With a field",
     description:
@@ -301,6 +238,7 @@ export default async function ButtonPage() {
           attributes, are passed through.
         </p>
       }
+      previewSection={<ButtonInteractiveSection />}
       install="vinyaas add button"
       manual={
         <p>

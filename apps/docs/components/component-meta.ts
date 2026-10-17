@@ -12,10 +12,10 @@ export type ComponentCategory = RegistryCategory;
 export { formatRegistryCategoryLabel };
 
 /** The current docs/website release version. */
-export const currentVersion = "1.4.0";
+export const currentVersion = "1.5.0";
 
 export type ReleaseVersion =
-  "0.1" | "1.0.0" | "1.1.0" | "1.2.0" | "1.3.0" | "1.3.1" | "1.4.0";
+  "0.1" | "1.0.0" | "1.1.0" | "1.2.0" | "1.3.0" | "1.3.1" | "1.4.0" | "1.5.0";
 
 type ComponentMetaSource = {
   name: string;
@@ -75,6 +75,13 @@ const componentSources: readonly ComponentMetaSource[] = [
     slug: "badge",
     description: "A compact label for status or category.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Beam",
+    slug: "beam",
+    description:
+      "An animated connector between two elements with a glowing pulse.",
+    introducedIn: "1.5.0",
   },
   {
     name: "Breadcrumb",
@@ -182,6 +189,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     introducedIn: "1.3.0",
   },
   {
+    name: "Fuse Button",
+    slug: "fuse-button",
+    description: "A button with a burning fuse countdown for undoable actions.",
+    introducedIn: "1.5.0",
+  },
+  {
     name: "Hover Card",
     slug: "hover-card",
     description: "A preview that opens on hover or focus.",
@@ -222,6 +235,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     slug: "marker",
     description: "An inline status, bordered row, or labeled divider.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "Multi Input",
+    slug: "multi-input",
+    description: "A field that collects several values as removable chips.",
+    introducedIn: "1.5.0",
   },
   {
     name: "Native Select",
@@ -379,6 +398,12 @@ const componentSources: readonly ComponentMetaSource[] = [
     slug: "typography",
     description: "Semantic text styles for titles, body, and supporting copy.",
     introducedIn: "1.0.0",
+  },
+  {
+    name: "User Cursor",
+    slug: "user-cursor",
+    description: "A Figma-style collaborative cursor with a name label.",
+    introducedIn: "1.5.0",
   },
 ];
 

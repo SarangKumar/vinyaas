@@ -235,7 +235,7 @@ describe("add confirmation", () => {
     assert.match(stdout, /Cancelled\. No changes made\./);
     assert.equal(value.entries.length, 0);
     await assert.rejects(() => access(join(cwd, "components/ui/button/index.tsx")));
-    await assert.rejects(() => access(join(cwd, MANIFEST_RELATIVE_PATH)));
+    assert.equal(await readManifest(cwd), null);
   });
 
   it("prompts for category installs", async () => {
@@ -302,7 +302,7 @@ describe("add confirmation", () => {
     assert.equal(asked, 0);
     assert.match(stdout, /Vinyaas dry run/);
     assert.doesNotMatch(stdout, /Add components/);
-    await assert.rejects(() => access(join(cwd, MANIFEST_RELATIVE_PATH)));
+    assert.equal(await readManifest(cwd), null);
   });
 
   it("does not prompt for a single-component install", async () => {

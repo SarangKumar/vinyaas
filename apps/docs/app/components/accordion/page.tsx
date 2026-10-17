@@ -24,6 +24,7 @@ import type {
 import { ComponentReference } from "@/components/component-reference";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
+import { AccordionPreview } from "./accordion-previews";
 
 export const metadata: Metadata = componentPageMetadata("accordion");
 
@@ -332,6 +333,12 @@ export default async function AccordionPage() {
       usage={usage}
       examples={examples}
       inPractice={inPractice}
+      livePreview={AccordionPreview}
+      controlOverrides={{
+        value: { exclude: true },
+        defaultValue: { exclude: true },
+        onValueChange: { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

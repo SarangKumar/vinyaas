@@ -8,6 +8,7 @@ import { store } from "@/lib/store/store";
 import CompanionInstallationPage from "./installation/page";
 import CompanionConfigurationPage from "./configuration/page";
 import CompanionCustomPage from "./custom/page";
+import CompanionAnimationsPage from "./animations/page";
 
 function renderWithStore(ui: React.ReactElement) {
   store.dispatch(setCodeLanguage("jsx"));
@@ -55,6 +56,25 @@ describe("Companion docs pages", () => {
     expect(document.body.textContent).toContain("play_animation");
     expect(document.body.textContent).toContain("moodBias");
     expect(document.body.textContent).toContain('"id": "ember"');
+  });
+
+  it("renders the animation clip and move tables with the Table primitive", () => {
+    renderWithStore(<CompanionAnimationsPage />);
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Companion Animations" }),
+    ).toBeInTheDocument();
+
+    const tables = screen.getAllByRole("table");
+    expect(tables).toHaveLength(2);
+    for (const table of tables) {
+      // Table wraps the element in the shared bordered, scrollable card.
+      expect(table.parentElement).toHaveClass("border-border", "rounded-3xl");
+      // TableHead owns the muted uppercase header tokens.
+      for (const header of table.querySelectorAll("th")) {
+        expect(header).toHaveClass("text-muted-foreground", "uppercase");
+      }
+    }
   });
 
   it("outlines the custom companion authoring workflow", () => {

@@ -2,7 +2,7 @@
 
 Vinyaas is a CLI that installs reusable UI components from a registry into an existing project. Components are copied in as source files. They are not consumed from a runtime component package.
 
-**v1.4.0** is the current release. It adds Toggle, Toggle Group, and Score Ring, `vinyaas update` (alias `upgrade`), an auto-growing Textarea (`maxRows`), single-key `⌘K` Kbd labels, a restyled Toast, and form, dialog, resizable, data table, and chart refinements, plus a static, lighter docs site with `/llm.txt` — on top of registry-owned catalogs, a release-wide accessibility contract, and CLI catalog/`--dry-run` UX across the existing installable set (forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities). Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
+**v1.5.0** is the current release. It adds Beam, Fuse Button, Multi Input, and User Cursor, moves CLI install tracking from `.vinyaas/manifest.json` into `components.json`, writes `.jsx` when `tsx` is `false` in `components.json`, raises Popover above dialog overlays, softens table row hover so controls inside rows stay readable, fixes the chevron alignment in Combobox, Select, and Native Select, and rebuilds the docs demos around a Preview/Code toolbar with width presets and an optional Customize panel — on top of registry-owned catalogs, a release-wide accessibility contract, and CLI catalog/`--dry-run` UX across the installable set (forms, feedback, layout, navigation, data display, overlays, charts, typography, and utilities). Each item is independently installable. The homepage at `/` is the component showcase. `/introduction` is the documentation introduction. Full CLI reference: [vinyaas.vercel.app/cli](https://vinyaas.vercel.app/cli).
 
 ## Prerequisites
 
@@ -225,6 +225,71 @@ components/ui/button/index.tsx
 ```
 
 The current Button item does not declare CSS, environment variables, or a documentation URL, so those steps do not change `app/globals.css` and do not print an environment or documentation section.
+
+## Components
+
+**58 components** across forms, layout, navigation, feedback, data display, charts, typography, and utilities.
+
+| Name            | Slug              | Category     |
+| --------------- | ----------------- | ------------ |
+| Accordion       | `accordion`       | layout       |
+| Alert           | `alert`           | feedback     |
+| Alert Dialog    | `alert-dialog`    | feedback     |
+| Aspect Ratio    | `aspect-ratio`    | layout       |
+| Attachment      | `attachment`      | data-display |
+| Avatar          | `avatar`          | data-display |
+| Badge           | `badge`           | data-display |
+| Beam            | `beam`            | utilities    |
+| Breadcrumb      | `breadcrumb`      | navigation   |
+| Button          | `button`          | forms        |
+| Calendar        | `calendar`        | forms        |
+| Card            | `card`            | layout       |
+| Chart           | `chart`           | charts       |
+| Checkbox        | `checkbox`        | forms        |
+| Combobox        | `combobox`        | forms        |
+| Command         | `command`         | navigation   |
+| Data Table      | `data-table`      | data-display |
+| Date Picker     | `date-picker`     | forms        |
+| Dialog          | `dialog`          | feedback     |
+| Drag & Drop     | `drag-and-drop`   | layout       |
+| Drawer          | `drawer`          | feedback     |
+| Dropdown Menu   | `dropdown-menu`   | feedback     |
+| Empty State     | `empty-state`     | feedback     |
+| File Upload     | `file-upload`     | forms        |
+| Form            | `form`            | forms        |
+| Fuse Button     | `fuse-button`     | forms        |
+| Hover Card      | `hover-card`      | feedback     |
+| Input           | `input`           | forms        |
+| Input Group     | `input-group`     | forms        |
+| Input OTP       | `input-otp`       | forms        |
+| Kbd             | `kbd`             | data-display |
+| Label           | `label`           | forms        |
+| Marker          | `marker`          | utilities    |
+| Native Select   | `native-select`   | forms        |
+| Navigation Menu | `navigation-menu` | navigation   |
+| Pagination      | `pagination`      | navigation   |
+| Popover         | `popover`         | feedback     |
+| Progress        | `progress`        | feedback     |
+| Radio Group     | `radio-group`     | forms        |
+| Resizable       | `resizable`       | layout       |
+| Score Ring      | `score-ring`      | data-display |
+| Scroll Area     | `scroll-area`     | layout       |
+| Select          | `select`          | forms        |
+| Separator       | `separator`       | layout       |
+| Sheet           | `sheet`           | feedback     |
+| Sidebar         | `sidebar`         | navigation   |
+| Skeleton        | `skeleton`        | data-display |
+| Slider          | `slider`          | forms        |
+| Spinner         | `spinner`         | feedback     |
+| Switch          | `switch`          | forms        |
+| Table           | `table`           | data-display |
+| Tabs            | `tabs`            | navigation   |
+| Textarea        | `textarea`        | forms        |
+| Toast           | `toast`           | feedback     |
+| Toggle          | `toggle`          | forms        |
+| Toggle Group    | `toggle-group`    | forms        |
+| Tooltip         | `tooltip`         | feedback     |
+| Typography      | `typography`      | typography   |
 
 ## Component conventions
 

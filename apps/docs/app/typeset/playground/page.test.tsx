@@ -42,8 +42,11 @@ describe("Typeset playground page", () => {
     expect(typesetExamples.length).toBeGreaterThanOrEqual(16);
     expect(document.querySelector("[data-playground-content]")).toBeTruthy();
     expect(document.querySelector("[data-playground-grid]")?.className).toMatch(
-      /xl:columns-4/,
+      /\bgrid\b/,
     );
+    expect(
+      document.querySelector("[data-playground-grid]")?.className,
+    ).not.toMatch(/columns-/);
     expect(
       document.querySelector("[data-playground-grid]")?.className,
     ).not.toMatch(/columns-5/);

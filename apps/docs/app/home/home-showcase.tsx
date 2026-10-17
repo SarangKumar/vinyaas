@@ -1,5 +1,6 @@
 import { Playground } from "@/app/home/playground";
 import { PlaygroundSideRails } from "@/app/home/playground-side-skeletons";
+import { currentVersion } from "@/components/component-meta";
 
 /**
  * Below-the-fold homepage showcase + decorative side rails.
@@ -42,7 +43,7 @@ export function HomeShowcase() {
           </a>{" "}
           · 2026
         </p>
-        <p className="text-muted-foreground text-xs">v1.4.0</p>
+        <p className="text-muted-foreground text-xs">v{currentVersion}</p>
       </footer>
     </div>
   );

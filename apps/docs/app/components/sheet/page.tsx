@@ -15,6 +15,7 @@ import {
   SettingsSheetDemo,
   SidesSheetDemo,
 } from "./sheet-demos";
+import { SheetPreview } from "./sheet-previews";
 
 export const metadata: Metadata = componentPageMetadata("sheet");
 
@@ -375,6 +376,12 @@ export default async function SheetPage() {
     <ComponentReference
       title="Sheet"
       description="A side modal for settings, details, filters, and mobile navigation."
+      livePreview={SheetPreview}
+      controlOverrides={{
+        open: { exclude: true },
+        defaultOpen: { exclude: true },
+        onOpenChange: { exclude: true },
+      }}
       overview={
         <p>
           Sheet is a modal panel that slides in from an edge of the viewport.

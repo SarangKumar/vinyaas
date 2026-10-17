@@ -12,7 +12,7 @@ import { focusRing } from "@/components/focus-ring";
 // prefetching them all would dominate the first-load traffic.
 
 /**
- * Companions introduced in the current release line. v1.4.0 adds none (the
+ * Companions introduced in the current release line. v1.5.0 adds none (the
  * Flint–Drake set shipped in v1.3.0 and Nyx in v1.3.1), so the card links to
  * the companion index instead.
  */
