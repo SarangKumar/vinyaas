@@ -37,13 +37,15 @@ export const changelogVersions: ChangelogVersion[] = [
         items: [
           `Beam — an animated connector between two elements with a glowing ray or dot pulse that travels along a dotted, dashed, or solid arc or S-curve. BeamNode provides ready-made round icon endpoints.`,
           `Fuse Button — a button whose lit state is a burning-border countdown. Pressing while the fuse burns calls onUndo; burning out calls onFire. Supports rect and circle shapes and all Button sizes including icon.`,
-          `Multi Input — one field that collects several values as removable chips. Entries commit on Enter, on a separator character while typing or pasting, or on blur; \`max\`, \`validate\`, and \`allowDuplicates\` control what lands in the list, and \`name\` submits one hidden input per value. Part of the form catalog.`,
+          `Multi Input — one field that collects several values as removable chips. Entries commit on Enter, on a separator character while typing or pasting, or on blur; \`max\`, \`validate\`, and \`allowDuplicates\` control what lands in the list, and \`name\` submits one hidden input per value. Pass \`options\` to turn it into a multi-select with a filtered dropdown (arrow keys and Enter included), and \`allowCustomValues={false}\` to accept listed values only. Part of the form catalog.`,
           `User Cursor — a Figma-style collaborative cursor: an arrow pointer with a rounded pill label showing the user's name. Color-coded per user; purely presentational so it works with any multiplayer or canvas setup.`,
         ],
       },
       {
         title: "Component improvements",
         items: [
+          `Data Table: \`pageSizeOptions\` renders a toggle group beside the pager so the reader picks how many rows a page holds; \`pagination\` still sets the starting size and \`pageSizeLabel\` names the group. Picking a size returns to page 1. Data Table now depends on the toggle-group registry item.`,
+          `Resizable: in \`variant="blocks"\` the three-dot grip is opt-in through \`withHandle\`, matching the default variant. Blocks groups that relied on the grip appearing on its own now need \`withHandle\` on the handle.`,
           `Popover: z-index raised from 50 to 60 so date pickers and comboboxes open above dialog overlays (Dialog is z-50).`,
           `Table: row hover uses bg-accent/40 instead of bg-accent, so interactive elements (buttons, icons) inside rows keep their own hover state visible.`,
           `Combobox: the display span inside ComboboxTrigger now carries min-w-0 flex-1 so long option labels truncate correctly and the chevron always stays at the far right.`,
@@ -55,8 +57,12 @@ export const changelogVersions: ChangelogVersion[] = [
         items: [
           `Component demos were rebuilt around a toolbar that sits above the frame: Preview and Code are now toggled views rather than a stacked preview-plus-source, with desktop, tablet, and mobile width presets, a refresh control, and a drag handle on the right edge that resizes the frame down to 320px while showing the current width.`,
           `Demos can now expose a Customize panel below the frame. Controls (color, text, long text, range, toggle, and select) drive the preview and the generated source at the same time, so a single interactive demo replaces several near-identical static examples. Beam is the first page to use it.`,
+          `Customize panels now cover Button, Badge, Fuse Button, Calendar, Combobox, Drag & Drop, and Data Table. Button, Badge, and Fuse Button gained Text and Icon controls — the icon is placed leading or trailing, and on an icon-only size or a circle the text control drops out of the panel, since those render the icon alone. Calendar exposes mode, caption layout, month count, and grid options; Combobox its alignment, placeholders, and a disabled option; Drag & Drop its orientation and activator; Data Table its row-count choices.`,
+          `Controls can be conditional: a control declares when it applies and leaves the panel, and the generated source, while it does not.`,
+          `Empty State: the free-text \`Empty className\` control is no longer in the Customize panel; it stays documented in the API table.`,
           `Documentation pages widened from 48rem to 52rem, giving examples, API tables, and code blocks more room without stretching body copy; demo code blocks render at 12px.`,
           `Installation is now a CLI/Manual toggle group on every component page. The CLI tab keeps the \`npx vinyaas add\` command, and the Manual tab holds the dependency and file-placement notes followed by the component source — so the source moved out of the trailing Source section and into the step that asks for it. Section order is Preview, Installation, Usage, Examples.`,
+          `Homepage showcase cards now demonstrate a use case instead of the bare component: Fuse Button is a project danger zone with an undo window, Drag & Drop is a sprint backlog that reprioritises, Resizable is an inbox list beside a reading pane, and User Cursor is a design frame with presence on the element being edited.`,
         ],
       },
       {

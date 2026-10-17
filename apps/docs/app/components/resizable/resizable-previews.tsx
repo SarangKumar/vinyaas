@@ -23,7 +23,7 @@ export function ResizablePreview({ values }: { values: ControlValues }) {
         </div>
       </ResizablePanel>
       <ResizableHandle
-        withHandle={(values.withHandle as boolean) || undefined}
+        withHandle={values.withHandle as boolean}
         aria-label="Resize"
       />
       <ResizablePanel defaultSize="60">

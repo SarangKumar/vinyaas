@@ -20,7 +20,8 @@ export type ResizablePanelGroupProps = GroupProps & {
   /**
    * `default` is one surface split by a thin line. `blocks` renders each
    * panel as its own bordered block with a small gutter between them; the
-   * gutter shows a three-dot grip.
+   * gutter is the drag target and shows a three-dot grip when the handle
+   * sets `withHandle`.
    */
   variant?: ResizableVariant;
 };
@@ -74,8 +75,9 @@ export function ResizablePanel({ className, ...props }: ResizablePanelProps) {
 
 export type ResizableHandleProps = PanelSeparatorProps & {
   /**
-   * Renders a centered orientation-aware grip affordance on the separator.
-   * Defaults to `false`, or `true` inside a `blocks` group.
+   * Renders a centered orientation-aware grip affordance on the separator:
+   * the dot grip in a `default` group, the three-dot grip in a `blocks` group.
+   * Defaults to `false` in both.
    */
   withHandle?: boolean;
 };
@@ -113,9 +115,9 @@ function ResizableHandleGrip() {
 }
 
 /**
- * Three-dot grip for the `blocks` variant. The gutter is the whole gap
- * between blocks, so the dots sit on the page background with no box.
- * Rotated on horizontal separators (vertical resize).
+ * Three-dot grip for the `blocks` variant, rendered only with `withHandle`.
+ * The gutter is the whole gap between blocks, so the dots sit on the page
+ * background with no box. Rotated on horizontal separators (vertical resize).
  */
 function ResizableHandleDots() {
   return (
@@ -155,8 +157,9 @@ export function ResizableHandle({
   ...props
 }: ResizableHandleProps) {
   const blocks = useContext(ResizableVariantContext) === "blocks";
-  // Blocks have no divider line, so the grip is on unless explicitly disabled.
-  const showHandle = withHandle ?? blocks;
+  // The grip is opt-in in both variants: in `blocks` the three dots are the
+  // only visible handle, so they follow `withHandle` rather than the variant.
+  const showHandle = withHandle === true;
 
   return (
     <PanelSeparator

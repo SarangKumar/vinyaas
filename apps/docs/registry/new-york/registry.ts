@@ -270,6 +270,7 @@ const items: readonly RegistryItem[] = [
       "button",
       "dropdown-menu",
       "skeleton",
+      "toggle-group",
     ],
     files: [
       {
@@ -640,7 +641,7 @@ const items: readonly RegistryItem[] = [
     name: "multi-input",
     type: "registry:ui",
     description:
-      "A field that collects several values as removable chips in one row.",
+      "A field that collects several values as removable chips, free-form or from a dropdown.",
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {

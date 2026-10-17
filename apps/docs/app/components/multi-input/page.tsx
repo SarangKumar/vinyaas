@@ -11,6 +11,8 @@ import { MultiInput } from "@/registry/new-york/ui/multi-input";
 import {
   InviteFormDemo,
   MultiInputPreview,
+  OptionsDemo,
+  StrictOptionsDemo,
   ValidatedDemo,
 } from "./multi-input-previews";
 import type { Metadata } from "next";
@@ -120,6 +122,25 @@ const api: ApiRow[] = [
     type: "boolean",
     defaultValue: "false",
     description: "Keeps repeated entries instead of dropping them.",
+  },
+  {
+    prop: "options",
+    type: "(string | MultiInputOption)[]",
+    description:
+      "Turns the field into a multi-select. Typing filters the list and the field offers it in a dropdown.",
+  },
+  {
+    prop: "allowCustomValues",
+    type: "boolean",
+    defaultValue: "true",
+    description:
+      "With options, set false to accept listed values only. Text matching no option is rejected.",
+  },
+  {
+    prop: "emptyMessage",
+    type: "string",
+    defaultValue: '"No matches."',
+    description: "Shown when the dropdown has nothing left to offer.",
   },
   {
     prop: "disabled",
@@ -246,6 +267,48 @@ export function Recipients() {
 `,
   },
   {
+    id: "options",
+    title: "Dropdown",
+    description:
+      "options turns the field into a multi-select. The list opens on focus, narrows as you type, and hides values already chosen. An option can carry its own label and be disabled.",
+    preview: <OptionsDemo />,
+    code: `import { MultiInput } from "@/components/ui/multi-input";
+
+const TEAMS = [
+  { value: "design", label: "Design" },
+  { value: "engineering", label: "Engineering" },
+  { value: "marketing", label: "Marketing" },
+  { value: "support", label: "Customer Support" },
+  { value: "legal", label: "Legal", disabled: true },
+];
+
+export function Teams() {
+  return <MultiInput aria-label="Teams" options={TEAMS} placeholder="Pick a team…" />;
+}
+`,
+  },
+  {
+    id: "options-only",
+    title: "Listed values only",
+    description:
+      "allowCustomValues={false} rejects anything the list does not hold, so the field accepts dropdown values and nothing else. Typed text still matches an option by its value or its label.",
+    preview: <StrictOptionsDemo />,
+    code: `import { MultiInput } from "@/components/ui/multi-input";
+
+export function AllowedTeams() {
+  return (
+    <MultiInput
+      aria-label="Allowed teams"
+      options={TEAMS}
+      allowCustomValues={false}
+      emptyMessage="No team matches."
+      placeholder="Pick a team…"
+    />
+  );
+}
+`,
+  },
+  {
     id: "max",
     title: "Limit",
     description:
@@ -334,6 +397,15 @@ export default async function MultiInputPage() {
             submit the list through a native form, or <code>value</code> and{" "}
             <code>onValueChange</code> to drive it from state.
           </p>
+          <p>
+            Pass <code>options</code> to make it a multi-select: the field opens
+            a dropdown of the remaining choices, narrows it as you type, and
+            commits the highlighted one on Enter or a click. Add{" "}
+            <code>allowCustomValues={"{false}"}</code> when only listed values
+            may be entered — typed or pasted text then has to match an
+            option&apos;s value or label, and anything else is rejected the way
+            a failed <code>validate</code> is.
+          </p>
         </>
       }
       install="vinyaas add multi-input"
@@ -373,6 +445,12 @@ export default async function MultiInputPage() {
           <li>
             Backspace in an empty field removes the last value — a shortcut, not
             the only way to remove one.
+          </li>
+          <li>
+            With <code>options</code> the text input is a <code>combobox</code>{" "}
+            that owns the listbox: Arrow Down and Arrow Up move the highlight
+            through the choices, Enter commits the highlighted one, and Escape
+            closes the list without touching a surrounding dialog.
           </li>
           <li>
             A rejected entry sets <code>aria-invalid</code> on the text input.

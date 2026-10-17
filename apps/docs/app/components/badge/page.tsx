@@ -12,7 +12,7 @@ import { Separator } from "@/registry/new-york/ui/separator";
 import { Spinner } from "@/registry/new-york/ui/spinner";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
-import { BadgePreview } from "./badge-previews";
+import { BadgeInteractiveSection } from "./badge-previews";
 
 export const metadata: Metadata = componentPageMetadata("badge");
 
@@ -318,7 +318,7 @@ export default async function BadgePage() {
       examples={examples}
       inPractice={inPractice}
       api={api}
-      livePreview={BadgePreview}
+      previewSection={<BadgeInteractiveSection />}
       accessibility={
         <>
           <p>

@@ -15,29 +15,35 @@ import { cn } from "@/lib/utils";
 
 // ─── Control types ────────────────────────────────────────────────────────────
 
-export type ControlColor = {
+/**
+ * Shared by every control. `when` makes a control conditional: it is hidden
+ * from the panel, and left out of generated source, while it returns false.
+ * Values are kept, so a hidden control returns with its last value.
+ *
+ * `when` is a function, so controls that use it must be built in a
+ * `"use client"` module — `controlsFromApi` never sets it.
+ */
+type ControlBase = {
   key: string;
   label: string;
+  when?: (values: ControlValues) => boolean;
+};
+
+export type ControlColor = ControlBase & {
   type: "color";
   default: string;
 };
-export type ControlText = {
-  key: string;
-  label: string;
+export type ControlText = ControlBase & {
   type: "text";
   default: string;
   placeholder?: string;
 };
-export type ControlLongText = {
-  key: string;
-  label: string;
+export type ControlLongText = ControlBase & {
   type: "longtext";
   default: string;
   placeholder?: string;
 };
-export type ControlRange = {
-  key: string;
-  label: string;
+export type ControlRange = ControlBase & {
   type: "range";
   default: number;
   min: number;
@@ -45,15 +51,11 @@ export type ControlRange = {
   step?: number;
   unit?: string;
 };
-export type ControlToggle = {
-  key: string;
-  label: string;
+export type ControlToggle = ControlBase & {
   type: "toggle";
   default: boolean;
 };
-export type ControlSelect = {
-  key: string;
-  label: string;
+export type ControlSelect = ControlBase & {
   type: "select";
   default: string;
   options: { value: string; label: string }[];
@@ -188,12 +190,13 @@ export function RefreshIcon({ size = 13 }: { size?: number }) {
   );
 }
 
-// Visible vertical pill holding a 6-dot grid — the drag-to-resize handle
+// Visible vertical pill holding a 6-dot grid — the drag-to-resize handle.
+// Length comes from the hit area (h-full), which scales with the frame.
 function GripHandle({ dragging }: { dragging: boolean }) {
   return (
     <div
       className={cn(
-        "flex h-16 w-2 items-center justify-center rounded-full transition-colors",
+        "flex h-full w-2 items-center justify-center rounded-full transition-colors",
         dragging
           ? "bg-primary"
           : "bg-muted-foreground/35 group-hover:bg-muted-foreground/70",
@@ -398,6 +401,11 @@ export function ComponentDemo({
     controls ? Object.fromEntries(controls.map((c) => [c.key, c.default])) : {};
 
   const [values, setValues] = useState<ControlValues>(defaultValues);
+  // A control with `when` only appears while its condition holds, so a panel
+  // can drop options the current selection makes meaningless.
+  const visibleControls = (controls ?? []).filter(
+    (control) => control.when?.(values) ?? true,
+  );
   const [activeTab, setActiveTab] = useState<Tab>("preview");
   const [screenPreset, setScreenPreset] = useState<number>(1080);
   const [previewWidth, setPreviewWidth] = useState<number>(1080);
@@ -667,12 +675,15 @@ export function ComponentDemo({
           </div>
 
           {/* Resize grip — straddles the frame's right edge and moves with it.
-              The hit area is far wider than the visible pill. */}
+              The hit area is far wider than the visible pill, and its length
+              tracks a third of the frame height so tall previews get a grip
+              that is easy to find. The clamps keep it usable on a short
+              preview and stop it running the full edge on a very tall one. */}
           {activeTab === "preview" && (
             <div
               onMouseDown={handleDragStart}
               title="Drag to resize"
-              className="group absolute top-1/2 right-0 z-20 flex h-20 w-6 translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center select-none"
+              className="group absolute top-1/2 right-0 z-20 flex h-1/3 max-h-56 min-h-24 w-6 translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center select-none"
             >
               <GripHandle dragging={isDragging} />
             </div>
@@ -702,7 +713,7 @@ export function ComponentDemo({
           <div className="border-border bg-muted rounded-3xl border p-1.5">
             <div className="bg-background rounded-[1.125rem] p-4">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {controls.map((control) => (
+                {visibleControls.map((control) => (
                   <ControlCell
                     key={control.key}
                     control={control}

@@ -3,61 +3,68 @@
 import { useState } from "react";
 
 import { PlayBlock } from "@/app/home/play-block";
+import { Badge } from "@/registry/new-york/ui/badge";
+import { Button } from "@/registry/new-york/ui/button";
 import { FuseButton } from "@/registry/new-york/ui/fuse-button";
 
-function TrashIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <polyline points="3 6 5 6 21 6" />
-      <path d="M19 6l-1 14H6L5 6" />
-      <path d="M10 11v6M14 11v6" />
-      <path d="M9 6V4h6v2" />
-    </svg>
-  );
-}
-
+/**
+ * Project settings danger zone — the use case the fuse exists for: the burn
+ * is the undo window on an irreversible action, so the card shows what is
+ * about to be destroyed and what happens once it fires.
+ */
 export function FuseButtonBlock() {
-  const [active1, setActive1] = useState(false);
-  const [active2, setActive2] = useState(false);
+  const [burning, setBurning] = useState(false);
+  const [deleted, setDeleted] = useState(false);
 
   return (
     <PlayBlock
-      title="Fuse button"
-      description="Hold-to-confirm button that burns before firing a destructive action."
+      title="Danger zone"
+      description="Deleting is permanent. The fuse burns for five seconds, so a misclick can still be taken back."
     >
-      <div className="flex flex-wrap items-center justify-center gap-4">
-        <FuseButton
-          variant="destructive"
-          active={active1}
-          onActivate={() => setActive1(true)}
-          onFire={() => setActive1(false)}
-          onUndo={() => setActive1(false)}
-        >
-          Delete project
-        </FuseButton>
-        <FuseButton
-          shape="circle"
-          variant="destructive"
-          size="icon"
-          active={active2}
-          onActivate={() => setActive2(true)}
-          onFire={() => setActive2(false)}
-          onUndo={() => setActive2(false)}
-          aria-label="Delete"
-        >
-          <TrashIcon />
-        </FuseButton>
+      <div className="flex min-w-0 items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium">acme-web</p>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Production · 14 deploys this week
+          </p>
+        </div>
+        <Badge variant={deleted ? "destructive" : "secondary"}>
+          {deleted ? "Deleted" : "Live"}
+        </Badge>
+      </div>
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+        <p className="text-muted-foreground min-w-0 flex-1 text-sm">
+          {deleted
+            ? "Domains released. Backups are kept for 30 days."
+            : burning
+              ? "Press again to keep the project."
+              : "Removes the project, its domains, and every build log."}
+        </p>
+        {deleted ? (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => setDeleted(false)}
+          >
+            Restore
+          </Button>
+        ) : (
+          <FuseButton
+            variant="destructive"
+            size="sm"
+            active={burning}
+            undoLabel="Undo"
+            onActivate={() => setBurning(true)}
+            onFire={() => {
+              setBurning(false);
+              setDeleted(true);
+            }}
+            onUndo={() => setBurning(false)}
+          >
+            Delete project
+          </FuseButton>
+        )}
       </div>
     </PlayBlock>
   );

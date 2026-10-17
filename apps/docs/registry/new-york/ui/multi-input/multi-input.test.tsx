@@ -8,6 +8,11 @@ function field(name = "Recipients") {
   return screen.getByRole("textbox", { name });
 }
 
+/** With `options` the inner input is a combobox, not a plain textbox. */
+function picker(name = "Teams") {
+  return screen.getByRole("combobox", { name });
+}
+
 describe("Multi Input", () => {
   it("commits an entry on Enter and keeps the field empty", () => {
     const onValueChange = vi.fn();
@@ -171,5 +176,142 @@ describe("Multi Input", () => {
     fireEvent.change(field(), { target: { value: "one,one," } });
 
     expect(screen.getAllByText("one")).toHaveLength(2);
+  });
+  it("opens a dropdown of options on focus and commits the clicked one", () => {
+    const onValueChange = vi.fn();
+    render(
+      <MultiInput
+        aria-label="Teams"
+        options={["design", "engineering"]}
+        onValueChange={onValueChange}
+      />,
+    );
+
+    expect(screen.queryByRole("listbox")).toBeNull();
+
+    fireEvent.focus(picker());
+    fireEvent.click(screen.getByRole("option", { name: "engineering" }));
+
+    expect(onValueChange).toHaveBeenCalledWith(["engineering"]);
+    expect(picker()).toHaveValue("");
+  });
+
+  it("filters the dropdown by the typed text and hides chosen values", () => {
+    render(
+      <MultiInput
+        aria-label="Teams"
+        options={["design", "engineering", "support"]}
+        defaultValue={["support"]}
+      />,
+    );
+
+    fireEvent.focus(picker());
+
+    expect(screen.queryByRole("option", { name: "support" })).toBeNull();
+
+    fireEvent.change(picker(), { target: { value: "eng" } });
+
+    expect(screen.getAllByRole("option")).toHaveLength(1);
+    expect(
+      screen.getByRole("option", { name: "engineering" }),
+    ).toBeInTheDocument();
+  });
+
+  it("walks the dropdown with the arrow keys and commits on Enter", () => {
+    render(
+      <MultiInput aria-label="Teams" options={["design", "engineering"]} />,
+    );
+
+    fireEvent.focus(picker());
+    fireEvent.keyDown(picker(), { key: "ArrowDown" });
+    fireEvent.keyDown(picker(), { key: "ArrowDown" });
+    fireEvent.keyDown(picker(), { key: "Enter" });
+
+    expect(screen.getByText("engineering")).toBeInTheDocument();
+  });
+
+  it("closes the dropdown on Escape", () => {
+    render(<MultiInput aria-label="Teams" options={["design"]} />);
+
+    fireEvent.focus(picker());
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+
+    fireEvent.keyDown(picker(), { key: "Escape" });
+
+    expect(screen.queryByRole("listbox")).toBeNull();
+  });
+
+  it("rejects typed text that matches no option when custom values are off", () => {
+    render(
+      <MultiInput
+        aria-label="Teams"
+        options={["design"]}
+        allowCustomValues={false}
+      />,
+    );
+
+    fireEvent.change(picker(), { target: { value: "marketing" } });
+    fireEvent.keyDown(picker(), { key: "Enter" });
+
+    expect(screen.queryByText("marketing")).toBeNull();
+    expect(picker()).toHaveValue("marketing");
+    expect(picker()).toHaveAttribute("aria-invalid", "true");
+
+    fireEvent.change(picker(), { target: { value: "design" } });
+    fireEvent.keyDown(picker(), { key: "Enter" });
+
+    expect(screen.getByText("design")).toBeInTheDocument();
+    expect(picker()).not.toHaveAttribute("aria-invalid");
+  });
+
+  it("commits the option value when its label is typed", () => {
+    const onValueChange = vi.fn();
+    render(
+      <MultiInput
+        aria-label="Teams"
+        options={[{ value: "eng", label: "Engineering" }]}
+        allowCustomValues={false}
+        onValueChange={onValueChange}
+      />,
+    );
+
+    fireEvent.change(picker(), { target: { value: "engineering" } });
+    fireEvent.keyDown(picker(), { key: "Enter" });
+
+    expect(onValueChange).toHaveBeenCalledWith(["eng"]);
+    expect(screen.getByText("Engineering")).toBeInTheDocument();
+  });
+
+  it("skips a disabled option and blocks the list at max", () => {
+    render(
+      <MultiInput
+        aria-label="Teams"
+        options={["design", { value: "engineering", disabled: true }]}
+        max={1}
+      />,
+    );
+
+    fireEvent.focus(picker());
+
+    expect(screen.getByRole("option", { name: "engineering" })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("option", { name: "design" }));
+    fireEvent.focus(picker());
+
+    expect(screen.getByRole("option", { name: "engineering" })).toBeDisabled();
+  });
+
+  it("tells the reader when the dropdown has nothing left to offer", () => {
+    render(
+      <MultiInput
+        aria-label="Teams"
+        options={["design"]}
+        emptyMessage="No teams match."
+      />,
+    );
+
+    fireEvent.change(picker(), { target: { value: "zzz" } });
+
+    expect(screen.getByText("No teams match.")).toBeInTheDocument();
   });
 });

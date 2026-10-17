@@ -142,14 +142,15 @@ describe("homepage", () => {
     expect(
       screen.getByRole("heading", { name: "Traffic" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Resizable" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Inbox" })).toBeInTheDocument();
     expect(
       screen.getByRole("separator", { name: "Resize panels" }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Outline").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Preview").length).toBeGreaterThan(0);
+    // Both resizable panes show the selected thread: list row and reading pane.
+    expect(screen.getAllByText("Re: contract redlines").length).toBeGreaterThan(
+      1,
+    );
+    expect(screen.getByText("Priya Raman")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Schedule" }),
     ).toBeInTheDocument();
@@ -157,7 +158,10 @@ describe("homepage", () => {
       screen.getByRole("heading", { name: "Deadline" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Fuse button" }),
+      screen.getByRole("heading", { name: "Danger zone" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Delete project" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Empty workspace" }),
@@ -185,10 +189,13 @@ describe("homepage", () => {
       screen.queryByRole("heading", { name: "Navigation Menu" }),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Drag & Drop" }),
+      screen.getByRole("heading", { name: "Sprint backlog" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Reorder Revenue" }),
+      screen.getByRole("button", { name: "Reorder Passwordless sign-in" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Up next: Passwordless sign-in"),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Workspace settings" }),
@@ -197,8 +204,9 @@ describe("homepage", () => {
       screen.getByRole("button", { name: /pick a deadline/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Multiplayer cursors" }),
+      screen.getByRole("heading", { name: "Design review" }),
     ).toBeInTheDocument();
+    expect(screen.getByText("Order total")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /create project/i }),
     ).toBeInTheDocument();

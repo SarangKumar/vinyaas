@@ -38,6 +38,39 @@ export function ValidatedDemo() {
   );
 }
 
+const TEAMS = [
+  { value: "design", label: "Design" },
+  { value: "engineering", label: "Engineering" },
+  { value: "marketing", label: "Marketing" },
+  { value: "support", label: "Customer Support" },
+  { value: "legal", label: "Legal", disabled: true },
+];
+
+/** `options` holds objects, so this preview has to live client-side. */
+export function OptionsDemo() {
+  return (
+    <MultiInput
+      aria-label="Teams"
+      className="max-w-sm"
+      options={TEAMS}
+      placeholder="Pick a team…"
+    />
+  );
+}
+
+export function StrictOptionsDemo() {
+  return (
+    <MultiInput
+      aria-label="Allowed teams"
+      className="max-w-sm"
+      options={TEAMS}
+      allowCustomValues={false}
+      emptyMessage="No team matches."
+      placeholder="Pick a team…"
+    />
+  );
+}
+
 export function InviteFormDemo() {
   const [emails, setEmails] = useState<string[]>(["ada@vinyaas.dev"]);
 

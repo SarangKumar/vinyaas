@@ -280,14 +280,14 @@ describe("Resizable", () => {
     expect(groups).toHaveLength(2);
   });
 
-  it("renders the blocks variant as separate bordered panels with a dots gutter", () => {
+  it("renders the blocks variant as separate bordered panels, with the dots gutter under withHandle", () => {
     const { container } = render(
       <div style={{ width: 400, height: 200 }}>
         <ResizablePanelGroup orientation="horizontal" variant="blocks">
           <ResizablePanel defaultSize="50%" id="left">
             <div>Left</div>
           </ResizablePanel>
-          <ResizableHandle aria-label="Resize blocks" />
+          <ResizableHandle aria-label="Resize blocks" withHandle />
           <ResizablePanel defaultSize="50%" id="right">
             <div>Right</div>
           </ResizablePanel>
@@ -323,25 +323,42 @@ describe("Resizable", () => {
     ).toBeNull();
   });
 
-  it("lets the blocks variant hide the dots with withHandle={false}", () => {
-    render(
-      <div style={{ width: 400, height: 200 }}>
-        <ResizablePanelGroup orientation="horizontal" variant="blocks">
-          <ResizablePanel defaultSize="50%" id="left">
-            <div>Left</div>
-          </ResizablePanel>
-          <ResizableHandle aria-label="Resize blocks" withHandle={false} />
-          <ResizablePanel defaultSize="50%" id="right">
-            <div>Right</div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </div>,
-    );
+  it("leaves the blocks gutter empty unless withHandle is set", () => {
+    function Blocks({ withHandle }: { withHandle?: boolean }) {
+      return (
+        <div style={{ width: 400, height: 200 }}>
+          <ResizablePanelGroup orientation="horizontal" variant="blocks">
+            <ResizablePanel defaultSize="50%" id="left">
+              <div>Left</div>
+            </ResizablePanel>
+            <ResizableHandle
+              aria-label="Resize blocks"
+              withHandle={withHandle}
+            />
+            <ResizablePanel defaultSize="50%" id="right">
+              <div>Right</div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
+      );
+    }
 
-    expect(
-      screen
+    function dots() {
+      return screen
         .getByRole("separator", { name: "Resize blocks" })
-        .querySelector("[data-slot='resizable-handle-dots']"),
-    ).toBeNull();
+        .querySelector("[data-slot='resizable-handle-dots']");
+    }
+
+    // The three dots are the only visible handle in `blocks`, so they are
+    // opt-in exactly like the grip in the default variant.
+    const { rerender, unmount } = render(<Blocks />);
+    expect(dots()).toBeNull();
+
+    rerender(<Blocks withHandle={false} />);
+    expect(dots()).toBeNull();
+    unmount();
+
+    render(<Blocks withHandle />);
+    expect(dots()).toBeInTheDocument();
   });
 });

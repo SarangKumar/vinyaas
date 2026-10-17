@@ -175,7 +175,8 @@ export function defaultsFor(controls: ControlDef[]): ControlValues {
 
 /**
  * JSX prop lines for the values that differ from their defaults, so generated
- * source stays as short as the equivalent hand-written usage.
+ * source stays as short as the equivalent hand-written usage. Controls hidden
+ * by their `when` condition are skipped, so the snippet matches the panel.
  */
 export function propsSource(
   values: ControlValues,
@@ -186,6 +187,7 @@ export function propsSource(
     .map((control) => {
       const value = values[control.key];
       if (value === undefined || value === control.default) return null;
+      if (control.when && !control.when(values)) return null;
       if (typeof value === "boolean") {
         return value ? `${indent}${control.key}` : null;
       }

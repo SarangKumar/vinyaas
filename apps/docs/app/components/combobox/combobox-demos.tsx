@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 
+import {
+  ComponentDemo,
+  type ControlDef,
+  type ControlValues,
+} from "@/components/component-demo";
 import { Badge } from "@/registry/new-york/ui/badge";
 import {
   Combobox,
@@ -115,5 +120,163 @@ export function AssigneeInPracticeDemo() {
         <ComboboxItem value="alan">Alan Turing</ComboboxItem>
       </ComboboxContent>
     </Combobox>
+  );
+}
+
+/* ── Interactive demo (used with the Customize panel) ─────────────────────── */
+
+const frameworks = [
+  { value: "next", label: "Next.js" },
+  { value: "remix", label: "Remix" },
+  { value: "astro", label: "Astro" },
+  { value: "vite", label: "Vite" },
+  { value: "nuxt", label: "Nuxt" },
+];
+
+const comboboxControls: ControlDef[] = [
+  {
+    key: "align",
+    label: "Align",
+    type: "select",
+    default: "start",
+    options: [
+      { value: "start", label: "Start" },
+      { value: "center", label: "Center" },
+      { value: "end", label: "End" },
+    ],
+  },
+  {
+    key: "placeholder",
+    label: "Placeholder",
+    type: "text",
+    default: "Select a framework…",
+  },
+  {
+    key: "searchPlaceholder",
+    label: "Search Placeholder",
+    type: "text",
+    default: "Search frameworks…",
+  },
+  {
+    key: "emptyMessage",
+    label: "Empty Message",
+    type: "text",
+    default: "No framework found.",
+  },
+  {
+    key: "preselected",
+    label: "Preselected",
+    type: "select",
+    default: "none",
+    options: [
+      { value: "none", label: "None" },
+      ...frameworks.map((framework) => ({
+        value: framework.value,
+        label: framework.label,
+      })),
+    ],
+  },
+  {
+    key: "disableOption",
+    label: "Disable Astro",
+    type: "toggle",
+    default: false,
+  },
+  { key: "disabled", label: "Disabled", type: "toggle", default: false },
+];
+
+function ComboboxInteractivePreview(values: ControlValues) {
+  const preselected = values.preselected as string;
+
+  return (
+    <Combobox
+      // Remount when the starting value changes so the uncontrolled default
+      // is picked up instead of being frozen at first render.
+      key={preselected}
+      defaultValue={preselected === "none" ? undefined : preselected}
+      disabled={values.disabled as boolean}
+    >
+      <ComboboxTrigger
+        className="w-full max-w-sm"
+        aria-label="Framework"
+        placeholder={values.placeholder as string}
+      />
+      <ComboboxContent
+        align={values.align as "start" | "center" | "end"}
+        searchPlaceholder={values.searchPlaceholder as string}
+        emptyMessage={values.emptyMessage as string}
+      >
+        {frameworks.map((framework) => (
+          <ComboboxItem
+            key={framework.value}
+            value={framework.value}
+            disabled={
+              (values.disableOption as boolean) && framework.value === "astro"
+            }
+          >
+            {framework.label}
+          </ComboboxItem>
+        ))}
+      </ComboboxContent>
+    </Combobox>
+  );
+}
+
+function comboboxCode(values: ControlValues): string {
+  const preselected = values.preselected as string;
+  const rootProps = [
+    preselected === "none" ? null : ` defaultValue="${preselected}"`,
+    values.disabled ? " disabled" : null,
+  ]
+    .filter(Boolean)
+    .join("");
+
+  const contentProps = [
+    values.align === "start" ? null : `\n    align="${values.align}"`,
+    `\n    searchPlaceholder="${values.searchPlaceholder}"`,
+    `\n    emptyMessage="${values.emptyMessage}"`,
+  ]
+    .filter(Boolean)
+    .join("");
+
+  const items = frameworks
+    .map((framework) => {
+      const disabled =
+        (values.disableOption as boolean) && framework.value === "astro"
+          ? " disabled"
+          : "";
+
+      return `    <ComboboxItem value="${framework.value}"${disabled}>${framework.label}</ComboboxItem>`;
+    })
+    .join("\n");
+
+  return `import {
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxTrigger,
+} from "@/components/ui/combobox";
+
+<Combobox${rootProps}>
+  <ComboboxTrigger
+    className="w-full max-w-sm"
+    aria-label="Framework"
+    placeholder="${values.placeholder}"
+  />
+  <ComboboxContent${contentProps}
+  >
+${items}
+  </ComboboxContent>
+</Combobox>`;
+}
+
+/** Keeps the controls and the snippet generator on the client. */
+export function ComboboxInteractiveSection() {
+  return (
+    <ComponentDemo
+      preview={ComboboxInteractivePreview}
+      code={comboboxCode}
+      controls={comboboxControls}
+    />
   );
 }

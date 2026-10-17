@@ -831,6 +831,7 @@ describe("registry build output", () => {
       "button",
       "dropdown-menu",
       "skeleton",
+      "toggle-group",
     ]);
     expect(item.registryDependencies).toEqual([
       "table",
@@ -840,6 +841,7 @@ describe("registry build output", () => {
       "button",
       "dropdown-menu",
       "skeleton",
+      "toggle-group",
     ]);
     expect(generated.files).toHaveLength(1);
     expect(generated.files[0]?.content).toBe(source);

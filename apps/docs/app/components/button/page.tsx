@@ -12,7 +12,7 @@ import { Input } from "@/registry/new-york/ui/input";
 import { Label } from "@/registry/new-york/ui/label";
 import type { Metadata } from "next";
 import { componentPageMetadata } from "@/lib/page-metadata";
-import { ButtonPreview } from "./button-demos";
+import { ButtonInteractiveSection } from "./button-demos";
 
 export const metadata: Metadata = componentPageMetadata("button");
 
@@ -238,11 +238,7 @@ export default async function ButtonPage() {
           attributes, are passed through.
         </p>
       }
-      livePreview={ButtonPreview}
-      controlOverrides={{
-        type: { exclude: true },
-        className: { exclude: true },
-      }}
+      previewSection={<ButtonInteractiveSection />}
       install="vinyaas add button"
       manual={
         <p>

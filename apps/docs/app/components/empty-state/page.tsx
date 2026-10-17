@@ -255,6 +255,11 @@ export default async function EmptyStatePage() {
       examples={examples}
       inPractice={inPractice}
       livePreview={EmptyStatePreview}
+      controlOverrides={{
+        // Documented in the API table, but a free-text class is not a useful
+        // playground control.
+        "Empty className": { exclude: true },
+      }}
       api={api}
       accessibility={
         <>

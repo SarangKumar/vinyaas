@@ -3,9 +3,14 @@
 import { useState } from "react";
 import type { DateRange } from "react-day-picker";
 
+import {
+  ComponentDemo,
+  type ControlDef,
+  type ControlValues,
+} from "@/components/component-demo";
 import { Badge } from "@/registry/new-york/ui/badge";
 import { Label } from "@/registry/new-york/ui/label";
-import { Calendar } from "@/registry/new-york/ui/calendar";
+import { Calendar, type CalendarProps } from "@/registry/new-york/ui/calendar";
 
 export function BasicCalendarDemo() {
   const [date, setDate] = useState<Date | undefined>();
@@ -165,5 +170,174 @@ export function MeetingScheduleInPracticeDemo() {
         </Badge>
       ) : null}
     </form>
+  );
+}
+
+/* ── Interactive demo (used with the Customize panel) ─────────────────────── */
+
+const calendarControls: ControlDef[] = [
+  {
+    key: "mode",
+    label: "Mode",
+    type: "select",
+    default: "single",
+    options: [
+      { value: "single", label: "Single" },
+      { value: "multiple", label: "Multiple" },
+      { value: "range", label: "Range" },
+    ],
+  },
+  {
+    key: "captionLayout",
+    label: "Caption Layout",
+    type: "select",
+    default: "dropdown",
+    options: [
+      { value: "dropdown", label: "Dropdown" },
+      { value: "label", label: "Label" },
+      { value: "dropdown-months", label: "Dropdown Months" },
+      { value: "dropdown-years", label: "Dropdown Years" },
+    ],
+  },
+  {
+    key: "numberOfMonths",
+    label: "Months",
+    type: "range",
+    default: 1,
+    min: 1,
+    max: 2,
+  },
+  {
+    key: "showOutsideDays",
+    label: "Show Outside Days",
+    type: "toggle",
+    default: true,
+  },
+  {
+    key: "showWeekNumber",
+    label: "Show Week Number",
+    type: "toggle",
+    default: false,
+  },
+  { key: "fixedWeeks", label: "Fixed Weeks", type: "toggle", default: false },
+  {
+    key: "disablePast",
+    label: "Disable Past Dates",
+    type: "toggle",
+    default: false,
+  },
+];
+
+/** Shared by the preview and the snippet so both describe the same calendar. */
+function calendarShared(values: ControlValues) {
+  return {
+    captionLayout: values.captionLayout as CalendarProps["captionLayout"],
+    numberOfMonths: values.numberOfMonths as number,
+    showOutsideDays: values.showOutsideDays as boolean,
+    showWeekNumber: values.showWeekNumber as boolean,
+    fixedWeeks: values.fixedWeeks as boolean,
+  };
+}
+
+function CalendarInteractivePreview(values: ControlValues) {
+  // One state slot per mode: DayPicker types the selection per mode, and
+  // switching modes should not carry a stale shape across.
+  const [single, setSingle] = useState<Date | undefined>();
+  const [multiple, setMultiple] = useState<Date[] | undefined>();
+  const [range, setRange] = useState<DateRange | undefined>();
+  const shared = calendarShared(values);
+  const disabled = values.disablePast ? { before: new Date() } : undefined;
+
+  if (values.mode === "multiple") {
+    return (
+      <Calendar
+        {...shared}
+        mode="multiple"
+        selected={multiple}
+        onSelect={setMultiple}
+        disabled={disabled}
+        className="rounded-md border"
+      />
+    );
+  }
+
+  if (values.mode === "range") {
+    return (
+      <Calendar
+        {...shared}
+        mode="range"
+        selected={range}
+        onSelect={setRange}
+        disabled={disabled}
+        className="rounded-md border"
+      />
+    );
+  }
+
+  return (
+    <Calendar
+      {...shared}
+      mode="single"
+      selected={single}
+      onSelect={setSingle}
+      disabled={disabled}
+      className="rounded-md border"
+    />
+  );
+}
+
+const selectionTypes: Record<string, string> = {
+  single: "Date | undefined",
+  multiple: "Date[] | undefined",
+  range: "DateRange | undefined",
+};
+
+function calendarCode(values: ControlValues): string {
+  const mode = values.mode as string;
+  const props = [
+    `  mode="${mode}"`,
+    values.captionLayout === "dropdown"
+      ? null
+      : `  captionLayout="${values.captionLayout}"`,
+    values.numberOfMonths === 1
+      ? null
+      : `  numberOfMonths={${values.numberOfMonths}}`,
+    values.showOutsideDays ? null : `  showOutsideDays={false}`,
+    values.showWeekNumber ? `  showWeekNumber` : null,
+    values.fixedWeeks ? `  fixedWeeks` : null,
+    `  selected={selected}`,
+    `  onSelect={setSelected}`,
+    values.disablePast ? `  disabled={{ before: new Date() }}` : null,
+    `  className="rounded-md border"`,
+  ].filter(Boolean);
+
+  const rangeImport =
+    mode === "range"
+      ? `import type { DateRange } from "react-day-picker";\n`
+      : "";
+
+  return `"use client";
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+${rangeImport}
+export function Demo() {
+  const [selected, setSelected] = useState<${selectionTypes[mode]}>();
+
+  return (
+    <Calendar
+${props.map((line) => `  ${line}`).join("\n")}
+    />
+  );
+}`;
+}
+
+/** Keeps the controls and the snippet generator on the client. */
+export function CalendarInteractiveSection() {
+  return (
+    <ComponentDemo
+      preview={CalendarInteractivePreview}
+      code={calendarCode}
+      controls={calendarControls}
+    />
   );
 }

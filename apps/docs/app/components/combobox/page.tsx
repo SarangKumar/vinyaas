@@ -19,6 +19,7 @@ import {
   AssigneeDashboardDemo,
   AssigneeInPracticeDemo,
   BasicComboboxDemo,
+  ComboboxInteractiveSection,
   DisabledOptionsDemo,
   FrameworkSearchDemo,
 } from "./combobox-demos";
@@ -255,6 +256,7 @@ export default async function ComboboxPage() {
         </p>
       }
       usage={usage}
+      previewSection={<ComboboxInteractiveSection />}
       examples={examples}
       inPractice={inPractice}
       api={api}

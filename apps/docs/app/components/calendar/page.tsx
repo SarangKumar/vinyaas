@@ -12,6 +12,7 @@ import { componentPageMetadata } from "@/lib/page-metadata";
 
 import {
   BasicCalendarDemo,
+  CalendarInteractiveSection,
   DisabledDatesDemo,
   MeetingScheduleInPracticeDemo,
   MonthNavigationDemo,
@@ -298,6 +299,7 @@ export default async function CalendarPage() {
         </p>
       }
       usage={usage}
+      previewSection={<CalendarInteractiveSection />}
       examples={examples}
       inPractice={inPractice}
       api={api}

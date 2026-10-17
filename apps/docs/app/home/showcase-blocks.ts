@@ -146,7 +146,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   {
     id: "user-cursor",
     weight: 3,
-    components: ["user-cursor"],
+    components: ["user-cursor", "avatar"],
     Block: UserCursorBlock,
   },
   {
@@ -170,7 +170,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   {
     id: "fuse-button",
     weight: 2,
-    components: ["fuse-button"],
+    components: ["fuse-button", "badge", "button"],
     Block: FuseButtonBlock,
   },
   {
@@ -212,7 +212,7 @@ export const showcaseBlocks: readonly ShowcaseBlockDefinition[] = [
   {
     id: "drag-and-drop",
     weight: 4,
-    components: ["drag-and-drop"],
+    components: ["drag-and-drop", "badge"],
     Block: DragAndDropBlock,
   },
   {

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { Button } from "../button";
@@ -190,6 +190,86 @@ describe("DataTable", () => {
     expect(screen.getByText("Marketing")).toBeInTheDocument();
     expect(screen.queryByText("Vinyaas")).toBeNull();
     expect(screen.getByText("Showing 3–4 of 6")).toBeInTheDocument();
+  });
+
+  it("changes rows per page from the toggle group and returns to page one", () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={projects}
+        pagination={2}
+        pageSizeOptions={[2, 4]}
+      />,
+    );
+
+    const group = screen.getByRole("group", { name: "Rows per page" });
+    // The pager renders page numbers too, so scope to the group.
+    const two = within(group).getByRole("button", { name: "2" });
+    const four = within(group).getByRole("button", { name: "4" });
+
+    // `pagination`'s own number starts the group off.
+    expect(group).toBeInTheDocument();
+    expect(two).toHaveAttribute("aria-pressed", "true");
+    expect(four).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByText("Showing 1–2 of 6")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /next/i }));
+    expect(screen.getByText("Showing 3–4 of 6")).toBeInTheDocument();
+
+    fireEvent.click(four);
+    expect(four).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Showing 1–4 of 6")).toBeInTheDocument();
+    expect(screen.getByText("Marketing")).toBeInTheDocument();
+    expect(screen.queryByText("Analytics")).toBeNull();
+  });
+
+  it("falls back to the first choice when pagination's size is not offered", () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={projects}
+        pagination={5}
+        pageSizeOptions={[3, 6]}
+      />,
+    );
+
+    const group = screen.getByRole("group", { name: "Rows per page" });
+    expect(within(group).getByRole("button", { name: "3" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByText("Showing 1–3 of 6")).toBeInTheDocument();
+  });
+
+  it("hides the row-count group without pagination or with one choice", () => {
+    const { rerender } = render(
+      <DataTable columns={columns} data={projects} pageSizeOptions={[2, 4]} />,
+    );
+    expect(screen.queryByRole("group", { name: "Rows per page" })).toBeNull();
+
+    rerender(
+      <DataTable
+        columns={columns}
+        data={projects}
+        pagination={2}
+        pageSizeOptions={[2]}
+      />,
+    );
+    expect(screen.queryByRole("group", { name: "Rows per page" })).toBeNull();
+  });
+
+  it("names the row-count group with pageSizeLabel", () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={projects}
+        pagination={2}
+        pageSizeOptions={[2, 4]}
+        pageSizeLabel="Per page"
+      />,
+    );
+
+    expect(screen.getByRole("group", { name: "Per page" })).toBeInTheDocument();
   });
 
   it("toggles column visibility while keeping locked columns", () => {
