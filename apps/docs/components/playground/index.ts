@@ -6,18 +6,26 @@ export {
 } from "./playground-chrome";
 export { PlaygroundBlock, PlaygroundGrid } from "./playground-block";
 export {
-  playgroundColumnItemClassName,
-  playgroundColumnsClassName,
   playgroundDenseChromeInlineClassName,
   playgroundDenseChromeShowClassName,
   playgroundShowcaseColumnClassName,
   playgroundShowcaseColumnStackClassName,
   playgroundShowcaseColumnsClassName,
   playgroundShowcaseGridClassName,
+  playgroundMasonryClassName,
+  playgroundMasonryColumnClassName,
+  playgroundMasonryItemClassName,
+  getPlaygroundColumnCount,
+  getPlaygroundMasonryGap,
   getShowcaseColumnCount,
+  packMasonryColumns,
+  PLAYGROUND_MASONRY_BREAKPOINTS,
   SHOWCASE_COLUMN_BREAKPOINTS,
 } from "./playground-layout";
-export type { ShowcaseColumnCount } from "./playground-layout";
+export type {
+  PlaygroundColumnCount,
+  ShowcaseColumnCount,
+} from "./playground-layout";
 
 export {
   PlaygroundCheckIcon,

@@ -1,11 +1,14 @@
 /**
  * Shared playground layout ladder (docs site).
  *
- * Themes / Typeset (CSS columns masonry):
- * - default → 1 column
- * - `md` (768) → 2 columns
- * - `lg` (1024) → 3 columns
- * - `xl` (1280) → 4 columns
+ * Themes / Typeset (measured masonry — grid of flex column stacks):
+ * - container < 640 → 1 column
+ * - container < 960 → 2 columns
+ * - container < 1280 → 3 columns
+ * - container >= 1280 → 4 columns
+ * Column count follows the *container* width, and each card is placed in the
+ * shortest column at the time it is laid out, so every column starts at the
+ * same top edge and trailing space stays minimal.
  *
  * Homepage showcase (shadcn-style grid of flex columns):
  * - 1 → md:2 → lg:3 → min-[1400px]:4 → min-[1900px]:5
@@ -15,9 +18,17 @@
  * Dense chrome (Typeset drawer) shows inline options above 1400px.
  */
 
-/** Shared CSS-columns masonry (Themes / Typeset). Max 4. */
-export const playgroundColumnsClassName =
-  "columns-1 md:columns-2 lg:columns-3 xl:columns-4 [column-gap:var(--gap)] **:data-[slot=card]:w-full";
+/**
+ * Shared masonry root (Themes / Typeset). Max 4 columns.
+ *
+ * The track count and the gutter are inline styles rather than classes,
+ * because both are derived from the measured container width.
+ */
+export const playgroundMasonryClassName =
+  "grid w-full min-w-0 **:data-[slot=card]:w-full **:data-[slot=card]:max-w-full";
+
+/** One masonry column: a plain stack, so cards keep their natural heights. */
+export const playgroundMasonryColumnClassName = "flex min-w-0 flex-col";
 
 /**
  * Homepage showcase root — matches ui.shadcn.com CardsDemo grid.
@@ -46,9 +57,86 @@ export const playgroundShowcaseColumnClassName = {
 export const playgroundShowcaseColumnsClassName =
   playgroundShowcaseGridClassName;
 
-/** Item inside the CSS-columns masonry (Themes / Typeset). */
-export const playgroundColumnItemClassName =
-  "mb-(--gap) w-full break-inside-avoid [break-inside:avoid]";
+/** Item inside the masonry. The column stack owns the vertical gutter. */
+export const playgroundMasonryItemClassName = "w-full min-w-0";
+
+/** Container widths (px) where the masonry gains a column. */
+export const PLAYGROUND_MASONRY_BREAKPOINTS = {
+  two: 640,
+  three: 960,
+  four: 1280,
+} as const;
+
+export type PlaygroundColumnCount = 1 | 2 | 3 | 4;
+
+/** Masonry column count for a measured container width. */
+export function getPlaygroundColumnCount(
+  containerWidth: number,
+): PlaygroundColumnCount {
+  if (containerWidth >= PLAYGROUND_MASONRY_BREAKPOINTS.four) {
+    return 4;
+  }
+  if (containerWidth >= PLAYGROUND_MASONRY_BREAKPOINTS.three) {
+    return 3;
+  }
+  if (containerWidth >= PLAYGROUND_MASONRY_BREAKPOINTS.two) {
+    return 2;
+  }
+  return 1;
+}
+
+/** Gutter in px, used for both axes so the grid reads as one rhythm. */
+export function getPlaygroundMasonryGap(containerWidth: number): number {
+  if (containerWidth >= PLAYGROUND_MASONRY_BREAKPOINTS.four) {
+    return 32;
+  }
+  if (containerWidth >= PLAYGROUND_MASONRY_BREAKPOINTS.two) {
+    return 28;
+  }
+  return 24;
+}
+
+/**
+ * Pinterest packing: each card joins the column that is currently shortest,
+ * so columns grow evenly and no column is left with a tall empty tail.
+ *
+ * Ties break towards the column holding fewer cards, which makes an
+ * unmeasured first pass (every height still 0) fall back to round-robin
+ * instead of stacking everything into the first column.
+ *
+ * Indexes are handed out in source order, so reading order down a column
+ * matches the order the cards were declared in.
+ */
+export function packMasonryColumns(
+  heights: readonly number[],
+  columnCount: number,
+): number[][] {
+  const count = Math.max(1, columnCount);
+  const columns: number[][] = Array.from({ length: count }, () => []);
+  const totals = Array.from({ length: count }, () => 0);
+
+  heights.forEach((height, index) => {
+    let target = 0;
+
+    for (let column = 1; column < count; column += 1) {
+      const candidate = totals[column] ?? 0;
+      const current = totals[target] ?? 0;
+
+      if (
+        candidate < current ||
+        (candidate === current &&
+          (columns[column]?.length ?? 0) < (columns[target]?.length ?? 0))
+      ) {
+        target = column;
+      }
+    }
+
+    columns[target]!.push(index);
+    totals[target] = (totals[target] ?? 0) + Math.max(0, height);
+  });
+
+  return columns;
+}
 
 /**
  * Dense chrome (Typeset field row, etc.): drawer below 1400px,

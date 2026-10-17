@@ -7,7 +7,7 @@ import { ThemesPlayground } from "./themes-playground";
 export const metadata: Metadata = pageMetadata({
   title: "Themes",
   description:
-    "Preview curated Vinyaas theme presets and border radius across real UI compositions. Theme changes stay scoped to this playground.",
+    "Preview curated Vinyaas theme presets and border radius across real UI compositions, then apply one across the docs site.",
   path: "/themes",
 });
 

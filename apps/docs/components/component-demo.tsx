@@ -301,7 +301,13 @@ export function ControlCell({
             />
             <input
               type="color"
-              value={value as string}
+              // A CSS value like `var(--primary)` paints the swatch but is not
+              // a hex, so the native picker opens on a neutral grey instead.
+              value={
+                /^#[0-9a-f]{6}$/i.test(String(value))
+                  ? (value as string)
+                  : "#808080"
+              }
               onChange={(e) => onChange(e.target.value)}
               className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
             />

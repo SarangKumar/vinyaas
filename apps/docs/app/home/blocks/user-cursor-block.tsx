@@ -48,9 +48,19 @@ export function UserCursorBlock() {
         <p className="text-muted-foreground truncate text-sm">
           Checkout · Payment step
         </p>
-        <div className="flex items-center -space-x-2">
-          {COLLABORATORS.map((person) => (
-            <Avatar key={person.name} className="ring-card size-7 ring-2">
+        {/*
+          Overlapping presence stack. `isolate` keeps the z-indices to this
+          group, and each avatar outranks the one after it so the stack falls
+          left over right instead of every circle being clipped by its
+          neighbour. The card-colored ring keeps the edges apart.
+        */}
+        <div className="isolate flex items-center -space-x-2.5">
+          {COLLABORATORS.map((person, index) => (
+            <Avatar
+              key={person.name}
+              className="ring-card size-7 ring-2"
+              style={{ zIndex: COLLABORATORS.length - index }}
+            >
               <AvatarFallback
                 className="text-[0.625rem] font-medium"
                 style={{

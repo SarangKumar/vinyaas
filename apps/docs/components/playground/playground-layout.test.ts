@@ -5,11 +5,14 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
+  getPlaygroundColumnCount,
+  getPlaygroundMasonryGap,
   getShowcaseColumnCount,
-  playgroundColumnItemClassName,
-  playgroundColumnsClassName,
+  packMasonryColumns,
   playgroundDenseChromeInlineClassName,
   playgroundDenseChromeShowClassName,
+  playgroundMasonryClassName,
+  playgroundMasonryColumnClassName,
   playgroundShowcaseGridClassName,
 } from "./playground-layout";
 
@@ -24,13 +27,48 @@ describe("playground layout utilities", () => {
     expect(docsCss).toContain("--breakpoint-playground-wide: 118.75rem");
   });
 
-  it("encodes shared Themes/Typeset masonry up to 4 columns", () => {
-    expect(playgroundColumnsClassName).toContain("columns-1");
-    expect(playgroundColumnsClassName).toContain("md:columns-2");
-    expect(playgroundColumnsClassName).toContain("lg:columns-3");
-    expect(playgroundColumnsClassName).toContain("xl:columns-4");
-    expect(playgroundColumnsClassName).not.toContain("columns-5");
-    expect(playgroundColumnItemClassName).toContain("break-inside-avoid");
+  it("builds the shared Themes/Typeset masonry from column stacks", () => {
+    // The track count is an inline style, so the class must not also carry a
+    // CSS-columns rule that would fight it.
+    expect(playgroundMasonryClassName).toContain("grid");
+    expect(playgroundMasonryClassName).not.toContain("columns-");
+    expect(playgroundMasonryColumnClassName).toContain("flex-col");
+  });
+
+  it("maps container widths to masonry columns, mobile to desktop", () => {
+    expect(getPlaygroundColumnCount(375)).toBe(1);
+    expect(getPlaygroundColumnCount(639)).toBe(1);
+    expect(getPlaygroundColumnCount(640)).toBe(2);
+    expect(getPlaygroundColumnCount(959)).toBe(2);
+    expect(getPlaygroundColumnCount(960)).toBe(3);
+    expect(getPlaygroundColumnCount(1279)).toBe(3);
+    expect(getPlaygroundColumnCount(1280)).toBe(4);
+    expect(getPlaygroundColumnCount(2200)).toBe(4);
+  });
+
+  it("keeps the masonry gutter inside the 24-32px band", () => {
+    for (const width of [320, 640, 960, 1280, 2200]) {
+      const gap = getPlaygroundMasonryGap(width);
+      expect(gap).toBeGreaterThanOrEqual(24);
+      expect(gap).toBeLessThanOrEqual(32);
+    }
+  });
+
+  it("packs each card into the shortest column, in source order", () => {
+    const columns = packMasonryColumns([300, 100, 100, 100], 3);
+
+    expect(columns).toEqual([[0], [1, 3], [2]]);
+    // Reading order down a column never goes backwards.
+    for (const column of columns) {
+      expect([...column].sort((a, b) => a - b)).toEqual(column);
+    }
+  });
+
+  it("falls back to round-robin before the cards have been measured", () => {
+    expect(packMasonryColumns([0, 0, 0, 0, 0], 2)).toEqual([
+      [0, 2, 4],
+      [1, 3],
+    ]);
   });
 
   it("encodes homepage grid-of-columns ladder up to 5 tracks", () => {

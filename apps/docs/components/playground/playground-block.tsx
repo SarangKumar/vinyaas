@@ -1,10 +1,25 @@
-import { Children, type ReactNode } from "react";
+"use client";
+
+import {
+  Children,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
 import {
-  playgroundColumnItemClassName,
-  playgroundColumnsClassName,
+  getPlaygroundColumnCount,
+  getPlaygroundMasonryGap,
+  packMasonryColumns,
+  playgroundMasonryClassName,
+  playgroundMasonryColumnClassName,
+  playgroundMasonryItemClassName,
 } from "./playground-layout";
 
 /**
@@ -58,8 +73,35 @@ export function PlaygroundBlock({
   );
 }
 
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+/** Column width is identical everywhere, so sub-pixel drift is not a move. */
+function sameHeights(left: readonly number[], right: readonly number[]) {
+  return (
+    left.length === right.length &&
+    left.every((value, index) => Math.abs(value - (right[index] ?? 0)) < 1)
+  );
+}
+
+/** Rendered before the container is measured — a mid-laptop three columns. */
+const SERVER_COLUMN_COUNT = 3;
+
 /**
- * Themes / Typeset / Homepage Pinterest masonry (CSS columns).
+ * Themes / Typeset Pinterest masonry.
+ *
+ * A grid of flex column stacks rather than CSS multi-column: `column-fill:
+ * balance` splits the list to equalise column *height*, which leaves ragged
+ * tails and ignores how tall each card actually is. Here every card is
+ * measured and dropped into the shortest column, so all columns start at the
+ * same top edge, cards keep their natural heights, and the gutter is the
+ * same on both axes.
+ *
+ * Heights are observed rather than estimated, so a card that grows (a chart
+ * loading, a radius change, a longer description) repacks the gallery.
+ * Moving a card between columns remounts it, so the pack only runs when the
+ * assignment genuinely changes.
+ *
  * Homepage uses `playgroundShowcaseGridClassName` (grid of flex columns).
  */
 export function PlaygroundGrid({
@@ -70,20 +112,104 @@ export function PlaygroundGrid({
   className?: string;
 }) {
   const items = Children.toArray(children);
+  const count = items.length;
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [width, setWidth] = useState(0);
+  const [heights, setHeights] = useState<number[]>([]);
+
+  const measure = useCallback(() => {
+    setHeights((previous) => {
+      const next = Array.from(
+        { length: count },
+        (_, index) =>
+          itemsRef.current[index]?.getBoundingClientRect().height ?? 0,
+      );
+
+      return sameHeights(previous, next) ? previous : next;
+    });
+  }, [count]);
+
+  // The gallery sits in a padded, max-width column, so the viewport is the
+  // wrong thing to break on — measure the space the cards actually get.
+  useIsomorphicLayoutEffect(() => {
+    const root = rootRef.current;
+
+    if (!root) {
+      return;
+    }
+
+    setWidth(root.clientWidth);
+
+    const observer = new ResizeObserver((entries) => {
+      const measured = entries[0]?.contentRect.width;
+      setWidth(measured ?? root.clientWidth);
+    });
+
+    observer.observe(root);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    measure();
+
+    const observer = new ResizeObserver(() => measure());
+
+    for (let index = 0; index < count; index += 1) {
+      const node = itemsRef.current[index];
+
+      if (node) {
+        observer.observe(node);
+      }
+    }
+
+    return () => observer.disconnect();
+  }, [measure, count]);
+
+  const columnCount =
+    width > 0 ? getPlaygroundColumnCount(width) : SERVER_COLUMN_COUNT;
+  const gap = getPlaygroundMasonryGap(width);
+  const columns = useMemo(
+    () =>
+      packMasonryColumns(
+        Array.from({ length: count }, (_, index) => heights[index] ?? 0),
+        columnCount,
+      ),
+    [count, heights, columnCount],
+  );
 
   return (
     <div
+      ref={rootRef}
       data-playground-grid
       data-playground-mode="playground"
-      className={cn(playgroundColumnsClassName, className)}
+      data-playground-columns={columnCount}
+      className={cn(playgroundMasonryClassName, className)}
+      style={{
+        gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
+        gap: `${gap}px`,
+      }}
     >
-      {items.map((item, index) => (
+      {columns.map((indexes, column) => (
         <div
-          key={index}
-          data-playground-item
-          className={playgroundColumnItemClassName}
+          key={column}
+          data-playground-column={column}
+          className={playgroundMasonryColumnClassName}
+          style={{ gap: `${gap}px` }}
         >
-          {item}
+          {indexes.map((index) => (
+            <div
+              key={index}
+              data-playground-item
+              ref={(node) => {
+                itemsRef.current[index] = node;
+              }}
+              className={playgroundMasonryItemClassName}
+            >
+              {items[index]}
+            </div>
+          ))}
         </div>
       ))}
     </div>

@@ -322,7 +322,7 @@ const beamControlOverrides = {
   pulseLength: { min: 0.05, max: 0.8, step: 0.05 },
   width: { min: 1, max: 6, step: 0.5 },
   gap: { min: 0, max: 24 },
-  pulseColor: { color: "#8b5cf6" },
+  pulseColor: { color: "var(--primary)" },
   pathColor: { color: "#52525b" },
 } satisfies Record<string, ControlOverride>;
 

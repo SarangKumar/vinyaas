@@ -15,7 +15,11 @@ export type ControlOverride = {
   unit?: string;
   /** Override the default value independently of min/max. */
   default?: number | string | boolean;
-  /** Render a string prop as a color picker starting at this hex value. */
+  /**
+   * Render a string prop as a color picker starting at this value. A CSS
+   * value such as `var(--primary)` keeps the swatch on-theme; the picker
+   * itself opens on a hex, so pass one when the start color matters there.
+   */
   color?: string;
   /** Force a string prop into a select with these options. */
   options?: string[];

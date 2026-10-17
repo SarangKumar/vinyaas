@@ -6,7 +6,25 @@ export {
   type ThemeModeColors,
 } from "./theme";
 export { generateThemeCss } from "./generate-css";
-export { themePreviewStyle, type ThemePreviewMode } from "./preview-style";
+export {
+  siteThemeVariables,
+  themePreviewStyle,
+  type ThemePreviewMode,
+} from "./preview-style";
+export {
+  themePreviewPortalClassName,
+  themePreviewPortalCss,
+} from "./portal-style";
+export {
+  appliedThemeConfig,
+  appliedThemeEvent,
+  appliedThemeStorageKey,
+  defaultSelection,
+  parseAppliedTheme,
+  readAppliedTheme,
+  sameAppliedTheme,
+  type AppliedTheme,
+} from "./applied-theme";
 export {
   getThemePreset,
   radiusOptions,
