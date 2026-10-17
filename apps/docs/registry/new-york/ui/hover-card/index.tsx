@@ -319,7 +319,9 @@ export function HoverCardContent({
     };
   }, [open, setOpen]);
 
-  if (!open) {
+  // `defaultOpen` can make this render during SSR, where there is no document
+  // to portal into.
+  if (!open || typeof document === "undefined") {
     return null;
   }
 

@@ -50,6 +50,7 @@ export const changelogVersions: ChangelogVersion[] = [
           `Table: row hover uses bg-accent/40 instead of bg-accent, so interactive elements (buttons, icons) inside rows keep their own hover state visible.`,
           `Combobox: the display span inside ComboboxTrigger now carries min-w-0 flex-1 so long option labels truncate correctly and the chevron always stays at the far right.`,
           `Native Select, Select, Combobox: chevron reliably appears at the right edge regardless of text length.`,
+          `Hover Card, Popover, Dropdown Menu, and Select: overlay content no longer reaches for \`document\` when it renders on the server. With \`defaultOpen\` the content rendered on the first pass, so prerendering a page that used it crashed the build with \`ReferenceError: document is not defined\`; the portal now waits for the client, as Dialog, Sheet, and Drawer already did.`,
           `Calendar: the selected range band is now a tint of the selection color instead of \`accent\`. In themes where \`accent\` sits close to \`background\` the band blended into the calendar surface, so a selected range was invisible between its end points; the tint reads against the surface in every preset and still contrasts with the solid circles on the range's first and last day.`,
         ],
       },
